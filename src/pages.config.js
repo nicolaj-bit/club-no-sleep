@@ -53,6 +53,12 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Knowledge from './pages/Knowledge';
 import ArticleDetail from './pages/ArticleDetail';
+import Community from './pages/Community';
+import Chat from './pages/Chat';
+import Profile from './pages/Profile';
+import ExpertDetail from './pages/ExpertDetail';
+import Booking from './pages/Booking';
+import MyBookings from './pages/MyBookings';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +69,12 @@ export const PAGES = {
     "BlogPost": BlogPost,
     "Knowledge": Knowledge,
     "ArticleDetail": ArticleDetail,
+    "Community": Community,
+    "Chat": Chat,
+    "Profile": Profile,
+    "ExpertDetail": ExpertDetail,
+    "Booking": Booking,
+    "MyBookings": MyBookings,
 }
 
 export const pagesConfig = {
