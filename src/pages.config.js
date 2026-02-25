@@ -59,6 +59,11 @@ import Profile from './pages/Profile';
 import ExpertDetail from './pages/ExpertDetail';
 import Booking from './pages/Booking';
 import MyBookings from './pages/MyBookings';
+import AskQuestion from './pages/AskQuestion';
+import QuestionDetail from './pages/QuestionDetail';
+import Favorites from './pages/Favorites';
+import Settings from './pages/Settings';
+import MyQuestions from './pages/MyQuestions';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +80,11 @@ export const PAGES = {
     "ExpertDetail": ExpertDetail,
     "Booking": Booking,
     "MyBookings": MyBookings,
+    "AskQuestion": AskQuestion,
+    "QuestionDetail": QuestionDetail,
+    "Favorites": Favorites,
+    "Settings": Settings,
+    "MyQuestions": MyQuestions,
 }
 
 export const pagesConfig = {
