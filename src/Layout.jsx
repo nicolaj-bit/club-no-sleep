@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Toaster } from 'sonner';
 
 // Pages that should NOT show bottom nav
-const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'Blog'];
+const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking'];
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
