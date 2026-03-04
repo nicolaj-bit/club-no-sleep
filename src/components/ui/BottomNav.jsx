@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, BookOpen, Lightbulb, Users, User } from 'lucide-react';
+import { Home, ShoppingBag, Lightbulb, Users, User } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 
 const navItems = [
+  { name: 'Hjem', icon: Home, page: 'Home' },
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
-  { name: 'Blog', icon: BookOpen, page: 'Blog' },
   { name: 'Viden', icon: Lightbulb, page: 'Knowledge' },
   { name: 'Community', icon: Users, page: 'Community' },
   { name: 'Profil', icon: User, page: 'Profile' },
