@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* LALATOTO warm cream/brown palette */
+    --background: 34 43% 96%;
+    --foreground: 25 60% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 25 60% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 60% 12%;
+    --primary: 25 60% 12%;
+    --primary-foreground: 34 43% 96%;
+    --secondary: 30 30% 92%;
+    --secondary-foreground: 25 60% 12%;
+    --muted: 30 25% 90%;
+    --muted-foreground: 25 20% 45%;
+    --accent: 30 30% 88%;
+    --accent-foreground: 25 60% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 25% 85%;
+    --input: 30 25% 85%;
+    --ring: 25 60% 12%;
+    --chart-1: 25 70% 45%;
+    --chart-2: 30 60% 55%;
+    --chart-3: 35 50% 65%;
+    --chart-4: 20 40% 50%;
+    --chart-5: 15 55% 40%;
+    --radius: 0.5rem;
+    --sidebar-background: 34 43% 96%;
+    --sidebar-foreground: 25 60% 12%;
+    --sidebar-primary: 25 60% 12%;
+    --sidebar-primary-foreground: 34 43% 96%;
+    --sidebar-accent: 30 30% 92%;
+    --sidebar-accent-foreground: 25 60% 12%;
+    --sidebar-border: 30 25% 85%;
+    --sidebar-ring: 25 60% 12%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-color: #F7F2EC;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
