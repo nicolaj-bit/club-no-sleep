@@ -59,12 +59,7 @@ export default function Home() {
     <div className="min-h-screen pb-28">
       {/* Header */}
       <header className="px-5 pt-12 pb-4">
-        <img
-          src="https://www.lalatoto.dk/cdn/shop/files/preview_images/1c63e645a49c449586a978a5005ee530.thumbnail.0000000000_400x.jpg?v=1770734025"
-          alt="LALATOTO"
-          className="h-8 object-contain mb-6"
-          onError={(e) => { e.target.style.display = 'none'; }}
-        />
+
         <p className="text-sm text-stone-400 capitalize">{todayStr}</p>
         <h1 className="text-2xl font-semibold text-stone-800 mt-0.5">God dag, mor 🤍</h1>
       </header>
