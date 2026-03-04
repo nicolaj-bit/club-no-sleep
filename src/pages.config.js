@@ -47,44 +47,44 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Shop from './pages/Shop';
-import ProductDetail from './pages/ProductDetail';
+import ArticleDetail from './pages/ArticleDetail';
+import AskQuestion from './pages/AskQuestion';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
-import Knowledge from './pages/Knowledge';
-import ArticleDetail from './pages/ArticleDetail';
-import Community from './pages/Community';
-import Chat from './pages/Chat';
-import Profile from './pages/Profile';
-import ExpertDetail from './pages/ExpertDetail';
 import Booking from './pages/Booking';
-import MyBookings from './pages/MyBookings';
-import AskQuestion from './pages/AskQuestion';
-import QuestionDetail from './pages/QuestionDetail';
+import Chat from './pages/Chat';
+import Community from './pages/Community';
+import ExpertDetail from './pages/ExpertDetail';
 import Favorites from './pages/Favorites';
-import Settings from './pages/Settings';
+import Knowledge from './pages/Knowledge';
+import MyBookings from './pages/MyBookings';
 import MyQuestions from './pages/MyQuestions';
+import ProductDetail from './pages/ProductDetail';
+import Profile from './pages/Profile';
+import QuestionDetail from './pages/QuestionDetail';
+import Settings from './pages/Settings';
+import Shop from './pages/Shop';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Shop": Shop,
-    "ProductDetail": ProductDetail,
+    "ArticleDetail": ArticleDetail,
+    "AskQuestion": AskQuestion,
     "Blog": Blog,
     "BlogPost": BlogPost,
-    "Knowledge": Knowledge,
-    "ArticleDetail": ArticleDetail,
-    "Community": Community,
-    "Chat": Chat,
-    "Profile": Profile,
-    "ExpertDetail": ExpertDetail,
     "Booking": Booking,
-    "MyBookings": MyBookings,
-    "AskQuestion": AskQuestion,
-    "QuestionDetail": QuestionDetail,
+    "Chat": Chat,
+    "Community": Community,
+    "ExpertDetail": ExpertDetail,
     "Favorites": Favorites,
-    "Settings": Settings,
+    "Knowledge": Knowledge,
+    "MyBookings": MyBookings,
     "MyQuestions": MyQuestions,
+    "ProductDetail": ProductDetail,
+    "Profile": Profile,
+    "QuestionDetail": QuestionDetail,
+    "Settings": Settings,
+    "Shop": Shop,
 }
 
 export const pagesConfig = {

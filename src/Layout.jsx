@@ -26,16 +26,23 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{backgroundColor: '#F7F2EC'}}>
       <style>{`
         :root {
-          --color-primary: #0f172a;
-          --color-primary-light: #1e293b;
-          --color-accent: #3b82f6;
+          --color-primary: #2C1A0E;
+          --color-primary-light: #4A2E1A;
+          --color-accent: #8B4513;
           --color-success: #10b981;
-          --color-warning: #f59e0b;
-          --color-error: #ef4444;
+          --color-warning: #C8860A;
+          --color-error: #B91C1C;
+          --color-bg: #F7F2EC;
+          --color-bg-card: #FFFFFF;
+          --color-border: #E8DDD3;
           --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        body {
+          background-color: #F7F2EC !important;
         }
         
         .safe-area-bottom {
