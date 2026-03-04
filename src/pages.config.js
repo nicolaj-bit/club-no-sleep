@@ -65,6 +65,7 @@ import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
 import Shop from './pages/Shop';
 import Home from './pages/Home';
+import AIChat from './pages/AIChat';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +88,7 @@ export const PAGES = {
     "Settings": Settings,
     "Shop": Shop,
     "Home": Home,
+    "AIChat": AIChat,
 }
 
 export const pagesConfig = {
