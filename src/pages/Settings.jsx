@@ -85,21 +85,37 @@ export default function Settings() {
       </header>
 
       <div className="p-4 space-y-4">
+        {/* Dark Mode Toggle */}
+        <div className="rounded-xl border divide-y" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <Moon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
+              </div>
+              <div>
+                <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Mørkt tema</h3>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Skift mellem lys og mørk visning</p>
+              </div>
+            </div>
+            <Switch checked={dark} onCheckedChange={toggle} />
+          </div>
+        </div>
+
         {/* Settings Items */}
-        <div className="bg-white rounded-xl border border-slate-100 divide-y divide-slate-100">
+        <div className="rounded-xl border divide-y" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           {settingsItems.map((item, i) => {
             const Icon = item.icon;
             
             if (item.toggle) {
               return (
-                <div key={i} className="flex items-center justify-between p-4">
+                <div key={i} className="flex items-center justify-between p-4" style={{ borderColor: 'var(--color-border)' }}>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-slate-600" />
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                      <Icon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
                     </div>
                     <div>
-                      <h3 className="font-medium text-slate-900">{item.title}</h3>
-                      <p className="text-xs text-slate-500">{item.description}</p>
+                      <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h3>
+                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
                     </div>
                   </div>
                   <Switch defaultChecked={item.defaultChecked} />
@@ -116,14 +132,15 @@ export default function Settings() {
               <Wrapper
                 key={i}
                 {...wrapperProps}
-                className="flex items-center gap-3 p-4 w-full text-left hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-3 p-4 w-full text-left transition-colors"
+                style={{ borderColor: 'var(--color-border)' }}
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-slate-600" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <Icon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
                 </div>
                 <div>
-                  <h3 className="font-medium text-slate-900">{item.title}</h3>
-                  <p className="text-xs text-slate-500">{item.description}</p>
+                  <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h3>
+                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
                 </div>
               </Wrapper>
             );
