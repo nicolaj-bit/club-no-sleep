@@ -49,7 +49,7 @@ export default function BottomNav() {
                   style={{ color: 'var(--color-text-primary)' }}
                 >
                   <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
-                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")}>{item.name}</span>
+                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")} style={{ color: 'var(--color-text-primary)' }}>{item.name}</span>
                 </Link>
               );
             })}
