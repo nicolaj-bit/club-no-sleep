@@ -47,7 +47,7 @@ export default function BottomNav() {
                   onClick={() => setMenuOpen(false)}
                   className={cn(
                     "flex items-center gap-4 px-6 py-4 transition-colors",
-                    active ? "bg-stone-100 text-stone-900" : "text-stone-600 hover:bg-stone-50"
+                    active ? "font-semibold" : "font-medium"
                   )}
                 >
                   <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
