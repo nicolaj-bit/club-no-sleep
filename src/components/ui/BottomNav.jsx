@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User, Moon } from 'lucide-react';
+import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 
