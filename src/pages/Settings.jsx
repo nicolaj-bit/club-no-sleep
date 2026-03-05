@@ -208,7 +208,7 @@ export default function Settings() {
 
         {/* App Info */}
         <div className="text-center pt-6">
-          <p className="text-xs text-slate-400">Version 1.0.0</p>
+          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Version 1.0.0</p>
         </div>
       </div>
 
