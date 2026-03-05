@@ -27,6 +27,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 export default function Community() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
@@ -146,7 +147,14 @@ export default function Community() {
     window.location.href = createPageUrl(`Chat?id=${conv.id}`);
   };
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['nearbyUsers']);
+    await queryClient.invalidateQueries(['conversations', user?.email]);
+    await queryClient.invalidateQueries(['experts']);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
@@ -309,5 +317,6 @@ export default function Community() {
         </Tabs>
       </div>
     </div>
+    </PullToRefresh>
   );
 }
