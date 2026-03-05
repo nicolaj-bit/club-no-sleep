@@ -45,10 +45,8 @@ export default function BottomNav() {
                   key={item.name}
                   to={url}
                   onClick={() => setMenuOpen(false)}
-                  className={cn(
-                    "flex items-center gap-4 px-6 py-4 transition-colors",
-                    active ? "font-semibold" : "font-medium"
-                  )}
+                  className="flex items-center gap-4 px-6 py-4 transition-colors"
+                  style={{ color: 'var(--color-text-primary)' }}
                 >
                   <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
                   <span className={cn("text-base", active ? "font-semibold" : "font-medium")}>{item.name}</span>
