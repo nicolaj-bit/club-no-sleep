@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -51,5 +52,23 @@
     background-color: #F7F2EC;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
   }
+
+  button, a, [role="button"], nav, [data-nav] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.header-safe {
+  padding-top: max(12px, env(safe-area-inset-top));
 }

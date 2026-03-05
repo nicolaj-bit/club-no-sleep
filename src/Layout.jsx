@@ -26,7 +26,7 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{backgroundColor: '#F7F2EC'}}>
+    <div className="min-h-screen" style={{backgroundColor: 'var(--color-bg)'}}>
       <style>{`
         :root {
           --color-primary: #2C1A0E;
