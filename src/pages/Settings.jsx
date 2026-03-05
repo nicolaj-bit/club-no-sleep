@@ -193,7 +193,8 @@ export default function Settings() {
         <div className="mt-4">
           <button
             onClick={() => setDeleteOpen(true)}
-            className="flex items-center gap-3 p-4 w-full text-left bg-white rounded-xl border border-slate-100 hover:bg-rose-50 transition-colors"
+            className="flex items-center gap-3 p-4 w-full text-left rounded-xl border hover:bg-rose-50 transition-colors"
+            style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
           >
             <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
               <Trash2 className="w-5 h-5 text-rose-500" />
