@@ -63,7 +63,18 @@ export default function SleepLog() {
   const [view, setView] = useState('log'); // 'log' | 'history'
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => base44.auth.redirectToLogin());
+    base44.auth.me().then(async (u) => {
+      setUser(u);
+      // Auto-calculate child age from profile
+      const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
+      const profile = profiles?.[0];
+      if (profile?.child_birthdate) {
+        const birth = new Date(profile.child_birthdate);
+        const now = new Date();
+        const months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
+        setForm(f => ({ ...f, child_age_months: Math.max(0, months) }));
+      }
+    }).catch(() => base44.auth.redirectToLogin());
   }, []);
 
   // Load today's log if exists
