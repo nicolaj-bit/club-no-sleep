@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/accordion";
 
 export default function Settings() {
+  const { isDark, toggle } = useTheme();
   const [user, setUser] = useState(null);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
