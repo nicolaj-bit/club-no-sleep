@@ -62,5 +62,6 @@ export default function Layout({ children, currentPageName }) {
 
       {showNav && <BottomNav />}
     </div>
+    </ThemeProvider>
   );
 }
