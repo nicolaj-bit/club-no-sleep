@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AIChat from './pages/AIChat';
 import ArticleDetail from './pages/ArticleDetail';
 import AskQuestion from './pages/AskQuestion';
 import Blog from './pages/Blog';
@@ -56,6 +57,7 @@ import Chat from './pages/Chat';
 import Community from './pages/Community';
 import ExpertDetail from './pages/ExpertDetail';
 import Favorites from './pages/Favorites';
+import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
 import MyBookings from './pages/MyBookings';
 import MyQuestions from './pages/MyQuestions';
@@ -64,12 +66,12 @@ import Profile from './pages/Profile';
 import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
 import Shop from './pages/Shop';
-import Home from './pages/Home';
-import AIChat from './pages/AIChat';
+import SleepLog from './pages/SleepLog';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIChat": AIChat,
     "ArticleDetail": ArticleDetail,
     "AskQuestion": AskQuestion,
     "Blog": Blog,
@@ -79,6 +81,7 @@ export const PAGES = {
     "Community": Community,
     "ExpertDetail": ExpertDetail,
     "Favorites": Favorites,
+    "Home": Home,
     "Knowledge": Knowledge,
     "MyBookings": MyBookings,
     "MyQuestions": MyQuestions,
@@ -87,8 +90,7 @@ export const PAGES = {
     "QuestionDetail": QuestionDetail,
     "Settings": Settings,
     "Shop": Shop,
-    "Home": Home,
-    "AIChat": AIChat,
+    "SleepLog": SleepLog,
 }
 
 export const pagesConfig = {
