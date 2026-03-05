@@ -33,7 +33,7 @@ export default function BottomNav() {
         >
           <div
             className="absolute bottom-28 left-1/2 -translate-x-1/2 w-72 rounded-3xl shadow-2xl overflow-hidden"
-            style={{ backgroundColor: 'var(--color-bg-card)' }}
+            style={{ backgroundColor: '#FFFFFF' }}
             onClick={(e) => e.stopPropagation()}
           >
             {menuItems.map((item) => {
