@@ -11,6 +11,8 @@ export default function AIChat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef(null);
+  const urlParams = new URLSearchParams(window.location.search);
+  const withLogs = urlParams.get('with_logs') === '1';
 
   useEffect(() => {
     const init = async () => {
@@ -20,6 +22,22 @@ export default function AIChat() {
       });
       setConversation(conv);
       setMessages(conv.messages || []);
+
+      // If coming from sleep log, auto-send logs
+      if (withLogs) {
+        try {
+          const user = await base44.auth.me();
+          const logs = await base44.entities.SleepLog.filter({ user_email: user.email }, '-date', 14);
+          if (logs?.length > 0) {
+            setIsLoading(true);
+            const logsText = JSON.stringify(logs, null, 2);
+            const prompt = `Analyser venligst mine søvnlogs fra de seneste dage og giv mig konkrete observationer og råd:\n\n\`\`\`json\n${logsText}\n\`\`\``;
+            await base44.agents.addMessage(conv, { role: 'user', content: prompt });
+          }
+        } catch (e) {
+          console.log('Could not load sleep logs');
+        }
+      }
 
       const unsubscribe = base44.agents.subscribeToConversation(conv.id, (data) => {
         setMessages(data.messages || []);
