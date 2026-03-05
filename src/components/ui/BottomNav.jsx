@@ -70,8 +70,8 @@ export default function BottomNav() {
               isActive('Home') ? "opacity-100" : "opacity-50 hover:opacity-75"
             )}
           >
-            <Home className="w-5 h-5" strokeWidth={isActive('Home') ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">Hjem</span>
+            <Home className="w-5 h-5" strokeWidth={isActive('Home') ? 2.5 : 2} style={{ color: 'var(--color-text-primary)' }} />
+            <span className="text-[10px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Hjem</span>
           </Link>
 
           <Link
