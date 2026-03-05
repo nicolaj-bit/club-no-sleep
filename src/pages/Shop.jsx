@@ -112,8 +112,8 @@ export default function Shop() {
                               onClick={() => setSortBy(opt.value)}
                               className={`w-full text-left px-3 py-2 rounded-lg text-sm ${
                                 sortBy === opt.value 
-                                  ? 'bg-slate-900 text-white' 
-                                  : 'bg-slate-100 text-slate-700'
+                                  ? 'bg-stone-800 text-white' 
+                                  : 'text-slate-700'
                               }`}
                             >
                               {opt.label}
