@@ -63,6 +63,14 @@ export default function Settings() {
       defaultChecked: true,
     },
     {
+      icon: Moon,
+      title: 'Mørkt tema',
+      description: 'Skift til mørkt udseende',
+      toggle: true,
+      checked: isDark,
+      onToggle: toggle,
+    },
+    {
       icon: Shield,
       title: 'Privatliv',
       description: 'Administrer dine privatlivsindstillinger',
