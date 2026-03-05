@@ -30,39 +30,38 @@ export default function Layout({ children, currentPageName }) {
   return (
     <ThemeProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-...
-      <style>{`
-        body { background-color: var(--color-bg) !important; }
-        .safe-area-bottom {
-          padding-bottom: max(var(--safe-area-inset-bottom, 0px), 8px);
-        }
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          -webkit-font-smoothing: antialiased;
-        }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
-      `}</style>
+        <style>{`
+          body { background-color: var(--color-bg) !important; }
+          .safe-area-bottom {
+            padding-bottom: max(var(--safe-area-inset-bottom, 0px), 8px);
+          }
+          body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+          }
+          ::-webkit-scrollbar { width: 4px; height: 4px; }
+          ::-webkit-scrollbar-track { background: transparent; }
+          ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+        `}</style>
 
-      <Toaster position="top-center" />
+        <Toaster position="top-center" />
 
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={currentPageName}
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -16 }}
-          transition={{ duration: 0.18, ease: 'easeOut' }}
-          className={showNav ? "pb-20" : ""}
-          style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
-        >
-          {children}
-        </motion.main>
-      </AnimatePresence>
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={currentPageName}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className={showNav ? "pb-20" : ""}
+            style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+          >
+            {children}
+          </motion.main>
+        </AnimatePresence>
 
-      {showNav && <BottomNav />}
-    </div>
+        {showNav && <BottomNav />}
+      </div>
     </ThemeProvider>
   );
 }
