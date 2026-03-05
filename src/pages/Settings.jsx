@@ -29,6 +29,7 @@ export default function Settings() {
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState('');
+  const { dark, toggle } = useTheme();
   const [passwordForm, setPasswordForm] = useState({
     current: '',
     new: '',
