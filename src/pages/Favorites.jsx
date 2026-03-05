@@ -33,9 +33,21 @@ export default function Favorites() {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Favorite.delete(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries(['myFavorites', user?.email]);
+      const previous = queryClient.getQueryData(['myFavorites', user?.email]);
+      queryClient.setQueryData(['myFavorites', user?.email], (old) => old?.filter(f => f.id !== id) || []);
+      return { previous };
+    },
+    onError: (_err, _id, context) => {
+      queryClient.setQueryData(['myFavorites', user?.email], context.previous);
+      toast.error('Noget gik galt');
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['myFavorites']);
       toast.success('Fjernet fra favoritter');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['myFavorites', user?.email]);
     },
   });
 

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail } from 'lucide-react';
+import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
