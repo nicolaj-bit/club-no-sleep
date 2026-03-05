@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User } from 'lucide-react';
+import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User, Moon } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 
 const menuItems = [
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
   { name: 'Blog', icon: BookOpen, page: 'Blog' },
+  { name: 'Søvnlog', icon: Moon, page: 'SleepLog' },
   { name: 'Viden', icon: Lightbulb, page: 'Knowledge' },
   { name: 'Community', icon: Users, page: 'Community' },
   { name: 'Profil', icon: User, page: 'Profile' },
@@ -24,7 +25,6 @@ export default function BottomNav() {
 
   return (
     <>
-      {/* Burger menu overlay */}
       {menuOpen && (
         <div
           className="fixed inset-0 z-40"
@@ -58,13 +58,11 @@ export default function BottomNav() {
         </div>
       )}
 
-      {/* Bottom nav bar */}
       <nav className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-6">
         <div
           className="flex items-center justify-around h-16 px-6 w-full max-w-xs bg-white rounded-full border border-stone-100"
           style={{ boxShadow: '0 8px 32px rgba(44,26,14,0.15)' }}
         >
-          {/* Hjem */}
           <Link
             to={createPageUrl('Home')}
             className={cn(
@@ -76,7 +74,6 @@ export default function BottomNav() {
             <span className="text-[10px] font-medium">Hjem</span>
           </Link>
 
-          {/* AI Chat */}
           <Link
             to={createPageUrl('AIChat')}
             className="flex flex-col items-center gap-0.5"
@@ -89,7 +86,6 @@ export default function BottomNav() {
             </div>
           </Link>
 
-          {/* Burger menu */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className={cn(
