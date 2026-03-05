@@ -26,6 +26,8 @@ import {
 export default function Settings() {
   const [user, setUser] = useState(null);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState('');
   const [passwordForm, setPasswordForm] = useState({
     current: '',
     new: '',
