@@ -11,6 +11,7 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 const categories = ['Alle', 'Tips', 'Guides', 'Nyheder', 'Inspiration'];
 
 export default function Blog() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Alle');
@@ -31,7 +32,12 @@ export default function Blog() {
   const featuredPost = filteredPosts[0];
   const otherPosts = filteredPosts.slice(1);
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['blogPosts']);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100">
@@ -132,5 +138,6 @@ export default function Blog() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
