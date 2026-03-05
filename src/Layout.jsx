@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import BottomNav from '@/components/ui/BottomNav';
 import { base44 } from '@/api/base44Client';
 import { Toaster } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Pages that should NOT show bottom nav
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat'];
@@ -70,9 +71,19 @@ export default function Layout({ children, currentPageName }) {
       
       <Toaster position="top-center" />
       
-      <main className={showNav ? "pb-20" : ""}>
-        {children}
-      </main>
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={currentPageName}
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -16 }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
+          className={showNav ? "pb-20" : ""}
+          style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+        >
+          {children}
+        </motion.main>
+      </AnimatePresence>
       
       {showNav && <BottomNav />}
     </div>
