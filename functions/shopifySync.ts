@@ -4,7 +4,7 @@ const SHOPIFY_DOMAIN = Deno.env.get("SHOPIFY_STORE_DOMAIN");
 const SHOPIFY_TOKEN = Deno.env.get("SHOPIFY_ADMIN_API_TOKEN");
 
 async function shopifyFetch(endpoint) {
-  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/api/2024-01/${endpoint}`, {
+  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/${endpoint}`, {
     headers: {
       "X-Shopify-Access-Token": SHOPIFY_TOKEN,
       "Content-Type": "application/json",
