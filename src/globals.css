@@ -103,10 +103,11 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #F7F2EC;
+    background-color: var(--color-bg);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   button, a, [role="button"], nav, [data-nav] {
