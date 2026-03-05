@@ -58,7 +58,7 @@ export default function BottomNav() {
         </div>
       )}
 
-      <nav className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-6">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-6" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
         <div
           className="flex items-center justify-around h-16 px-6 w-full max-w-xs bg-white rounded-full border border-stone-100"
           style={{ boxShadow: '0 8px 32px rgba(44,26,14,0.15)' }}
