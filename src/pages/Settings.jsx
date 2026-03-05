@@ -240,6 +240,38 @@ export default function Settings() {
           </div>
         </DialogContent>
       </Dialog>
+      {/* Delete Account Dialog */}
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-rose-600">Slet konto</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-slate-600">
+              Er du sikker på, at du vil slette din konto? Denne handling kan <strong>ikke fortrydes</strong> og al din data vil blive permanent slettet.
+            </p>
+            <div className="space-y-2">
+              <Label>Skriv <strong>SLET</strong> for at bekræfte</Label>
+              <Input
+                value={deleteConfirm}
+                onChange={(e) => setDeleteConfirm(e.target.value)}
+                placeholder="SLET"
+              />
+            </div>
+            <Button
+              variant="destructive"
+              className="w-full"
+              disabled={deleteConfirm !== 'SLET'}
+              onClick={() => {
+                base44.auth.logout('/');
+              }}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Slet min konto permanent
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
