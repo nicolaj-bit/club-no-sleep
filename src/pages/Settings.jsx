@@ -155,19 +155,19 @@ export default function Settings() {
               <AccordionItem value="item-1" className="border-0">
                 <AccordionTrigger className="px-4 hover:no-underline">
                   <div className="flex items-center gap-3">
-                    <HelpCircle className="w-5 h-5 text-slate-400" />
-                    <span>Ofte stillede spørgsmål</span>
+                    <HelpCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                    <span style={{ color: 'var(--color-text-primary)' }}>Ofte stillede spørgsmål</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4">
-                  <div className="space-y-3 text-sm text-slate-600">
+                  <div className="space-y-3 text-sm">
                     <div>
-                      <p className="font-medium">Hvordan ændrer jeg min profil?</p>
-                      <p className="text-slate-500">Gå til din profil og tryk på "Rediger profil"</p>
+                      <p className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Hvordan ændrer jeg min profil?</p>
+                      <p style={{ color: 'var(--color-text-muted)' }}>Gå til din profil og tryk på "Rediger profil"</p>
                     </div>
                     <div>
-                      <p className="font-medium">Hvordan booker jeg en konsultation?</p>
-                      <p className="text-slate-500">Find en ekspert under Community og tryk "Book tid"</p>
+                      <p className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Hvordan booker jeg en konsultation?</p>
+                      <p style={{ color: 'var(--color-text-muted)' }}>Find en ekspert under Community og tryk "Book tid"</p>
                     </div>
                   </div>
                 </AccordionContent>
@@ -175,12 +175,12 @@ export default function Settings() {
               <AccordionItem value="item-2" className="border-0">
                 <AccordionTrigger className="px-4 hover:no-underline">
                   <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-slate-400" />
-                    <span>Kontakt support</span>
+                    <Mail className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                    <span style={{ color: 'var(--color-text-primary)' }}>Kontakt support</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4">
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                     Send en email til support@example.com
                   </p>
                 </AccordionContent>
