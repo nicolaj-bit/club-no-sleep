@@ -149,8 +149,8 @@ export default function Settings() {
 
         {/* FAQ */}
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-slate-900 mb-3 px-1">Hjælp & Support</h3>
-          <div className="bg-white rounded-xl border border-slate-100">
+          <h3 className="text-sm font-semibold mb-3 px-1" style={{ color: 'var(--color-text-primary)' }}>Hjælp & Support</h3>
+          <div className="rounded-xl border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1" className="border-0">
                 <AccordionTrigger className="px-4 hover:no-underline">
