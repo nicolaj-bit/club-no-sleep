@@ -23,6 +23,7 @@ const sortOptions = [
 ];
 
 export default function Shop() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('Alle');
   const [sortBy, setSortBy] = useState('newest');
@@ -47,7 +48,12 @@ export default function Shop() {
       return 0;
     });
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['products']);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100">
@@ -168,5 +174,6 @@ export default function Shop() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
