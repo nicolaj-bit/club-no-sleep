@@ -138,8 +138,8 @@ export default function Shop() {
                 onClick={() => setActiveCategory(cat)}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-stone-800 text-white'
+                    : 'text-slate-600 hover:opacity-80'
                 }`}
               >
                 {cat}
