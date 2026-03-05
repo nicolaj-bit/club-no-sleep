@@ -83,7 +83,7 @@ export default function Shop() {
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-slate-900">Shop</h1>
+              <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Shop</h1>
               <div className="flex items-center gap-1">
                 <Button 
                   variant="ghost" 
