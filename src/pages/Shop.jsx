@@ -104,7 +104,7 @@ export default function Shop() {
                     </SheetHeader>
                     <div className="mt-6 space-y-6">
                       <div>
-                        <h3 className="text-sm font-medium text-slate-700 mb-3">Sorter efter</h3>
+                        <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-secondary)' }}>Sorter efter</h3>
                         <div className="space-y-2">
                           {sortOptions.map(opt => (
                             <button
