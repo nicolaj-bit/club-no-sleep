@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import BlogCard from '@/components/blog/BlogCard';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 
 const categories = ['Alle', 'Tips', 'Guides', 'Nyheder', 'Inspiration'];
 
