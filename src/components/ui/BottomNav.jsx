@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User } from 'lucide-react';
-import { createPageUrl } from '@/utils';
-import { cn } from '@/lib/utils';
-
+import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble } from 'lucide-react';
+...
 const menuItems = [
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
   { name: 'Blog', icon: BookOpen, page: 'Blog' },
-  { name: 'Søvnlog', icon: Lightbulb, page: 'SleepLog' },
+  { name: 'Søvnlog', icon: BedDouble, page: 'SleepLog' },
   { name: 'Viden', icon: Lightbulb, page: 'Knowledge' },
   { name: 'Community', icon: Users, page: 'Community' },
   { name: 'Profil', icon: User, page: 'Profile' },
