@@ -90,7 +90,7 @@ export default function BottomNav() {
             onClick={() => setMenuOpen(!menuOpen)}
             className={cn(
               "flex flex-col items-center gap-0.5 transition-all",
-              menuOpen ? "text-stone-900" : "text-stone-400 hover:text-stone-600"
+              menuOpen ? "opacity-100" : "opacity-50 hover:opacity-75"
             )}
           >
             {menuOpen ? <X className="w-5 h-5" strokeWidth={2.5} /> : <Menu className="w-5 h-5" strokeWidth={2} />}
