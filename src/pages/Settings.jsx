@@ -83,22 +83,6 @@ export default function Settings() {
       </header>
 
       <div className="p-4 space-y-4">
-        {/* Dark Mode Toggle */}
-        <div className="rounded-xl border divide-y" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <div className="flex items-center justify-between p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                <Moon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-              </div>
-              <div>
-                <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Mørkt tema</h3>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Skift mellem lys og mørk visning</p>
-              </div>
-            </div>
-            <Switch checked={dark} onCheckedChange={toggle} />
-          </div>
-        </div>
-
         {/* Settings Items */}
         <div className="rounded-xl border divide-y" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           {settingsItems.map((item, i) => {
