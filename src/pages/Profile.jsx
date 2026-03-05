@@ -190,9 +190,10 @@ export default function Profile() {
                   variant="outline" 
                   className="mt-4 rounded-full"
                   onClick={() => setEditForm({
-                    username: profile?.username || '',
-                    display_name: profile?.display_name || '',
-                    city: profile?.city || '',
+                   username: profile?.username || '',
+                   display_name: profile?.display_name || '',
+                   city: profile?.city || '',
+                   child_birthdate: profile?.child_birthdate || '',
                   })}
                 >
                   Rediger profil
