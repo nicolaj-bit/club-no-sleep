@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const menuItems = [
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
   { name: 'Blog', icon: BookOpen, page: 'Blog' },
-  { name: 'Søvnlog', icon: Moon, page: 'SleepLog' },
+  { name: 'Søvnlog', icon: Lightbulb, page: 'SleepLog' },
   { name: 'Viden', icon: Lightbulb, page: 'Knowledge' },
   { name: 'Community', icon: Users, page: 'Community' },
   { name: 'Profil', icon: User, page: 'Profile' },
