@@ -110,7 +110,11 @@ export default function Settings() {
                       <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
                     </div>
                   </div>
-                  <Switch defaultChecked={item.defaultChecked} />
+                  <Switch 
+                    checked={item.onToggle ? item.checked : undefined}
+                    defaultChecked={item.onToggle ? undefined : item.defaultChecked}
+                    onCheckedChange={item.onToggle || undefined}
+                  />
                 </div>
               );
             }
