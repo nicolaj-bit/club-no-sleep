@@ -80,7 +80,7 @@ export default function Settings() {
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <h1 className="text-lg font-semibold text-slate-900">Indstillinger</h1>
+          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Indstillinger</h1>
         </div>
       </header>
 
