@@ -136,6 +136,7 @@ export default function Shop() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
+                style={activeCategory !== cat ? { backgroundColor: 'var(--color-bg-subtle)' } : {}}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
                     ? 'bg-stone-800 text-white'
