@@ -93,8 +93,8 @@ export default function BottomNav() {
               menuOpen ? "opacity-100" : "opacity-50 hover:opacity-75"
             )}
           >
-            {menuOpen ? <X className="w-5 h-5" strokeWidth={2.5} /> : <Menu className="w-5 h-5" strokeWidth={2} />}
-            <span className="text-[10px] font-medium">Menu</span>
+            {menuOpen ? <X className="w-5 h-5" strokeWidth={2.5} style={{ color: 'var(--color-text-primary)' }} /> : <Menu className="w-5 h-5" strokeWidth={2} style={{ color: 'var(--color-text-primary)' }} />}
+            <span className="text-[10px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Menu</span>
           </button>
         </div>
       </nav>
