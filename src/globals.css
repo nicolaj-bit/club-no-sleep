@@ -111,9 +111,25 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  .dark body, .dark {
+  html.dark {
     background-color: #000000 !important;
     color: #FFFFFF !important;
+  }
+  html.dark body {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+  html.dark * {
+    --color-bg: #000000;
+    --color-bg-card: #111111;
+    --color-bg-subtle: #0A0A0A;
+    --color-border: #2A2A2A;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-text-muted: #888888;
+    --color-primary: #FFFFFF;
+    --color-primary-light: #CCCCCC;
+    --color-accent: #C8860A;
   }
 
   button, a, [role="button"], nav, [data-nav] {
