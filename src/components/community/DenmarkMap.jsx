@@ -9,7 +9,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
   const mappedUsers = users.filter(u => u.latitude && u.longitude);
 
   return (
-    <div style={{ height: 300, position: 'relative' }}>
+    <div style={{ height: 300, position: 'relative', zIndex: 0 }}>
       <style>{`
         .leaflet-popup-content-wrapper {
           border-radius: 12px;
