@@ -103,12 +103,17 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: var(--color-bg);
-    color: var(--color-text-primary);
+    background-color: var(--color-bg) !important;
+    color: var(--color-text-primary) !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark body, .dark {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
   }
 
   button, a, [role="button"], nav, [data-nav] {
