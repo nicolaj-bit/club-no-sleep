@@ -4,7 +4,14 @@ const ThemeContext = createContext({ isDark: false, toggle: () => {} });
 
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem('lalatoto-theme') === 'dark';
+    const saved = localStorage.getItem('lalatoto-theme') === 'dark';
+    // Apply immediately before first render
+    if (saved) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    return saved;
   });
 
   useEffect(() => {
