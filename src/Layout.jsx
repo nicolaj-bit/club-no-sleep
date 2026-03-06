@@ -29,7 +29,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)' }}>
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }
           .safe-area-bottom {
