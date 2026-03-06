@@ -2,29 +2,40 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext({ isDark: false, toggle: () => {} });
 
+function applyTheme(dark) {
+  if (dark) {
+    document.documentElement.classList.add('dark');
+    document.documentElement.style.backgroundColor = '#000000';
+    document.documentElement.style.colorScheme = 'dark';
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.backgroundColor = '';
+    document.documentElement.style.colorScheme = 'light';
+  }
+}
+
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('lalatoto-theme') === 'dark';
-    // Apply immediately before first render
-    if (saved) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    applyTheme(saved);
     return saved;
   });
 
+  const toggle = () => {
+    setIsDark(d => {
+      const next = !d;
+      applyTheme(next);
+      localStorage.setItem('lalatoto-theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
+
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('lalatoto-theme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
   }, [isDark]);
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggle: () => setIsDark(d => !d) }}>
+    <ThemeContext.Provider value={{ isDark, toggle }}>
       {children}
     </ThemeContext.Provider>
   );
