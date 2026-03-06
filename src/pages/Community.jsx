@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserAvatar from '@/components/community/UserAvatar';
 import NearbyUserCard from '@/components/community/NearbyUserCard';
 import ExpertCard from '@/components/booking/ExpertCard';
+import DenmarkMap from '@/components/community/DenmarkMap';
 import { toast } from 'sonner';
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
