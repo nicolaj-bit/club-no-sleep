@@ -83,15 +83,15 @@
     --sidebar-ring: 34 30% 70%;
 
     /* Dark mode CSS vars */
-    --color-bg: #1E1410;
-    --color-bg-card: #2A1E18;
-    --color-bg-subtle: #241A14;
-    --color-border: #3D2C22;
-    --color-text-primary: #F8F3ED;
-    --color-text-secondary: #C9A882;
-    --color-text-muted: #8C7060;
-    --color-primary: #F0E4D4;
-    --color-primary-light: #C9A882;
+    --color-bg: #000000;
+    --color-bg-card: #111111;
+    --color-bg-subtle: #0A0A0A;
+    --color-border: #2A2A2A;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-text-muted: #888888;
+    --color-primary: #FFFFFF;
+    --color-primary-light: #CCCCCC;
     --color-accent: #C8860A;
   }
 }
