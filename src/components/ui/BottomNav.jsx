@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Sparkles, Menu, X, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 const menuItems = [
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
