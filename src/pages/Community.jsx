@@ -224,10 +224,45 @@ export default function Community() {
             </div>
 
             {/* Denmark Map */}
-            <DenmarkMap
-              users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
-              currentUserLocation={locationEnabled ? userLocation : null}
-            />
+            <div className="rounded-2xl overflow-hidden border border-slate-100">
+              <div className="px-4 pt-3 pb-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
+                <div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Aktive mødre i Danmark</p>
+                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {allVisibleUsers.filter(u => u.user_email !== user?.email).length} aktive nu
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {isVisible ? 'Synlig' : 'Skjult'}
+                  </span>
+                  <Switch
+                    checked={isVisible && locationEnabled}
+                    onCheckedChange={async (checked) => {
+                      if (checked && !locationEnabled) {
+                        await handleEnableLocation();
+                      } else {
+                        handleToggleVisibility(checked);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+              <DenmarkMap
+                users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
+                currentUserLocation={locationEnabled && isVisible ? userLocation : null}
+              />
+              <div className="px-4 py-2 flex items-center gap-4 text-xs" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)' }}>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+                  <span>Dig</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                  <span>Andre aktive</span>
+                </div>
+              </div>
+            </div>
 
             {/* Nearby Users */}
             {!locationEnabled ? (
