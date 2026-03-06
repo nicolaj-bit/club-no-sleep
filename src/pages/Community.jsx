@@ -77,6 +77,11 @@ export default function Community() {
     enabled: !!userLocation && locationEnabled,
   });
 
+  const { data: allVisibleUsers = [] } = useQuery({
+    queryKey: ['allVisibleUsers'],
+    queryFn: () => base44.entities.UserProfile.filter({ is_visible: true, location_enabled: true }),
+  });
+
   const { data: conversations = [], isLoading: loadingChats } = useQuery({
     queryKey: ['conversations', user?.email],
     queryFn: () => base44.entities.ChatConversation.filter(
