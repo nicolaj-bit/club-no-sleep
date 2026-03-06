@@ -251,6 +251,7 @@ export default function Community() {
               <DenmarkMap
                 users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
                 currentUserLocation={locationEnabled && isVisible ? userLocation : null}
+                onStartChat={handleStartChat}
               />
               <div className="px-4 py-2 flex items-center gap-4 text-xs" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)' }}>
                 <div className="flex items-center gap-1.5">
