@@ -223,6 +223,12 @@ export default function Community() {
               )}
             </div>
 
+            {/* Denmark Map */}
+            <DenmarkMap
+              users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
+              currentUserLocation={locationEnabled ? userLocation : null}
+            />
+
             {/* Nearby Users */}
             {!locationEnabled ? (
               <div className="text-center py-12">
