@@ -18,6 +18,7 @@ export default function BottomNav() {
   const location = useLocation();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isDark } = useTheme();
 
   const isActive = (page) => {
     const url = createPageUrl(page);
