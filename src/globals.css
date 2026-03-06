@@ -73,6 +73,18 @@
     --border: 0 0% 17%;
     --input: 0 0% 17%;
     --ring: 0 0% 70%;
+
+    /* Custom CSS vars for dark mode */
+    --color-bg: #000000;
+    --color-bg-card: #111111;
+    --color-bg-subtle: #0A0A0A;
+    --color-border: #2A2A2A;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-text-muted: #888888;
+    --color-primary: #FFFFFF;
+    --color-primary-light: #CCCCCC;
+    --color-accent: #C8860A;
     --sidebar-background: 25 18% 12%;
     --sidebar-foreground: 34 30% 88%;
     --sidebar-primary: 34 30% 88%;
