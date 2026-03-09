@@ -62,7 +62,7 @@ export default function BlogCard({ post, variant = 'default' }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <BookOpen className="w-6 h-6 text-slate-300" />
+            <BookOpen className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
           </div>
         )}
       </div>
