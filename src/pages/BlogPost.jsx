@@ -14,6 +14,8 @@ import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function BlogPost() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
   const queryClient = useQueryClient();
