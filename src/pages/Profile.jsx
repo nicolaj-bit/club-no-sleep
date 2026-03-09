@@ -124,10 +124,9 @@ export default function Profile() {
             className="rounded-3xl p-6"
             style={{ background: 'var(--color-bg-card)' }}
           >
-            {/* Avatar + name row */}
             <DialogTrigger asChild>
               <button
-                className="flex items-center gap-3 w-full text-left"
+                className="flex flex-col items-center w-full text-center gap-3"
                 onClick={() => setEditForm({
                   username: profile?.username || '',
                   display_name: profile?.display_name || '',
@@ -136,26 +135,32 @@ export default function Profile() {
                 })}
               >
                 <div className="relative">
-                  <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
+                  <UserAvatar src={profile?.profile_image} name={displayName} size="2xl" />
                   <label
-                    className="absolute bottom-0 right-0 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
-                    style={{ background: 'var(--color-text-muted)' }}
+                    className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer"
+                    style={{ background: 'var(--color-accent)' }}
                     onClick={e => e.stopPropagation()}
                   >
-                    <Camera className="w-3 h-3 text-white" />
+                    <Camera className="w-3.5 h-3.5 text-white" />
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                   </label>
                 </div>
                 <div>
-                  <p className="font-medium text-base" style={{ color: 'var(--color-text-primary)' }}>{displayName}</p>
-                  <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>@{username}</p>
+                  <p className="font-semibold text-lg" style={{ color: 'var(--color-text-primary)' }}>{displayName}</p>
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>@{username}</p>
                   {profile?.city && (
-                    <div className="flex items-center gap-1 mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                    <div className="flex items-center justify-center gap-1 mt-1" style={{ color: 'var(--color-text-muted)' }}>
                       <MapPin className="w-3 h-3" />
                       <span className="text-xs">{profile.city}</span>
                     </div>
                   )}
                 </div>
+                <span
+                  className="text-xs px-4 py-1.5 rounded-full border"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+                >
+                  Rediger profil
+                </span>
               </button>
             </DialogTrigger>
           </div>
