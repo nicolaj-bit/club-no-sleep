@@ -29,13 +29,14 @@ const WAKING_METHODS = ['Amning', 'Flaske', 'Vugning', 'Sig i søvn', 'Barnevogn
 function TimeInput({ label, value, onChange, placeholder }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-xs text-stone-500 font-medium">{label}</label>
+      <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{label}</label>
       <input
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+        className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
       />
     </div>
   );
@@ -199,19 +200,20 @@ export default function SleepLog() {
   };
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: '#F7F2EC' }}>
+    <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-stone-100 px-4 pt-12 pb-3 flex items-center justify-between">
+      <div className="sticky top-0 z-10 border-b px-4 pt-12 pb-3 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
-          <Link to={createPageUrl('Home')} className="p-2 rounded-full hover:bg-stone-50">
-            <ChevronLeft className="w-5 h-5 text-stone-600" />
+          <Link to={createPageUrl('Home')} className="p-2 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
+            <ChevronLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-lg font-semibold text-stone-800">Søvnlog</h1>
+          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Søvnlog</h1>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-stone-100 text-stone-600"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+            style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
             <BookOpen className="w-3.5 h-3.5" />
             {view === 'log' ? 'Historik' : 'Log i dag'}
@@ -224,25 +226,27 @@ export default function SleepLog() {
       ) : (
         <div className="px-4 py-4 space-y-5 max-w-lg mx-auto">
           {/* Date + Age */}
-          <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="rounded-2xl p-4 shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)' }}>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-stone-500 font-medium">Dato</label>
+                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Dato</label>
                 <input
                   type="date"
                   value={form.date}
                   onChange={(e) => setForm(f => ({ ...f, date: e.target.value }))}
-                  className="px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  className="px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-stone-500 font-medium">Alder (måneder)</label>
+                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Alder (måneder)</label>
                 <input
                   type="number"
                   value={form.child_age_months}
                   onChange={(e) => setForm(f => ({ ...f, child_age_months: e.target.value }))}
                   placeholder="f.eks. 8"
-                  className="px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  className="px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 />
               </div>
             </div>
@@ -277,22 +281,24 @@ export default function SleepLog() {
                   type="time"
                   value={w.time}
                   onChange={(e) => updateWaking(i, 'time', e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 />
                 <select
                   value={w.method}
                   onChange={(e) => updateWaking(i, 'method', e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 >
                   <option value="">Metode...</option>
                   {WAKING_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
                 </select>
-                <button onClick={() => removeWaking(i)} className="p-2 text-stone-400 hover:text-red-500">
+                <button onClick={() => removeWaking(i)} className="p-2 hover:text-red-500" style={{ color: 'var(--color-text-muted)' }}>
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
-            <button onClick={addWaking} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 mt-1">
+            <button onClick={addWaking} className="flex items-center gap-2 text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
               <Plus className="w-4 h-4" /> Tilføj opvågning
             </button>
           </Section>
@@ -303,28 +309,30 @@ export default function SleepLog() {
               const mins = calcNapMinutes(nap);
               return (
                 <div key={i} className="flex gap-2 items-center">
-                  <div className="text-xs text-stone-400 w-12 flex-shrink-0">Lur {i + 1}</div>
+                  <div className="text-xs w-12 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>Lur {i + 1}</div>
                   <input
                     type="time"
                     value={nap.start}
                     onChange={(e) => updateNap(i, 'start', e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                    className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
                   <input
                     type="time"
                     value={nap.end}
                     onChange={(e) => updateNap(i, 'end', e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                    className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
-                  {mins && <span className="text-xs text-stone-400 w-12 text-right">{mins}m</span>}
-                  <button onClick={() => removeNap(i)} className="p-2 text-stone-400 hover:text-red-500">
+                  {mins && <span className="text-xs w-12 text-right" style={{ color: 'var(--color-text-muted)' }}>{mins}m</span>}
+                  <button onClick={() => removeNap(i)} className="p-2 hover:text-red-500" style={{ color: 'var(--color-text-muted)' }}>
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               );
             })}
             {form.naps.length < 4 && (
-              <button onClick={addNap} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 mt-1">
+              <button onClick={addNap} className="flex items-center gap-2 text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
                 <Plus className="w-4 h-4" /> Tilføj lur
               </button>
             )}
@@ -337,11 +345,10 @@ export default function SleepLog() {
                 <button
                   key={m.value}
                   onClick={() => setForm(f => ({ ...f, sleep_method: f.sleep_method === m.value ? '' : m.value }))}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                    form.sleep_method === m.value
-                      ? 'border-stone-600 bg-stone-800 text-white'
-                      : 'border-stone-200 bg-white text-stone-600'
-                  }`}
+                  className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all"
+                  style={form.sleep_method === m.value
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
+                    : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                 >
                   {m.label}
                 </button>
@@ -356,11 +363,10 @@ export default function SleepLog() {
                 <button
                   key={m.value}
                   onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all flex items-center gap-1.5 ${
-                    form.bedtime_mood === m.value
-                      ? 'border-stone-600 bg-stone-800 text-white'
-                      : 'border-stone-200 bg-white text-stone-600'
-                  }`}
+                  className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all flex items-center gap-1.5"
+                  style={form.bedtime_mood === m.value
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
+                    : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                 >
                   <span>{m.emoji}</span> {m.label}
                 </button>
@@ -375,7 +381,8 @@ export default function SleepLog() {
               onChange={(e) => setForm(f => ({ ...f, parent_note: e.target.value }))}
               placeholder="Hvad skete der i dag? Urolig aften? Ny tand?"
               rows={3}
-              className="w-full px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-stone-300"
+              className="w-full px-3 py-2.5 rounded-xl border text-sm resize-none focus:outline-none focus:ring-2 focus:ring-stone-300"
+              style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
             />
           </Section>
 
@@ -392,7 +399,8 @@ export default function SleepLog() {
 
             <button
               onClick={openAIWithLogs}
-              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border border-stone-200 bg-white text-stone-700"
+              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border"
+              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
               Få AI-analyse af min søvndata
@@ -406,10 +414,10 @@ export default function SleepLog() {
 
 function Section({ icon, title, children }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+    <div className="rounded-2xl p-4 shadow-sm space-y-3" style={{ backgroundColor: 'var(--color-bg-card)' }}>
       <div className="flex items-center gap-2">
-        <span className="text-stone-400">{icon}</span>
-        <h2 className="text-sm font-semibold text-stone-700">{title}</h2>
+        <span style={{ color: 'var(--color-text-muted)' }}>{icon}</span>
+        <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{title}</h2>
       </div>
       {children}
     </div>
@@ -429,7 +437,7 @@ function Chip({ label, color }) {
 }
 
 function HistoryView({ history }) {
-  if (!history) return <div className="flex justify-center py-20"><div className="w-6 h-6 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin" /></div>;
+  if (!history) return <div className="flex justify-center py-20"><div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--color-border)', borderTopColor: 'var(--color-text-secondary)' }} /></div>;
 
   if (history.length === 0) return (
     <div className="flex flex-col items-center justify-center py-20 text-stone-400">
@@ -459,9 +467,9 @@ function HistoryView({ history }) {
         }
 
         return (
-          <div key={log.id} className="bg-white rounded-2xl p-4 shadow-sm">
+          <div key={log.id} className="rounded-2xl p-4 shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)' }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold text-stone-800 text-sm">
+              <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
                 {format(new Date(log.date), 'd. MMM', { locale: da })}
               </span>
               {log.bedtime_mood && (
@@ -475,7 +483,7 @@ function HistoryView({ history }) {
               {totalNapMins > 0 && <Chip label={`Lure: ${Math.floor(totalNapMins / 60)}t ${totalNapMins % 60}m`} color="blue" />}
               {log.minutes_to_sleep != null && <Chip label={`Sovnet: ${log.minutes_to_sleep}m`} color={log.minutes_to_sleep > 30 ? 'red' : 'green'} />}
             </div>
-            {log.parent_note && <p className="text-xs text-stone-400 mt-2 italic">"{log.parent_note}"</p>}
+            {log.parent_note && <p className="text-xs mt-2 italic" style={{ color: 'var(--color-text-muted)' }}>"{log.parent_note}"</p>}
           </div>
         );
       })}
