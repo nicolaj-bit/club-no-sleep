@@ -12,7 +12,7 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
     : `${distance.toFixed(1)} km`;
 
   return (
-    <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+    <div className="rounded-2xl p-4 border shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
       <div className="flex items-start gap-3">
         <UserAvatar 
           src={user.profile_image}
@@ -24,7 +24,7 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-slate-900 truncate">
+            <h3 className="font-semibold truncate" style={{ color: 'var(--color-text-primary)' }}>
               {user.display_name || user.username}
             </h3>
             {user.role === 'expert' && (
@@ -35,14 +35,14 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
           </div>
           
           <div className="flex items-center gap-1.5 mt-1">
-            <MapPin className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-sm text-slate-500">
+            <MapPin className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
+            <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
               {formattedDistance} væk
             </span>
             {user.city && (
               <>
-                <span className="text-slate-300">•</span>
-                <span className="text-sm text-slate-500 truncate">{user.city}</span>
+                <span style={{ color: 'var(--color-border)' }}>•</span>
+                <span className="text-sm truncate" style={{ color: 'var(--color-text-muted)' }}>{user.city}</span>
               </>
             )}
           </div>
