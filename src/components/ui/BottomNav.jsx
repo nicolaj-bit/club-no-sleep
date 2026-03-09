@@ -35,7 +35,10 @@ export default function BottomNav() {
         >
           <div
             className="absolute bottom-28 left-1/2 -translate-x-1/2 w-72 rounded-3xl shadow-2xl overflow-hidden"
-            style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+            style={{
+              backgroundColor: isDark ? '#111111' : '#FFFFFF',
+              border: isDark ? '1px solid #2A2A2A' : '1px solid #E8DDD3',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {menuItems.map((item) => {
@@ -49,17 +52,16 @@ export default function BottomNav() {
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-4 px-6 py-4 transition-colors"
                   style={{
-                    backgroundColor: active ? 'var(--color-bg-subtle)' : 'transparent',
-                    color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                    backgroundColor: active ? (isDark ? '#1A1A1A' : '#F0E9E0') : 'transparent',
                   }}
                 >
                   <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: active ? 'var(--color-primary)' : 'var(--color-bg-subtle)' }}
+                    style={{ backgroundColor: active ? (isDark ? '#FFFFFF' : '#2C1A0E') : (isDark ? '#1A1A1A' : '#F0E9E0') }}
                   >
-                    <Icon className="w-4 h-4" strokeWidth={active ? 2.5 : 2} style={{ color: active ? 'var(--color-bg)' : 'var(--color-text-muted)' }} />
+                    <Icon className="w-4 h-4" strokeWidth={active ? 2.5 : 2} style={{ color: active ? (isDark ? '#000000' : '#FFFFFF') : (isDark ? '#888888' : '#9C7E6A') }} />
                   </div>
-                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")} style={{ color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>{item.name}</span>
+                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")} style={{ color: active ? (isDark ? '#FFFFFF' : '#2C1A0E') : (isDark ? '#888888' : '#9C7E6A') }}>{item.name}</span>
                 </Link>
               );
             })}
