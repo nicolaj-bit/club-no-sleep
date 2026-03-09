@@ -86,11 +86,10 @@ export default function Blog() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === cat
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                style={activeCategory === cat
+                  ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                className="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
               >
                 {cat}
               </button>
