@@ -87,12 +87,7 @@ export default function ExpertCard({ expert }) {
             {expert.opening_hours}
           </div>
         )}
-        {expert.hourly_rate && (
-          <div className="pt-1">
-            <span className="text-base font-semibold text-slate-900">{expert.hourly_rate} kr</span>
-            <span className="text-sm text-slate-400"> / time</span>
-          </div>
-        )}
+
       </div>
     </Link>
   );
