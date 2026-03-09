@@ -11,13 +11,22 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ProductDetail() {
   const { theme } = useTheme();
-  const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', productId],
