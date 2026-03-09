@@ -204,10 +204,11 @@ export default function Knowledge() {
                     <Link 
                       key={q.id}
                       to={createPageUrl(`QuestionDetail?id=${q.id}`)}
-                      className="block bg-white rounded-xl p-4 border border-slate-100"
+                      className="block rounded-xl p-4 border"
+                      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-medium text-slate-900 line-clamp-2">{q.title}</h3>
+                        <h3 className="font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{q.title}</h3>
                         <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full ${
                           q.status === 'answered' 
                             ? 'bg-emerald-100 text-emerald-700'
