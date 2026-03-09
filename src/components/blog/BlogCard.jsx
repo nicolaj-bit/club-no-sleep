@@ -68,15 +68,15 @@ export default function BlogCard({ post, variant = 'default' }) {
       </div>
       <div className="flex-1 min-w-0 py-0.5">
         {post.category && (
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+          <span className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
             {post.category}
           </span>
         )}
-        <h3 className="text-sm font-medium text-slate-900 line-clamp-2 mt-0.5 leading-snug">
+        <h3 className="text-sm font-medium line-clamp-2 mt-0.5 leading-snug" style={{ color: 'var(--color-text-primary)' }}>
           {post.title}
         </h3>
         {formattedDate && (
-          <p className="text-xs text-slate-400 mt-1.5">{formattedDate}</p>
+          <p className="text-xs mt-1.5" style={{ color: 'var(--color-text-muted)' }}>{formattedDate}</p>
         )}
       </div>
     </Link>
