@@ -112,7 +112,7 @@ export default function ProductDetail() {
               size="icon"
               variant="secondary"
               className="rounded-full backdrop-blur shadow-md"
-              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isFavorite ? '#f43f5e' : (isDark ? '#FFFFFF' : '#000000') }}
+              style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isFavorite ? '#f43f5e' : (isDark ? '#FFFFFF' : '#000000') }}
               onClick={() => setIsFavorite(!isFavorite)}
             >
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-rose-500' : ''}`} />
@@ -121,7 +121,7 @@ export default function ProductDetail() {
               size="icon"
               variant="secondary"
               className="rounded-full backdrop-blur shadow-md"
-              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
+              style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
               onClick={handleShare}
             >
               <Share2 className="w-5 h-5" />
