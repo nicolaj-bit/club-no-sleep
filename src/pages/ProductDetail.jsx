@@ -223,7 +223,7 @@ export default function ProductDetail() {
       <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <button
           className="w-full h-12 rounded-full text-base font-semibold flex items-center justify-center gap-2 shadow-lg disabled:opacity-40"
-          style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}
+          style={{ backgroundColor: isDark ? '#FFFFFF' : '#000000', color: isDark ? '#000000' : '#FFFFFF' }}
           disabled={!product.in_stock}
           onClick={handleBuyNow}
         >
