@@ -136,8 +136,8 @@ export default function BlogPost() {
         {/* Navigation */}
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to={createPageUrl('Blog')}>
-            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur" style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}>
-              <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}>
+              <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
           <div className="flex gap-2">
@@ -146,21 +146,21 @@ export default function BlogPost() {
                 size="icon" 
                 variant="secondary" 
                 className="rounded-full backdrop-blur"
-                style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}
+                style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
                 onClick={() => saveMutation.mutate()}
                 disabled={saveMutation.isPending}
               >
-                <Bookmark className="w-5 h-5" style={{ color: 'var(--color-text-primary)', fill: isSaved ? 'var(--color-text-primary)' : 'none' }} />
+                <Bookmark className="w-5 h-5" style={{ fill: isSaved ? 'currentColor' : 'none' }} />
               </Button>
             )}
             <Button 
               size="icon" 
               variant="secondary" 
               className="rounded-full backdrop-blur"
-              style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}
+              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
               onClick={handleShare}
             >
-              <Share2 className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+              <Share2 className="w-5 h-5" />
             </Button>
           </div>
         </div>
