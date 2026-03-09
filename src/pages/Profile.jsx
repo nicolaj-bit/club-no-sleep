@@ -124,11 +124,6 @@ export default function Profile() {
             className="rounded-3xl p-6"
             style={{ background: 'var(--color-bg-card)' }}
           >
-            {/* Moon decoration */}
-            <div className="flex justify-center mb-4">
-              <span className="text-4xl opacity-30" style={{ color: 'var(--color-text-secondary)' }}>☽</span>
-            </div>
-
             {/* Avatar + name row */}
             <DialogTrigger asChild>
               <button
