@@ -43,121 +43,100 @@ export default function Favorites() {
       queryClient.setQueryData(['myFavorites', user?.email], context.previous);
       toast.error('Noget gik galt');
     },
-    onSuccess: () => {
-      toast.success('Fjernet fra favoritter');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(['myFavorites', user?.email]);
-    },
+    onSuccess: () => toast.success('Fjernet fra favoritter'),
+    onSettled: () => queryClient.invalidateQueries(['myFavorites', user?.email]),
   });
 
   const productFavorites = favorites.filter(f => f.item_type === 'product');
   const blogFavorites = favorites.filter(f => f.item_type === 'blog');
-  const articleFavorites = favorites.filter(f => f.item_type === 'article');
 
   const FavoriteItem = ({ item, icon: Icon, linkPrefix }) => (
-    <div className="flex items-center gap-3 bg-white rounded-xl p-3 border border-slate-100">
-      <div className="w-16 h-16 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
+    <div
+      className="flex items-center gap-3 rounded-2xl p-3"
+      style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+    >
+      <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
         {item.item_image ? (
-          <img 
-            src={item.item_image} 
-            alt={item.item_title}
-            className="w-full h-full object-cover"
-          />
+          <img src={item.item_image} alt={item.item_title} className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Icon className="w-6 h-6 text-slate-300" />
+            <Icon className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
           </div>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <Link to={createPageUrl(`${linkPrefix}?id=${item.item_id}`)}>
-          <h3 className="font-medium text-slate-900 line-clamp-2 hover:text-slate-600">
+          <h3 className="text-sm font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>
             {item.item_title}
           </h3>
         </Link>
       </div>
-      <Button 
-        variant="ghost" 
-        size="icon"
-        className="text-slate-400 hover:text-rose-500"
+      <button
+        className="p-2 rounded-xl transition-colors"
+        style={{ color: 'var(--color-text-muted)' }}
         onClick={() => deleteMutation.mutate(item.id)}
       >
         <Trash2 className="w-4 h-4" />
-      </Button>
+      </button>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Link to={createPageUrl('Profile')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <h1 className="text-lg font-semibold text-slate-900">Mine favoritter</h1>
-        </div>
-      </header>
+      <div className="pt-6 pb-2 px-6 text-center relative">
+        <Link to={createPageUrl('Profile')} className="absolute left-4 top-6">
+          <Button variant="ghost" size="icon">
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+        </Link>
+        <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+          Favoritter
+        </h1>
+      </div>
 
-      <div className="p-4">
+      <div className="px-4 mt-4">
         {isLoading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-20 rounded-xl" />
-            ))}
+            {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 rounded-2xl" />)}
           </div>
         ) : favorites.length === 0 ? (
-          <div className="text-center py-12">
-            <Heart className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500">Ingen favoritter endnu</p>
-            <p className="text-sm text-slate-400 mt-1">Gem produkter og artikler du kan lide</p>
+          <div className="flex flex-col items-center justify-center py-20 gap-3">
+            <span className="text-5xl opacity-20">♡</span>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen favoritter endnu</p>
+            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Gem produkter og artikler du kan lide</p>
           </div>
         ) : (
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="w-full bg-slate-100 p-1 rounded-xl">
-              <TabsTrigger value="all" className="flex-1 rounded-lg">
-                Alle ({favorites.length})
-              </TabsTrigger>
-              <TabsTrigger value="products" className="flex-1 rounded-lg">
-                Produkter ({productFavorites.length})
-              </TabsTrigger>
-              <TabsTrigger value="blog" className="flex-1 rounded-lg">
-                Blog ({blogFavorites.length})
-              </TabsTrigger>
+            <TabsList className="w-full p-1 rounded-2xl mb-4" style={{ background: 'var(--color-bg-card)' }}>
+              <TabsTrigger value="all" className="flex-1 rounded-xl text-sm">Alle ({favorites.length})</TabsTrigger>
+              <TabsTrigger value="products" className="flex-1 rounded-xl text-sm">Produkter ({productFavorites.length})</TabsTrigger>
+              <TabsTrigger value="blog" className="flex-1 rounded-xl text-sm">Blog ({blogFavorites.length})</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="all" className="mt-4 space-y-3">
+            <TabsContent value="all" className="space-y-3">
               {favorites.map(item => (
-                <FavoriteItem 
-                  key={item.id} 
-                  item={item} 
+                <FavoriteItem
+                  key={item.id}
+                  item={item}
                   icon={item.item_type === 'product' ? ShoppingBag : item.item_type === 'blog' ? BookOpen : FileText}
                   linkPrefix={item.item_type === 'product' ? 'ProductDetail' : item.item_type === 'blog' ? 'BlogPost' : 'ArticleDetail'}
                 />
               ))}
             </TabsContent>
 
-            <TabsContent value="products" className="mt-4 space-y-3">
-              {productFavorites.length === 0 ? (
-                <p className="text-center text-slate-400 py-8">Ingen produkter gemt</p>
-              ) : (
-                productFavorites.map(item => (
-                  <FavoriteItem key={item.id} item={item} icon={ShoppingBag} linkPrefix="ProductDetail" />
-                ))
-              )}
+            <TabsContent value="products" className="space-y-3">
+              {productFavorites.length === 0
+                ? <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen produkter gemt</p>
+                : productFavorites.map(item => <FavoriteItem key={item.id} item={item} icon={ShoppingBag} linkPrefix="ProductDetail" />)
+              }
             </TabsContent>
 
-            <TabsContent value="blog" className="mt-4 space-y-3">
-              {blogFavorites.length === 0 ? (
-                <p className="text-center text-slate-400 py-8">Ingen blogindlæg gemt</p>
-              ) : (
-                blogFavorites.map(item => (
-                  <FavoriteItem key={item.id} item={item} icon={BookOpen} linkPrefix="BlogPost" />
-                ))
-              )}
+            <TabsContent value="blog" className="space-y-3">
+              {blogFavorites.length === 0
+                ? <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen blogindlæg gemt</p>
+                : blogFavorites.map(item => <FavoriteItem key={item.id} item={item} icon={BookOpen} linkPrefix="BlogPost" />)
+              }
             </TabsContent>
           </Tabs>
         )}

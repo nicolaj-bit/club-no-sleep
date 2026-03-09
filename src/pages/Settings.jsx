@@ -79,133 +79,106 @@ export default function Settings() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center gap-3">
-          <Link to={createPageUrl('Profile')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Indstillinger</h1>
-        </div>
-      </header>
+      <div className="pt-6 pb-2 px-6 text-center relative">
+        <Link to={createPageUrl('Profile')} className="absolute left-4 top-6">
+          <Button variant="ghost" size="icon">
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
+        </Link>
+        <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+          Indstillinger
+        </h1>
+      </div>
 
-      <div className="p-4 space-y-4">
-        {/* Settings Items */}
-        <div className="rounded-xl border divide-y" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <div className="px-4 mt-4 space-y-4">
+        {/* Settings grid */}
+        <div className="grid grid-cols-2 gap-3">
           {settingsItems.map((item, i) => {
             const Icon = item.icon;
-            
+
             if (item.toggle) {
               return (
-                <div key={i} className="flex items-center justify-between p-4" style={{ borderColor: 'var(--color-border)' }}>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                      <Icon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                    </div>
-                    <div>
-                      <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h3>
-                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
-                    </div>
+                <div
+                  key={i}
+                  className="rounded-2xl p-5 flex flex-col gap-3"
+                  style={{ background: 'var(--color-bg-card)' }}
+                >
+                  <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</span>
+                    <Switch
+                      checked={item.onToggle ? item.checked : undefined}
+                      defaultChecked={item.onToggle ? undefined : item.defaultChecked}
+                      onCheckedChange={item.onToggle || undefined}
+                    />
                   </div>
-                  <Switch 
-                    checked={item.onToggle ? item.checked : undefined}
-                    defaultChecked={item.onToggle ? undefined : item.defaultChecked}
-                    onCheckedChange={item.onToggle || undefined}
-                  />
                 </div>
               );
             }
-            
+
             const Wrapper = item.link ? Link : 'button';
-            const wrapperProps = item.link 
+            const wrapperProps = item.link
               ? { to: createPageUrl(item.link) }
               : { onClick: item.action };
-            
+
             return (
               <Wrapper
                 key={i}
                 {...wrapperProps}
-                className="flex items-center gap-3 p-4 w-full text-left transition-colors"
-                style={{ borderColor: 'var(--color-border)' }}
+                className="rounded-2xl p-5 flex flex-col gap-3 text-left active:scale-[0.97] transition-transform"
+                style={{ background: 'var(--color-bg-card)' }}
               >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                  <Icon className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-                </div>
-                <div>
-                  <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</h3>
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
-                </div>
+                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
+                <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</span>
               </Wrapper>
             );
           })}
         </div>
 
         {/* FAQ */}
-        <div className="mt-6">
-          <h3 className="text-sm font-semibold mb-3 px-1" style={{ color: 'var(--color-text-primary)' }}>Hjælp & Support</h3>
-          <div className="rounded-xl border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1" className="border-0">
-                <AccordionTrigger className="px-4 hover:no-underline">
-                  <div className="flex items-center gap-3">
-                    <HelpCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                    <span style={{ color: 'var(--color-text-primary)' }}>Ofte stillede spørgsmål</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
-                  <div className="space-y-3 text-sm">
-                    <div>
-                      <p className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Hvordan ændrer jeg min profil?</p>
-                      <p style={{ color: 'var(--color-text-muted)' }}>Gå til din profil og tryk på "Rediger profil"</p>
-                    </div>
-                    <div>
-                      <p className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>Hvordan booker jeg en konsultation?</p>
-                      <p style={{ color: 'var(--color-text-muted)' }}>Find en ekspert under Community og tryk "Book tid"</p>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2" className="border-0">
-                <AccordionTrigger className="px-4 hover:no-underline">
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                    <span style={{ color: 'var(--color-text-primary)' }}>Kontakt support</span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 pb-4">
-                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Send en email til support@example.com
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1" className="border-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <AccordionTrigger className="px-5 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Ofte stillede spørgsmål</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-5 pb-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                <p className="mb-2"><strong style={{ color: 'var(--color-text-secondary)' }}>Hvordan ændrer jeg min profil?</strong><br />Gå til din profil og tryk på "Rediger profil"</p>
+                <p><strong style={{ color: 'var(--color-text-secondary)' }}>Hvordan finder jeg en behandler?</strong><br />Find en behandler under Community fanen</p>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2" className="border-0">
+              <AccordionTrigger className="px-5 hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kontakt support</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-5 pb-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                Send en email til support@example.com
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         {/* Delete Account */}
-        <div className="mt-4">
-          <button
-            onClick={() => setDeleteOpen(true)}
-            className="flex items-center gap-3 p-4 w-full text-left rounded-xl border hover:bg-rose-50 transition-colors"
-            style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-          >
-            <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
-              <Trash2 className="w-5 h-5 text-rose-500" />
-            </div>
-            <div>
-              <h3 className="font-medium text-rose-600">Slet konto</h3>
-              <p className="text-xs text-slate-500">Permanent sletning af din konto og data</p>
-            </div>
-          </button>
-        </div>
+        <button
+          onClick={() => setDeleteOpen(true)}
+          className="w-full py-4 rounded-2xl text-sm font-medium transition-all active:scale-[0.98]"
+          style={{ background: 'var(--color-bg-card)', color: '#c0614a' }}
+        >
+          <span className="flex items-center justify-center gap-2">
+            <Trash2 className="w-4 h-4" />
+            Slet konto
+          </span>
+        </button>
 
-        {/* App Info */}
-        <div className="text-center pt-6">
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Version 1.0.0</p>
-        </div>
+        <p className="text-center text-xs" style={{ color: 'var(--color-text-muted)' }}>Version 1.0.0</p>
       </div>
 
       {/* Change Password Dialog */}

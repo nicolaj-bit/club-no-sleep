@@ -59,7 +59,6 @@ import ExpertDetail from './pages/ExpertDetail';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
-import MyBookings from './pages/MyBookings';
 import MyQuestions from './pages/MyQuestions';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
@@ -83,7 +82,6 @@ export const PAGES = {
     "Favorites": Favorites,
     "Home": Home,
     "Knowledge": Knowledge,
-    "MyBookings": MyBookings,
     "MyQuestions": MyQuestions,
     "ProductDetail": ProductDetail,
     "Profile": Profile,
