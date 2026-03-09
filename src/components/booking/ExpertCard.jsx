@@ -60,17 +60,39 @@ export default function ExpertCard({ expert }) {
         </div>
       </div>
       
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-        <div>
-          <span className="text-lg font-semibold text-slate-900">
-            {expert.hourly_rate} kr
-          </span>
-          <span className="text-sm text-slate-400"> / time</span>
-        </div>
-        <Button className="rounded-full gap-2 bg-slate-900 hover:bg-slate-800">
-          <Calendar className="w-4 h-4" />
-          Book tid
-        </Button>
+      <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+        {expert.contact_email && (
+          <a
+            href={`mailto:${expert.contact_email}`}
+            onClick={e => e.stopPropagation()}
+            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
+          >
+            <Mail className="w-4 h-4 text-slate-400" />
+            {expert.contact_email}
+          </a>
+        )}
+        {expert.contact_phone && (
+          <a
+            href={`tel:${expert.contact_phone}`}
+            onClick={e => e.stopPropagation()}
+            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
+          >
+            <Phone className="w-4 h-4 text-slate-400" />
+            {expert.contact_phone}
+          </a>
+        )}
+        {expert.opening_hours && (
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Clock className="w-4 h-4 text-slate-400 shrink-0" />
+            {expert.opening_hours}
+          </div>
+        )}
+        {expert.hourly_rate && (
+          <div className="pt-1">
+            <span className="text-base font-semibold text-slate-900">{expert.hourly_rate} kr</span>
+            <span className="text-sm text-slate-400"> / time</span>
+          </div>
+        )}
       </div>
     </Link>
   );
