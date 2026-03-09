@@ -217,7 +217,8 @@ export default function ProductDetail() {
       {/* Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Button 
-          className="w-full h-12 rounded-full bg-slate-900 hover:bg-slate-800 text-base font-semibold gap-2"
+          className="w-full h-12 rounded-full text-base font-semibold gap-2"
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           disabled={!product.in_stock}
           onClick={handleBuyNow}
         >

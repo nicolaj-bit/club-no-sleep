@@ -33,7 +33,7 @@ export default function ExpertDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white p-4">
+      <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
         <div className="flex flex-col items-center py-8">
           <Skeleton className="w-24 h-24 rounded-full" />
           <Skeleton className="h-6 w-32 mt-4" />
@@ -45,8 +45,8 @@ export default function ExpertDetail() {
 
   if (!expert) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-500">Ekspert ikke fundet</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Ekspert ikke fundet</p>
       </div>
     );
   }
