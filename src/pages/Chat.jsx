@@ -109,16 +109,16 @@ export default function Chat() {
 
   if (loadingConv) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="w-20 h-20 rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
           <Link to={createPageUrl('Community')}>
             <Button variant="ghost" size="icon" className="-ml-2">
@@ -127,7 +127,7 @@ export default function Chat() {
           </Link>
           <UserAvatar src={otherImage} name={otherName} size="sm" />
           <div className="flex-1">
-            <h1 className="font-semibold text-slate-900">{otherName}</h1>
+            <h1 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{otherName}</h1>
           </div>
           <Button variant="ghost" size="icon">
             <MoreVertical className="w-5 h-5" />
@@ -147,8 +147,8 @@ export default function Chat() {
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-500">Ingen beskeder endnu</p>
-            <p className="text-sm text-slate-400 mt-1">Sig hej!</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>Ingen beskeder endnu</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Sig hej!</p>
           </div>
         ) : (
           messages.map((msg, i) => {
@@ -172,14 +172,13 @@ export default function Chat() {
                   </div>
                 )}
                 <div className={`max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                  <div className={`px-4 py-2.5 rounded-2xl ${
-                    isOwn 
-                      ? 'bg-slate-900 text-white rounded-br-md' 
-                      : 'bg-slate-100 text-slate-900 rounded-bl-md'
-                  }`}>
+                  <div className="px-4 py-2.5 rounded-2xl" style={isOwn
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderRadius: '16px 16px 4px 16px' }
+                    : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)', borderRadius: '16px 16px 16px 4px' }
+                  }>
                     <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                   </div>
-                  <p className={`text-[10px] text-slate-400 mt-1 ${isOwn ? 'text-right' : ''}`}>
+                  <p className={`text-[10px] mt-1 ${isOwn ? 'text-right' : ''}`} style={{ color: 'var(--color-text-muted)' }}>
                     {formatMessageDate(msg.created_date)}
                   </p>
                 </div>
@@ -191,18 +190,20 @@ export default function Chat() {
       </div>
 
       {/* Input */}
-      <div className="sticky bottom-0 bg-white border-t border-slate-100 p-4 safe-area-bottom">
+      <div className="sticky bottom-0 border-t p-4 safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-2">
           <Input
             placeholder="Skriv en besked..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-            className="flex-1 bg-slate-50 border-0 rounded-full px-4"
+            className="flex-1 border-0 rounded-full px-4"
+            style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
           />
           <Button 
             size="icon"
-            className="rounded-full bg-slate-900 hover:bg-slate-800"
+            className="rounded-full"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             onClick={handleSend}
             disabled={!message.trim() || sendMutation.isPending}
           >

@@ -47,7 +47,7 @@ export default function ProductDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="aspect-square w-full" />
         <div className="p-4 space-y-4">
           <Skeleton className="h-8 w-3/4" />
@@ -60,8 +60,8 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-500">Produkt ikke fundet</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Produkt ikke fundet</p>
       </div>
     );
   }
