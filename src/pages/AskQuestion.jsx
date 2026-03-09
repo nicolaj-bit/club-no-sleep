@@ -78,16 +78,16 @@ export default function AskQuestion() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
           <Link to={createPageUrl('Knowledge')}>
             <Button variant="ghost" size="icon" className="-ml-2">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <h1 className="text-lg font-semibold text-slate-900">Stil et spørgsmål</h1>
+          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Stil et spørgsmål</h1>
         </div>
       </header>
 
@@ -118,7 +118,7 @@ export default function AskQuestion() {
             placeholder="Hvad vil du gerne vide?"
             maxLength={100}
           />
-          <p className="text-xs text-slate-400 text-right">{form.title.length}/100</p>
+          <p className="text-xs text-right" style={{ color: 'var(--color-text-muted)' }}>{form.title.length}/100</p>
         </div>
 
         <div className="space-y-2">

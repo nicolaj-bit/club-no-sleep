@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ArticleDetail() {
   const urlParams = new URLSearchParams(window.location.search);
