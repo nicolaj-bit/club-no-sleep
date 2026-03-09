@@ -59,16 +59,16 @@ export default function ExpertDetail() {
   }, {});
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between">
           <Link to={createPageUrl('Community')}>
             <Button variant="ghost" size="icon" className="-ml-2">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <span className="text-sm font-medium text-slate-500">Ekspert profil</span>
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Ekspert profil</span>
           <div className="w-9" />
         </div>
       </header>
@@ -81,21 +81,21 @@ export default function ExpertDetail() {
             name={expert.name}
             size="2xl"
           />
-          <h1 className="text-xl font-bold text-slate-900 mt-4">{expert.name}</h1>
-          <p className="text-slate-500">{expert.title}</p>
+          <h1 className="text-xl font-bold mt-4" style={{ color: 'var(--color-text-primary)' }}>{expert.name}</h1>
+          <p style={{ color: 'var(--color-text-muted)' }}>{expert.title}</p>
           
           <div className="flex items-center gap-4 mt-3">
             {expert.rating && (
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span className="font-medium text-slate-700">{expert.rating.toFixed(1)}</span>
+                <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>{expert.rating.toFixed(1)}</span>
                 {expert.review_count > 0 && (
-                  <span className="text-slate-400">({expert.review_count})</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>({expert.review_count})</span>
                 )}
               </div>
             )}
             {expert.city && (
-              <div className="flex items-center gap-1 text-slate-400">
+              <div className="flex items-center gap-1" style={{ color: 'var(--color-text-muted)' }}>
                 <MapPin className="w-4 h-4" />
                 <span>{expert.city}</span>
               </div>
@@ -106,16 +106,16 @@ export default function ExpertDetail() {
         {/* Specialties */}
         {expert.specialties?.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Specialer</h3>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Specialer</h3>
             <div className="flex flex-wrap gap-2">
               {expert.specialties.map((specialty, i) => (
-                <Badge 
+                <span
                   key={i}
-                  variant="secondary"
-                  className="bg-slate-100 text-slate-600"
+                  className="px-2.5 py-1 text-xs rounded-full"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
                 >
                   {specialty}
-                </Badge>
+                </span>
               ))}
             </div>
           </div>
@@ -124,28 +124,28 @@ export default function ExpertDetail() {
         {/* Bio */}
         {expert.bio && (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Om</h3>
-            <p className="text-slate-600 text-sm leading-relaxed">{expert.bio}</p>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Om</h3>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{expert.bio}</p>
           </div>
         )}
 
         {/* Availability */}
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-slate-900 mb-3">Tilgængelighed</h3>
-          <div className="bg-slate-50 rounded-xl p-4 space-y-3">
+          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Tilgængelighed</h3>
+          <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             {Object.entries(groupedAvailability).length === 0 ? (
-              <p className="text-sm text-slate-500 text-center">Ingen tider sat op</p>
+              <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>Ingen tider sat op</p>
             ) : (
               Object.entries(groupedAvailability)
                 .sort(([a], [b]) => Number(a) - Number(b))
                 .map(([day, slots]) => (
                   <div key={day} className="flex items-center gap-3">
-                    <span className="w-10 text-sm font-medium text-slate-700">
+                    <span className="w-10 text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                       {dayNames[Number(day)]}
                     </span>
                     <div className="flex flex-wrap gap-2">
                       {slots.map((slot, i) => (
-                        <span key={i} className="text-sm text-slate-500 bg-white px-2 py-1 rounded-lg">
+                        <span key={i} className="text-sm px-2 py-1 rounded-lg" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)' }}>
                           {slot.start_time} - {slot.end_time}
                         </span>
                       ))}
@@ -157,19 +157,19 @@ export default function ExpertDetail() {
         </div>
 
         {/* Price */}
-        <div className="mt-6 bg-slate-900 rounded-xl p-4 flex items-center justify-between">
+        <div className="mt-6 rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-primary)' }}>
           <div>
-            <p className="text-slate-400 text-sm">Konsultation</p>
-            <p className="text-white text-2xl font-bold">{expert.hourly_rate} kr<span className="text-base font-normal"> / time</span></p>
+            <p className="text-sm" style={{ color: 'var(--color-bg)', opacity: 0.7 }}>Konsultation</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert.hourly_rate} kr<span className="text-base font-normal"> / time</span></p>
           </div>
           <CheckCircle className="w-6 h-6 text-emerald-400" />
         </div>
       </div>
 
       {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-100 safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Link to={createPageUrl(`Booking?expertId=${expertId}`)}>
-          <Button className="w-full h-12 rounded-full bg-slate-900 hover:bg-slate-800 text-base font-semibold gap-2">
+          <Button className="w-full h-12 rounded-full text-base font-semibold gap-2" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
             <Calendar className="w-5 h-5" />
             Book konsultation
           </Button>

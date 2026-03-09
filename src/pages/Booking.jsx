@@ -133,23 +133,23 @@ export default function Booking() {
 
   if (loadingExpert) {
     return (
-      <div className="min-h-screen bg-white p-4">
+      <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="h-20 rounded-xl" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between">
           <Link to={createPageUrl(`ExpertDetail?id=${expertId}`)}>
             <Button variant="ghost" size="icon" className="-ml-2">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <span className="text-sm font-medium text-slate-500">
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
             Trin {step} af 3
           </span>
           <div className="w-9" />
@@ -157,7 +157,7 @@ export default function Booking() {
       </header>
 
       {/* Expert Info */}
-      <div className="p-4 border-b border-slate-100">
+      <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
           <UserAvatar 
             src={expert?.profile_image}
@@ -165,8 +165,8 @@ export default function Booking() {
             size="lg"
           />
           <div>
-            <h2 className="font-semibold text-slate-900">{expert?.name}</h2>
-            <p className="text-sm text-slate-500">{expert?.title}</p>
+            <h2 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{expert?.name}</h2>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{expert?.title}</p>
           </div>
         </div>
       </div>
