@@ -61,12 +61,13 @@ export default function Shop() {
           {showSearch ? (
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                 <Input
                   placeholder="Søg produkter..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 bg-slate-50 border-0"
+                  className="pl-9 border-0"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)' }}
                   autoFocus
                 />
               </div>
@@ -110,11 +111,10 @@ export default function Shop() {
                             <button
                               key={opt.value}
                               onClick={() => setSortBy(opt.value)}
-                              className={`w-full text-left px-3 py-2 rounded-lg text-sm ${
-                                sortBy === opt.value 
-                                  ? 'bg-stone-800 text-white' 
-                                  : 'text-slate-700'
-                              }`}
+                              className="w-full text-left px-3 py-2 rounded-lg text-sm"
+                              style={sortBy === opt.value
+                                ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                                : { color: 'var(--color-text-secondary)' }}
                             >
                               {opt.label}
                             </button>
@@ -136,12 +136,10 @@ export default function Shop() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                style={activeCategory !== cat ? { backgroundColor: 'var(--color-bg-subtle)' } : {}}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === cat
-                    ? 'bg-stone-800 text-white'
-                    : 'text-slate-600 hover:opacity-80'
-                }`}
+                className="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+                style={activeCategory === cat
+                  ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 {cat}
               </button>
