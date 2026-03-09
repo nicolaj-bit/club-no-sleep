@@ -335,6 +335,7 @@ export default function Booking() {
             </Button>
             <Button 
               className="flex-1 gap-2"
+              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               onClick={() => createBookingMutation.mutate()}
               disabled={createBookingMutation.isPending}
             >
