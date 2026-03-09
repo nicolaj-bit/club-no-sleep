@@ -181,7 +181,8 @@ export default function Knowledge() {
             <TabsContent value="questions" className="mt-4 space-y-4">
               <Link 
                 to={createPageUrl('AskQuestion')}
-                className="flex items-center justify-center gap-2 p-4 bg-slate-900 text-white rounded-xl font-medium"
+                className="flex items-center justify-center gap-2 p-4 rounded-xl font-medium"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
                 <HelpCircle className="w-5 h-5" />
                 Stil et spørgsmål
