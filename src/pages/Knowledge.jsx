@@ -150,7 +150,7 @@ export default function Knowledge() {
                 </div>
               ) : Object.entries(articlesByCategory).map(([category, categoryArticles]) => (
                 <div key={category}>
-                  <h2 className="text-sm font-semibold text-slate-900 mb-3">{category}</h2>
+                  <h2 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{category}</h2>
                   <div className="space-y-2">
                     {categoryArticles.map(article => (
                       <ArticleCard key={article.id} article={article} />
