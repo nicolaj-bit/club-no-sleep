@@ -16,9 +16,9 @@ export default function ProductCard({ product, compact = false }) {
       className="group block"
     >
       <div className={cn(
-        "relative bg-slate-50 rounded-2xl overflow-hidden",
+        "relative rounded-2xl overflow-hidden",
         compact ? "aspect-square" : "aspect-[4/5]"
-      )}>
+      )} style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
         {product.images?.[0] ? (
           <img 
             src={product.images[0]} 
