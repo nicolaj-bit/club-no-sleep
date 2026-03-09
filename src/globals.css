@@ -73,6 +73,7 @@
     --border: 0 0% 17%;
     --input: 0 0% 17%;
     --ring: 0 0% 70%;
+    --button-bg-dark: #643C20;
 
     /* Custom CSS vars for dark mode */
     --color-bg: #000000;
@@ -93,19 +94,6 @@
     --sidebar-accent-foreground: 34 30% 88%;
     --sidebar-border: 25 12% 22%;
     --sidebar-ring: 34 30% 70%;
-
-    /* Dark mode CSS vars */
-    --color-bg: #000000;
-    --color-bg-card: #111111;
-    --color-bg-subtle: #0A0A0A;
-    --color-border: #2A2A2A;
-    --color-text-primary: #FFFFFF;
-    --color-text-secondary: #CCCCCC;
-    --color-text-muted: #888888;
-    --color-primary: #FFFFFF;
-    --color-primary-light: #CCCCCC;
-    --color-accent: #C8860A;
-    --button-bg-dark: #643C20;
   }
 }
 
