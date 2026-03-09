@@ -92,7 +92,7 @@ export default function BlogPost() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="aspect-video w-full" />
         <div className="p-4 space-y-4">
           <Skeleton className="h-8 w-3/4" />
@@ -105,8 +105,8 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-500">Indlæg ikke fundet</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Indlæg ikke fundet</p>
       </div>
     );
   }
