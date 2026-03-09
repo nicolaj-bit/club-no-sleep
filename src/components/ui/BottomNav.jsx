@@ -30,12 +30,12 @@ export default function BottomNav() {
       {menuOpen && (
         <div
           className="fixed inset-0 z-40"
-          style={{ backgroundColor: 'rgba(44,26,14,0.4)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
           onClick={() => setMenuOpen(false)}
         >
           <div
             className="absolute bottom-28 left-1/2 -translate-x-1/2 w-72 rounded-3xl shadow-2xl overflow-hidden"
-            style={{ backgroundColor: isDark ? 'var(--color-bg-card)' : '#FFFFFF', border: '1px solid var(--color-border)' }}
+            style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
             onClick={(e) => e.stopPropagation()}
           >
             {menuItems.map((item) => {
