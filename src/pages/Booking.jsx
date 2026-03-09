@@ -174,7 +174,7 @@ export default function Booking() {
       {/* Step 1: Select Date */}
       {step === 1 && (
         <div className="p-4 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900">Vælg dato</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Vælg dato</h3>
           
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
@@ -185,7 +185,7 @@ export default function Booking() {
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
-            <span className="text-sm font-medium text-slate-600">
+            <span className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
               {format(weekStart, 'd. MMM', { locale: da })} - {format(addDays(weekStart, 6), 'd. MMM yyyy', { locale: da })}
             </span>
             <Button 
@@ -214,13 +214,13 @@ export default function Booking() {
                     }
                   }}
                   disabled={isPast || !hasAvailability}
-                  className={`flex flex-col items-center p-2 rounded-xl transition-all ${
-                    isSelected
-                      ? 'bg-slate-900 text-white'
-                      : isPast || !hasAvailability
-                        ? 'bg-slate-50 text-slate-300'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
+                  className="flex flex-col items-center p-2 rounded-xl transition-all"
+                  style={isSelected
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                    : isPast || !hasAvailability
+                      ? { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }
+                      : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }
+                  }
                 >
                   <span className="text-[10px] font-medium">{dayNames[i]}</span>
                   <span className="text-lg font-semibold">{format(date, 'd')}</span>
@@ -231,6 +231,7 @@ export default function Booking() {
 
           <Button 
             className="w-full mt-4"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             disabled={!selectedDate}
             onClick={() => setStep(2)}
           >
@@ -243,18 +244,18 @@ export default function Booking() {
       {step === 2 && (
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5 text-slate-400" />
-            <span className="font-medium text-slate-700">
+            <CalendarIcon className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+            <span className="font-medium" style={{ color: 'var(--color-text-secondary)' }}>
               {format(selectedDate, 'EEEE d. MMMM', { locale: da })}
             </span>
           </div>
 
-          <h3 className="text-lg font-semibold text-slate-900">Vælg tidspunkt</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Vælg tidspunkt</h3>
 
           {availableSlots.length === 0 ? (
             <div className="text-center py-8">
-              <Clock className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">Ingen ledige tider denne dag</p>
+              <Clock className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+              <p style={{ color: 'var(--color-text-muted)' }}>Ingen ledige tider denne dag</p>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
@@ -262,11 +263,11 @@ export default function Booking() {
                 <button
                   key={i}
                   onClick={() => setSelectedSlot(slot)}
-                  className={`p-3 rounded-xl text-sm font-medium transition-all ${
-                    selectedSlot?.start === slot.start
-                      ? 'bg-slate-900 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
+                  className="p-3 rounded-xl text-sm font-medium transition-all"
+                  style={selectedSlot?.start === slot.start
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                    : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }
+                  }
                 >
                   {slot.start}
                 </button>
@@ -280,6 +281,7 @@ export default function Booking() {
             </Button>
             <Button 
               className="flex-1"
+              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               disabled={!selectedSlot}
               onClick={() => setStep(3)}
             >
@@ -292,25 +294,25 @@ export default function Booking() {
       {/* Step 3: Confirm */}
       {step === 3 && (
         <div className="p-4 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900">Bekræft booking</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Bekræft booking</h3>
 
-          <div className="bg-slate-50 rounded-xl p-4 space-y-3">
+          <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <div className="flex items-center gap-3">
-              <CalendarIcon className="w-5 h-5 text-slate-400" />
-              <span className="text-slate-700">
+              <CalendarIcon className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+              <span style={{ color: 'var(--color-text-secondary)' }}>
                 {format(selectedDate, 'EEEE d. MMMM yyyy', { locale: da })}
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-slate-400" />
-              <span className="text-slate-700">
+              <Clock className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+              <span style={{ color: 'var(--color-text-secondary)' }}>
                 {selectedSlot?.start} - {selectedSlot?.end}
               </span>
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-slate-700">
+            <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
               Noter til eksperten (valgfrit)
             </label>
             <Textarea
@@ -322,9 +324,9 @@ export default function Booking() {
             />
           </div>
 
-          <div className="bg-slate-900 rounded-xl p-4 flex items-center justify-between">
-            <span className="text-slate-400">Total</span>
-            <span className="text-white text-xl font-bold">{expert?.hourly_rate} kr</span>
+          <div className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-primary)' }}>
+            <span style={{ color: 'var(--color-bg)', opacity: 0.7 }}>Total</span>
+            <span className="text-xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert?.hourly_rate} kr</span>
           </div>
 
           <div className="flex gap-2">
