@@ -89,31 +89,27 @@ export default function ProductDetail() {
         </div>
         
         {/* Navigation */}
-        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <Link to={createPageUrl('Shop')}>
-            <Button size="icon" variant="secondary" className="rounded-full shadow-lg" style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}>
+            <button className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>
               <ChevronLeft className="w-5 h-5" />
-            </Button>
+            </button>
           </Link>
           <div className="flex gap-2">
-            <Button 
-              size="icon" 
-              variant="secondary" 
-              className="rounded-full shadow-lg"
-              style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}
+            <button
+              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
+              style={{ backgroundColor: '#1a1a1a', color: isFavorite ? '#f43f5e' : '#ffffff' }}
               onClick={() => setIsFavorite(!isFavorite)}
             >
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-rose-500' : ''}`} />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="secondary" 
-              className="rounded-full shadow-lg"
-              style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}
+            </button>
+            <button
+              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
+              style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}
               onClick={handleShare}
             >
               <Share2 className="w-5 h-5" />
-            </Button>
+            </button>
           </div>
         </div>
         
@@ -218,15 +214,15 @@ export default function ProductDetail() {
 
       {/* Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <Button 
-          className="w-full h-12 rounded-full text-base font-semibold gap-2 shadow-lg"
-          style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)', opacity: product.in_stock ? 1 : 0.5 }}
+        <button
+          className="w-full h-12 rounded-full text-base font-semibold flex items-center justify-center gap-2 shadow-lg disabled:opacity-40"
+          style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}
           disabled={!product.in_stock}
           onClick={handleBuyNow}
         >
           <ExternalLink className="w-5 h-5" />
           Køb nu i webshop
-        </Button>
+        </button>
       </div>
     </div>
   );
