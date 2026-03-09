@@ -11,7 +11,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ProductDetail() {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   
