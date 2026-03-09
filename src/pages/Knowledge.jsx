@@ -94,7 +94,7 @@ export default function Knowledge() {
         <div className="p-4 space-y-6">
           {searchResults.articles.length === 0 && searchResults.questions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-slate-500">Ingen resultater for "{search}"</p>
+              <p style={{ color: 'var(--color-text-muted)' }}>Ingen resultater for "{search}"</p>
             </div>
           ) : (
             <>
