@@ -100,7 +100,7 @@ export default function Knowledge() {
             <>
               {searchResults.articles.length > 0 && (
                 <div>
-                  <h2 className="text-sm font-medium text-slate-500 mb-3">Artikler</h2>
+                  <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>Artikler</h2>
                   <div className="space-y-2">
                     {searchResults.articles.map(article => (
                       <ArticleCard key={article.id} article={article} variant="compact" />
