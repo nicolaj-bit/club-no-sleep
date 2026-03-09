@@ -90,7 +90,7 @@ export default function Home() {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2].map(i => (
-              <div key={i} className="h-28 bg-stone-100 rounded-2xl animate-pulse" />
+              <div key={i} className="h-28 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-subtle)' }} />
             ))}
           </div>
         ) : (
