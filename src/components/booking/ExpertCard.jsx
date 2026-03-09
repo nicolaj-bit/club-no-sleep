@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Star, MapPin, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Star, MapPin, Mail, Phone, Clock } from 'lucide-react';
 import UserAvatar from '@/components/community/UserAvatar';
 import { Badge } from '@/components/ui/badge';
 
