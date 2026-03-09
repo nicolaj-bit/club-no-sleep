@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import UserAvatar from '@/components/community/UserAvatar';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
