@@ -27,7 +27,7 @@ export default function ProductCard({ product, compact = false }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <ShoppingBag className="w-12 h-12 text-slate-300" />
+            <ShoppingBag className="w-12 h-12" style={{ color: 'var(--color-text-muted)' }} />
           </div>
         )}
         
@@ -38,8 +38,8 @@ export default function ProductCard({ product, compact = false }) {
         )}
         
         {!product.in_stock && (
-          <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-            <span className="bg-slate-900 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+          <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-card)', opacity: 0.7 }}>
+            <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}>
               Udsolgt
             </span>
           </div>
@@ -52,20 +52,20 @@ export default function ProductCard({ product, compact = false }) {
             // TODO: Add to favorites
           }}
         >
-          <Heart className="w-4 h-4 text-slate-700" />
+          <Heart className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
         </button>
       </div>
       
       <div className="mt-3 px-1">
-        <h3 className="text-sm font-medium text-slate-900 line-clamp-2 leading-snug">
+        <h3 className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: 'var(--color-text-primary)' }}>
           {product.title}
         </h3>
         <div className="mt-1.5 flex items-center gap-2">
-          <span className="text-sm font-semibold text-slate-900">
+          <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
             {product.price} kr
           </span>
           {hasDiscount && (
-            <span className="text-xs text-slate-400 line-through">
+            <span className="text-xs line-through" style={{ color: 'var(--color-text-muted)' }}>
               {product.compare_at_price} kr
             </span>
           )}
