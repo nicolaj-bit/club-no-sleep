@@ -48,10 +48,18 @@ export default function BottomNav() {
                   to={url}
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-4 px-6 py-4 transition-colors"
-                  style={{ color: 'var(--color-text-primary)' }}
+                  style={{
+                    backgroundColor: active ? 'var(--color-bg-subtle)' : 'transparent',
+                    color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                  }}
                 >
-                  <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
-                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")} style={{ color: 'var(--color-text-primary)' }}>{item.name}</span>
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: active ? 'var(--color-primary)' : 'var(--color-bg-subtle)' }}
+                  >
+                    <Icon className="w-4 h-4" strokeWidth={active ? 2.5 : 2} style={{ color: active ? 'var(--color-bg)' : 'var(--color-text-muted)' }} />
+                  </div>
+                  <span className={cn("text-base", active ? "font-semibold" : "font-medium")} style={{ color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>{item.name}</span>
                 </Link>
               );
             })}
