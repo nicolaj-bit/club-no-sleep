@@ -7,6 +7,7 @@ import { ChevronLeft, Heart, Share2, ExternalLink, Check, ShoppingBag } from 'lu
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
