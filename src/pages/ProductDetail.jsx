@@ -91,7 +91,7 @@ export default function ProductDetail() {
         {/* Navigation */}
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to={createPageUrl('Shop')}>
-            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}>
+            <Button size="icon" variant="secondary" className="rounded-full shadow-md border" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
@@ -99,8 +99,8 @@ export default function ProductDetail() {
             <Button 
               size="icon" 
               variant="secondary" 
-              className="rounded-full backdrop-blur"
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
+              className="rounded-full shadow-md border"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
               onClick={() => setIsFavorite(!isFavorite)}
             >
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-rose-500 text-rose-500' : ''}`} />
@@ -108,8 +108,8 @@ export default function ProductDetail() {
             <Button 
               size="icon" 
               variant="secondary" 
-              className="rounded-full backdrop-blur"
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
+              className="rounded-full shadow-md border"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
               onClick={handleShare}
             >
               <Share2 className="w-5 h-5" />
@@ -220,7 +220,7 @@ export default function ProductDetail() {
       <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Button 
           className="w-full h-12 rounded-full text-base font-semibold gap-2"
-          style={{ backgroundColor: 'var(--color-accent)', color: '#FFFFFF' }}
+          style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}
           disabled={!product.in_stock}
           onClick={handleBuyNow}
         >
