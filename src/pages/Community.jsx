@@ -345,21 +345,61 @@ export default function Community() {
 
           {/* Experts Tab */}
           <TabsContent value="experts" className="mt-4 space-y-4">
+            {/* Search area button */}
+            <div className="bg-white rounded-2xl p-4 border border-slate-100 flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-900">Find behandler</p>
+                <p className="text-xs text-slate-500">
+                  {expertSearchMode === 'area' && userLocation
+                    ? `Viser eksperter i dit område`
+                    : 'Viser anbefalede behandlere'}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant={expertSearchMode === 'area' ? 'default' : 'outline'}
+                className="gap-2 rounded-full"
+                onClick={handleExpertAreaSearch}
+              >
+                <MapPin className="w-4 h-4" />
+                {expertSearchMode === 'area' ? 'Alle' : 'Søg i mit område'}
+              </Button>
+            </div>
+
             {loadingExperts ? (
               <div className="space-y-4">
                 {[1, 2].map(i => (
                   <Skeleton key={i} className="h-48 rounded-2xl" />
                 ))}
               </div>
-            ) : experts.length === 0 ? (
+            ) : filteredExperts.length === 0 ? (
               <div className="text-center py-12">
-                <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">Ingen eksperter tilgængelige</p>
+                <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <p className="text-slate-500">
+                  {expertSearchMode === 'area'
+                    ? 'Ingen eksperter fundet i dit område'
+                    : 'Ingen eksperter tilgængelige'}
+                </p>
+                {expertSearchMode === 'area' && (
+                  <button
+                    className="text-sm text-blue-500 mt-2"
+                    onClick={() => setExpertSearchMode('all')}
+                  >
+                    Vis alle eksperter
+                  </button>
+                )}
               </div>
             ) : (
-              experts.map(expert => (
-                <ExpertCard key={expert.id} expert={expert} />
-              ))
+              <>
+                {expertSearchMode === 'all' && (
+                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide px-1">
+                    Anbefalede behandlere
+                  </p>
+                )}
+                {filteredExperts.map(expert => (
+                  <ExpertCard key={expert.id} expert={expert} />
+                ))}
+              </>
             )}
           </TabsContent>
         </Tabs>
