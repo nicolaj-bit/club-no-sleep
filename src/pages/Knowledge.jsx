@@ -117,11 +117,12 @@ export default function Knowledge() {
                       <Link 
                         key={q.id}
                         to={createPageUrl(`QuestionDetail?id=${q.id}`)}
-                        className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100"
+                        className="flex items-center gap-3 p-3 rounded-xl border"
+                      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
                       >
-                        <MessageCircle className="w-5 h-5 text-slate-400" />
-                        <span className="flex-1 text-sm text-slate-700 line-clamp-1">{q.title}</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400" />
+                        <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                        <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{q.title}</span>
+                        <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                       </Link>
                     ))}
                   </div>
