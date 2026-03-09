@@ -210,7 +210,7 @@ export default function Community() {
             </TabsTrigger>
             <TabsTrigger value="experts" className="flex-1 rounded-lg gap-1.5">
               <Calendar className="w-4 h-4" />
-              Eksperter
+              Behandlere
             </TabsTrigger>
           </TabsList>
 
