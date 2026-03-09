@@ -34,6 +34,7 @@ export default function Community() {
   const [userLocation, setUserLocation] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [expertSearchMode, setExpertSearchMode] = useState('all'); // 'all' | 'area'
 
   useEffect(() => {
     const loadUser = async () => {
