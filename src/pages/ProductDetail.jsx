@@ -71,10 +71,10 @@ export default function ProductDetail() {
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Image Gallery */}
       <div className="relative">
-        <div className="aspect-square bg-slate-100">
+        <div className="aspect-square" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           {currentImage ? (
             <img 
               src={currentImage} 
@@ -83,7 +83,7 @@ export default function ProductDetail() {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <ShoppingBag className="w-16 h-16 text-slate-300" />
+              <ShoppingBag className="w-16 h-16" style={{ color: 'var(--color-text-muted)' }} />
             </div>
           )}
         </div>
@@ -135,13 +135,13 @@ export default function ProductDetail() {
       <div className="p-4 space-y-4">
         {/* Title & Price */}
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">{product.title}</h1>
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{product.title}</h1>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-bold text-slate-900">
+            <span className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
               {product.price} kr
             </span>
             {hasDiscount && (
-              <span className="text-lg text-slate-400 line-through">
+              <span className="text-lg line-through" style={{ color: 'var(--color-text-muted)' }}>
                 {product.compare_at_price} kr
               </span>
             )}
@@ -157,8 +157,8 @@ export default function ProductDetail() {
             </>
           ) : (
             <>
-              <div className="w-2 h-2 rounded-full bg-slate-300" />
-              <span className="text-sm text-slate-500 font-medium">Udsolgt</span>
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-text-muted)' }} />
+              <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Udsolgt</span>
             </>
           )}
         </div>
@@ -166,20 +166,20 @@ export default function ProductDetail() {
         {/* Variants */}
         {product.variants?.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium text-slate-700 mb-2">Variant</h3>
+            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Variant</h3>
             <div className="flex flex-wrap gap-2">
               {product.variants.map((variant, i) => (
                 <button
                   key={i}
                   onClick={() => setSelectedVariant(variant)}
                   disabled={!variant.in_stock}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${
-                    selectedVariant?.name === variant.name
-                      ? 'border-slate-900 bg-slate-900 text-white'
-                      : variant.in_stock
-                        ? 'border-slate-200 hover:border-slate-300'
-                        : 'border-slate-100 text-slate-400 cursor-not-allowed'
-                  }`}
+                  className="px-4 py-2 rounded-lg text-sm font-medium border transition-all"
+                  style={selectedVariant?.name === variant.name
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
+                    : variant.in_stock
+                      ? { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }
+                      : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', borderColor: 'var(--color-border)', cursor: 'not-allowed' }
+                  }
                 >
                   {variant.name}
                 </button>
@@ -190,9 +190,9 @@ export default function ProductDetail() {
 
         {/* Description */}
         {product.description && (
-          <div className="pt-4 border-t border-slate-100">
-            <h3 className="text-sm font-medium text-slate-700 mb-2">Beskrivelse</h3>
-            <p className="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+          <div className="pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Beskrivelse</h3>
+            <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>
               {product.description}
             </p>
           </div>
@@ -204,7 +204,8 @@ export default function ProductDetail() {
             {product.tags.map((tag, i) => (
               <span 
                 key={i}
-                className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-full"
+                className="px-2.5 py-1 text-xs rounded-full"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 {tag}
               </span>
@@ -214,7 +215,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-100 safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 p-4 border-t safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Button 
           className="w-full h-12 rounded-full bg-slate-900 hover:bg-slate-800 text-base font-semibold gap-2"
           disabled={!product.in_stock}
