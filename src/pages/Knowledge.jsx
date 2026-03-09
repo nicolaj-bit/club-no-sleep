@@ -111,7 +111,7 @@ export default function Knowledge() {
               
               {searchResults.questions.length > 0 && (
                 <div>
-                  <h2 className="text-sm font-medium text-slate-500 mb-3">Spørgsmål</h2>
+                  <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>Spørgsmål</h2>
                   <div className="space-y-2">
                     {searchResults.questions.map(q => (
                       <Link 
