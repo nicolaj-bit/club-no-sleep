@@ -76,7 +76,7 @@ export default function Knowledge() {
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-slate-900">Viden & Svar</h1>
+              <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Viden & Svar</h1>
               <Button 
                 variant="ghost" 
                 size="icon"
