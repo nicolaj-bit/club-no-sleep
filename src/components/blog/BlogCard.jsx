@@ -17,7 +17,7 @@ export default function BlogCard({ post, variant = 'default' }) {
         to={createPageUrl(`BlogPost?id=${post.id}`)}
         className="group block"
       >
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-slate-100">
+        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           {post.featured_image ? (
             <img 
               src={post.featured_image} 
