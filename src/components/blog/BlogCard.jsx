@@ -53,7 +53,7 @@ export default function BlogCard({ post, variant = 'default' }) {
       to={createPageUrl(`BlogPost?id=${post.id}`)}
       className="group flex gap-4"
     >
-      <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-slate-100">
+      <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
         {post.featured_image ? (
           <img 
             src={post.featured_image} 
