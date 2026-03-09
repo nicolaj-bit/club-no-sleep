@@ -90,7 +90,7 @@ export default function QuestionDetail() {
 
   if (loadingQuestion) {
     return (
-      <div className="min-h-screen bg-white p-4">
+      <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="h-8 w-3/4 mb-4" />
         <Skeleton className="h-24 w-full" />
       </div>
@@ -99,8 +99,8 @@ export default function QuestionDetail() {
 
   if (!question) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-500">Spørgsmål ikke fundet</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Spørgsmål ikke fundet</p>
       </div>
     );
   }
@@ -109,21 +109,21 @@ export default function QuestionDetail() {
   const canAnswer = user && !isAuthor;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
           <Link to={createPageUrl('Knowledge')}>
             <Button variant="ghost" size="icon" className="-ml-2">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <span className="text-sm font-medium text-slate-500">Spørgsmål</span>
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Spørgsmål</span>
         </div>
       </header>
 
       {/* Question */}
-      <div className="p-4 border-b border-slate-100">
+      <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
         <div className="flex items-start gap-3">
           <UserAvatar 
             src={question.author_image}
@@ -132,32 +132,31 @@ export default function QuestionDetail() {
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-slate-900">{question.author_username}</span>
-              <span className="text-xs text-slate-400">
+              <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{question.author_username}</span>
+              <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 {format(new Date(question.created_date), 'd. MMM', { locale: da })}
               </span>
             </div>
             {question.category && (
-              <span className="text-xs text-slate-500">{question.category}</span>
+              <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{question.category}</span>
             )}
           </div>
-          <span className={`text-xs px-2 py-1 rounded-full ${
-            question.status === 'answered' 
-              ? 'bg-emerald-100 text-emerald-700'
-              : 'bg-amber-100 text-amber-700'
-          }`}>
+          <span className="text-xs px-2 py-1 rounded-full" style={{
+            backgroundColor: question.status === 'answered' ? (isDark ? '#052e16' : '#d1fae5') : (isDark ? '#451a03' : '#fef3c7'),
+            color: question.status === 'answered' ? (isDark ? '#4ade80' : '#065f46') : (isDark ? '#fbbf24' : '#92400e'),
+          }}>
             {question.status === 'answered' ? 'Besvaret' : 'Åben'}
           </span>
         </div>
         
-        <h1 className="text-lg font-semibold text-slate-900 mt-4">{question.title}</h1>
-        <p className="text-slate-600 mt-2 whitespace-pre-line">{question.content}</p>
+        <h1 className="text-lg font-semibold mt-4" style={{ color: 'var(--color-text-primary)' }}>{question.title}</h1>
+        <p className="mt-2 whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>{question.content}</p>
       </div>
 
       {/* Answers */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
-          <h2 className="text-sm font-semibold text-slate-900 mb-4">
+          <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
             {answers.length} {answers.length === 1 ? 'svar' : 'svar'}
           </h2>
           
@@ -169,17 +168,16 @@ export default function QuestionDetail() {
             </div>
           ) : answers.length === 0 ? (
             <div className="text-center py-8">
-              <MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">Ingen svar endnu</p>
+              <MessageCircle className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+              <p style={{ color: 'var(--color-text-muted)' }}>Ingen svar endnu</p>
             </div>
           ) : (
             <div className="space-y-4">
               {answers.map(answer => (
                 <div 
                   key={answer.id}
-                  className={`bg-slate-50 rounded-xl p-4 ${
-                    answer.is_accepted ? 'ring-2 ring-emerald-500' : ''
-                  }`}
+                  className={`rounded-xl p-4 ${answer.is_accepted ? 'ring-2 ring-emerald-500' : ''}`}
+                  style={{ backgroundColor: 'var(--color-bg-subtle)' }}
                 >
                   <div className="flex items-start gap-3">
                     <UserAvatar 
@@ -189,14 +187,14 @@ export default function QuestionDetail() {
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-slate-900">{answer.author_username}</span>
+                        <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{answer.author_username}</span>
                         {answer.author_role === 'expert' && (
-                          <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: isDark ? '#451a03' : '#fef3c7', color: isDark ? '#fbbf24' : '#92400e' }}>
                             EKSPERT
                           </span>
                         )}
                         {answer.author_role === 'admin' && (
-                          <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: isDark ? '#1e3a5f' : '#eff6ff', color: isDark ? '#60a5fa' : '#1d4ed8' }}>
                             ADMIN
                           </span>
                         )}
@@ -204,11 +202,11 @@ export default function QuestionDetail() {
                           <CheckCircle className="w-4 h-4 text-emerald-500" />
                         )}
                       </div>
-                      <p className="text-slate-600 mt-1 text-sm whitespace-pre-line">
+                      <p className="mt-1 text-sm whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>
                         {answer.content}
                       </p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                           {format(new Date(answer.created_date), 'd. MMM HH:mm', { locale: da })}
                         </span>
                         {isAuthor && !answer.is_accepted && (
@@ -234,7 +232,7 @@ export default function QuestionDetail() {
 
       {/* Answer Input */}
       {canAnswer && (
-        <div className="sticky bottom-0 bg-white border-t border-slate-100 p-4 safe-area-bottom">
+        <div className="sticky bottom-0 border-t p-4 safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <div className="flex gap-2">
             <Textarea
               value={answerText}
