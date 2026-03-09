@@ -116,11 +116,11 @@ export default function BlogPost() {
     : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Hero Image */}
       <div className="relative">
         {post.featured_image ? (
-          <div className="aspect-video bg-slate-100">
+          <div className="aspect-video" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <img 
               src={post.featured_image} 
               alt={post.title}
@@ -128,16 +128,16 @@ export default function BlogPost() {
             />
           </div>
         ) : (
-          <div className="aspect-video bg-slate-100 flex items-center justify-center">
-            <BookOpen className="w-16 h-16 text-slate-300" />
+          <div className="aspect-video flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+            <BookOpen className="w-16 h-16" style={{ color: 'var(--color-text-muted)' }} />
           </div>
         )}
         
         {/* Navigation */}
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to={createPageUrl('Blog')}>
-            <Button size="icon" variant="secondary" className="rounded-full bg-white/90 backdrop-blur">
-              <ChevronLeft className="w-5 h-5" />
+            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur" style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}>
+              <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
             </Button>
           </Link>
           <div className="flex gap-2">
@@ -145,20 +145,22 @@ export default function BlogPost() {
               <Button 
                 size="icon" 
                 variant="secondary" 
-                className="rounded-full bg-white/90 backdrop-blur"
+                className="rounded-full backdrop-blur"
+                style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}
                 onClick={() => saveMutation.mutate()}
                 disabled={saveMutation.isPending}
               >
-                <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-slate-900' : ''}`} />
+                <Bookmark className="w-5 h-5" style={{ color: 'var(--color-text-primary)', fill: isSaved ? 'var(--color-text-primary)' : 'none' }} />
               </Button>
             )}
             <Button 
               size="icon" 
               variant="secondary" 
-              className="rounded-full bg-white/90 backdrop-blur"
+              className="rounded-full backdrop-blur"
+              style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.9)' : 'rgba(255,255,255,0.9)' }}
               onClick={handleShare}
             >
-              <Share2 className="w-5 h-5" />
+              <Share2 className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
             </Button>
           </div>
         </div>
@@ -168,13 +170,13 @@ export default function BlogPost() {
       <div className="p-4 space-y-4">
         {/* Category */}
         {post.category && (
-          <span className="inline-block bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1 rounded-full">
+          <span className="inline-block text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
             {post.category}
           </span>
         )}
         
         {/* Title */}
-        <h1 className="text-2xl font-bold text-slate-900 leading-tight">
+        <h1 className="text-2xl font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
           {post.title}
         </h1>
         
@@ -187,26 +189,27 @@ export default function BlogPost() {
           />
           <div>
             {post.author_name && (
-              <p className="text-sm font-medium text-slate-900">{post.author_name}</p>
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{post.author_name}</p>
             )}
             {formattedDate && (
-              <p className="text-xs text-slate-500">{formattedDate}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{formattedDate}</p>
             )}
           </div>
         </div>
         
         {/* Content */}
-        <div className="prose prose-slate prose-sm max-w-none">
+        <div className="prose prose-sm max-w-none" style={{ color: 'var(--color-text-primary)' }}>
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
         
         {/* Tags */}
         {post.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+          <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
             {post.tags.map((tag, i) => (
               <span 
                 key={i}
-                className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-full"
+                className="px-2.5 py-1 text-xs rounded-full"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 #{tag}
               </span>
