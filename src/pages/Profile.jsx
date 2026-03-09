@@ -104,7 +104,6 @@ export default function Profile() {
 
   const gridItems = [
     { icon: Bookmark, label: 'Favoritter', page: 'Favorites' },
-    { icon: Calendar, label: 'Bookinger', page: 'MyBookings' },
     { icon: HelpCircle, label: 'Spørgsmål', page: 'MyQuestions' },
     { icon: Settings, label: 'Indstillinger', page: 'Settings' },
   ];
