@@ -217,8 +217,8 @@ export default function Knowledge() {
                           {q.status === 'answered' ? 'Besvaret' : 'Åben'}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-500 mt-1 line-clamp-2">{q.content}</p>
-                      <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
+                      <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>
+                      <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
                         <span>af {q.author_username}</span>
                         {q.answer_count > 0 && (
                           <>
