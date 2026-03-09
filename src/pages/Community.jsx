@@ -191,15 +191,15 @@ export default function Community() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
-        <h1 className="text-xl font-semibold text-slate-900">Community</h1>
+      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Community</h1>
       </header>
 
       <div className="p-4">
         <Tabs defaultValue="nearby" className="w-full">
-          <TabsList className="w-full bg-slate-100 p-1 rounded-xl">
+          <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <TabsTrigger value="nearby" className="flex-1 rounded-lg gap-1.5">
               <Radio className="w-4 h-4" />
               Nær mig
@@ -217,15 +217,15 @@ export default function Community() {
           {/* Nearby Tab */}
           <TabsContent value="nearby" className="mt-4 space-y-4">
             {/* Privacy Settings */}
-            <div className="bg-white rounded-xl p-4 border border-slate-100 space-y-4">
+            <div className="rounded-xl p-4 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-blue-500" />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                    <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900">Lokation</p>
-                    <p className="text-xs text-slate-500">Find folk i nærheden</p>
+                    <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Lokation</p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Find folk i nærheden</p>
                   </div>
                 </div>
                 {locationEnabled ? (
@@ -240,8 +240,8 @@ export default function Community() {
               </div>
               
               {locationEnabled && (
-                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                  <Label htmlFor="visibility" className="text-sm text-slate-600">
+                <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                  <Label htmlFor="visibility" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                     Vis mig som synlig for andre
                   </Label>
                   <Switch
@@ -254,7 +254,7 @@ export default function Community() {
             </div>
 
             {/* Denmark Map */}
-            <div className="rounded-2xl overflow-hidden border border-slate-100">
+            <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
               <div className="px-4 pt-3 pb-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
                 <div>
                   <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Aktive mødre i Danmark</p>
@@ -298,8 +298,8 @@ export default function Community() {
             {/* Nearby Users */}
             {!locationEnabled ? (
               <div className="text-center py-12">
-                <Radio className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">Aktiver lokation for at se hvem der er i nærheden</p>
+                <Radio className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+                <p style={{ color: 'var(--color-text-muted)' }}>Aktiver lokation for at se hvem der er i nærheden</p>
               </div>
             ) : loadingNearby ? (
               <div className="space-y-3">
@@ -309,12 +309,12 @@ export default function Community() {
               </div>
             ) : nearbyUsers.length === 0 ? (
               <div className="text-center py-12">
-                <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">Ingen brugere i nærheden (20 km)</p>
+                <Users className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+                <p style={{ color: 'var(--color-text-muted)' }}>Ingen brugere i nærheden (20 km)</p>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
                   {nearbyUsers.length} {nearbyUsers.length === 1 ? 'person' : 'personer'} indenfor 20 km
                 </p>
                 {nearbyUsers.map(nearbyUser => (
@@ -339,9 +339,9 @@ export default function Community() {
               </div>
             ) : conversations.length === 0 ? (
               <div className="text-center py-12">
-                <MessageCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">Ingen samtaler endnu</p>
-                <p className="text-sm text-slate-400 mt-1">Start en chat med nogen i nærheden</p>
+                <MessageCircle className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+                <p style={{ color: 'var(--color-text-muted)' }}>Ingen samtaler endnu</p>
+                <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Start en chat med nogen i nærheden</p>
               </div>
             ) : (
               conversations.map(conv => {
@@ -353,7 +353,8 @@ export default function Community() {
                   <Link 
                     key={conv.id}
                     to={createPageUrl(`Chat?id=${conv.id}`)}
-                    className="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100"
+                    className="flex items-center gap-3 rounded-xl p-4 border"
+                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
                   >
                     <UserAvatar 
                       src={otherImage}
@@ -361,12 +362,12 @@ export default function Community() {
                       size="md"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-slate-900">{otherName}</h3>
+                      <h3 className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{otherName}</h3>
                       {conv.last_message && (
-                        <p className="text-sm text-slate-500 truncate">{conv.last_message}</p>
+                        <p className="text-sm truncate" style={{ color: 'var(--color-text-muted)' }}>{conv.last_message}</p>
                       )}
                     </div>
-                    <ChevronRight className="w-5 h-5 text-slate-300" />
+                    <ChevronRight className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                   </Link>
                 );
               })
@@ -376,10 +377,10 @@ export default function Community() {
           {/* Experts Tab */}
           <TabsContent value="experts" className="mt-4 space-y-4">
             {/* Search area button */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-100 flex items-center justify-between">
+            <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div>
-                <p className="font-medium text-slate-900">Find behandler</p>
-                <p className="text-xs text-slate-500">
+                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find behandler</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                   {expertSearchMode === 'area' && userLocation
                     ? `Viser eksperter i dit område`
                     : 'Viser anbefalede behandlere'}
@@ -404,8 +405,8 @@ export default function Community() {
               </div>
             ) : filteredExperts.length === 0 ? (
               <div className="text-center py-12">
-                <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-500">
+                <MapPin className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
+                <p style={{ color: 'var(--color-text-muted)' }}>
                   {expertSearchMode === 'area'
                     ? 'Ingen eksperter fundet i dit område'
                     : 'Ingen eksperter tilgængelige'}
@@ -422,7 +423,7 @@ export default function Community() {
             ) : (
               <>
                 {expertSearchMode === 'all' && (
-                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide px-1">
+                  <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
                     Anbefalede behandlere
                   </p>
                 )}
