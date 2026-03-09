@@ -103,7 +103,7 @@ export default function ProductDetail() {
         {/* Navigation */}
         <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to={createPageUrl('Shop')}>
-            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur shadow-md" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}>
+            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur shadow-md" style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
