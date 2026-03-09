@@ -46,7 +46,8 @@ export default function ProductCard({ product, compact = false }) {
         )}
         
         <button 
-          className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+          className="absolute top-3 right-3 w-8 h-8 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+          style={{ backgroundColor: 'var(--color-bg-card)' }}
           onClick={(e) => {
             e.preventDefault();
             // TODO: Add to favorites
