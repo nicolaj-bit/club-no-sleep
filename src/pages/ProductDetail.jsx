@@ -92,27 +92,31 @@ export default function ProductDetail() {
         </div>
         
         {/* Navigation */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
           <Link to={createPageUrl('Shop')}>
-            <button className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>
+            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur shadow-md" style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}>
               <ChevronLeft className="w-5 h-5" />
-            </button>
+            </Button>
           </Link>
           <div className="flex gap-2">
-            <button
-              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
-              style={{ backgroundColor: '#1a1a1a', color: isFavorite ? '#f43f5e' : '#ffffff' }}
+            <Button
+              size="icon"
+              variant="secondary"
+              className="rounded-full backdrop-blur shadow-md"
+              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isFavorite ? '#f43f5e' : (isDark ? '#FFFFFF' : '#000000') }}
               onClick={() => setIsFavorite(!isFavorite)}
             >
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-rose-500' : ''}`} />
-            </button>
-            <button
-              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
-              style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="rounded-full backdrop-blur shadow-md"
+              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
               onClick={handleShare}
             >
               <Share2 className="w-5 h-5" />
-            </button>
+            </Button>
           </div>
         </div>
         
