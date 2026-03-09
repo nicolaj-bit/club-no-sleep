@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import UserAvatar from '@/components/community/UserAvatar';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function QuestionDetail() {
   const urlParams = new URLSearchParams(window.location.search);

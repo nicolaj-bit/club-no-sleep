@@ -11,8 +11,11 @@ import ReactMarkdown from 'react-markdown';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ArticleDetail() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
+
 
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', articleId],
@@ -37,7 +40,7 @@ export default function ArticleDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white p-4">
+      <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="h-8 w-3/4 mb-4" />
         <Skeleton className="h-4 w-1/4 mb-6" />
         <Skeleton className="h-40 w-full" />
@@ -47,8 +50,8 @@ export default function ArticleDetail() {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-slate-500">Artikel ikke fundet</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Artikel ikke fundet</p>
       </div>
     );
   }
@@ -56,9 +59,9 @@ export default function ArticleDetail() {
   const Icon = article.is_faq ? HelpCircle : FileText;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-4 py-3">
+      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center justify-between">
           <Link to={createPageUrl('Knowledge')}>
             <Button variant="ghost" size="icon" className="-ml-2">
@@ -74,28 +77,25 @@ export default function ArticleDetail() {
       {/* Content */}
       <div className="p-4 space-y-4">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-            article.is_faq ? 'bg-blue-50' : 'bg-slate-100'
-          }`}>
-            <Icon className={`w-5 h-5 ${
-              article.is_faq ? 'text-blue-500' : 'text-slate-500'
-            }`} />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: article.is_faq ? (isDark ? '#1e3a5f' : '#eff6ff') : 'var(--color-bg-subtle)' }}>
+            <Icon className="w-5 h-5" style={{ color: article.is_faq ? (isDark ? '#60a5fa' : '#3b82f6') : 'var(--color-text-muted)' }} />
           </div>
-          <span className="text-sm text-slate-500">{article.category}</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{article.category}</span>
         </div>
 
-        <h1 className="text-xl font-bold text-slate-900">{article.title}</h1>
+        <h1 className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{article.title}</h1>
 
-        <div className="prose prose-slate prose-sm max-w-none">
+        <div className="prose prose-sm max-w-none" style={{ color: 'var(--color-text-primary)' }}>
           <ReactMarkdown>{article.content}</ReactMarkdown>
         </div>
 
         {article.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+          <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
             {article.tags.map((tag, i) => (
               <span 
                 key={i}
-                className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-full"
+                className="px-2.5 py-1 text-xs rounded-full"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 {tag}
               </span>
