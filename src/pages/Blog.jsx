@@ -118,7 +118,7 @@ export default function Blog() {
           </>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-500">Ingen indlæg fundet</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg fundet</p>
           </div>
         ) : (
           <>
