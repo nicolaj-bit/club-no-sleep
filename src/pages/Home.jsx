@@ -56,12 +56,11 @@ export default function Home() {
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: da });
 
   return (
-    <div className="min-h-screen pb-28">
+    <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <header className="px-5 pt-12 pb-4">
-
-        <p className="text-sm text-stone-400 capitalize">{todayStr}</p>
-        <h1 className="text-2xl font-semibold text-stone-800 mt-0.5">God dag, mor 🤍</h1>
+        <p className="text-sm capitalize" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+        <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>God dag, mor 🤍</h1>
       </header>
 
       {/* Daily Affirmation */}
