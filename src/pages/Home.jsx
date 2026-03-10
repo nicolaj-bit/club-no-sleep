@@ -82,7 +82,13 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="px-5 pt-12 pb-4">
+      <header
+        className="sticky top-0 z-40 px-5 pt-12 pb-4 backdrop-blur-xl transition-transform duration-300"
+        style={{
+          backgroundColor: 'var(--color-bg)',
+          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
+        }}
+      >
         <p className="text-sm capitalize" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
         <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>God dag, mor 🤍</h1>
       </header>

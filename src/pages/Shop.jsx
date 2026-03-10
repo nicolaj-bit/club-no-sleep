@@ -58,7 +58,14 @@ export default function Shop() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <header
+        className="sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300"
+        style={{
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
+        }}
+      >
         <div className="px-4 py-3">
           {showSearch ? (
             <div className="flex items-center gap-2">

@@ -195,7 +195,14 @@ export default function Community() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <header
+        className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3 transition-transform duration-300"
+        style={{
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
+        }}
+      >
         <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Community</h1>
       </header>
 
