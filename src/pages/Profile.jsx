@@ -109,13 +109,6 @@ export default function Profile() {
             className="rounded-3xl p-5"
             style={{ background: 'var(--color-bg-card)' }}
           >
-            {/* Moon / decorative top area */}
-            <div className="flex justify-center py-4 mb-2">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'var(--color-bg-subtle)' }}>
-                <span className="text-3xl" style={{ color: 'var(--color-text-muted)' }}>🌙</span>
-              </div>
-            </div>
-
             <DialogTrigger asChild>
               <button
                 className="flex items-center gap-3 w-full text-left cursor-pointer active:opacity-70 transition-opacity"
