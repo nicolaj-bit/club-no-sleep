@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +20,7 @@ export default function AdminEditor() {
   const [activeTab, setActiveTab] = useState('BlogPost');
   const [editing, setEditing] = useState(null); // null = list view, object = edit view
   const [isNew, setIsNew] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
