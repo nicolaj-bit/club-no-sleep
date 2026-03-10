@@ -185,11 +185,7 @@ export default function Profile() {
               <div className="space-y-2">
                 <Label>Barnets fødselsdag</Label>
                 <Input type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label>Terminsdato</Label>
-                <Input type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value })} />
-                <p className="text-xs text-slate-400">Terminsdatoen bruges til nøjagtig beregning af tigerspring. 🐯</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Bruges til beregning af tigerspring 🐯</p>
               </div>
               <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
                 Gem ændringer
