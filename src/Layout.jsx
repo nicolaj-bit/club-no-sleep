@@ -29,6 +29,36 @@ export default function Layout({ children, currentPageName }) {
     loadUser();
   }, []);
 
+  useEffect(() => {
+    // Load OneSignal SDK
+    const script = document.createElement('script');
+    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+    script.defer = true;
+    document.head.appendChild(script);
+
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async (OneSignal) => {
+      await OneSignal.init({
+        appId: ONESIGNAL_APP_ID,
+        allowLocalhostAsSecureOrigin: true,
+      });
+      // Tag brugeren med deres email så vi kan sende målrettede tigerspring-notifikationer
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const u = await base44.auth.me();
+          if (u?.email) {
+            OneSignal.login(u.email);
+          }
+        }
+      } catch (_) {}
+    });
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <ThemeProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
