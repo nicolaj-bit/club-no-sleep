@@ -137,9 +137,10 @@ export default function Knowledge() {
         <div className="p-4">
           <Tabs defaultValue="articles" className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              <TabsTrigger value="articles" className="flex-1 rounded-lg">Artikler</TabsTrigger>
-              <TabsTrigger value="faq" className="flex-1 rounded-lg">FAQ</TabsTrigger>
-              <TabsTrigger value="questions" className="flex-1 rounded-lg">Spørgsmål</TabsTrigger>
+              <TabsTrigger value="articles" className="flex-1 rounded-lg text-xs">Artikler</TabsTrigger>
+              <TabsTrigger value="tigerspring" className="flex-1 rounded-lg text-xs">🐯 Tigerspring</TabsTrigger>
+              <TabsTrigger value="faq" className="flex-1 rounded-lg text-xs">FAQ</TabsTrigger>
+              <TabsTrigger value="questions" className="flex-1 rounded-lg text-xs">Spørgsmål</TabsTrigger>
             </TabsList>
 
             <TabsContent value="articles" className="mt-4 space-y-6">
