@@ -100,6 +100,11 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Wonder Week Card */}
+      {wonderWeek && wonderWeek.status !== 'complete' && (
+        <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
+      )}
+
       {/* Blog Posts */}
       <div className="px-5">
         <div className="flex items-center justify-between mb-4">
