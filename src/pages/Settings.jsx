@@ -54,12 +54,6 @@ export default function Settings() {
   const settingsItems = [
     ...(isAdmin ? [
       {
-        icon: Smile,
-        title: 'Tigerspring emojis',
-        description: 'Rediger emojis (admin)',
-        link: 'AdminWonderWeeks',
-      },
-      {
         icon: FileText,
         title: 'Blog & Artikler',
         description: 'Rediger indhold (admin)',
