@@ -104,8 +104,8 @@ export default function Settings() {
               onClick={() => isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: !isDark ? '#E7D3B1' : 'transparent',
-                borderColor: !isDark ? '#E7D3B1' : 'var(--color-border)',
+                background: !isDark ? '#E7D3B1' : '#F8F3ED',
+                borderColor: !isDark ? '#E7D3B1' : '#F8F3ED',
                 color: 'var(--color-text-primary)',
               }}
             >
