@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import BlogCard from '@/components/blog/BlogCard';
+import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
+import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 
 const AFFIRMATIONS = [
   "Du er en fantastisk mor — selv på de dage, det føles det modsatte. 🤍",
