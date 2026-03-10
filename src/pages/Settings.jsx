@@ -51,12 +51,20 @@ export default function Settings() {
   const isAdmin = user?.role === 'admin';
 
   const settingsItems = [
-    ...(isAdmin ? [{
-      icon: Smile,
-      title: 'Tigerspring emojis',
-      description: 'Rediger emojis (admin)',
-      link: 'AdminWonderWeeks',
-    }] : []),
+    ...(isAdmin ? [
+      {
+        icon: Smile,
+        title: 'Tigerspring emojis',
+        description: 'Rediger emojis (admin)',
+        link: 'AdminWonderWeeks',
+      },
+      {
+        icon: FileText,
+        title: 'Blog & Artikler',
+        description: 'Rediger indhold (admin)',
+        link: 'AdminEditor',
+      },
+    ] : []),
     {
       icon: Lock,
       title: 'Skift adgangskode',
