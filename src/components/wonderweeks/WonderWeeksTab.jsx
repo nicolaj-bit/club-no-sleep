@@ -47,7 +47,7 @@ export default function WonderWeeksTab() {
         style={{ background: 'linear-gradient(135deg, #2C1A0E 0%, #4A2E1A 100%)' }}
       >
         <div className="relative z-10">
-          <p className="text-2xl mb-1">🐯</p>
+          <p className="text-2xl mb-1" style={{ fontFamily: EMOJI_FONT }}>🐯</p>
           <h2 className="text-lg font-semibold text-white mb-1">Tigerspring</h2>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
             De 10 store udviklingsspring i dit barns første leveår. Tider beregnes fra terminsdatoen.
