@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { getAgeInWeeks, getCurrentWonderWeek, wonderWeeks } from '@/components/wonderweeks/wonderweeksData';
 import { ChevronRight, Sparkles, Clock } from 'lucide-react';
+import { useWonderWeekEmojis } from './useWonderWeekEmojis';
+
+const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeeksTab() {
   const [user, setUser] = useState(null);

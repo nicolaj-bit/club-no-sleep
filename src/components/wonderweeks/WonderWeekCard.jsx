@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronDown, ChevronUp, Sparkles, Clock, ArrowRight } from 'lucide-react';
+import { useWonderWeekEmojis } from './useWonderWeekEmojis';
+
+const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
   const [expanded, setExpanded] = useState(false);
