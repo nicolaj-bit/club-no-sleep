@@ -74,7 +74,7 @@ export default function WonderWeeksTab() {
           return (
             <Link
               key={ww.number}
-              to={createPageUrl('ArticleDetail') + `?category=Tigerspring&leap=${ww.number}`}
+              to={createPageUrl('ArticleDetail') + `?slug=${ww.articleSlug}`}
               className="flex items-center gap-4 p-4 rounded-2xl border transition-all active:scale-[0.99]"
               style={{
                 backgroundColor: isActive ? `${ww.color}12` : 'var(--color-bg-card)',
