@@ -24,6 +24,7 @@ const sortOptions = [
 ];
 
 export default function Shop() {
+  const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('Alle');

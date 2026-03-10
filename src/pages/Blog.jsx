@@ -12,6 +12,7 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 const categories = ['Alle', 'Tips', 'Guides', 'Nyheder', 'Inspiration'];
 
 export default function Blog() {
+  const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);

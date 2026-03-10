@@ -13,6 +13,7 @@ import ArticleCard from '@/components/knowledge/ArticleCard';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 
 export default function Knowledge() {
+  const headerVisible = useScrollDirection();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
 
