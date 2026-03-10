@@ -26,7 +26,7 @@ export default function ArticleDetail() {
       }
       if (articleSlug) {
         const articles = await base44.entities.KnowledgeArticle.list();
-        return articles.find(a => a.title?.toLowerCase().replace(/\s+/g, '-').includes(articleSlug.replace('tigerspring-', '').replace('-', '')) || a.tags?.includes(articleSlug));
+        return articles.find(a => a.tags?.includes(articleSlug));
       }
     },
     enabled: !!(articleId || articleSlug),
