@@ -68,6 +68,7 @@ import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
 import Shop from './pages/Shop';
 import SleepLog from './pages/SleepLog';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +94,7 @@ export const PAGES = {
     "Settings": Settings,
     "Shop": Shop,
     "SleepLog": SleepLog,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {
