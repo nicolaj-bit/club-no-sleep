@@ -299,6 +299,11 @@ export default function AdminEditor() {
         ))}
       </div>
 
+      {/* Push notifications */}
+      <div className="px-4 mt-4">
+        <PushNotificationSender />
+      </div>
+
       {/* List */}
       <div className="p-4 space-y-2 mt-2">
         {isLoading ? (
