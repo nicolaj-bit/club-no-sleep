@@ -131,7 +131,7 @@ export default function Settings() {
         {isAdmin && <PushNotificationSender />}
 
         {/* FAQ + Support */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: '#F8F3ED', borderColor: '#F8F3ED' }}>
+        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <AccordionTrigger className="px-5 hover:no-underline py-4">
