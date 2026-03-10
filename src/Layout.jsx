@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+
+const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 import BottomNav from '@/components/ui/BottomNav';
 import { base44 } from '@/api/base44Client';
 import { Toaster } from 'sonner';
