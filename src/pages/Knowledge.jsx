@@ -162,6 +162,10 @@ export default function Knowledge() {
               ))}
             </TabsContent>
 
+            <TabsContent value="tigerspring" className="mt-4">
+              <WonderWeeksTab />
+            </TabsContent>
+
             <TabsContent value="faq" className="mt-4 space-y-2">
               {loadingArticles ? (
                 <div className="space-y-2">
