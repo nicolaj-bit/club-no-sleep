@@ -150,7 +150,9 @@ export default function Knowledge() {
                     <Skeleton key={i} className="h-20 rounded-2xl" />
                   ))}
                 </div>
-              ) : Object.entries(articlesByCategory).map(([category, categoryArticles]) => (
+              ) : Object.entries(articlesByCategory)
+                  .filter(([category]) => category !== 'Tigerspring')
+                  .map(([category, categoryArticles]) => (
                 <div key={category}>
                   <h2 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{category}</h2>
                   <div className="space-y-2">
