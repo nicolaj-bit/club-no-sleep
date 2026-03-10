@@ -183,9 +183,9 @@ export default function Profile() {
                 key={i}
                 to={createPageUrl(item.page)}
                 className="rounded-2xl p-5 flex flex-col gap-3 cursor-pointer active:opacity-70 transition-opacity"
-                style={{ background: 'var(--color-bg-card)' }}
+                style={{ background: 'var(--color-bg-subtle)' }}
               >
-                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
+                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-secondary)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                   {item.label}
                 </span>
