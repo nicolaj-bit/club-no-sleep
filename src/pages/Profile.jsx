@@ -185,7 +185,7 @@ export default function Profile() {
                 key={i}
                 to={createPageUrl(item.page)}
                 className="rounded-2xl p-5 flex flex-col gap-3 cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: '#F8F3ED', borderColor: '#F8F3ED', color: 'var(--color-text-primary)' }}
+                style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-primary)' }}
               >
                 <Icon className="w-6 h-6" style={{ color: 'var(--color-text-secondary)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
