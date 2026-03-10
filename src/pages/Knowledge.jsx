@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Search, X, HelpCircle, FileText, MessageCircle, ChevronRight } from 'lucide-react';
+import { Search, X, HelpCircle, MessageCircle, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ArticleCard from '@/components/knowledge/ArticleCard';
+import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 
 export default function Knowledge() {
   const [search, setSearch] = useState('');
