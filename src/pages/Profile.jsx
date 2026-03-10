@@ -132,7 +132,6 @@ export default function Profile() {
                   display_name: profile?.display_name || '',
                   city: profile?.city || '',
                   child_birthdate: profile?.child_birthdate || '',
-                  child_due_date: profile?.child_due_date || '',
                 })}
               >
                 <div className="relative">
