@@ -184,9 +184,13 @@ export default function Profile() {
                 <Input value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
               </div>
               <div className="space-y-2">
-                <Label>Barnets fødselsdag / terminsdato</Label>
+                <Label>Barnets fødselsdag</Label>
                 <Input type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
-                <p className="text-xs text-slate-400">Du kan altid opdatere denne dato.</p>
+              </div>
+              <div className="space-y-2">
+                <Label>Terminsdato</Label>
+                <Input type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value })} />
+                <p className="text-xs text-slate-400">Terminsdatoen bruges til nøjagtig beregning af tigerspring. 🐯</p>
               </div>
               <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
                 Gem ændringer
