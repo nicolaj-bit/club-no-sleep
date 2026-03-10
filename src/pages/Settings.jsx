@@ -116,9 +116,9 @@ export default function Settings() {
               onClick={() => !isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: isDark ? '#E7D3B1' : 'var(--color-bg-subtle)',
+                background: isDark ? '#E7D3B1' : 'transparent',
                 borderColor: isDark ? '#E7D3B1' : 'var(--color-border)',
-                color: isDark ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                color: 'var(--color-text-primary)',
               }}
             >
               <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
