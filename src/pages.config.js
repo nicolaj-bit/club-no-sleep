@@ -62,13 +62,13 @@ import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
 import MyQuestions from './pages/MyQuestions';
+import Onboarding from './pages/Onboarding';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
 import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
 import Shop from './pages/Shop';
 import SleepLog from './pages/SleepLog';
-import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -88,13 +88,13 @@ export const PAGES = {
     "Home": Home,
     "Knowledge": Knowledge,
     "MyQuestions": MyQuestions,
+    "Onboarding": Onboarding,
     "ProductDetail": ProductDetail,
     "Profile": Profile,
     "QuestionDetail": QuestionDetail,
     "Settings": Settings,
     "Shop": Shop,
     "SleepLog": SleepLog,
-    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {

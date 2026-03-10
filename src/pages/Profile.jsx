@@ -3,19 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import {
-  Camera, LogOut, Bookmark, Calendar, HelpCircle,
-  Shield, MapPin, Settings, Users, Bell, Globe, Palette
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import UserAvatar from '@/components/community/UserAvatar';
 
 export default function Profile() {
@@ -50,12 +45,6 @@ export default function Profile() {
     enabled: !!user?.email,
   });
 
-  const { data: bookings = [] } = useQuery({
-    queryKey: ['myBookings', user?.email],
-    queryFn: () => base44.entities.Booking.filter({ client_email: user.email }, '-date', 5),
-    enabled: !!user?.email,
-  });
-
   const { data: favorites = [] } = useQuery({
     queryKey: ['myFavorites', user?.email],
     queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
@@ -80,21 +69,16 @@ export default function Profile() {
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      updateProfileMutation.mutate({ profile_image: file_url });
-    } catch {
-      toast.error('Kunne ikke uploade billede');
-    }
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    updateProfileMutation.mutate({ profile_image: file_url });
   };
-
-  const handleLogout = () => base44.auth.logout('/');
 
   if (loading || loadingProfile) {
     return (
-      <div className="min-h-screen flex flex-col items-center pt-24 gap-4" style={{ background: 'var(--color-bg)' }}>
-        <Skeleton className="w-28 h-28 rounded-full" />
-        <Skeleton className="h-5 w-36" />
+      <div className="min-h-screen flex flex-col items-center pt-24 gap-4 px-4" style={{ background: 'var(--color-bg)' }}>
+        <Skeleton className="w-24 h-24 rounded-full" />
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-4 w-28" />
       </div>
     );
   }
@@ -102,67 +86,61 @@ export default function Profile() {
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
   const username = profile?.username || user?.email?.split('@')[0];
 
-  const gridItems = [
-    { icon: Bookmark, label: 'Favoritter', page: 'Favorites' },
-    { icon: HelpCircle, label: 'Spørgsmål', page: 'MyQuestions' },
-    { icon: Settings, label: 'Indstillinger', page: 'Settings' },
+  const menuItems = [
+    { icon: Bookmark, label: 'Favoritter', sublabel: `${favorites.length} gemte`, page: 'Favorites' },
+    { icon: HelpCircle, label: 'Mine spørgsmål', sublabel: 'Se dine spørgsmål', page: 'MyQuestions' },
+    { icon: Settings, label: 'Indstillinger', sublabel: 'App & konto', page: 'Settings' },
   ];
 
   return (
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="pt-6 pb-2 px-6 text-center">
-        <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+      <div className="pt-8 pb-4 px-6 text-center">
+        <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
           Profil
         </h1>
       </div>
 
-      <div className="px-4 space-y-4 mt-2">
-        {/* Profile card */}
+      <div className="px-4 space-y-3">
+        {/* Profile hero card */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
-          <div
-            className="rounded-3xl p-6"
-            style={{ background: 'var(--color-bg-card)' }}
-          >
-            <DialogTrigger asChild>
-              <button
-                className="flex flex-col items-center w-full text-center gap-3"
-                onClick={() => setEditForm({
-                  username: profile?.username || '',
-                  display_name: profile?.display_name || '',
-                  city: profile?.city || '',
-                  child_birthdate: profile?.child_birthdate || '',
-                })}
-              >
-                <div className="relative">
-                  <UserAvatar src={profile?.profile_image} name={displayName} size="2xl" />
-                  <label
-                    className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer"
-                    style={{ background: 'var(--color-accent)' }}
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <Camera className="w-3.5 h-3.5 text-white" />
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                  </label>
-                </div>
-                <div>
-                  <p className="font-semibold text-lg" style={{ color: 'var(--color-text-primary)' }}>{displayName}</p>
-                  <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>@{username}</p>
-                  {profile?.city && (
-                    <div className="flex items-center justify-center gap-1 mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                      <MapPin className="w-3 h-3" />
-                      <span className="text-xs">{profile.city}</span>
-                    </div>
-                  )}
-                </div>
-                <span
-                  className="text-xs px-4 py-1.5 rounded-full border"
-                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+          <div className="rounded-3xl p-6" style={{ background: 'var(--color-bg-card)' }}>
+            <div className="flex items-center gap-4">
+              <div className="relative flex-shrink-0">
+                <UserAvatar src={profile?.profile_image} name={displayName} size="2xl" />
+                <label
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-sm"
+                  style={{ background: 'var(--color-accent)' }}
                 >
-                  Rediger profil
-                </span>
-              </button>
-            </DialogTrigger>
+                  <Camera className="w-3.5 h-3.5 text-white" />
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                </label>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-lg leading-tight truncate" style={{ color: 'var(--color-text-primary)' }}>{displayName}</p>
+                <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>@{username}</p>
+                {profile?.city && (
+                  <div className="flex items-center gap-1 mt-1.5" style={{ color: 'var(--color-text-muted)' }}>
+                    <MapPin className="w-3 h-3" />
+                    <span className="text-xs">{profile.city}</span>
+                  </div>
+                )}
+              </div>
+              <DialogTrigger asChild>
+                <button
+                  className="text-xs px-3 py-1.5 rounded-full border flex-shrink-0 cursor-pointer"
+                  style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+                  onClick={() => setEditForm({
+                    username: profile?.username || '',
+                    display_name: profile?.display_name || '',
+                    city: profile?.city || '',
+                    child_birthdate: profile?.child_birthdate || '',
+                  })}
+                >
+                  Rediger
+                </button>
+              </DialogTrigger>
+            </div>
           </div>
 
           <DialogContent>
@@ -171,54 +149,59 @@ export default function Profile() {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label>Brugernavn</Label>
-                <Input value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
+                <Label htmlFor="username">Brugernavn</Label>
+                <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
               </div>
               <div className="space-y-2">
-                <Label>Visningsnavn</Label>
-                <Input value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
+                <Label htmlFor="display_name">Visningsnavn</Label>
+                <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
               </div>
               <div className="space-y-2">
-                <Label>By</Label>
-                <Input value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
+                <Label htmlFor="city">By</Label>
+                <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
               </div>
               <div className="space-y-2">
-                <Label>Barnets fødselsdag</Label>
-                <Input type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
+                <Label htmlFor="birthdate">Barnets fødselsdag</Label>
+                <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Bruges til beregning af tigerspring 🐯</p>
               </div>
               <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
-                Gem ændringer
+                {updateProfileMutation.isPending ? 'Gemmer…' : 'Gem ændringer'}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
 
-        {/* Grid menu */}
-        <div className="grid grid-cols-2 gap-3">
-          {gridItems.map((item, i) => {
+        {/* Menu items */}
+        <div className="rounded-3xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
+          {menuItems.map((item, i) => {
             const Icon = item.icon;
             return (
               <Link
                 key={i}
                 to={createPageUrl(item.page)}
-                className="rounded-2xl p-5 flex flex-col gap-3 active:scale-[0.97] transition-transform"
-                style={{ background: 'var(--color-bg-card)' }}
+                className="flex items-center gap-4 px-5 py-4 cursor-pointer active:opacity-70 transition-opacity"
+                style={{ borderBottom: i < menuItems.length - 1 ? '1px solid var(--color-border)' : 'none' }}
               >
-                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
-                <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                  {item.label}
-                </span>
+                <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
+                  <Icon className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.sublabel}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
               </Link>
             );
           })}
         </div>
 
         {/* Privacy toggles */}
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
-          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="rounded-3xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
+          <p className="px-5 pt-4 pb-2 text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>Privatliv</p>
+          <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center gap-3">
-              <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+              <MapPin className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
               <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>Del lokation</span>
             </div>
             <Switch
@@ -226,9 +209,9 @@ export default function Profile() {
               onCheckedChange={(checked) => updateProfileMutation.mutate({ location_enabled: checked })}
             />
           </div>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-3.5">
             <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+              <Shield className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
               <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>Vis mig som synlig</span>
             </div>
             <Switch
@@ -240,12 +223,9 @@ export default function Profile() {
 
         {/* Log out */}
         <button
-          onClick={handleLogout}
-          className="w-full py-4 rounded-2xl text-sm font-medium transition-all active:scale-[0.98]"
-          style={{
-            background: 'var(--color-bg-card)',
-            color: '#c0614a',
-          }}
+          onClick={() => base44.auth.logout('/')}
+          className="w-full py-4 rounded-3xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
+          style={{ background: 'var(--color-bg-card)', color: '#c0614a' }}
         >
           <span className="flex items-center justify-center gap-2">
             <LogOut className="w-4 h-4" />
