@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, ChevronRight, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText } from 'lucide-react';
+import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { Button } from '@/components/ui/button';
@@ -35,18 +35,18 @@ export default function Settings() {
 
   const isAdmin = user?.role === 'admin';
 
-  const settingsItems = [
-    ...(isAdmin ? [{ icon: FileText, title: 'Blog & Artikler', description: 'Rediger indhold', link: 'AdminEditor' }] : []),
-    { icon: Lock, title: 'Skift adgangskode', description: 'Opdater din adgangskode', action: () => setPasswordOpen(true) },
-    { icon: Bell, title: 'Notifikationer', description: 'Push notifikationer', toggle: true, defaultChecked: true },
-    { icon: Moon, title: 'Mørkt tema', description: isDark ? 'Slå lyst tema til' : 'Slå mørkt tema til', toggle: true, checked: isDark, onToggle: toggle },
-    { icon: Shield, title: 'Privatliv', description: 'Del lokation & synlighed', link: 'Profile' },
+  const gridItems = [
+    ...(isAdmin ? [{ icon: FileText, label: 'Blog & Artikler', link: 'AdminEditor' }] : []),
+    { icon: Lock, label: 'Adgangskode', action: () => setPasswordOpen(true) },
+    { icon: Bell, label: 'Notifikationer', toggle: true, defaultChecked: true },
+    { icon: Shield, label: 'Privatliv', link: 'Profile' },
+    { icon: HelpCircle, label: 'Hjælp', accordion: true },
   ];
 
   return (
     <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="pt-8 pb-4 px-6 text-center relative flex items-center justify-center">
+      <div className="pt-8 pb-4 px-5 flex items-center justify-center relative">
         <Link to={createPageUrl('Profile')} className="absolute left-4">
           <button className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer" style={{ background: 'var(--color-bg-card)' }}>
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
@@ -57,74 +57,86 @@ export default function Settings() {
         </h1>
       </div>
 
-      <div className="px-4 space-y-3 mt-2">
-        {/* Settings list */}
-        <div className="rounded-3xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
-          {settingsItems.map((item, i) => {
+      <div className="px-4 space-y-4 mt-2">
+
+        {/* Grid items */}
+        <div className="grid grid-cols-2 gap-3">
+          {gridItems.filter(i => !i.accordion).map((item, i) => {
             const Icon = item.icon;
-            return (
-              <div
-                key={i}
-                style={{ borderBottom: i < settingsItems.length - 1 ? '1px solid var(--color-border)' : 'none' }}
-              >
-                {item.toggle ? (
-                  <div className="flex items-center gap-4 px-5 py-4">
-                    <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
-                      <Icon className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
-                    </div>
-                    <Switch
-                      checked={item.onToggle ? item.checked : undefined}
-                      defaultChecked={item.onToggle ? undefined : item.defaultChecked}
-                      onCheckedChange={item.onToggle || undefined}
-                    />
+
+            if (item.toggle) {
+              return (
+                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: 'var(--color-bg-card)' }}>
+                  <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
+                    <Switch defaultChecked={item.defaultChecked} />
                   </div>
-                ) : item.link ? (
-                  <Link to={createPageUrl(item.link)} className="flex items-center gap-4 px-5 py-4 cursor-pointer active:opacity-70 transition-opacity">
-                    <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
-                      <Icon className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-                  </Link>
-                ) : (
-                  <button onClick={item.action} className="flex items-center gap-4 px-5 py-4 w-full text-left cursor-pointer active:opacity-70 transition-opacity">
-                    <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
-                      <Icon className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-                  </button>
-                )}
-              </div>
+                </div>
+              );
+            }
+
+            const Wrapper = item.link ? Link : 'button';
+            const wrapperProps = item.link ? { to: createPageUrl(item.link) } : { onClick: item.action };
+
+            return (
+              <Wrapper
+                key={i}
+                {...wrapperProps}
+                className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity"
+                style={{ background: 'var(--color-bg-card)' }}
+              >
+                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
+                <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
+              </Wrapper>
             );
           })}
         </div>
 
-        {/* Push notifications – kun admin */}
+        {/* Tema – Lys / Mørk */}
+        <div className="rounded-2xl p-5 space-y-3" style={{ background: 'var(--color-bg-card)' }}>
+          <div>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tema</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vælg dit foretrukne look</p>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => isDark && toggle()}
+              className="py-3 rounded-xl text-sm font-medium border-2 transition-all cursor-pointer"
+              style={{
+                background: !isDark ? 'var(--color-bg)' : 'transparent',
+                borderColor: !isDark ? 'var(--color-text-primary)' : 'transparent',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
+              Lys
+            </button>
+            <button
+              onClick={() => !isDark && toggle()}
+              className="py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
+              style={{
+                background: isDark ? '#5a5047' : 'var(--color-bg-subtle)',
+                color: isDark ? '#fff' : 'var(--color-text-secondary)',
+              }}
+            >
+              <Moon className="w-4 h-4 mx-auto mb-1" />
+              Mørk
+            </button>
+          </div>
+        </div>
+
+        {/* Admin push */}
         {isAdmin && <PushNotificationSender />}
 
         {/* FAQ + Support */}
-        <div className="rounded-3xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <AccordionTrigger className="px-5 hover:no-underline py-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
-                    <HelpCircle className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Ofte stillede spørgsmål</p>
-                  </div>
+                  <HelpCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Ofte stillede spørgsmål</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
@@ -135,12 +147,8 @@ export default function Settings() {
             <AccordionItem value="support" className="border-0">
               <AccordionTrigger className="px-5 hover:no-underline py-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
-                    <Mail className="w-4.5 h-4.5" style={{ color: 'var(--color-text-secondary)' }} />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kontakt support</p>
-                  </div>
+                  <Mail className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kontakt support</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
@@ -153,7 +161,7 @@ export default function Settings() {
         {/* Delete account */}
         <button
           onClick={() => setDeleteOpen(true)}
-          className="w-full py-4 rounded-3xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
+          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
           style={{ background: 'var(--color-bg-card)', color: '#c0614a' }}
         >
           <span className="flex items-center justify-center gap-2">
