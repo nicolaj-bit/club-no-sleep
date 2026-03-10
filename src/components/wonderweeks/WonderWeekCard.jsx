@@ -8,6 +8,8 @@ const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans
 
 export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
   const [expanded, setExpanded] = useState(false);
+  const emojiMap = useWonderWeekEmojis();
+  const emoji = emojiMap[wonderWeek?.number] || wonderWeek?.emoji;
 
   if (!wonderWeek || wonderWeek.status === 'complete') return null;
 

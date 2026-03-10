@@ -11,6 +11,7 @@ const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans
 
 export default function WonderWeeksTab() {
   const [user, setUser] = useState(null);
+  const emojiMap = useWonderWeekEmojis();
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
