@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
