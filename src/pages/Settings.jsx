@@ -66,7 +66,7 @@ export default function Settings() {
 
             if (item.toggle) {
               return (
-                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3" style={{ background: 'var(--color-bg-card)' }}>
+                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
                   <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
@@ -83,8 +83,8 @@ export default function Settings() {
               <Wrapper
                 key={i}
                 {...wrapperProps}
-                className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity"
-                style={{ background: 'var(--color-bg-card)' }}
+                className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity border"
+                style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
               >
                 <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
