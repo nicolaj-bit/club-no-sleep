@@ -197,7 +197,7 @@ export default function Profile() {
         </div>
 
         {/* Privacy toggles */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: '#F8F3ED', borderColor: '#F8F3ED' }}>
+        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center gap-3">
               <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
