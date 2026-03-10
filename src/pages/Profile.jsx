@@ -109,7 +109,7 @@ export default function Profile() {
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
             className="rounded-3xl p-5"
-            style={{ background: 'var(--color-bg-card)' }}
+            style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
           >
             <DialogTrigger asChild>
               <button
