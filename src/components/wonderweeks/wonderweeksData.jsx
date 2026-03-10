@@ -224,6 +224,8 @@ export const WONDER_WEEKS = [
   }
 ];
 
+export const wonderWeeks = WONDER_WEEKS;
+
 /**
  * Beregn barnets alder i uger fra terminsdato (eller fødselsdato som fallback)
  * Wonder Weeks bruger terminsdato som udgangspunkt
