@@ -94,7 +94,7 @@ export default function Settings() {
         </div>
 
         {/* Tema – Lys / Mørk */}
-        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: '#F8F3ED', borderColor: '#F8F3ED' }}>
           <div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tema</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vælg dit foretrukne look</p>
