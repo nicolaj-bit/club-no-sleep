@@ -30,6 +30,12 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
+    // Kun aktiver OneSignal i appen (PWA standalone/installed), ikke på hjemmesiden
+    const isApp = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+
+    if (!isApp) return;
+
     // Load OneSignal SDK
     const script = document.createElement('script');
     script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
