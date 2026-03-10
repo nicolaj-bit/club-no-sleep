@@ -215,8 +215,8 @@ export default function Profile() {
         {/* Log out */}
         <button
           onClick={() => base44.auth.logout('/')}
-          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
-          style={{ background: 'var(--color-bg-card)', color: '#c0614a' }}
+          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
+          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
         >
           <span className="flex items-center justify-center gap-2">
             <LogOut className="w-4 h-4" />
