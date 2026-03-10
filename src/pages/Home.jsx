@@ -68,7 +68,12 @@ export default function Home() {
     queryKey: ['userProfileHome', user?.email],
     queryFn: async () => {
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-      return profiles[0] || null;
+      const p = profiles[0] || null;
+      // Ny bruger uden profil → send til onboarding
+      if (!p) {
+        window.location.href = createPageUrl('Onboarding');
+      }
+      return p;
     },
     enabled: !!user?.email,
   });
