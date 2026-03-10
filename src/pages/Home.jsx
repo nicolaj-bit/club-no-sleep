@@ -49,10 +49,30 @@ function getDailyAffirmation() {
 }
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(isAuth => {
+      if (isAuth) base44.auth.me().then(setUser).catch(() => {});
+    });
+  }, []);
+
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date', 3),
   });
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfileHome', user?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+      return profiles[0] || null;
+    },
+    enabled: !!user?.email,
+  });
+
+  const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
+  const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
   const affirmation = getDailyAffirmation();
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: da });
