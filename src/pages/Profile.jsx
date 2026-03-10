@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useTheme } from '@/components/ui/ThemeProvider';
 import UserAvatar from '@/components/community/UserAvatar';
 
 export default function Profile() {
