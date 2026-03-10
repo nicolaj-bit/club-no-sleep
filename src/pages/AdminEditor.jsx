@@ -156,13 +156,29 @@ export default function AdminEditor() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Billede URL</Label>
-                <Input
-                  value={editing.featured_image || ''}
-                  onChange={e => setEditing({ ...editing, featured_image: e.target.value })}
-                  placeholder="https://..."
-                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-                />
+                <Label style={{ color: 'var(--color-text-secondary)' }}>Billede</Label>
+                {editing.featured_image && (
+                  <img src={editing.featured_image} alt="preview" className="w-full h-40 object-cover rounded-xl" />
+                )}
+                <label className="flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-sm w-fit"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
+                  <Upload className="w-4 h-4" />
+                  {uploading ? 'Uploader...' : 'Vælg billede'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={uploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setUploading(true);
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      setEditing(prev => ({ ...prev, featured_image: file_url }));
+                      setUploading(false);
+                    }}
+                  />
+                </label>
               </div>
               <div className="space-y-1.5">
                 <Label style={{ color: 'var(--color-text-secondary)' }}>Publiceringsdato</Label>
