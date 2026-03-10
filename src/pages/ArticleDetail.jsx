@@ -15,15 +15,21 @@ export default function ArticleDetail() {
   const isDark = theme === 'dark';
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
-
+  const articleSlug = urlParams.get('slug');
 
   const { data: article, isLoading } = useQuery({
-    queryKey: ['article', articleId],
+    queryKey: ['article', articleId, articleSlug],
     queryFn: async () => {
-      const articles = await base44.entities.KnowledgeArticle.filter({ id: articleId });
-      return articles[0];
+      if (articleId) {
+        const articles = await base44.entities.KnowledgeArticle.filter({ id: articleId });
+        return articles[0];
+      }
+      if (articleSlug) {
+        const articles = await base44.entities.KnowledgeArticle.list();
+        return articles.find(a => a.title?.toLowerCase().replace(/\s+/g, '-').includes(articleSlug.replace('tigerspring-', '').replace('-', '')) || a.tags?.includes(articleSlug));
+      }
     },
-    enabled: !!articleId,
+    enabled: !!(articleId || articleSlug),
   });
 
   const handleShare = async () => {
