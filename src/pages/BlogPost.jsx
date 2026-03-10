@@ -160,8 +160,8 @@ export default function BlogPost() {
       </div>
 
       {/* Content card */}
-      <div className="mx-4 -mt-5 relative z-10 rounded-2xl border p-5 space-y-4"
-        style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+      <div className="mx-4 -mt-5 relative z-10 rounded-2xl p-5 space-y-4"
+        style={{ backgroundColor: 'var(--color-bg-card)' }}
       >
         {/* Category */}
         {post.category && (
