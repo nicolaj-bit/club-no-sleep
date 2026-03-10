@@ -90,9 +90,9 @@ export default function WonderWeeksTab() {
               {/* Emoji */}
               <div
                 className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                style={{ backgroundColor: isComplete ? 'var(--color-bg-subtle)' : `${ww.color}20` }}
+                style={{ backgroundColor: isComplete ? 'var(--color-bg-subtle)' : `${ww.color}20`, fontFamily: EMOJI_FONT }}
               >
-                {isComplete ? '✓' : ww.emoji}
+                {isComplete ? '✓' : (emojiMap[ww.number] || ww.emoji)}
               </div>
 
               {/* Info */}

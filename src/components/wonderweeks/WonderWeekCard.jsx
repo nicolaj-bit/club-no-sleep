@@ -63,9 +63,9 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
             </div>
             <div
               className="w-13 h-13 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-              style={{ backgroundColor: `${wonderWeek.color}18`, width: 52, height: 52, fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' }}
+              style={{ backgroundColor: `${wonderWeek.color}18`, width: 52, height: 52, fontFamily: EMOJI_FONT }}
             >
-              {wonderWeek.emoji}
+              {emoji}
             </div>
           </div>
 
