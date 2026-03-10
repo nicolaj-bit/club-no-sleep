@@ -94,7 +94,7 @@ export default function Settings() {
         </div>
 
         {/* Tema – Lys / Mørk */}
-        <div className="rounded-2xl p-5 space-y-3" style={{ background: 'var(--color-bg-card)' }}>
+        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tema</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vælg dit foretrukne look</p>
@@ -102,10 +102,10 @@ export default function Settings() {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => isDark && toggle()}
-              className="py-3 rounded-xl text-sm font-medium border-2 transition-all cursor-pointer"
+              className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
                 background: !isDark ? 'var(--color-bg)' : 'transparent',
-                borderColor: !isDark ? 'var(--color-text-primary)' : 'transparent',
+                borderColor: 'var(--color-border)',
                 color: 'var(--color-text-primary)',
               }}
             >
@@ -114,13 +114,14 @@ export default function Settings() {
             </button>
             <button
               onClick={() => !isDark && toggle()}
-              className="py-3 rounded-xl text-sm font-medium transition-all cursor-pointer"
+              className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: isDark ? '#5a5047' : 'var(--color-bg-subtle)',
-                color: isDark ? '#fff' : 'var(--color-text-secondary)',
+                background: 'var(--color-bg-subtle)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-secondary)',
               }}
             >
-              <Moon className="w-4 h-4 mx-auto mb-1" />
+              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
               Mørk
             </button>
           </div>
