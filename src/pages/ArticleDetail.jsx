@@ -34,10 +34,7 @@ export default function ArticleDetail() {
 
   const handleShare = async () => {
     try {
-      await navigator.share({
-        title: article.title,
-        url: window.location.href,
-      });
+      await navigator.share({ title: article.title, url: window.location.href });
     } catch {
       navigator.clipboard.writeText(window.location.href);
       toast.success('Link kopieret');
@@ -46,10 +43,13 @@ export default function ArticleDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <Skeleton className="h-8 w-3/4 mb-4" />
-        <Skeleton className="h-4 w-1/4 mb-6" />
-        <Skeleton className="h-40 w-full" />
+      <div className="min-h-screen p-5" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <Skeleton className="h-6 w-1/3 mb-8" />
+        <Skeleton className="h-7 w-4/5 mb-3" />
+        <Skeleton className="h-5 w-2/5 mb-8" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-3/4" />
       </div>
     );
   }
@@ -63,52 +63,137 @@ export default function ArticleDetail() {
   }
 
   const Icon = article.is_faq ? HelpCircle : FileText;
+  const isFaq = article.is_faq;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center justify-between">
+      {/* Sticky header */}
+      <header
+        className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3"
+        style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.85)' : 'rgba(255,255,255,0.85)', borderColor: 'var(--color-border)' }}
+      >
+        <div className="flex items-center justify-between max-w-2xl mx-auto">
           <Link to={createPageUrl('Knowledge')}>
             <Button variant="ghost" size="icon" className="-ml-2">
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
           <Button variant="ghost" size="icon" onClick={handleShare}>
-            <Share2 className="w-5 h-5" />
+            <Share2 className="w-4 h-4" />
           </Button>
         </div>
       </header>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: article.is_faq ? (isDark ? '#1e3a5f' : '#eff6ff') : 'var(--color-bg-subtle)' }}>
-            <Icon className="w-5 h-5" style={{ color: article.is_faq ? (isDark ? '#60a5fa' : '#3b82f6') : 'var(--color-text-muted)' }} />
+      {/* Article body */}
+      <article className="max-w-2xl mx-auto px-5 pt-8 pb-16">
+
+        {/* Category badge */}
+        <div className="flex items-center gap-2 mb-5">
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center"
+            style={{ backgroundColor: isFaq ? (isDark ? '#1e3a5f' : '#eff6ff') : 'var(--color-bg-subtle)' }}
+          >
+            <Icon
+              className="w-3.5 h-3.5"
+              style={{ color: isFaq ? (isDark ? '#60a5fa' : '#3b82f6') : 'var(--color-text-muted)' }}
+            />
           </div>
-          <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{article.category}</span>
+          <span
+            className="text-xs font-medium uppercase tracking-widest"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            {article.category}
+          </span>
         </div>
 
-        <h1 className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{article.title}</h1>
+        {/* Title */}
+        <h1
+          className="text-2xl font-bold leading-snug mb-8"
+          style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}
+        >
+          {article.title}
+        </h1>
 
-        <div className="prose prose-sm max-w-none" style={{ color: 'var(--color-text-primary)' }}>
-          <ReactMarkdown>{article.content}</ReactMarkdown>
+        {/* Divider */}
+        <div className="w-10 h-0.5 mb-8 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
+
+        {/* Markdown content */}
+        <div
+          className="article-content"
+          style={{ color: 'var(--color-text-primary)' }}
+        >
+          <ReactMarkdown
+            components={{
+              h1: ({ children }) => (
+                <h1 className="text-xl font-bold mt-8 mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{children}</h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-lg font-semibold mt-7 mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{children}</h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-base font-semibold mt-5 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h3>
+              ),
+              p: ({ children }) => (
+                <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-text-secondary)' }}>{children}</p>
+              ),
+              ul: ({ children }) => (
+                <ul className="mb-5 space-y-2 pl-1">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="mb-5 space-y-2 pl-1 list-decimal list-inside">{children}</ol>
+              ),
+              li: ({ children }) => (
+                <li className="flex items-start gap-3 text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--color-accent)' }} />
+                  <span>{children}</span>
+                </li>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote
+                  className="pl-4 py-1 my-6 rounded-r-lg border-l-4"
+                  style={{ borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                >
+                  {children}
+                </blockquote>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{children}</strong>
+              ),
+              em: ({ children }) => (
+                <em className="italic" style={{ color: 'var(--color-text-secondary)' }}>{children}</em>
+              ),
+              code: ({ children }) => (
+                <code
+                  className="px-1.5 py-0.5 rounded text-sm font-mono"
+                  style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-accent)' }}
+                >
+                  {children}
+                </code>
+              ),
+              hr: () => (
+                <hr className="my-8" style={{ borderColor: 'var(--color-border)' }} />
+              ),
+            }}
+          >
+            {article.content}
+          </ReactMarkdown>
         </div>
 
-        {article.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
-            {article.tags.map((tag, i) => (
-              <span 
+        {/* Tags */}
+        {article.tags?.filter(t => !t.startsWith('tigerspring')).length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-8 mt-8 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            {article.tags.filter(t => !t.startsWith('tigerspring')).map((tag, i) => (
+              <span
                 key={i}
-                className="px-2.5 py-1 text-xs rounded-full"
-                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                className="px-3 py-1 text-xs rounded-full font-medium"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}
               >
                 {tag}
               </span>
             ))}
           </div>
         )}
-      </div>
+      </article>
     </div>
   );
 }
