@@ -15,6 +15,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import UserAvatar from '@/components/community/UserAvatar';
 
 export default function Profile() {
+  const { isDark } = useTheme();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
