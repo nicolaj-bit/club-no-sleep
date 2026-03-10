@@ -148,6 +148,9 @@ export default function Settings() {
           })}
         </div>
 
+        {/* Push notifications – kun admin */}
+        {isAdmin && <PushNotificationSender />}
+
         {/* FAQ */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--color-bg-card)' }}>
           <Accordion type="single" collapsible className="w-full">
