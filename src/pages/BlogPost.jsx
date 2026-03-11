@@ -103,7 +103,7 @@ export default function BlogPost() {
       await navigator.share({ title: post.title, url: window.location.href });
     } catch {
       navigator.clipboard.writeText(window.location.href);
-      toast.success('Link kopieret');
+      toast.success(lang === 'en' ? 'Link copied' : 'Link kopieret');
     }
   };
 
