@@ -13,6 +13,7 @@ import ReactMarkdown from 'react-markdown';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { enUS } from 'date-fns/locale';
 
 export default function BlogPost() {
   const { theme } = useTheme();
