@@ -52,18 +52,18 @@ export default function BottomNav() {
               onClick={() => setMenuOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 8 }}
-              transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed left-1/2 top-1/2 z-50 w-80 rounded-3xl overflow-hidden"
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
               style={{
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
-                backdropFilter: 'blur(20px)',
+                bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
+                backgroundColor: isDark ? 'rgba(18,18,18,0.97)' : 'rgba(255,255,255,0.97)',
+                backdropFilter: 'blur(24px)',
                 boxShadow: isDark
-                  ? '0 32px 64px rgba(0,0,0,0.9), 0 0 0 0.5px rgba(255,255,255,0.08)'
-                  : '0 32px 64px rgba(44,26,14,0.18), 0 0 0 0.5px rgba(44,26,14,0.06)',
+                  ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
+                  : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
               }}
             >
               {/* Header */}
