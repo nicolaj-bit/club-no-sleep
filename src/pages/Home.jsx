@@ -72,6 +72,8 @@ export default function Home() {
   const affirmationIndex = getDailyAffirmationIndex();
   const affirmation = t.affirmations[affirmationIndex % t.affirmations.length];
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
+  
+  const greeting = getGreeting(lang, profile?.gender);
 
   // Translate affirmation to Danish when in Danish mode
   const translatedAffirmations = useTranslation(
