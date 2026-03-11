@@ -76,7 +76,7 @@ export default function Shop() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                 <Input
-                  placeholder="Søg produkter..."
+                  placeholder={t.searchProducts}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 border-0"
