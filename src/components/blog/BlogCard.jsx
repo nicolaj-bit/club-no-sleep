@@ -2,13 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { da, enUS } from 'date-fns/locale';
 import { BookOpen, ChevronRight } from 'lucide-react';
 
-export default function BlogCard({ post, variant = 'default' }) {
+export default function BlogCard({ post, variant = 'default', translatedTitle, translatedCategory, lang = 'da' }) {
+  const locale = lang === 'en' ? enUS : da;
+  const dateFormat = lang === 'en' ? 'MMM d, yyyy' : 'd. MMM yyyy';
   const formattedDate = post.published_date
-    ? format(new Date(post.published_date), 'd. MMM yyyy', { locale: da })
+    ? format(new Date(post.published_date), dateFormat, { locale })
     : null;
+  const displayTitle = translatedTitle || post.title;
+  const displayCategory = translatedCategory || post.category;
 
   if (variant === 'featured') {
     return (
