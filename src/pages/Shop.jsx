@@ -119,14 +119,14 @@ export default function Shop() {
           <div className="flex gap-2">
             {categories.map(cat => (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
+                key={cat.key}
+                onClick={() => setActiveCategory(cat.key)}
                 className="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
-                style={activeCategory === cat
+                style={activeCategory === cat.key
                   ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
                   : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
