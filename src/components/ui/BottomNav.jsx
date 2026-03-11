@@ -22,6 +22,8 @@ export default function BottomNav() {
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
   const { isDark } = useTheme();
+  const { t } = useLanguage();
+  const menuItems = menuItemsConfig.map(item => ({ ...item, name: t[item.key] }));
 
   const isActive = (page) => {
     const url = createPageUrl(page);
