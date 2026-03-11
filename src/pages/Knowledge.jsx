@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -12,11 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ArticleCard from '@/components/knowledge/ArticleCard';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function Knowledge() {
   const headerVisible = useScrollDirection();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const { lang, t } = useLanguage();
 
   const { data: articles = [], isLoading: loadingArticles } = useQuery({
     queryKey: ['articles'],
@@ -28,21 +30,41 @@ export default function Knowledge() {
     queryFn: () => base44.entities.Question.list('-created_date', 20),
   });
 
-  const { t } = useLanguage();
-
   const { data: tabs = [] } = useQuery({
     queryKey: ['knowledge-tabs'],
     queryFn: () => base44.entities.KnowledgeTab.list('order'),
   });
 
+  // Translate articles, questions and tabs
+  const articlesToTranslate = lang === 'en' && articles.length > 0
+    ? articles.map(a => ({ id: a.id, title: a.title, category: a.category || '' }))
+    : [];
+  const questionsToTranslate = lang === 'en' && questions.length > 0
+    ? questions.map(q => ({ id: q.id, title: q.title }))
+    : [];
+  const tabsToTranslate = lang === 'en' && tabs.length > 0
+    ? tabs.map(tab => ({ id: tab.id, label: tab.label }))
+    : [];
+
+  const articleTranslations = useTranslation(articlesToTranslate);
+  const questionTranslations = useTranslation(questionsToTranslate);
+  const tabTranslations = useTranslation(tabsToTranslate);
+
   const activeTabs = tabs.filter(t => t.is_active);
 
-  // Group articles by category with translations
+  // Helper to get translated text
+  const getTranslated = (items, itemId, field, fallback) => {
+    if (!Array.isArray(items)) return fallback;
+    const found = items.find(i => i.id === itemId);
+    return found ? found[field] : fallback;
+  };
+
+  // Group articles by category
   const articlesByCategory = articles.reduce((acc, article) => {
-    const translated = translations['article_' + article.id];
-    const cat = lang === 'en' && translated ? translated.category : (article.category || 'Andet');
+    const cat = getTranslated(articleTranslations, article.id, 'category', article.category || 'Andet');
     if (!acc[cat]) acc[cat] = [];
-    acc[cat].push({ ...article, _displayTitle: translated?.title || article.title });
+    const displayTitle = getTranslated(articleTranslations, article.id, 'title', article.title);
+    acc[cat].push({ ...article, _displayTitle: displayTitle });
     return acc;
   }, {});
 
@@ -124,12 +146,11 @@ export default function Knowledge() {
                   <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>{t.articles}</h2>
                   <div className="space-y-2">
                     {searchResults.articles.map(article => {
-                        const translated = translations['article_' + article.id];
-                        const displayTitle = lang === 'en' && translated ? translated.title : article.title;
-                        return (
-                          <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
-                        );
-                      })}
+                      const displayTitle = getTranslated(articleTranslations, article.id, 'title', article.title);
+                      return (
+                        <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -139,21 +160,20 @@ export default function Knowledge() {
                   <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>{t.questions}</h2>
                   <div className="space-y-2">
                     {searchResults.questions.map(q => {
-                        const translated = translations['question_' + q.id];
-                        const displayTitle = lang === 'en' && translated ? translated.title : q.title;
-                        return (
-                      <Link 
-                        key={q.id}
-                        to={createPageUrl(`QuestionDetail?id=${q.id}`)}
-                        className="flex items-center gap-3 p-3 rounded-xl border"
-                      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-                      >
-                        <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                        <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</span>
-                        <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
-                      </Link>
-                    );
-                      })}
+                      const displayTitle = getTranslated(questionTranslations, q.id, 'title', q.title);
+                      return (
+                        <Link 
+                          key={q.id}
+                          to={createPageUrl(`QuestionDetail?id=${q.id}`)}
+                          className="flex items-center gap-3 p-3 rounded-xl border"
+                          style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+                        >
+                          <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                          <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</span>
+                          <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -166,8 +186,7 @@ export default function Knowledge() {
           <Tabs defaultValue={activeTabs[0]?.key || 'articles'} className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
               {activeTabs.map(tab => {
-                const translated = translations['tab_' + tab.id];
-                const displayLabel = lang === 'en' && translated ? translated.label : tab.label;
+                const displayLabel = getTranslated(tabTranslations, tab.id, 'label', tab.label);
                 return (
                   <TabsTrigger key={tab.key} value={tab.key} className="flex-1 rounded-lg text-xs">
                     {tab.emoji ? `${tab.emoji} ` : ''}{displayLabel}
@@ -213,13 +232,12 @@ export default function Knowledge() {
                   <p style={{ color: 'var(--color-text-muted)' }}>{t.noFaq}</p>
                 </div>
               ) : (
-               faqs.map(article => {
-                 const translated = translations['article_' + article.id];
-                 const displayTitle = lang === 'en' && translated ? translated.title : article.title;
-                 return (
-                   <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
-                 );
-               })
+                faqs.map(article => {
+                  const displayTitle = getTranslated(articleTranslations, article.id, 'title', article.title);
+                  return (
+                    <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
+                  );
+                })
               )}
             </TabsContent>
 
@@ -246,41 +264,40 @@ export default function Knowledge() {
               ) : (
                 <div className="space-y-3">
                   {questions.map(q => {
-                   const translated = translations['question_' + q.id];
-                   const displayTitle = lang === 'en' && translated ? translated.title : q.title;
-                   return (
-                   <Link 
-                     key={q.id}
-                     to={createPageUrl(`QuestionDetail?id=${q.id}`)}
-                     className="block rounded-xl p-4 border"
-                     style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-                   >
-                     <div className="flex items-start justify-between gap-2">
-                       <h3 className="font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</h3>
-                        <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full ${
-                          q.status === 'answered' 
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-amber-100 text-amber-700'
-                        }`}>
-                          {q.status === 'answered' ? t.answered : t.open}
-                        </span>
-                      </div>
-                      <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>
-                      <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                        <span>{t.by} {q.author_username}</span>
-                        {q.answer_count > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>{q.answer_count} {t.answers}</span>
-                          </>
-                        )}
-                      </div>
-                    </Link>
+                    const displayTitle = getTranslated(questionTranslations, q.id, 'title', q.title);
+                    return (
+                      <Link 
+                        key={q.id}
+                        to={createPageUrl(`QuestionDetail?id=${q.id}`)}
+                        className="block rounded-xl p-4 border"
+                        style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</h3>
+                          <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full ${
+                            q.status === 'answered' 
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            {q.status === 'answered' ? t.answered : t.open}
+                          </span>
+                        </div>
+                        <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>
+                        <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                          <span>{t.by} {q.author_username}</span>
+                          {q.answer_count > 0 && (
+                            <>
+                              <span>•</span>
+                              <span>{q.answer_count} {t.answers}</span>
+                            </>
+                          )}
+                        </div>
+                      </Link>
                     );
-                    })}
-                    </div>
-                    )}
-                    </TabsContent>
+                  })}
+                </div>
+              )}
+            </TabsContent>
           </Tabs>
         </div>
       )}
