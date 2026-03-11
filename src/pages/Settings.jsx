@@ -173,7 +173,7 @@ export default function Settings() {
           </span>
         </button>
 
-        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>Version 1.0.0</p>
+        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>{t.version}</p>
       </div>
 
       {/* Change Password Bottom Sheet */}
