@@ -27,6 +27,13 @@ export default function Knowledge() {
     queryFn: () => base44.entities.Question.list('-created_date', 20),
   });
 
+  const { data: tabs = [] } = useQuery({
+    queryKey: ['knowledge-tabs'],
+    queryFn: () => base44.entities.KnowledgeTab.list('order'),
+  });
+
+  const activeTabs = tabs.filter(t => t.is_active);
+
   // Group articles by category
   const articlesByCategory = articles.reduce((acc, article) => {
     const cat = article.category || 'Andet';
