@@ -16,7 +16,6 @@ export default function ArticleDetail() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { lang } = useLanguage();
-  const [translatedArticle, setTranslatedArticle] = useState(null);
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
   const articleSlug = urlParams.get('slug');
