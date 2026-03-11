@@ -69,7 +69,8 @@ export function BottomSheetAction({ icon: Icon, label, onPress, destructive, act
         color: destructive ? '#EF4444' : active ? 'var(--color-accent)' : 'var(--color-text-primary)',
       }}
     >
-      {Icon && (
+      {Icon && ( // Icon is passed as a prop component
+
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{
