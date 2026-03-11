@@ -52,9 +52,14 @@ export default function Onboarding() {
       toast.error('Vælg venligst et brugernavn');
       return;
     }
+    if (!form.accept_terms || !form.accept_privacy) {
+      toast.error('Du skal acceptere handelsbetingelser og privatlivspolitik');
+      return;
+    }
     setSaving(true);
+    const { accept_terms, accept_privacy, ...profileData } = form;
     await base44.entities.UserProfile.create({
-      ...form,
+      ...profileData,
       user_email: user.email,
     });
     window.location.href = createPageUrl('Home');
