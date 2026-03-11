@@ -129,7 +129,7 @@ export default function BlogPost() {
   }
 
   const formattedDate = post.published_date
-    ? format(new Date(post.published_date), 'd. MMMM yyyy', { locale: da })
+    ? format(new Date(post.published_date), lang === 'en' ? 'MMMM d, yyyy' : 'd. MMMM yyyy', { locale: lang === 'en' ? enUS : da })
     : null;
 
   return (
