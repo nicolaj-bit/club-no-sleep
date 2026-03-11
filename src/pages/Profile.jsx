@@ -92,11 +92,11 @@ export default function Profile() {
   const username = profile?.username || user?.email?.split('@')[0];
 
   const gridItems = [
-    { icon: Bookmark, label: 'Favoritter', page: 'Favorites' },
-    { icon: Bell, label: 'Notifikationer', page: 'Settings' },
-    { icon: HelpCircle, label: 'Spørgsmål', page: 'MyQuestions' },
-    { icon: Settings, label: 'Indstillinger', page: 'Settings' },
-    { icon: Help, label: 'Hjælp', page: 'Settings' },
+    { icon: Bookmark, label: t.favorites, page: 'Favorites' },
+    { icon: Bell, label: t.notifications, page: 'Settings' },
+    { icon: HelpCircle, label: t.questions, page: 'MyQuestions' },
+    { icon: Settings, label: t.settings, page: 'Settings' },
+    { icon: Help, label: t.help, page: 'Settings' },
   ];
 
   return (
