@@ -38,11 +38,11 @@ export default function Settings() {
   const isAdmin = user?.role === 'admin';
 
   const gridItems = [
-    ...(isAdmin ? [{ icon: FileText, label: 'Blog & Artikler', link: 'AdminEditor' }] : []),
-    { icon: Lock, label: 'Adgangskode', action: () => setPasswordOpen(true) },
-    { icon: Bell, label: 'Notifikationer', toggle: true, defaultChecked: true },
-    { icon: Shield, label: 'Privatliv', link: 'Profile' },
-    { icon: HelpCircle, label: 'Hjælp', accordion: true },
+    ...(isAdmin ? [{ icon: FileText, label: t.blogAndArticles, link: 'AdminEditor' }] : []),
+    { icon: Lock, label: t.password, action: () => setPasswordOpen(true) },
+    { icon: Bell, label: t.notifications, toggle: true, defaultChecked: true },
+    { icon: Shield, label: t.privacy, link: 'Profile' },
+    { icon: HelpCircle, label: t.help, accordion: true },
   ];
 
   return (
