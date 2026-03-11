@@ -68,7 +68,7 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries(['userProfile']);
       setEditOpen(false);
-      toast.success('Profil opdateret');
+      toast.success(t.profileUpdated);
     },
   });
 
