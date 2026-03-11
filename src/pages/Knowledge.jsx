@@ -197,7 +197,7 @@ export default function Knowledge() {
                 </div>
               ) : faqs.length === 0 ? (
                 <div className="text-center py-12">
-                  <p style={{ color: 'var(--color-text-muted)' }}>Ingen FAQ endnu</p>
+                  <p style={{ color: 'var(--color-text-muted)' }}>{t.noFaq}</p>
                 </div>
               ) : (
                 faqs.map(article => (
