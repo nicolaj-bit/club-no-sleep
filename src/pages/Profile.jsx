@@ -18,11 +18,13 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 
 export default function Profile() {
   const { isDark } = useTheme();
+  const { t, lang, setLang } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [langSheetOpen, setLangSheetOpen] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
