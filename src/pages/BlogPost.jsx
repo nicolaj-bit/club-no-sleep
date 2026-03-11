@@ -25,8 +25,6 @@ export default function BlogPost() {
 
   const [isSaved, setIsSaved] = useState(false);
   const [user, setUser] = useState(null);
-  const [translated, setTranslated] = useState(null);
-  const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
