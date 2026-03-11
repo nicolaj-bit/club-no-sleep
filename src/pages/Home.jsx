@@ -5,10 +5,11 @@ import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { da, enUS } from 'date-fns/locale';
 import BlogCard from '@/components/blog/BlogCard';
 import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
 import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const AFFIRMATIONS = [
   "Du er en fantastisk mor — selv på de dage, det føles det modsatte. 🤍",
