@@ -241,15 +241,18 @@ export default function Knowledge() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {questions.map(q => (
-                    <Link 
-                      key={q.id}
-                      to={createPageUrl(`QuestionDetail?id=${q.id}`)}
-                      className="block rounded-xl p-4 border"
-                      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{q.title}</h3>
+                  {questions.map(q => {
+                   const translated = translations['question_' + q.id];
+                   const displayTitle = lang === 'en' && translated ? translated.title : q.title;
+                   return (
+                   <Link 
+                     key={q.id}
+                     to={createPageUrl(`QuestionDetail?id=${q.id}`)}
+                     className="block rounded-xl p-4 border"
+                     style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+                   >
+                     <div className="flex items-start justify-between gap-2">
+                       <h3 className="font-medium line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</h3>
                         <span className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full ${
                           q.status === 'answered' 
                             ? 'bg-emerald-100 text-emerald-700'
