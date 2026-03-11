@@ -238,12 +238,35 @@ export default function Profile() {
         >
           <span className="flex items-center justify-center gap-2">
             <LogOut className="w-4 h-4" />
-            Log ud
+            {t.logOut}
           </span>
         </button>
 
-        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>v1.0</p>
+        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>{t.v1}</p>
       </div>
+
+      {/* Language picker */}
+      <BottomSheet open={langSheetOpen} onOpenChange={setLangSheetOpen} title={t.chooseLanguage}>
+        <div className="py-2">
+          {[{ code: 'da', flag: '🇩🇰', label: 'Dansk' }, { code: 'en', flag: '🇬🇧', label: 'English' }].map((option, i, arr) => (
+            <React.Fragment key={option.code}>
+              <button
+                onClick={() => { setLang(option.code); setLangSheetOpen(false); }}
+                className="w-full flex items-center justify-between px-5 py-4 active:opacity-60 transition-opacity"
+              >
+                <span className="text-base" style={{ color: 'var(--color-text-primary)' }}>
+                  {option.flag} {option.label}
+                </span>
+                {lang === option.code && (
+                  <span className="text-xs font-semibold" style={{ color: 'var(--color-accent)' }}>✓</span>
+                )}
+              </button>
+              {i < arr.length - 1 && <div className="h-px mx-5" style={{ backgroundColor: 'var(--color-border)' }} />}
+            </React.Fragment>
+          ))}
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
     </div>
   );
 }
