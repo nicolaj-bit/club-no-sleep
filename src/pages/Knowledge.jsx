@@ -182,7 +182,7 @@ export default function Knowledge() {
                   <h2 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{category}</h2>
                   <div className="space-y-2">
                     {categoryArticles.map(article => (
-                      <ArticleCard key={article.id} article={article} />
+                      <ArticleCard key={article.id} article={article} displayTitle={article._displayTitle} />
                     ))}
                   </div>
                 </div>
