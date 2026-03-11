@@ -98,8 +98,8 @@ export default function Settings() {
         {/* Tema – Lys / Mørk */}
         <div className="rounded-2xl p-5 space-y-3 border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
           <div>
-            <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tema</p>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vælg dit foretrukne look</p>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.theme}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.chooseTheme}</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button
