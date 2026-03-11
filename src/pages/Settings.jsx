@@ -169,7 +169,7 @@ export default function Settings() {
         >
           <span className="flex items-center justify-center gap-2">
             <Trash2 className="w-4 h-4" />
-            Slet konto
+            {t.deleteAccount}
           </span>
         </button>
 
