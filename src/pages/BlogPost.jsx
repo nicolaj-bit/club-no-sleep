@@ -74,7 +74,9 @@ export default function BlogPost() {
     onSuccess: () => {
       setIsSaved(!isSaved);
       queryClient.invalidateQueries(['favorites']);
-      toast.success(isSaved ? 'Fjernet fra favoritter' : 'Gemt til favoritter');
+      toast.success(isSaved
+        ? (lang === 'en' ? 'Removed from favorites' : 'Fjernet fra favoritter')
+        : (lang === 'en' ? 'Saved to favorites' : 'Gemt til favoritter'));
     },
   });
 
