@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function ArticleDetail() {
   const { theme } = useTheme();
