@@ -146,7 +146,7 @@ export default function BottomNav() {
           >
             <Menu className="w-5 h-5" strokeWidth={2} style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }} />
             <span className="text-[10px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}>
-              Menu
+              {t.menu}
             </span>
           </button>
         </div>
