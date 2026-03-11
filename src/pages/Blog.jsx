@@ -31,13 +31,65 @@ export default function Blog() {
     queryFn: () => base44.entities.BlogCategory.list('order'),
   });
 
-  const categories = ['Alle', ...categoryRecords.filter(c => c.is_active).map(c => c.label)];
+  const allLabel = lang === 'en' ? 'All' : 'Alle';
+  const activeCategories = categoryRecords.filter(c => c.is_active);
+  const categories = [allLabel, ...activeCategories.map(c =>
+    lang === 'en' && translatedPosts['__cat_' + c.label] ? translatedPosts['__cat_' + c.label] : c.label
+  )];
+
+  // Translate all posts + categories when language changes to English
+  useEffect(() => {
+    if (lang !== 'en' || posts.length === 0) {
+      setTranslatedPosts({});
+      return;
+    }
+    const key = posts.map(p => p.id).join(',');
+    if (translateRef.current === key) return;
+    translateRef.current = key;
+
+    setTranslating(true);
+    const items = posts.map(p => ({ id: p.id, title: p.title, category: p.category || '' }));
+    const uniqueCategories = [...new Set(posts.map(p => p.category).filter(Boolean))];
+
+    base44.integrations.Core.InvokeLLM({
+      prompt: `Translate these Danish blog post titles and categories to English. Return ONLY valid JSON.
+Posts: ${JSON.stringify(items)}
+Unique categories: ${JSON.stringify(uniqueCategories)}
+
+Return format:
+{
+  "posts": [{"id": "...", "title": "...", "category": "..."}],
+  "categories": {"DanskKategori": "EnglishCategory"}
+}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          posts: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, title: { type: 'string' }, category: { type: 'string' } } } },
+          categories: { type: 'object' }
+        }
+      }
+    }).then(result => {
+      const map = {};
+      (result.posts || []).forEach(p => { map[p.id] = { title: p.title, category: p.category }; });
+      Object.entries(result.categories || {}).forEach(([da, en]) => { map['__cat_' + da] = en; });
+      setTranslatedPosts(map);
+    }).finally(() => setTranslating(false));
+  }, [lang, posts]);
+
+  const activeCategoryDa = (() => {
+    if (!activeCategory || activeCategory === allLabel) return null;
+    // find the original danish label for the active category
+    const idx = categories.indexOf(activeCategory);
+    if (idx <= 0) return activeCategory;
+    return activeCategories[idx - 1]?.label || activeCategory;
+  })();
 
   const filteredPosts = posts.filter(p => {
-    const matchesSearch = !search || 
-      p.title?.toLowerCase().includes(search.toLowerCase()) ||
+    const displayTitle = translatedPosts[p.id]?.title || p.title;
+    const matchesSearch = !search ||
+      displayTitle?.toLowerCase().includes(search.toLowerCase()) ||
       p.excerpt?.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = activeCategory === 'Alle' || p.category === activeCategory;
+    const matchesCategory = !activeCategory || activeCategory === allLabel || p.category === activeCategoryDa;
     return matchesSearch && matchesCategory;
   });
 
