@@ -37,11 +37,12 @@ export default function Knowledge() {
 
   const activeTabs = tabs.filter(t => t.is_active);
 
-  // Group articles by category
+  // Group articles by category with translations
   const articlesByCategory = articles.reduce((acc, article) => {
-    const cat = article.category || 'Andet';
+    const translated = translations['article_' + article.id];
+    const cat = lang === 'en' && translated ? translated.category : (article.category || 'Andet');
     if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(article);
+    acc[cat].push({ ...article, _displayTitle: translated?.title || article.title });
     return acc;
   }, {});
 
