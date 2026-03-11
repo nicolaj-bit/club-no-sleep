@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Camera, ArrowRight, ArrowLeft, Baby, MapPin, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 3;
 
 export default function Onboarding() {
   const [user, setUser] = useState(null);
@@ -189,15 +189,13 @@ export default function Onboarding() {
               style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
             />
           </div>
-        </div>
-      ),
-    },
-    {
-      icon: User,
-      title: 'Betingelser',
-      subtitle: 'Accepter vores vilkår',
-      content: (
-        <div className="space-y-5">
+
+          <div className="flex items-center gap-3 pt-4">
+            <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>betingelser</span>
+            <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+          </div>
+
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
