@@ -170,19 +170,33 @@ export default function Profile() {
                  <Label>{lang === 'da' ? 'Køn' : 'Gender'}</Label>
                  <div className="flex gap-3">
                    {[{ value: 'female', label: lang === 'da' ? 'Kvinde' : 'Female' }, { value: 'male', label: lang === 'da' ? 'Mand' : 'Male' }].map(option => (
-                     <button
+                     <label
                        key={option.value}
-                       onClick={() => setEditForm({ ...editForm, gender: option.value })}
-                       className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                       style={{
-                         backgroundColor: editForm.gender === option.value ? 'var(--color-text-primary)' : 'var(--color-bg-subtle)',
-                         color: editForm.gender === option.value ? 'var(--color-bg)' : 'var(--color-text-primary)',
-                       }}
+                       className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
+                       style={{ backgroundColor: 'var(--color-bg-subtle)' }}
                      >
-                       {option.label}
-                     </button>
+                       <input
+                         type="checkbox"
+                         checked={editForm.gender === option.value}
+                         onChange={() => {
+                           if (!profile?.gender) {
+                             setEditForm({ ...editForm, gender: option.value });
+                           }
+                         }}
+                         disabled={!!profile?.gender}
+                         className="w-4 h-4 cursor-pointer"
+                       />
+                       <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                         {option.label}
+                       </span>
+                     </label>
                    ))}
                  </div>
+                 {profile?.gender && (
+                   <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                     {lang === 'da' ? 'Køn kan ikke ændres efter valg' : 'Gender cannot be changed after selection'}
+                   </p>
+                 )}
                </div>
                <div className="space-y-2">
                  <Label htmlFor="city">{t.city}</Label>
