@@ -225,7 +225,7 @@ export default function QuestionDetail() {
                         )}
                       </div>
                       <p className="mt-1 text-sm whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>
-                        {answer.content}
+                        {translatedAnswers[answer.id]?.content || answer.content}
                       </p>
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
