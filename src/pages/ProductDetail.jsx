@@ -193,7 +193,7 @@ export default function ProductDetail() {
         {/* Variants */}
         {product.variants?.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Variant</h3>
+            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>{lang === 'en' ? 'Variant' : 'Variant'}</h3>
             <div className="flex flex-wrap gap-2">
               {product.variants.map((variant, i) => (
                 <button
