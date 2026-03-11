@@ -151,12 +151,13 @@ export default function Knowledge() {
       ) : (
         /* Main Content */
         <div className="p-4">
-          <Tabs defaultValue="articles" className="w-full">
+          <Tabs defaultValue={activeTabs[0]?.key || 'articles'} className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              <TabsTrigger value="articles" className="flex-1 rounded-lg text-xs">Artikler</TabsTrigger>
-              <TabsTrigger value="tigerspring" className="flex-1 rounded-lg text-xs">🐯 Tigerspring</TabsTrigger>
-              <TabsTrigger value="faq" className="flex-1 rounded-lg text-xs">FAQ</TabsTrigger>
-              <TabsTrigger value="questions" className="flex-1 rounded-lg text-xs">Spørgsmål</TabsTrigger>
+              {activeTabs.map(tab => (
+                <TabsTrigger key={tab.key} value={tab.key} className="flex-1 rounded-lg text-xs">
+                  {tab.emoji ? `${tab.emoji} ` : ''}{tab.label}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             <TabsContent value="articles" className="mt-4 space-y-6">
