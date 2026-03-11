@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
