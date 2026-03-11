@@ -68,6 +68,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ThemeProvider>
+    <TabStateProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }
