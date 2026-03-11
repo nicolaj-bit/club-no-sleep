@@ -124,7 +124,7 @@ export default function BottomNav() {
               style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}
             />
             <span className="text-[10px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}>
-              Hjem
+              {t.home}
             </span>
           </Link>
 
