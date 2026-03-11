@@ -161,8 +161,8 @@ export default function ProductDetail() {
       {/* Content */}
       <div className="p-4 space-y-4">
         {/* Title & Price */}
-        <div>
-          <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{product.title}</h1>
+         <div>
+           <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{displayProduct.title}</h1>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
               {product.price} kr
