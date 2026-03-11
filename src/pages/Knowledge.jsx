@@ -224,7 +224,7 @@ export default function Knowledge() {
                 </div>
               ) : questions.length === 0 ? (
                 <div className="text-center py-8">
-                  <p style={{ color: 'var(--color-text-muted)' }}>Ingen spørgsmål endnu</p>
+                  <p style={{ color: 'var(--color-text-muted)' }}>{t.noQuestions}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
