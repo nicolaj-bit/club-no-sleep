@@ -28,6 +28,8 @@ export default function Knowledge() {
     queryFn: () => base44.entities.Question.list('-created_date', 20),
   });
 
+  const { t } = useLanguage();
+
   const { data: tabs = [] } = useQuery({
     queryKey: ['knowledge-tabs'],
     queryFn: () => base44.entities.KnowledgeTab.list('order'),
