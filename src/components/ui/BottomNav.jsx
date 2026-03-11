@@ -38,63 +38,86 @@ export default function BottomNav() {
 
   return (
     <>
-      {/* Native bottom sheet menu */}
-      <BottomSheet open={menuOpen} onOpenChange={setMenuOpen} title={t.menu}>
-        <div className="py-2">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            const active = isActive(item.page);
-            return (
-              <React.Fragment key={item.name}>
-                {index > 0 && (
-                  <div className="h-px mx-5" style={{ backgroundColor: 'var(--color-border)', opacity: 0.5 }} />
-                )}
-                <button
-                  onClick={() => handleMenuItemPress(item.page)}
-                  className="w-full flex items-center gap-4 px-5 py-4 active:opacity-60 transition-opacity"
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{
-                      backgroundColor: active
-                        ? isDark ? '#FFFFFF' : '#2C1A0E'
-                        : isDark ? '#1A1A1A' : '#F0E9E0',
-                    }}
-                  >
-                    <Icon
-                      className="w-5 h-5"
-                      strokeWidth={active ? 2.5 : 2}
-                      style={{
-                        color: active
-                          ? isDark ? '#000000' : '#FFFFFF'
-                          : isDark ? '#888888' : '#9C7E6A',
-                      }}
-                    />
-                  </div>
-                  <span
-                    className={cn('text-[16px] flex-1 text-left', active ? 'font-semibold' : 'font-medium')}
-                    style={{
-                      color: active
-                        ? isDark ? '#FFFFFF' : '#2C1A0E'
-                        : isDark ? '#CCCCCC' : '#6B4F3A',
-                    }}
-                  >
-                    {item.name}
-                  </span>
-                  {active && (
-                    <div
-                      className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: isDark ? '#FFFFFF' : '#2C1A0E' }}
-                    />
-                  )}
+      {/* Center modal menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50"
+              style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+              onClick={() => setMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="fixed left-1/2 top-1/2 z-50 w-72 rounded-2xl overflow-hidden"
+              style={{
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: isDark ? '#111111' : '#FFFFFF',
+                boxShadow: isDark
+                  ? '0 20px 60px rgba(0,0,0,0.8)'
+                  : '0 20px 60px rgba(44,26,14,0.2)',
+              }}
+            >
+              <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                <span className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{t.menu}</span>
+                <button onClick={() => setMenuOpen(false)} className="opacity-50 hover:opacity-100 transition-opacity">
+                  <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
                 </button>
-              </React.Fragment>
-            );
-          })}
-          {/* Safe area spacer */}
-          <div className="h-2" />
-        </div>
-      </BottomSheet>
+              </div>
+              <div className="py-2">
+                {menuItems.map((item, index) => {
+                  const Icon = item.icon;
+                  const active = isActive(item.page);
+                  return (
+                    <React.Fragment key={item.name}>
+                      {index > 0 && (
+                        <div className="h-px mx-5" style={{ backgroundColor: 'var(--color-border)', opacity: 0.5 }} />
+                      )}
+                      <button
+                        onClick={() => handleMenuItemPress(item.page)}
+                        className="w-full flex items-center gap-4 px-5 py-3.5 active:opacity-60 transition-opacity"
+                      >
+                        <Icon
+                          className="w-5 h-5 flex-shrink-0"
+                          strokeWidth={active ? 2.5 : 2}
+                          style={{
+                            color: active
+                              ? isDark ? '#FFFFFF' : '#2C1A0E'
+                              : isDark ? '#888888' : '#9C7E6A',
+                          }}
+                        />
+                        <span
+                          className={cn('text-[15px] flex-1 text-left', active ? 'font-semibold' : 'font-medium')}
+                          style={{
+                            color: active
+                              ? isDark ? '#FFFFFF' : '#2C1A0E'
+                              : isDark ? '#CCCCCC' : '#6B4F3A',
+                          }}
+                        >
+                          {item.name}
+                        </span>
+                        {active && (
+                          <div
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: isDark ? '#FFFFFF' : '#2C1A0E' }}
+                          />
+                        )}
+                      </button>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Bottom tab bar */}
       <nav
