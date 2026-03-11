@@ -157,11 +157,15 @@ export default function Knowledge() {
         <div className="p-4">
           <Tabs defaultValue={activeTabs[0]?.key || 'articles'} className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              {activeTabs.map(tab => (
-                <TabsTrigger key={tab.key} value={tab.key} className="flex-1 rounded-lg text-xs">
-                  {tab.emoji ? `${tab.emoji} ` : ''}{tab.label}
-                </TabsTrigger>
-              ))}
+              {activeTabs.map(tab => {
+                const translated = translations['tab_' + tab.id];
+                const displayLabel = lang === 'en' && translated ? translated.label : tab.label;
+                return (
+                  <TabsTrigger key={tab.key} value={tab.key} className="flex-1 rounded-lg text-xs">
+                    {tab.emoji ? `${tab.emoji} ` : ''}{displayLabel}
+                  </TabsTrigger>
+                );
+              })}
             </TabsList>
 
             <TabsContent value="articles" className="mt-4 space-y-6">
