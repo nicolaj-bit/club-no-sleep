@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function QuestionDetail() {
   const { theme } = useTheme();
