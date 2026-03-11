@@ -13,6 +13,7 @@ import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function ProductDetail() {
   const { theme } = useTheme();
+  const { lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   
