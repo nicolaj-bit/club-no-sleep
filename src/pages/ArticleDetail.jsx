@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ArticleDetail() {
   const { theme } = useTheme();
