@@ -45,7 +45,7 @@ export default function Shop() {
       const matchesSearch = !search || 
         p.title?.toLowerCase().includes(search.toLowerCase()) ||
         p.description?.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = activeCategory === 'Alle' || p.category === activeCategory;
+      const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
