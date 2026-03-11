@@ -91,43 +91,24 @@ export default function QuestionDetail() {
     },
   });
 
-  // Translate question and answers when language = English
-  useEffect(() => {
-    if (!question || lang !== 'en') {
-      setTranslatedQuestion(null);
-      setTranslatedAnswers({});
-      return;
-    }
+  const itemsToTranslate = lang === 'en' && question && answers.length > 0
+    ? [
+        { id: 'q', title: question.title, content: question.content },
+        ...answers.map((a, i) => ({ id: 'a' + i, content: a.content }))
+      ]
+    : [];
 
-    const itemsToTranslate = [
-      { id: 'q', title: question.title, content: question.content }
-    ];
-    answers.forEach((a, i) => {
-      itemsToTranslate.push({ id: 'a' + i, content: a.content });
-    });
+  const translations = useTranslation(itemsToTranslate);
 
-    base44.integrations.Core.InvokeLLM({
-      prompt: `Translate these Danish Q&A texts to English. Return ONLY valid JSON.
-${JSON.stringify(itemsToTranslate)}
+  const translatedQuestion = Array.isArray(translations)
+    ? translations.find(t => t.id === 'q')
+    : null;
 
-Return format:
-{"q": {"title": "...", "content": "..."}, "answers": [{"id": "a0", "content": "..."}, ...]}`,
-      response_json_schema: {
-        type: 'object',
-        properties: { 
-          q: { type: 'object' },
-          answers: { type: 'array', items: { type: 'object' } }
-        }
-      }
-    }).then(result => {
-      setTranslatedQuestion(result.q);
-      const answerMap = {};
-      (result.answers || []).forEach((a) => {
-        answerMap[a.id] = a;
-      });
-      setTranslatedAnswers(answerMap);
-    });
-  }, [question, answers, lang]);
+  const translatedAnswers = Array.isArray(translations)
+    ? Object.fromEntries(
+        translations.filter(t => t.id?.startsWith('a')).map(t => [t.id, t])
+      )
+    : {};
 
   if (loadingQuestion) {
     return (
