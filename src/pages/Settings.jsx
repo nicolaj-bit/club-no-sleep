@@ -5,6 +5,7 @@ import { createPageUrl } from '@/utils';
 import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

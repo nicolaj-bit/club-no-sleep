@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import UserAvatar from '@/components/community/UserAvatar';
+import { useLanguage } from '@/components/ui/LanguageContext';
+import { BottomSheet } from '@/components/ui/BottomSheet';
 
 export default function Profile() {
   const { isDark } = useTheme();

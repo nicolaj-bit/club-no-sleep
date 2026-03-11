@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ArticleCard from '@/components/knowledge/ArticleCard';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Knowledge() {
   const headerVisible = useScrollDirection();

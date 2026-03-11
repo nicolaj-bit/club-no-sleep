@@ -5,6 +5,7 @@ import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { BottomSheet } from '@/components/ui/BottomSheet';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const menuItems = [
   { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
