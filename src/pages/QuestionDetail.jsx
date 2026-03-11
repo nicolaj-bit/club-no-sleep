@@ -26,8 +26,6 @@ export default function QuestionDetail() {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [answerText, setAnswerText] = useState('');
-  const [translatedQuestion, setTranslatedQuestion] = useState(null);
-  const [translatedAnswers, setTranslatedAnswers] = useState({});
 
   useEffect(() => {
     const loadUser = async () => {
