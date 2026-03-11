@@ -59,8 +59,7 @@ export default function BottomNav() {
               className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
-                backgroundColor: isDark ? 'rgba(18,18,18,0.97)' : 'rgba(255,255,255,0.97)',
-                backdropFilter: 'blur(24px)',
+                backgroundColor: isDark ? '#121212' : '#FFFFFF',
                 boxShadow: isDark
                   ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
                   : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
