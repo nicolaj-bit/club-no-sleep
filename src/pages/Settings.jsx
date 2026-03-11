@@ -174,54 +174,50 @@ export default function Settings() {
         <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>Version 1.0.0</p>
       </div>
 
-      {/* Change Password Dialog */}
-      <Dialog open={passwordOpen} onOpenChange={setPasswordOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Skift adgangskode</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="current-pw">Nuværende adgangskode</Label>
-              <Input id="current-pw" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-pw">Ny adgangskode</Label>
-              <Input id="new-pw" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-pw">Bekræft ny adgangskode</Label>
-              <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
-            </div>
-            <Button className="w-full" onClick={() => {
-              if (passwordForm.new !== passwordForm.confirm) { toast.error('Adgangskoderne matcher ikke'); return; }
-              toast.success('Adgangskode opdateret');
-              setPasswordOpen(false);
-              setPasswordForm({ current: '', new: '', confirm: '' });
-            }}>
-              Opdater adgangskode
-            </Button>
+      {/* Change Password Bottom Sheet */}
+      <BottomSheet open={passwordOpen} onOpenChange={setPasswordOpen} title="Skift adgangskode">
+        <div className="px-5 py-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="current-pw">Nuværende adgangskode</Label>
+            <Input id="current-pw" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
           </div>
-        </DialogContent>
-      </Dialog>
+          <div className="space-y-2">
+            <Label htmlFor="new-pw">Ny adgangskode</Label>
+            <Input id="new-pw" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirm-pw">Bekræft ny adgangskode</Label>
+            <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
+          </div>
+          <Button className="w-full" onClick={() => {
+            if (passwordForm.new !== passwordForm.confirm) { toast.error('Adgangskoderne matcher ikke'); return; }
+            toast.success('Adgangskode opdateret');
+            setPasswordOpen(false);
+            setPasswordForm({ current: '', new: '', confirm: '' });
+          }}>
+            Opdater adgangskode
+          </Button>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
 
-      {/* Delete Account Dialog */}
-      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle className="text-rose-600">Slet konto</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-              Er du sikker? Denne handling kan <strong>ikke fortrydes</strong> — al din data slettes permanent.
-            </p>
-            <div className="space-y-2">
-              <Label htmlFor="delete-confirm">Skriv <strong>SLET</strong> for at bekræfte</Label>
-              <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder="SLET" />
-            </div>
-            <Button variant="destructive" className="w-full" disabled={deleteConfirm !== 'SLET'} onClick={() => base44.auth.logout('/')}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Slet min konto permanent
-            </Button>
+      {/* Delete Account Bottom Sheet */}
+      <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title="Slet konto">
+        <div className="px-5 py-4 space-y-4">
+          <p className="text-sm leading-relaxed text-rose-500">
+            Er du sikker? Denne handling kan <strong>ikke fortrydes</strong> — al din data slettes permanent.
+          </p>
+          <div className="space-y-2">
+            <Label htmlFor="delete-confirm">Skriv <strong>SLET</strong> for at bekræfte</Label>
+            <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder="SLET" />
           </div>
-        </DialogContent>
-      </Dialog>
+          <Button variant="destructive" className="w-full" disabled={deleteConfirm !== 'SLET'} onClick={() => base44.auth.logout('/')}>
+            <Trash2 className="w-4 h-4 mr-2" />
+            Slet min konto permanent
+          </Button>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
     </div>
   );
 }
