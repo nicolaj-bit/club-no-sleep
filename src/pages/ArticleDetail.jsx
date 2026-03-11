@@ -127,17 +127,17 @@ Return format:
             className="text-xs font-medium uppercase tracking-widest"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            {article.category}
+            {translatedArticle?.category || article.category}
           </span>
-        </div>
+          </div>
 
-        {/* Title */}
-        <h1
+          {/* Title */}
+          <h1
           className="text-2xl font-bold leading-snug mb-8"
           style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}
-        >
-          {article.title}
-        </h1>
+          >
+          {translatedArticle?.title || article.title}
+          </h1>
 
         {/* Divider */}
         <div className="w-10 h-0.5 mb-8 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
