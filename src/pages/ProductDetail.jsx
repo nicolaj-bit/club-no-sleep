@@ -248,10 +248,10 @@ export default function ProductDetail() {
           style={{ backgroundColor: isDark ? 'var(--button-bg-dark)' : '#000000', color: '#FFFFFF' }}
           disabled={!product.in_stock}
           onClick={handleBuyNow}
-        >
+          >
           <ExternalLink className="w-5 h-5" />
-          Køb nu i webshop
-        </button>
+          {lang === 'en' ? 'Buy now in webshop' : 'Køb nu i webshop'}
+          </button>
       </div>
     </div>
   );
