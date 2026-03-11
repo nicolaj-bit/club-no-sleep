@@ -86,7 +86,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Produkt ikke fundet</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'Product not found' : 'Produkt ikke fundet'}</p>
       </div>
     );
   }
