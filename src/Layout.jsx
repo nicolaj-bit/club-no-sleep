@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-
-const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 import BottomNav from '@/components/ui/BottomNav';
 import { base44 } from '@/api/base44Client';
 import { Toaster } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { TabStateProvider } from '@/components/ui/TabStateContext';
+
+const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
 // Pages that should NOT show bottom nav
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat'];
