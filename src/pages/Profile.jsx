@@ -14,7 +14,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useTheme } from '@/components/ui/ThemeProvider';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { BottomSheet } from '@/components/ui/BottomSheet';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 export default function Profile() {
   const { isDark } = useTheme();
