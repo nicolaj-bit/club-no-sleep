@@ -218,6 +218,9 @@ export default function BlogPost() {
           className="prose prose-sm max-w-none leading-relaxed"
           style={{ color: 'var(--color-text-primary)' }}
         >
+          {translating && (
+            <p className="text-xs mb-3 animate-pulse" style={{ color: 'var(--color-text-muted)' }}>Translating…</p>
+          )}
           <ReactMarkdown
             components={{
               h1: ({ children }) => <h1 className="text-xl font-bold mt-5 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h1>,
