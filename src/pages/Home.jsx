@@ -50,8 +50,9 @@ export default function Home() {
   const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
-  const affirmation = getDailyAffirmation();
-  const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: da });
+  const affirmationIndex = getDailyAffirmationIndex();
+  const affirmation = t.affirmations[affirmationIndex % t.affirmations.length];
+  const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
