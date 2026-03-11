@@ -123,7 +123,7 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Indlæg ikke fundet</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'Post not found' : 'Indlæg ikke fundet'}</p>
       </div>
     );
   }
