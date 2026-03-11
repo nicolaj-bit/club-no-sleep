@@ -39,7 +39,7 @@ export default function BottomNav() {
   return (
     <>
       {/* Native bottom sheet menu */}
-      <BottomSheet open={menuOpen} onOpenChange={setMenuOpen} title="Menu">
+      <BottomSheet open={menuOpen} onOpenChange={setMenuOpen} title={t.menu}>
         <div className="py-2">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
