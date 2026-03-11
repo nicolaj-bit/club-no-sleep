@@ -55,6 +55,12 @@ export default function Home() {
   const affirmation = t.affirmations[affirmationIndex % t.affirmations.length];
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
 
+  // Translate affirmation
+  const translatedAffirmations = useTranslation(
+    lang === 'en' && affirmation ? [{ text: affirmation }] : []
+  );
+  const displayAffirmation = lang === 'en' && translatedAffirmations[0]?.text ? translatedAffirmations[0].text : affirmation;
+
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
