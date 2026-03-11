@@ -192,6 +192,37 @@ export default function Onboarding() {
         </div>
       ),
     },
+    {
+      icon: User,
+      title: 'Betingelser',
+      subtitle: 'Accepter vores vilkår',
+      content: (
+        <div className="space-y-5">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.accept_terms}
+              onChange={e => setForm(f => ({ ...f, accept_terms: e.target.checked }))}
+              className="w-5 h-5 mt-0.5 cursor-pointer"
+            />
+            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+              Jeg accepterer <a href="#" className="underline font-semibold">handelsbetingelserne</a>
+            </span>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.accept_privacy}
+              onChange={e => setForm(f => ({ ...f, accept_privacy: e.target.checked }))}
+              className="w-5 h-5 mt-0.5 cursor-pointer"
+            />
+            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+              Jeg accepterer <a href="#" className="underline font-semibold">privatlivspolitikken</a>
+            </span>
+          </label>
+        </div>
+      ),
+    },
   ];
 
   const currentStep = steps[step];
