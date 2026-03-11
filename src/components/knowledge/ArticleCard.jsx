@@ -5,8 +5,7 @@ import { ChevronRight, HelpCircle, FileText } from 'lucide-react';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function ArticleCard({ article, variant = 'default' }) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
   const Icon = article.is_faq ? HelpCircle : FileText;
   
   if (variant === 'compact') {
