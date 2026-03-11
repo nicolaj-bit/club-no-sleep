@@ -85,9 +85,9 @@ export default function Home() {
       {/* Blog Posts */}
       <div className="px-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Fra bloggen</h2>
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.fromBlog}</h2>
           <Link to={createPageUrl('Blog')} className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-            Se alle →
+            {t.seeAll}
           </Link>
         </div>
 
