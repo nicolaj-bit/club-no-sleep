@@ -11,6 +11,9 @@ import { TabStateProvider } from '@/components/ui/TabStateContext';
 // Pages that should NOT show bottom nav
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat'];
 
+// Root-level tab pages — use crossfade (no slide) to feel like native tab switch
+const rootTabPages = ['Home', 'Shop', 'Blog', 'SleepLog', 'Knowledge', 'Community', 'Profile', 'AIChat'];
+
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const showNav = !noNavPages.includes(currentPageName);
