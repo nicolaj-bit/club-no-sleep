@@ -21,8 +21,6 @@ export default function Shop() {
   const [sortBy, setSortBy] = useState('newest');
   const [showSearch, setShowSearch] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [translations, setTranslations] = useState({});
-  const translateRef = useRef(null);
 
   const categories = [
     { key: 'all', label: t.catAll },
