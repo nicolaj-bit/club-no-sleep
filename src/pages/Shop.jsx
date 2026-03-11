@@ -9,13 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import ProductCard from '@/components/shop/ProductCard';
-
-const categories = ['Alle', 'Pleje', 'Tilbehør', 'Udstyr', 'Bøger'];
-const sortOptions = [
-  { value: 'newest', label: 'Nyeste' },
-  { value: 'price_asc', label: 'Pris: Lav til høj' },
-  { value: 'price_desc', label: 'Pris: Høj til lav' },
-];
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Shop() {
   const headerVisible = useScrollDirection();
