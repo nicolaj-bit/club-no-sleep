@@ -216,11 +216,11 @@ export default function ProductDetail() {
         )}
 
         {/* Description */}
-        {product.description && (
+        {displayProduct.description && (
           <div className="pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
-            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Beskrivelse</h3>
+            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>{lang === 'en' ? 'Description' : 'Beskrivelse'}</h3>
             <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>
-              {product.description}
+              {displayProduct.description}
             </p>
           </div>
         )}
