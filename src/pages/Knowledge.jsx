@@ -152,7 +152,8 @@ export default function Knowledge() {
                         <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</span>
                         <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                       </Link>
-                    ))}
+                    );
+                      })}
                   </div>
                 </div>
               )}
