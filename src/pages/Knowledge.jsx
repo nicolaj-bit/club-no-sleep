@@ -247,11 +247,11 @@ export default function Knowledge() {
                       </div>
                       <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>
                       <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                        <span>af {q.author_username}</span>
+                        <span>{t.by} {q.author_username}</span>
                         {q.answer_count > 0 && (
                           <>
                             <span>•</span>
-                            <span>{q.answer_count} svar</span>
+                            <span>{q.answer_count} {t.answers}</span>
                           </>
                         )}
                       </div>
