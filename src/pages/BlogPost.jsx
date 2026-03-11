@@ -16,8 +16,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { enUS } from 'date-fns/locale';
 
 export default function BlogPost() {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
   const { lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
