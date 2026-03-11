@@ -200,7 +200,7 @@ Return format:
               ),
             }}
           >
-            {article.content}
+            {translatedArticle?.content || article.content}
           </ReactMarkdown>
         </div>
 
