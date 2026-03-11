@@ -11,43 +11,10 @@ import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
 import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-const AFFIRMATIONS = [
-  "Du er en fantastisk mor — selv på de dage, det føles det modsatte. 🤍",
-  "Det er okay, at kaffen er kold. Du er varm og nærværende, og det er nok.",
-  "Du behøver ikke gøre alt perfekt. Du skal bare gøre dit bedste — og det gør du.",
-  "Søvnmangel er hård. At du stadig kæmper er bevis på din utrolige styrke.",
-  "Din baby ved ikke hvad 'perfekt' er. De ved kun, at de elsker dig.",
-  "Dem der siger moderskab er let, har aldrig prøvet det. Du klarer det!",
-  "Hvert lille smil fra dit barn er et bevis på, at du gør det rigtigt.",
-  "Du er ikke alene. Tusindvis af mødre sidder lige nu og føler præcis det samme.",
-  "Det er okay at have brug for hjælp. Det er faktisk modigt at bede om det.",
-  "I dag er du nok. I morgen er du nok. Altid er du nok.",
-  "Dine tårer er ikke svaghed — de er kærlighed, der er løbet over.",
-  "Ingen håndbog kan forberede dig på den kærlighed, du føler. Du er stærk.",
-  "Du har gjort noget utroligt. Du har skabt et menneske. Husk det.",
-  "Nogle dage er det nok at alle er i live og nogenlunde mætte. 🙌",
-  "Du er din babys favoritperson i hele verden. Altid.",
-  "Selvom du er træt, er du stadig der. Det er kærlighed i sin reneste form.",
-  "Ingen mor er perfekt. Men du er den perfekte mor til dit barn.",
-  "En god mor er ikke den der aldrig fejler — men den der altid prøver igen.",
-  "Tillykke med at overleve endnu en nat. Du fortjener en medalje (og mere kaffe).",
-  "Din kærlighed er det varmeste sted dit barn kender. 🧡",
-  "Selv de svære dage former jer begge til noget stærkere.",
-  "Du er mere end 'bare mor'. Du er en heltinde i hverdagsformat.",
-  "Det du giver dit barn i dag, bærer de med sig hele livet.",
-  "En knap-nok-dag er stadig en dag fuld af kærlighed.",
-  "Du klarer mere, end du selv ved. Det er det smukkeste ved dig.",
-  "Hvert kram, hvert ammetag, hvert søvnforsøg — det tæller.",
-  "Moderskab er ikke en præstation. Det er en relation. Og jeres er smuk.",
-  "Du er ikke fejlet. Du er midt i det.",
-  "Morgendagen er en ny chance. Og du er allerede klar til den.",
-  "Du bærer så meget. Men du bærer det med kærlighed.",
-];
-
-function getDailyAffirmation() {
+function getDailyAffirmationIndex() {
   const today = new Date();
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-  return AFFIRMATIONS[dayOfYear % AFFIRMATIONS.length];
+  return dayOfYear;
 }
 
 export default function Home() {
