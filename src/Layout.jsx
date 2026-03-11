@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { TabStateProvider } from '@/components/ui/TabStateContext';
+import { LanguageProvider } from '@/components/ui/LanguageContext';
 
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
