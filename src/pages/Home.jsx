@@ -70,7 +70,7 @@ export default function Home() {
         >
           <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 bg-white -translate-y-8 translate-x-8" />
           <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full opacity-10 bg-white translate-y-6 -translate-x-6" />
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-3">Dagens ord til dig</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-3">{t.dailyWord}</p>
           <p className="text-white text-lg font-medium leading-relaxed relative z-10">
             {affirmation}
           </p>
