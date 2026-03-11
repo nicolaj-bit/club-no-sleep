@@ -209,9 +209,13 @@ export default function Knowledge() {
                   <p style={{ color: 'var(--color-text-muted)' }}>{t.noFaq}</p>
                 </div>
               ) : (
-                faqs.map(article => (
-                  <ArticleCard key={article.id} article={article} variant="compact" />
-                ))
+               faqs.map(article => {
+                 const translated = translations['article_' + article.id];
+                 const displayTitle = lang === 'en' && translated ? translated.title : article.title;
+                 return (
+                   <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
+                 );
+               })
               )}
             </TabsContent>
 
