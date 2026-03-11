@@ -7,13 +7,7 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { BottomSheet } from '@/components/ui/BottomSheet';
 import ProductCard from '@/components/shop/ProductCard';
 
 const categories = ['Alle', 'Pleje', 'Tilbehør', 'Udstyr', 'Bøger'];
