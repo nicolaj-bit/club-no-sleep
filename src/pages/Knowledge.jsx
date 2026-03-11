@@ -138,7 +138,10 @@ export default function Knowledge() {
                 <div>
                   <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>{t.questions}</h2>
                   <div className="space-y-2">
-                    {searchResults.questions.map(q => (
+                    {searchResults.questions.map(q => {
+                        const translated = translations['question_' + q.id];
+                        const displayTitle = lang === 'en' && translated ? translated.title : q.title;
+                        return (
                       <Link 
                         key={q.id}
                         to={createPageUrl(`QuestionDetail?id=${q.id}`)}
@@ -146,7 +149,7 @@ export default function Knowledge() {
                       style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
                       >
                         <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                        <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{q.title}</span>
+                        <span className="flex-1 text-sm line-clamp-1" style={{ color: 'var(--color-text-primary)' }}>{displayTitle}</span>
                         <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                       </Link>
                     ))}
