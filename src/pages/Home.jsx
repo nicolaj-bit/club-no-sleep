@@ -59,7 +59,7 @@ export default function Home() {
       {/* Header */}
       <div className="px-5 pt-12 pb-4">
         <p className="text-sm capitalize" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-        <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>God dag, mor 🤍</h1>
+        <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>{t.goodDay}</h1>
       </div>
 
       {/* Daily Affirmation */}
