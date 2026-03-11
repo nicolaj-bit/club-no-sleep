@@ -24,6 +24,7 @@ export default function Shop() {
   const [activeCategory, setActiveCategory] = useState('Alle');
   const [sortBy, setSortBy] = useState('newest');
   const [showSearch, setShowSearch] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
