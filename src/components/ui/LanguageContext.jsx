@@ -114,6 +114,28 @@ const translations = {
     by: 'af',
     answers: 'svar',
 
+    // Shop
+    shopTitle: 'Shop',
+    searchProducts: 'Søg produkter...',
+    noProducts: 'Ingen produkter fundet',
+    sortBy: 'Sorter efter',
+    newest: 'Nyeste',
+    priceLow: 'Pris: Lav til høj',
+    priceHigh: 'Pris: Høj til lav',
+    filtersTitle: 'Filtre & Sortering',
+    outOfStock: 'Udsolgt',
+    catAll: 'Alle',
+    catCare: 'Pleje',
+    catAccessories: 'Tilbehør',
+    catEquipment: 'Udstyr',
+    catBooks: 'Bøger',
+
+    // Blog
+    blogTitle: 'Blog',
+    searchBlog: 'Søg indlæg...',
+    noPosts: 'Ingen indlæg fundet',
+    allCategories: 'Alle',
+
     // Community / shared
     version: 'Version 1.0.0',
     v1: 'v1.0',
