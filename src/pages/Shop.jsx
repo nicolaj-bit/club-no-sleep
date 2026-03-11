@@ -147,7 +147,7 @@ export default function Shop() {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{ color: 'var(--color-text-muted)' }}>Ingen produkter fundet</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>{t.noProducts}</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
