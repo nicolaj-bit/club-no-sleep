@@ -272,10 +272,11 @@ export default function Knowledge() {
                         )}
                       </div>
                     </Link>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
+                    );
+                    })}
+                    </div>
+                    )}
+                    </TabsContent>
           </Tabs>
         </div>
       )}
