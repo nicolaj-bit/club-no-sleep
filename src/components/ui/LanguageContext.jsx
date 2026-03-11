@@ -254,6 +254,28 @@ const translations = {
     by: 'by',
     answers: 'answers',
 
+    // Shop
+    shopTitle: 'Shop',
+    searchProducts: 'Search products...',
+    noProducts: 'No products found',
+    sortBy: 'Sort by',
+    newest: 'Newest',
+    priceLow: 'Price: Low to high',
+    priceHigh: 'Price: High to low',
+    filtersTitle: 'Filters & Sorting',
+    outOfStock: 'Out of stock',
+    catAll: 'All',
+    catCare: 'Care',
+    catAccessories: 'Accessories',
+    catEquipment: 'Equipment',
+    catBooks: 'Books',
+
+    // Blog
+    blogTitle: 'Blog',
+    searchBlog: 'Search posts...',
+    noPosts: 'No posts found',
+    allCategories: 'All',
+
     // Community / shared
     version: 'Version 1.0.0',
     v1: 'v1.0',
