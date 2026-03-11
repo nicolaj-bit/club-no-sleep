@@ -213,7 +213,7 @@ export default function Knowledge() {
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
                 <HelpCircle className="w-5 h-5" />
-                Stil et spørgsmål
+                {t.askQuestion}
               </Link>
               
               {loadingQuestions ? (
