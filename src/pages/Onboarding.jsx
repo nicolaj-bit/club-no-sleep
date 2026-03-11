@@ -204,7 +204,7 @@ export default function Onboarding() {
               className="w-5 h-5 mt-0.5 cursor-pointer"
             />
             <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              Jeg accepterer <a href="#" className="https://www.lalatoto.dk/pages/handelsbetingelser">handelsbetingelserne</a>
+              Jeg accepterer <a href="https://www.lalatoto.dk/pages/handelsbetingelser" className="underline font-semibold">handelsbetingelserne</a>
             </span>
           </label>
           <label className="flex items-start gap-3 cursor-pointer">
@@ -215,7 +215,7 @@ export default function Onboarding() {
               className="w-5 h-5 mt-0.5 cursor-pointer"
             />
             <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              Jeg accepterer <a href="#" className="https://www.lalatoto.dk/pages/privatlivspolitik">privatlivspolitikken</a>
+              Jeg accepterer <a href="https://www.lalatoto.dk/pages/privatlivspolitik" className="underline font-semibold">privatlivspolitikken</a>
             </span>
           </label>
         </div>
