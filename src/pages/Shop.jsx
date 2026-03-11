@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import ProductCard from '@/components/shop/ProductCard';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function Shop() {
   const { t, lang } = useLanguage();
