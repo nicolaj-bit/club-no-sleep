@@ -205,17 +205,29 @@ export default function Profile() {
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center gap-3">
               <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>Del lokation</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.shareLocation}</span>
             </div>
             <Switch checked={profile?.location_enabled || false} onCheckedChange={(checked) => updateProfileMutation.mutate({ location_enabled: checked })} />
           </div>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center gap-3">
               <Shield className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>Vis mig som synlig</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.showAsVisible}</span>
             </div>
             <Switch checked={profile?.is_visible !== false} onCheckedChange={(checked) => updateProfileMutation.mutate({ is_visible: checked })} />
           </div>
+          <button
+            onClick={() => setLangSheetOpen(true)}
+            className="w-full flex items-center justify-between px-5 py-4 active:opacity-70 transition-opacity"
+          >
+            <div className="flex items-center gap-3">
+              <Globe className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.language}</span>
+            </div>
+            <span className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
+              {lang === 'en' ? '🇬🇧 English' : '🇩🇰 Dansk'}
+            </span>
+          </button>
         </div>
 
         {/* Log out */}
