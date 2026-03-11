@@ -149,6 +149,32 @@ export default function Shop() {
         )}
       </div>
     </div>
+      {/* Filter & Sort Bottom Sheet */}
+      <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title="Filtre & Sortering">
+        <div className="px-5 py-4 space-y-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--color-text-muted)' }}>
+              Sorter efter
+            </p>
+            <div className="space-y-1">
+              {sortOptions.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => { setSortBy(opt.value); setFilterOpen(false); }}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-[15px] active:opacity-60 transition-opacity"
+                  style={sortBy === opt.value
+                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
+                    : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                >
+                  <span>{opt.label}</span>
+                  {sortBy === opt.value && <span className="text-xs">✓</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
     </PullToRefresh>
   );
 }
