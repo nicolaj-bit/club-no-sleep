@@ -104,7 +104,7 @@ export default function Profile() {
       {/* Header */}
       <div className="pt-8 pb-4 px-5 flex items-center justify-center relative">
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          Profil
+          {t.profileTitle}
         </h1>
       </div>
 
