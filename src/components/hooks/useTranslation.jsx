@@ -4,6 +4,17 @@ import { base44 } from '@/api/base44Client';
 
 const CACHE_PREFIX = 'translation_cache_';
 
+// Simple hash function for cache keys
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash).toString(36);
+}
+
 export function useTranslation(items) {
   const { lang } = useLanguage();
   const [translated, setTranslated] = useState({});
@@ -17,7 +28,7 @@ export function useTranslation(items) {
 
     // Build cache key from items
     const cacheKey = JSON.stringify(items);
-    const storageKey = CACHE_PREFIX + btoa(cacheKey);
+    const storageKey = CACHE_PREFIX + hashString(cacheKey);
 
     // Check memory cache first
     if (cacheRef.current[cacheKey]) {
