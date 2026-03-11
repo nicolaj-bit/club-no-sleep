@@ -177,45 +177,45 @@ export default function Settings() {
       </div>
 
       {/* Change Password Bottom Sheet */}
-      <BottomSheet open={passwordOpen} onOpenChange={setPasswordOpen} title="Skift adgangskode">
+      <BottomSheet open={passwordOpen} onOpenChange={setPasswordOpen} title={t.changePassword}>
         <div className="px-5 py-4 space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="current-pw">Nuværende adgangskode</Label>
+            <Label htmlFor="current-pw">{t.currentPassword}</Label>
             <Input id="current-pw" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="new-pw">Ny adgangskode</Label>
+            <Label htmlFor="new-pw">{t.newPassword}</Label>
             <Input id="new-pw" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirm-pw">Bekræft ny adgangskode</Label>
+            <Label htmlFor="confirm-pw">{t.confirmPassword}</Label>
             <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
           </div>
           <Button className="w-full" onClick={() => {
-            if (passwordForm.new !== passwordForm.confirm) { toast.error('Adgangskoderne matcher ikke'); return; }
-            toast.success('Adgangskode opdateret');
+            if (passwordForm.new !== passwordForm.confirm) { toast.error(t.passwordMismatch); return; }
+            toast.success(t.passwordUpdated);
             setPasswordOpen(false);
             setPasswordForm({ current: '', new: '', confirm: '' });
           }}>
-            Opdater adgangskode
+            {t.updatePassword}
           </Button>
           <div className="h-2" />
         </div>
       </BottomSheet>
 
       {/* Delete Account Bottom Sheet */}
-      <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title="Slet konto">
+      <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title={t.deleteAccount}>
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed text-rose-500">
-            Er du sikker? Denne handling kan <strong>ikke fortrydes</strong> — al din data slettes permanent.
+            {t.deleteWarning}
           </p>
           <div className="space-y-2">
-            <Label htmlFor="delete-confirm">Skriv <strong>SLET</strong> for at bekræfte</Label>
-            <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder="SLET" />
+            <Label htmlFor="delete-confirm">{t.typeToConfirmDelete}</Label>
+            <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
           </div>
-          <Button variant="destructive" className="w-full" disabled={deleteConfirm !== 'SLET'} onClick={() => base44.auth.logout('/')}>
+          <Button variant="destructive" className="w-full" disabled={deleteConfirm !== t.deleteConfirmWord} onClick={() => base44.auth.logout('/')}>
             <Trash2 className="w-4 h-4 mr-2" />
-            Slet min konto permanent
+            {t.deletePermanently}
           </Button>
           <div className="h-2" />
         </div>
