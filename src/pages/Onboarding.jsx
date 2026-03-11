@@ -23,6 +23,8 @@ export default function Onboarding() {
     profile_image: '',
     child_birthdate: '',
     child_due_date: '',
+    accept_terms: false,
+    accept_privacy: false,
   });
 
   useEffect(() => {
