@@ -187,12 +187,12 @@ Return format:
             backgroundColor: question.status === 'answered' ? (isDark ? '#052e16' : '#d1fae5') : (isDark ? '#451a03' : '#fef3c7'),
             color: question.status === 'answered' ? (isDark ? '#4ade80' : '#065f46') : (isDark ? '#fbbf24' : '#92400e'),
           }}>
-            {question.status === 'answered' ? 'Besvaret' : 'Åben'}
+            {question.status === 'answered' ? (lang === 'en' ? 'Answered' : 'Besvaret') : (lang === 'en' ? 'Open' : 'Åben')}
           </span>
-        </div>
-        
-        <h1 className="text-lg font-semibold mt-4" style={{ color: 'var(--color-text-primary)' }}>{question.title}</h1>
-        <p className="mt-2 whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>{question.content}</p>
+          </div>
+
+          <h1 className="text-lg font-semibold mt-4" style={{ color: 'var(--color-text-primary)' }}>{translatedQuestion?.title || question.title}</h1>
+          <p className="mt-2 whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>{translatedQuestion?.content || question.content}</p>
       </div>
 
       {/* Answers */}
