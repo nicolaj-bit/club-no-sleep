@@ -19,6 +19,7 @@ function getDailyAffirmationIndex() {
 
 export default function Home() {
   const headerVisible = useScrollDirection();
+  const { t, lang } = useLanguage();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
