@@ -40,6 +40,16 @@ export default function ProductDetail() {
     enabled: !!productId,
   });
 
+  const translations = useTranslation(
+    lang === 'en' && product
+      ? [{ id: product.id, title: product.title, description: product.description || '' }]
+      : []
+  );
+
+  const displayProduct = lang === 'en' && translations.length > 0 && translations[0] 
+    ? { ...product, ...translations[0] } 
+    : product;
+
   const handleShare = async () => {
     try {
       await navigator.share({
