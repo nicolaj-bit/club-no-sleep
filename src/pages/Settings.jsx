@@ -112,7 +112,7 @@ export default function Settings() {
               }}
             >
               <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
-              Lys
+              {t.light}
             </button>
             <button
               onClick={() => !isDark && toggle()}
@@ -124,7 +124,7 @@ export default function Settings() {
               }}
             >
               <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
-              Mørk
+              {t.dark}
             </button>
           </div>
         </div>
