@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Sparkles, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, ChevronRight } from 'lucide-react';
+import { Home, Sparkles, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
-import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const menuItemsConfig = [
   { key: 'shop', icon: ShoppingBag, page: 'Shop' },
