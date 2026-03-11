@@ -97,37 +97,9 @@ export default function Shop() {
                 >
                   <Search className="w-5 h-5" />
                 </Button>
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <SlidersHorizontal className="w-5 h-5" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle>Filtre & Sortering</SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-6 space-y-6">
-                      <div>
-                        <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-secondary)' }}>Sorter efter</h3>
-                        <div className="space-y-2">
-                          {sortOptions.map(opt => (
-                            <button
-                              key={opt.value}
-                              onClick={() => setSortBy(opt.value)}
-                              className="w-full text-left px-3 py-2 rounded-lg text-sm"
-                              style={sortBy === opt.value
-                                ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
-                                : { color: 'var(--color-text-secondary)' }}
-                            >
-                              {opt.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </SheetContent>
-                </Sheet>
+                <Button variant="ghost" size="icon" onClick={() => setFilterOpen(true)}>
+                  <SlidersHorizontal className="w-5 h-5" />
+                </Button>
               </div>
             </div>
           )}
