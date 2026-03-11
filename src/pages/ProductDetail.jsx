@@ -180,12 +180,12 @@ export default function ProductDetail() {
           {product.in_stock ? (
             <>
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-sm text-emerald-600 font-medium">På lager</span>
+              <span className="text-sm text-emerald-600 font-medium">{lang === 'en' ? 'In stock' : 'På lager'}</span>
             </>
           ) : (
             <>
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-text-muted)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Udsolgt</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'Out of stock' : 'Udsolgt'}</span>
             </>
           )}
         </div>
