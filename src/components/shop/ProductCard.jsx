@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ProductCard({ product, compact = false }) {
+  const { t } = useLanguage();
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price;
   const discountPercent = hasDiscount 
     ? Math.round((1 - product.price / product.compare_at_price) * 100) 
