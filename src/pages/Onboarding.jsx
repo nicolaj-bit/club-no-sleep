@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Camera, ArrowRight, ArrowLeft, Baby, MapPin, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 export default function Onboarding() {
   const [user, setUser] = useState(null);
