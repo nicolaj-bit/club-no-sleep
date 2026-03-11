@@ -151,7 +151,7 @@ export default function Settings() {
               <AccordionTrigger className="px-5 hover:no-underline py-4">
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kontakt support</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.contactSupport}</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
