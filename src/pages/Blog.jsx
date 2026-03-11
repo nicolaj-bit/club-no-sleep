@@ -189,19 +189,34 @@ Return format:
           </>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg fundet</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'No posts found' : 'Ingen indlæg fundet'}</p>
           </div>
         ) : (
           <>
+            {translating && (
+              <p className="text-center text-xs pb-1" style={{ color: 'var(--color-text-muted)' }}>Translating…</p>
+            )}
             {/* Featured Post */}
             {featuredPost && (
-              <BlogCard post={featuredPost} variant="featured" />
+              <BlogCard
+                post={featuredPost}
+                variant="featured"
+                translatedTitle={translatedPosts[featuredPost.id]?.title}
+                translatedCategory={translatedPosts[featuredPost.id]?.category}
+                lang={lang}
+              />
             )}
             
             {/* Other Posts */}
             <div className="space-y-4">
               {otherPosts.map(post => (
-                <BlogCard key={post.id} post={post} />
+                <BlogCard
+                  key={post.id}
+                  post={post}
+                  translatedTitle={translatedPosts[post.id]?.title}
+                  translatedCategory={translatedPosts[post.id]?.category}
+                  lang={lang}
+                />
               ))}
             </div>
           </>
