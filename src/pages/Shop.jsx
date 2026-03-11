@@ -42,6 +42,44 @@ export default function Shop() {
     queryFn: () => base44.entities.Product.list('-created_date'),
   });
 
+  // Translate products when language = English
+  useEffect(() => {
+    if (lang !== 'en' || products.length === 0) {
+      setTranslations({});
+      return;
+    }
+    const key = products.map(p => p.id).join(',');
+    if (translateRef.current === key) return;
+    translateRef.current = key;
+
+    const items = products.map(p => ({ id: p.id, title: p.title, description: p.description || '', category: p.category || '' }));
+    const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
+
+    base44.integrations.Core.InvokeLLM({
+      prompt: `Translate these Danish product titles, descriptions and categories to English. Return ONLY valid JSON.
+Products: ${JSON.stringify(items)}
+Categories: ${JSON.stringify(uniqueCategories)}
+
+Return format:
+{
+  "products": [{"id": "...", "title": "...", "description": "...", "category": "..."}],
+  "categories": {"DanskKat": "EnglishCat"}
+}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          products: { type: 'array', items: { type: 'object' } },
+          categories: { type: 'object' }
+        }
+      }
+    }).then(result => {
+      const map = {};
+      (result.products || []).forEach(p => { map['product_' + p.id] = { title: p.title, description: p.description, category: p.category }; });
+      Object.entries(result.categories || {}).forEach(([da, en]) => { map['cat_' + da] = en; });
+      setTranslations(map);
+    });
+  }, [lang, products]);
+
   const filteredProducts = products
     .filter(p => {
       const matchesSearch = !search || 
