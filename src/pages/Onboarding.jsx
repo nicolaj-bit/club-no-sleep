@@ -252,51 +252,8 @@ export default function Onboarding() {
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-80 pr-4">
-          <div style={{ color: 'var(--color-text-secondary)', lineHeight: '1.6', fontSize: '0.875rem' }}>
-            {openModal === 'terms' ? (
-              <div className="space-y-3">
-                <p><strong>Handelsbetingelser for LALATOTO</strong></p>
-                <p>Velkommen til LALATOTO. Ved at bruge vores app accepterer du disse handelsbetingelser.</p>
-                <p><strong>1. Brug af appen</strong></p>
-                <p>Du accepterer at bruge appen i overensstemmelse med alle gældende love og regler.</p>
-                <p><strong>2. Brugeransvar</strong></p>
-                <p>Du er ansvarlig for at holde dine loginoplysninger fortrolige og for alle aktiviteter på din konto.</p>
-                <p><strong>3. Begrænsninger</strong></p>
-                <p>Du må ikke:</p>
-                <ul className="ml-4 space-y-1">
-                  <li>- Misbruge eller forsøge at få uautoriseret adgang til appen</li>
-                  <li>- Dele indhold, der er ulovligt eller krænkende</li>
-                  <li>- Forsøge at manipulere eller skade appens funktionalitet</li>
-                </ul>
-                <p><strong>4. Ansvar</strong></p>
-                <p>LALATOTO stiller appen til rådighed "som den er". Vi påtager os ikke ansvar for direkte eller indirekte skader.</p>
-                <p><strong>5. Ændringer</strong></p>
-                <p>Vi forbeholder os retten til at ændre disse betingelser når som helst.</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <p><strong>Privatlivspolitik for LALATOTO</strong></p>
-                <p>Vi værdsætter dine personlige oplysninger og er forpligtet til at beskytte dem.</p>
-                <p><strong>1. Indsamling af data</strong></p>
-                <p>Vi indsamler data som navn, email, by, og oplysninger om dit barn til at tilbyde personaliserede tjenester.</p>
-                <p><strong>2. Brug af data</strong></p>
-                <p>Vi bruger dine data til:</p>
-                <ul className="ml-4 space-y-1">
-                  <li>- Personalisering af indhold</li>
-                  <li>- Beregning af tigerspring</li>
-                  <li>- Forbedring af appen</li>
-                  <li>- Kommunikation med dig</li>
-                </ul>
-                <p><strong>3. Sikkerhed</strong></p>
-                <p>Vi implementerer sikkerhedsforanstaltninger for at beskytte dine data mod uautoriseret adgang.</p>
-                <p><strong>4. Deling af data</strong></p>
-                <p>Vi deler ikke dine personlige oplysninger med tredjeparter uden dit samtykke, undtagen hvor loven kræver det.</p>
-                <p><strong>5. Dine rettigheder</strong></p>
-                <p>Du har ret til at anmode om adgang til, redigering eller sletning af dine personlige oplysninger.</p>
-                <p><strong>6. Kontakt</strong></p>
-                <p>Hvis du har spørgsmål om denne privatlivspolitik, kontakt os på support@lalatoto.dk</p>
-              </div>
-            )}
+          <div style={{ color: 'var(--color-text-secondary)', lineHeight: '1.6', fontSize: '0.875rem' }} className="whitespace-pre-wrap">
+            {openModal === 'terms' ? legalContent.terms : legalContent.privacy}
           </div>
         </ScrollArea>
       </DialogContent>
