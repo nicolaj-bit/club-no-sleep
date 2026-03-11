@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { Toaster } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
+import { TabStateProvider } from '@/components/ui/TabStateContext';
 
 // Pages that should NOT show bottom nav
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat'];
