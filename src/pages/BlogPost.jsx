@@ -197,7 +197,7 @@ export default function BlogPost() {
 
         {/* Title */}
         <h1 className="text-2xl font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-          {post.title}
+          {translated?.title || post.title}
         </h1>
 
         {/* Author & Date */}
