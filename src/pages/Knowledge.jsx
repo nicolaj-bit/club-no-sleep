@@ -123,9 +123,13 @@ export default function Knowledge() {
                 <div>
                   <h2 className="text-sm font-medium mb-3" style={{ color: 'var(--color-text-muted)' }}>{t.articles}</h2>
                   <div className="space-y-2">
-                    {searchResults.articles.map(article => (
-                      <ArticleCard key={article.id} article={article} variant="compact" />
-                    ))}
+                    {searchResults.articles.map(article => {
+                        const translated = translations['article_' + article.id];
+                        const displayTitle = lang === 'en' && translated ? translated.title : article.title;
+                        return (
+                          <ArticleCard key={article.id} article={{ ...article, title: displayTitle }} variant="compact" />
+                        );
+                      })}
                   </div>
                 </div>
               )}
