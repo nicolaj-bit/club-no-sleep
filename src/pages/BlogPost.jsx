@@ -78,6 +78,24 @@ export default function BlogPost() {
     },
   });
 
+  // Auto-translate when language is English and post is loaded
+  useEffect(() => {
+    if (lang !== 'en' || !post) { setTranslated(null); return; }
+    setTranslating(true);
+    base44.integrations.Core.InvokeLLM({
+      prompt: `Translate the following blog post title and content from Danish to English. Return JSON with keys "title" and "content" (keep markdown formatting in content).\n\nTitle: ${post.title}\n\nContent:\n${post.content}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          content: { type: 'string' },
+        },
+      },
+    }).then((res) => {
+      setTranslated(res);
+    }).finally(() => setTranslating(false));
+  }, [lang, post?.id]);
+
   const handleShare = async () => {
     try {
       await navigator.share({ title: post.title, url: window.location.href });
