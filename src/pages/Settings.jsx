@@ -16,6 +16,7 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 
 export default function Settings() {
   const { isDark, toggle } = useTheme();
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
