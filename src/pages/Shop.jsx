@@ -159,11 +159,11 @@ export default function Shop() {
       </div>
     </div>
       {/* Filter & Sort Bottom Sheet */}
-      <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title="Filtre & Sortering">
+      <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title={t.filtersTitle}>
         <div className="px-5 py-4 space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--color-text-muted)' }}>
-              Sorter efter
+              {t.sortBy}
             </p>
             <div className="space-y-1">
               {sortOptions.map(opt => (
