@@ -189,7 +189,7 @@ Return format:
           </>
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'No posts found' : 'Ingen indlæg fundet'}</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>{t.noPosts}</p>
           </div>
         ) : (
           <>
