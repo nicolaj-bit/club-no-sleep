@@ -233,22 +233,27 @@ export default function AdminEditor() {
             </div>
           )}
 
-          {/* Content — stor editor */}
+          {/* Content — rich text editor */}
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Indhold (markdown)</Label>
-            <textarea
-              value={editing.content || ''}
-              onChange={e => setEditing({ ...editing, content: e.target.value })}
-              placeholder="Skriv indhold her i markdown..."
-              className="w-full rounded-xl border px-4 py-3 text-sm font-mono leading-relaxed resize-y"
-              style={{
-                backgroundColor: 'var(--color-bg-card)',
-                color: 'var(--color-text-primary)',
-                borderColor: 'var(--color-border)',
-                minHeight: '60vh',
-              }}
-            />
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Understøtter markdown: **fed**, *kursiv*, # overskrift, - liste</p>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Indhold</Label>
+            <div className="rounded-xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
+              <ReactQuill
+                theme="snow"
+                value={editing.content || ''}
+                onChange={val => setEditing(prev => ({ ...prev, content: val }))}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', { color: [] }],
+                    [{ align: [] }],
+                    ['link', 'image', 'video', { table: [] }],
+                    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+                    ['clean'],
+                  ],
+                }}
+                style={{ minHeight: '50vh', backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
+              />
+            </div>
           </div>
 
           <Button onClick={handleSave} disabled={isSaving} className="w-full"
