@@ -34,13 +34,13 @@ export default function BlogCard({ post, variant = 'default', translatedTitle, t
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-5">
-            {post.category && (
+            {displayCategory && (
               <span className="inline-block bg-white/20 backdrop-blur text-white text-xs font-medium px-2.5 py-1 rounded-full mb-2">
-                {post.category}
+                {displayCategory}
               </span>
             )}
             <h3 className="text-lg font-semibold text-white leading-snug line-clamp-2">
-              {post.title}
+              {displayTitle}
             </h3>
             {formattedDate && (
               <p className="text-white/65 text-xs mt-1.5">{formattedDate}</p>
