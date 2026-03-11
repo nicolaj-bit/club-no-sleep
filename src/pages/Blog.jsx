@@ -9,8 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import BlogCard from '@/components/blog/BlogCard';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 
-const categories = ['Alle', 'Tips', 'Guides', 'Nyheder', 'Inspiration'];
-
 export default function Blog() {
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
@@ -22,6 +20,13 @@ export default function Blog() {
     queryKey: ['blogPosts'],
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date'),
   });
+
+  const { data: categoryRecords = [] } = useQuery({
+    queryKey: ['blogCategories'],
+    queryFn: () => base44.entities.BlogCategory.list('order'),
+  });
+
+  const categories = ['Alle', ...categoryRecords.filter(c => c.is_active).map(c => c.label)];
 
   const filteredPosts = posts.filter(p => {
     const matchesSearch = !search || 
