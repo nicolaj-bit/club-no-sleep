@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import BlogCard from '@/components/blog/BlogCard';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function Blog() {
   const headerVisible = useScrollDirection();
@@ -17,9 +18,6 @@ export default function Blog() {
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [translatedPosts, setTranslatedPosts] = useState({});
-  const [translating, setTranslating] = useState(false);
-  const translateRef = useRef(null);
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
@@ -31,61 +29,43 @@ export default function Blog() {
     queryFn: () => base44.entities.BlogCategory.list('order'),
   });
 
+  // Translate posts and categories
+  const postsToTranslate = lang === 'en' && posts.length > 0
+    ? posts.map(p => ({ id: p.id, title: p.title, category: p.category || '' }))
+    : [];
+  const categoriesToTranslate = lang === 'en' && categoryRecords.length > 0
+    ? categoryRecords.map(c => ({ id: c.id, label: c.label }))
+    : [];
+
+  const postTranslations = useTranslation(postsToTranslate);
+  const categoryTranslations = useTranslation(categoriesToTranslate);
+
   const allLabel = lang === 'en' ? 'All' : 'Alle';
   const activeCategories = categoryRecords.filter(c => c.is_active);
-  const categories = [allLabel, ...activeCategories.map(c =>
-    lang === 'en' && translatedPosts['__cat_' + c.label] ? translatedPosts['__cat_' + c.label] : c.label
-  )];
 
-  // Translate all posts + categories when language changes to English
-  useEffect(() => {
-    if (lang !== 'en' || posts.length === 0) {
-      setTranslatedPosts({});
-      return;
-    }
-    const key = posts.map(p => p.id).join(',');
-    if (translateRef.current === key) return;
-    translateRef.current = key;
+  // Helper to get translated text
+  const getTranslated = (items, itemId, field, fallback) => {
+    if (!Array.isArray(items)) return fallback;
+    const found = items.find(i => i.id === itemId);
+    return found ? found[field] : fallback;
+  };
 
-    setTranslating(true);
-    const items = posts.map(p => ({ id: p.id, title: p.title, category: p.category || '' }));
-    const uniqueCategories = [...new Set(posts.map(p => p.category).filter(Boolean))];
-
-    base44.integrations.Core.InvokeLLM({
-      prompt: `Translate these Danish blog post titles and categories to English. Return ONLY valid JSON.
-Posts: ${JSON.stringify(items)}
-Unique categories: ${JSON.stringify(uniqueCategories)}
-
-Return format:
-{
-  "posts": [{"id": "...", "title": "...", "category": "..."}],
-  "categories": {"DanskKategori": "EnglishCategory"}
-}`,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          posts: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, title: { type: 'string' }, category: { type: 'string' } } } },
-          categories: { type: 'object' }
-        }
-      }
-    }).then(result => {
-      const map = {};
-      (result.posts || []).forEach(p => { map[p.id] = { title: p.title, category: p.category }; });
-      Object.entries(result.categories || {}).forEach(([da, en]) => { map['__cat_' + da] = en; });
-      setTranslatedPosts(map);
-    }).finally(() => setTranslating(false));
-  }, [lang, posts]);
+  const categories = [
+    allLabel,
+    ...activeCategories.map(c =>
+      getTranslated(categoryTranslations, c.id, 'label', c.label)
+    )
+  ];
 
   const activeCategoryDa = (() => {
     if (!activeCategory || activeCategory === allLabel) return null;
-    // find the original danish label for the active category
     const idx = categories.indexOf(activeCategory);
     if (idx <= 0) return activeCategory;
     return activeCategories[idx - 1]?.label || activeCategory;
   })();
 
   const filteredPosts = posts.filter(p => {
-    const displayTitle = translatedPosts[p.id]?.title || p.title;
+    const displayTitle = getTranslated(postTranslations, p.id, 'title', p.title);
     const matchesSearch = !search ||
       displayTitle?.toLowerCase().includes(search.toLowerCase()) ||
       p.excerpt?.toLowerCase().includes(search.toLowerCase());
@@ -118,7 +98,7 @@ Return format:
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input
-                placeholder={t.searchBlog}
+                  placeholder={t.searchBlog}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 bg-slate-50 border-0"
@@ -193,16 +173,13 @@ Return format:
           </div>
         ) : (
           <>
-            {translating && (
-              <p className="text-center text-xs pb-1" style={{ color: 'var(--color-text-muted)' }}>Translating…</p>
-            )}
             {/* Featured Post */}
             {featuredPost && (
               <BlogCard
                 post={featuredPost}
                 variant="featured"
-                translatedTitle={translatedPosts[featuredPost.id]?.title}
-                translatedCategory={translatedPosts[featuredPost.id]?.category}
+                translatedTitle={getTranslated(postTranslations, featuredPost.id, 'title', null)}
+                translatedCategory={getTranslated(postTranslations, featuredPost.id, 'category', null)}
                 lang={lang}
               />
             )}
@@ -213,8 +190,8 @@ Return format:
                 <BlogCard
                   key={post.id}
                   post={post}
-                  translatedTitle={translatedPosts[post.id]?.title}
-                  translatedCategory={translatedPosts[post.id]?.category}
+                  translatedTitle={getTranslated(postTranslations, post.id, 'title', null)}
+                  translatedCategory={getTranslated(postTranslations, post.id, 'category', null)}
                   lang={lang}
                 />
               ))}
