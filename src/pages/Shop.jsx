@@ -12,13 +12,28 @@ import ProductCard from '@/components/shop/ProductCard';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Shop() {
+  const { t, lang } = useLanguage();
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState('Alle');
+  const [activeCategory, setActiveCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [showSearch, setShowSearch] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+
+  const categories = [
+    { key: 'all', label: t.catAll },
+    { key: 'Pleje', label: t.catCare },
+    { key: 'Tilbehør', label: t.catAccessories },
+    { key: 'Udstyr', label: t.catEquipment },
+    { key: 'Bøger', label: t.catBooks },
+  ];
+
+  const sortOptions = [
+    { value: 'newest', label: t.newest },
+    { value: 'price_asc', label: t.priceLow },
+    { value: 'price_desc', label: t.priceHigh },
+  ];
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
