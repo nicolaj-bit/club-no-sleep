@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ export default function Onboarding() {
   });
 
   const [openModal, setOpenModal] = useState(null);
+  const [legalContent, setLegalContent] = useState({ terms: null, privacy: null });
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -40,6 +41,16 @@ export default function Onboarding() {
         username: (u.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, ''),
       }));
     }).catch(() => base44.auth.redirectToLogin());
+
+    // Hent handelsbetingelser og privatlivspolitik
+    base44.entities.LegalContent.list().then(items => {
+      const terms = items.find(i => i.type === 'terms');
+      const privacy = items.find(i => i.type === 'privacy');
+      setLegalContent({
+        terms: terms?.content || '',
+        privacy: privacy?.content || ''
+      });
+    });
   }, []);
 
   const handleImageUpload = async (e) => {
