@@ -242,7 +242,7 @@ export default function Knowledge() {
                             ? 'bg-emerald-100 text-emerald-700'
                             : 'bg-amber-100 text-amber-700'
                         }`}>
-                          {q.status === 'answered' ? 'Besvaret' : 'Åben'}
+                          {q.status === 'answered' ? t.answered : t.open}
                         </span>
                       </div>
                       <p className="text-sm mt-1 line-clamp-2" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>
