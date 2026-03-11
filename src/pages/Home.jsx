@@ -10,6 +10,7 @@ import BlogCard from '@/components/blog/BlogCard';
 import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
 import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTranslation } from '@/components/hooks/useTranslation';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
