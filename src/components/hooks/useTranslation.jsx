@@ -21,7 +21,12 @@ export function useTranslation(items) {
   const cacheRef = useRef({});
 
   useEffect(() => {
-    if (lang !== 'en' || !items || items.length === 0) {
+    if (lang !== 'en') {
+      setTranslated({});
+      return;
+    }
+
+    if (!items || items.length === 0) {
       setTranslated({});
       return;
     }
