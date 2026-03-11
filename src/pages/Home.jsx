@@ -40,11 +40,19 @@ export default function Home() {
   const headerVisible = useScrollDirection();
   const { t, lang } = useLanguage();
   const [user, setUser] = useState(null);
+  const [, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
       if (isAuth) base44.auth.me().then(setUser).catch(() => {});
     });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const { data: posts = [], isLoading } = useQuery({
