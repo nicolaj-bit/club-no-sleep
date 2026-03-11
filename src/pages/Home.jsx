@@ -25,7 +25,7 @@ function getGreeting(lang, gender) {
   if (hour >= 5 && hour < 12) {
     greeting = lang === 'da' ? 'God morgen' : 'Good morning';
   } else if (hour >= 12 && hour < 17) {
-    greeting = lang === 'da' ? 'God formiddag' : 'Good afternoon';
+    greeting = lang === 'da' ? 'God eftermiddag' : 'Good afternoon';
   } else if (hour >= 17 && hour < 21) {
     greeting = lang === 'da' ? 'God aften' : 'Good evening';
   } else {
