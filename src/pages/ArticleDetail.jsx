@@ -14,6 +14,8 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 export default function ArticleDetail() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { lang } = useLanguage();
+  const [translatedArticle, setTranslatedArticle] = useState(null);
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
   const articleSlug = urlParams.get('slug');
@@ -32,6 +34,28 @@ export default function ArticleDetail() {
     },
     enabled: !!(articleId || articleSlug),
   });
+
+  // Translate article when language = English
+  useEffect(() => {
+    if (!article || lang !== 'en') {
+      setTranslatedArticle(null);
+      return;
+    }
+
+    base44.integrations.Core.InvokeLLM({
+      prompt: `Translate this Danish article to English. Return ONLY valid JSON.
+Article: ${JSON.stringify({ title: article.title, content: article.content, category: article.category || '' })}
+
+Return format:
+{"title": "...", "content": "...", "category": "..."}`,
+      response_json_schema: {
+        type: 'object',
+        properties: { title: { type: 'string' }, content: { type: 'string' }, category: { type: 'string' } }
+      }
+    }).then(result => {
+      setTranslatedArticle(result);
+    });
+  }, [article, lang]);
 
   const handleShare = async () => {
     try {
