@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ProductCard({ product, compact = false }) {
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price;
