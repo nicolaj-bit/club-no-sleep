@@ -143,8 +143,8 @@ export default function Settings() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                <p className="mb-3"><strong style={{ color: 'var(--color-text-secondary)' }}>Hvordan ændrer jeg min profil?</strong><br />Gå til din profil og tryk på "Rediger".</p>
-                <p><strong style={{ color: 'var(--color-text-secondary)' }}>Hvordan finder jeg en behandler?</strong><br />Find en behandler under Community-fanen.</p>
+                <p className="mb-3"><strong style={{ color: 'var(--color-text-secondary)' }}>{t.faqQ1}</strong><br />{t.faqA1}</p>
+                <p><strong style={{ color: 'var(--color-text-secondary)' }}>{t.faqQ2}</strong><br />{t.faqA2}</p>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support" className="border-0">
