@@ -92,10 +92,16 @@ export default function Layout({ children, currentPageName }) {
         <AnimatePresence mode="wait">
           <motion.main
             key={currentPageName}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
+            initial={rootTabPages.includes(currentPageName)
+              ? { opacity: 0 }
+              : { opacity: 0, x: 20 }}
+            animate={rootTabPages.includes(currentPageName)
+              ? { opacity: 1 }
+              : { opacity: 1, x: 0 }}
+            exit={rootTabPages.includes(currentPageName)
+              ? { opacity: 0 }
+              : { opacity: 0, x: -20 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             className={showNav ? "pb-20" : ""}
             style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
           >
