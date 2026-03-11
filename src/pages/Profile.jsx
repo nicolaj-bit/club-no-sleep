@@ -120,11 +120,12 @@ export default function Profile() {
               <button
                 className="flex items-center gap-3 w-full text-left cursor-pointer active:opacity-70 transition-opacity"
                 onClick={() => setEditForm({
-                  username: profile?.username || '',
-                  display_name: profile?.display_name || '',
-                  city: profile?.city || '',
-                  child_birthdate: profile?.child_birthdate || '',
-                })}
+                   username: profile?.username || '',
+                   display_name: profile?.display_name || '',
+                   gender: profile?.gender || '',
+                   city: profile?.city || '',
+                   child_birthdate: profile?.child_birthdate || '',
+                 })}
               >
                 <div className="relative">
                   <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
@@ -162,11 +163,29 @@ export default function Profile() {
                 <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="display_name">{t.displayName}</Label>
-                <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="city">{t.city}</Label>
+                 <Label htmlFor="display_name">{t.displayName}</Label>
+                 <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
+               </div>
+               <div className="space-y-2">
+                 <Label>{lang === 'da' ? 'Køn' : 'Gender'}</Label>
+                 <div className="flex gap-3">
+                   {[{ value: 'female', label: lang === 'da' ? 'Kvinde' : 'Female' }, { value: 'male', label: lang === 'da' ? 'Mand' : 'Male' }, { value: 'other', label: lang === 'da' ? 'Andet' : 'Other' }].map(option => (
+                     <button
+                       key={option.value}
+                       onClick={() => setEditForm({ ...editForm, gender: option.value })}
+                       className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                       style={{
+                         backgroundColor: editForm.gender === option.value ? 'var(--color-text-primary)' : 'var(--color-bg-subtle)',
+                         color: editForm.gender === option.value ? 'var(--color-bg)' : 'var(--color-text-primary)',
+                       }}
+                     >
+                       {option.label}
+                     </button>
+                   ))}
+                 </div>
+               </div>
+               <div className="space-y-2">
+                 <Label htmlFor="city">{t.city}</Label>
                 <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
               </div>
               <div className="space-y-2">
