@@ -92,6 +92,44 @@ export default function QuestionDetail() {
     },
   });
 
+  // Translate question and answers when language = English
+  useEffect(() => {
+    if (!question || lang !== 'en') {
+      setTranslatedQuestion(null);
+      setTranslatedAnswers({});
+      return;
+    }
+
+    const itemsToTranslate = [
+      { id: 'q', title: question.title, content: question.content }
+    ];
+    answers.forEach((a, i) => {
+      itemsToTranslate.push({ id: 'a' + i, content: a.content });
+    });
+
+    base44.integrations.Core.InvokeLLM({
+      prompt: `Translate these Danish Q&A texts to English. Return ONLY valid JSON.
+${JSON.stringify(itemsToTranslate)}
+
+Return format:
+{"q": {"title": "...", "content": "..."}, "answers": [{"id": "a0", "content": "..."}, ...]}`,
+      response_json_schema: {
+        type: 'object',
+        properties: { 
+          q: { type: 'object' },
+          answers: { type: 'array', items: { type: 'object' } }
+        }
+      }
+    }).then(result => {
+      setTranslatedQuestion(result.q);
+      const answerMap = {};
+      (result.answers || []).forEach((a) => {
+        answerMap[a.id] = a;
+      });
+      setTranslatedAnswers(answerMap);
+    });
+  }, [question, answers, lang]);
+
   if (loadingQuestion) {
     return (
       <div className="min-h-screen p-4" style={{ backgroundColor: 'var(--color-bg)' }}>
