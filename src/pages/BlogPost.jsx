@@ -12,6 +12,7 @@ import { da } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function BlogPost() {
   const { theme } = useTheme();
