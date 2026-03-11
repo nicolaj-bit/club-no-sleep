@@ -191,9 +191,13 @@ Return format:
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {filteredProducts.map(product => {
+              const translated = translations['product_' + product.id];
+              const displayProduct = lang === 'en' && translated ? { ...product, ...translated } : product;
+              return (
+                <ProductCard key={product.id} product={displayProduct} />
+              );
+            })}
           </div>
         )}
       </div>
