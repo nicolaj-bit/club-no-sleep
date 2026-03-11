@@ -42,7 +42,7 @@ export default function ProductCard({ product, compact = false }) {
         {!product.in_stock && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-card)', opacity: 0.7 }}>
             <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)' }}>
-              Udsolgt
+              {t.outOfStock}
             </span>
           </div>
         )}
