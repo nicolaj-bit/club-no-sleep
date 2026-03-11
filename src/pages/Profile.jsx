@@ -169,7 +169,7 @@ export default function Profile() {
                <div className="space-y-2">
                  <Label>{lang === 'da' ? 'Køn' : 'Gender'}</Label>
                  <div className="flex gap-3">
-                   {[{ value: 'female', label: lang === 'da' ? 'Kvinde' : 'Female' }, { value: 'male', label: lang === 'da' ? 'Mand' : 'Male' }, { value: 'other', label: lang === 'da' ? 'Andet' : 'Other' }].map(option => (
+                   {[{ value: 'female', label: lang === 'da' ? 'Kvinde' : 'Female' }, { value: 'male', label: lang === 'da' ? 'Mand' : 'Male' }].map(option => (
                      <button
                        key={option.value}
                        onClick={() => setEditForm({ ...editForm, gender: option.value })}
