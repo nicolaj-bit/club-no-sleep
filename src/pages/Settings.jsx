@@ -55,7 +55,7 @@ export default function Settings() {
           </button>
         </Link>
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          Indstillinger
+          {t.settingsTitle}
         </h1>
       </div>
 
