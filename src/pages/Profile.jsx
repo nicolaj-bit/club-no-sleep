@@ -145,7 +145,7 @@ export default function Profile() {
                   )}
                 </div>
                 <span className="ml-auto text-xs px-3 py-1 rounded-full" style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
-                  Rediger
+                  {t.edit}
                 </span>
               </button>
             </DialogTrigger>
