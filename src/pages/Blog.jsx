@@ -13,9 +13,13 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 export default function Blog() {
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
+  const { lang, t } = useLanguage();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('Alle');
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [translatedPosts, setTranslatedPosts] = useState({});
+  const [translating, setTranslating] = useState(false);
+  const translateRef = useRef(null);
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
