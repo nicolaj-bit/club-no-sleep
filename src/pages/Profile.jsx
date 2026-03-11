@@ -153,28 +153,28 @@ export default function Profile() {
 
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Rediger profil</DialogTitle>
+              <DialogTitle>{t.editProfile}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Brugernavn</Label>
+                <Label htmlFor="username">{t.username}</Label>
                 <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="display_name">Visningsnavn</Label>
+                <Label htmlFor="display_name">{t.displayName}</Label>
                 <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="city">By</Label>
+                <Label htmlFor="city">{t.city}</Label>
                 <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="birthdate">Barnets fødselsdag</Label>
+                <Label htmlFor="birthdate">{t.childBirthdate}</Label>
                 <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Bruges til beregning af tigerspring 🐯</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
               </div>
               <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
-                {updateProfileMutation.isPending ? 'Gemmer…' : 'Gem ændringer'}
+                {updateProfileMutation.isPending ? t.saving : t.saveChanges}
               </Button>
             </div>
           </DialogContent>
