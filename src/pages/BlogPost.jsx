@@ -17,12 +17,15 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 export default function BlogPost() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
   const queryClient = useQueryClient();
 
   const [isSaved, setIsSaved] = useState(false);
   const [user, setUser] = useState(null);
+  const [translated, setTranslated] = useState(null);
+  const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
