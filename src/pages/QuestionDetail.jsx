@@ -199,8 +199,8 @@ Return format:
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
           <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
-            {answers.length} {answers.length === 1 ? 'svar' : 'svar'}
-          </h2>
+             {answers.length} {answers.length === 1 ? (lang === 'en' ? 'answer' : 'svar') : (lang === 'en' ? 'answers' : 'svar')}
+           </h2>
           
           {loadingAnswers ? (
             <div className="space-y-4">
