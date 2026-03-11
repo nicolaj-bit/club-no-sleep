@@ -7,13 +7,13 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-const menuItems = [
-  { name: 'Shop', icon: ShoppingBag, page: 'Shop' },
-  { name: 'Blog', icon: BookOpen, page: 'Blog' },
-  { name: 'Søvnlog', icon: BedDouble, page: 'SleepLog' },
-  { name: 'Viden', icon: Lightbulb, page: 'Knowledge' },
-  { name: 'Community', icon: Users, page: 'Community' },
-  { name: 'Profil', icon: User, page: 'Profile' },
+const menuItemsConfig = [
+  { key: 'shop', icon: ShoppingBag, page: 'Shop' },
+  { key: 'blog', icon: BookOpen, page: 'Blog' },
+  { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
+  { key: 'knowledge', icon: Lightbulb, page: 'Knowledge' },
+  { key: 'community', icon: Users, page: 'Community' },
+  { key: 'profile', icon: User, page: 'Profile' },
 ];
 
 export default function BottomNav() {
