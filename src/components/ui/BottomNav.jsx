@@ -46,71 +46,76 @@ export default function BottomNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.25 }}
               className="fixed inset-0 z-50"
-              style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+              style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
               onClick={() => setMenuOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="fixed left-1/2 top-1/2 z-50 w-72 rounded-2xl overflow-hidden"
+              initial={{ opacity: 0, scale: 0.92, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 8 }}
+              transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed left-1/2 top-1/2 z-50 w-80 rounded-3xl overflow-hidden"
               style={{
                 transform: 'translate(-50%, -50%)',
-                backgroundColor: isDark ? '#111111' : '#FFFFFF',
+                backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+                backdropFilter: 'blur(20px)',
                 boxShadow: isDark
-                  ? '0 20px 60px rgba(0,0,0,0.8)'
-                  : '0 20px 60px rgba(44,26,14,0.2)',
+                  ? '0 32px 64px rgba(0,0,0,0.9), 0 0 0 0.5px rgba(255,255,255,0.08)'
+                  : '0 32px 64px rgba(44,26,14,0.18), 0 0 0 0.5px rgba(44,26,14,0.06)',
               }}
             >
-              <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-                <span className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{t.menu}</span>
-                <button onClick={() => setMenuOpen(false)} className="opacity-50 hover:opacity-100 transition-opacity">
-                  <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 pt-5 pb-4">
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
+                  {t.menu}
+                </span>
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-opacity active:opacity-50"
+                  style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}
+                >
+                  <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
               </div>
-              <div className="py-2">
-                {menuItems.map((item, index) => {
+
+              {/* Menu items grid */}
+              <div className="px-4 pb-5 grid grid-cols-2 gap-2.5">
+                {menuItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.page);
                   return (
-                    <React.Fragment key={item.name}>
-                      {index > 0 && (
-                        <div className="h-px mx-5" style={{ backgroundColor: 'var(--color-border)', opacity: 0.5 }} />
-                      )}
-                      <button
-                        onClick={() => handleMenuItemPress(item.page)}
-                        className="w-full flex items-center gap-4 px-5 py-3.5 active:opacity-60 transition-opacity"
+                    <button
+                      key={item.name}
+                      onClick={() => handleMenuItemPress(item.page)}
+                      className="flex flex-col items-start gap-3 p-4 rounded-2xl text-left active:scale-95 transition-transform"
+                      style={{
+                        backgroundColor: active
+                          ? isDark ? '#FFFFFF' : '#2C1A0E'
+                          : isDark ? '#1A1A1A' : '#F7F2EC',
+                      }}
+                    >
+                      <Icon
+                        className="w-5 h-5"
+                        strokeWidth={2}
+                        style={{
+                          color: active
+                            ? isDark ? '#000000' : '#FFFFFF'
+                            : isDark ? '#888888' : '#9C7E6A',
+                        }}
+                      />
+                      <span
+                        className="text-[14px] font-medium leading-tight"
+                        style={{
+                          color: active
+                            ? isDark ? '#000000' : '#FFFFFF'
+                            : isDark ? '#CCCCCC' : '#4A2E1A',
+                        }}
                       >
-                        <Icon
-                          className="w-5 h-5 flex-shrink-0"
-                          strokeWidth={active ? 2.5 : 2}
-                          style={{
-                            color: active
-                              ? isDark ? '#FFFFFF' : '#2C1A0E'
-                              : isDark ? '#888888' : '#9C7E6A',
-                          }}
-                        />
-                        <span
-                          className={cn('text-[15px] flex-1 text-left', active ? 'font-semibold' : 'font-medium')}
-                          style={{
-                            color: active
-                              ? isDark ? '#FFFFFF' : '#2C1A0E'
-                              : isDark ? '#CCCCCC' : '#6B4F3A',
-                          }}
-                        >
-                          {item.name}
-                        </span>
-                        {active && (
-                          <div
-                            className="w-2 h-2 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: isDark ? '#FFFFFF' : '#2C1A0E' }}
-                          />
-                        )}
-                      </button>
-                    </React.Fragment>
+                        {item.name}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
