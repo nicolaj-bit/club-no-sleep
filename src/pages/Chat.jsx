@@ -233,8 +233,9 @@ export default function Chat() {
           <Input
             placeholder="Skriv en besked..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value.slice(0, 1000))}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+            maxLength={1000}
             className="flex-1 border-0 rounded-full px-4"
             style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
           />
