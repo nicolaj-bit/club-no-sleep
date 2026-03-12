@@ -29,7 +29,7 @@ function getGreeting(lang, gender) {
   } else if (hour >= 17 && hour < 21) {
     greeting = lang === 'da' ? 'God aften' : 'Good evening';
   } else {
-    greeting = lang === 'da' ? 'God nat' : 'Good night';
+    greeting = lang === 'da' ? 'God aften' : 'Good night';
   }
   
   const suffix = gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom');
