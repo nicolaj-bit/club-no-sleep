@@ -5,12 +5,19 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
 
+const SUGGESTIONS = [
+  "Hvordan hjælper jeg min baby til at sove bedre?",
+  "Hvad er søvnregression?",
+  "Min baby sover kun 20 min ad gangen — hjælp!",
+];
+
 export default function AIChat() {
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef(null);
+  const textareaRef = useRef(null);
   const urlParams = new URLSearchParams(window.location.search);
   const withLogs = urlParams.get('with_logs') === '1';
 
@@ -23,7 +30,6 @@ export default function AIChat() {
       setConversation(conv);
       setMessages(conv.messages || []);
 
-      // If coming from sleep log, auto-send logs
       if (withLogs) {
         try {
           const user = await base44.auth.me();
@@ -55,6 +61,14 @@ export default function AIChat() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [input]);
+
   const sendMessage = async () => {
     if (!input.trim() || !conversation || isLoading) return;
     const text = input.trim();
@@ -70,44 +84,81 @@ export default function AIChat() {
     }
   };
 
+  const visibleMessages = messages.filter(m => m.role !== 'tool');
+
   return (
-    <div className="flex flex-col h-screen" style={{ backgroundColor: '#F7F2EC' }}>
+    <div className="flex flex-col h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-4 bg-white border-b border-stone-100">
-        <Link to={createPageUrl('Home')} className="p-2 rounded-full hover:bg-stone-50">
-          <ArrowLeft className="w-5 h-5 text-stone-700" />
+      <div
+        className="flex items-center gap-3 px-4 pb-4 border-b"
+        style={{
+          paddingTop: 'max(48px, env(safe-area-inset-top, 48px))',
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+        }}
+      >
+        <Link
+          to={createPageUrl('Home')}
+          className="p-2 rounded-full transition-colors cursor-pointer"
+          style={{ color: 'var(--color-text-secondary)' }}
+          aria-label="Gå tilbage"
+        >
+          <ArrowLeft className="w-5 h-5" />
         </Link>
-        <div className="flex items-center gap-2 flex-1">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-            <Sparkles className="w-4 h-4 text-white" />
+
+        <div className="flex items-center gap-3 flex-1">
+          <div
+            className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+          >
+            <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-stone-800 text-sm">Baby & Søvn Ekspert</p>
-            <p className="text-xs text-amber-600 font-medium">🤖 AI · Erstatter ikke lægefaglig rådgivning</p>
+            <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+              Baby & Søvn Ekspert
+            </p>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>AI-assistent · Online</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        {messages.length === 0 && !isLoading && (
-          <div className="flex flex-col items-center justify-center h-full text-center px-6 pb-20">
-            <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-              <Sparkles className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-lg font-semibold text-stone-800 mb-2">Hej! Jeg er her for dig 🤍</h2>
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
 
-            <p className="text-stone-500 text-sm leading-relaxed mb-6">Jeg er ekspert i babysøvn, amning, barnets udvikling og meget mere. Spørg mig om alt!</p>
-            <div className="space-y-2 w-full max-w-xs">
-              {[
-                "Hvordan hjælper jeg min baby til at sove bedre?",
-                "Hvad er søvnregression?",
-                "Mine baby sover kun 20 min ad gangen — hjælp!",
-              ].map(q => (
+        {/* Empty state */}
+        {visibleMessages.length === 0 && !isLoading && (
+          <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
+            <div
+              className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-lg"
+              style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+            >
+              <Sparkles className="w-10 h-10 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                Hej! Jeg er her for dig 🤍
+              </h2>
+              <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
+                Ekspert i babysøvn, amning og barnets udvikling. Spørg mig om alt!
+              </p>
+            </div>
+
+            {/* Suggestion chips */}
+            <div className="w-full max-w-sm space-y-2 mt-2">
+              {SUGGESTIONS.map(q => (
                 <button
                   key={q}
                   onClick={() => setInput(q)}
-                  className="w-full text-left text-sm px-4 py-3 rounded-2xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 transition-all"
+                  className="w-full text-left text-sm px-4 py-3 rounded-2xl border transition-colors cursor-pointer"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    borderColor: 'var(--color-border)',
+                    color: 'var(--color-text-secondary)',
+                  }}
                 >
                   {q}
                 </button>
@@ -116,18 +167,34 @@ export default function AIChat() {
           </div>
         )}
 
-        {messages.map((msg, i) => {
-          if (msg.role === 'tool') return null;
+        {/* Messages */}
+        {visibleMessages.map((msg, i) => {
           const isUser = msg.role === 'user';
           return (
-            <div key={i} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
+            <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
               {!isUser && (
-                <div className="w-7 h-7 rounded-full flex items-center justify-center mr-2 mt-1 flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+                <div
+                  className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                >
                   <Sparkles className="w-3.5 h-3.5 text-white" />
                 </div>
               )}
-              <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${isUser ? 'text-white' : 'bg-white border border-stone-100 text-stone-800'}`}
-                style={isUser ? { background: 'linear-gradient(135deg, #A0785A, #7A5535)' } : {}}>
+              <div
+                className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${
+                  isUser
+                    ? 'rounded-br-md text-white'
+                    : 'rounded-bl-md border'
+                }`}
+                style={isUser
+                  ? { background: 'linear-gradient(135deg, #A0785A, #6B3F20)' }
+                  : {
+                      backgroundColor: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-border)',
+                      color: 'var(--color-text-primary)',
+                    }
+                }
+              >
                 {isUser ? (
                   <p className="text-sm leading-relaxed">{msg.content}</p>
                 ) : (
@@ -140,12 +207,19 @@ export default function AIChat() {
           );
         })}
 
+        {/* Loading dots */}
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center mr-2 flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+          <div className="flex items-end gap-2 justify-start">
+            <div
+              className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+              style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+            >
               <Sparkles className="w-3.5 h-3.5 text-white" />
             </div>
-            <div className="bg-white border border-stone-100 rounded-2xl px-4 py-3">
+            <div
+              className="rounded-2xl rounded-bl-md border px-4 py-3 shadow-sm"
+              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+            >
               <div className="flex gap-1 items-center h-4">
                 <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -154,33 +228,53 @@ export default function AIChat() {
             </div>
           </div>
         )}
+
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div className="px-4 pb-8 pt-3 bg-white border-t border-stone-100">
-
-        <div className="flex items-end gap-2 bg-stone-50 rounded-2xl px-4 py-3 border border-stone-200">
+      {/* Input bar */}
+      <div
+        className="px-4 pt-3 pb-6 border-t"
+        style={{
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+          paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
+        }}
+      >
+        <div
+          className="flex items-end gap-2 rounded-2xl px-4 py-3 border transition-colors"
+          style={{
+            backgroundColor: 'var(--color-bg-subtle)',
+            borderColor: 'var(--color-border)',
+          }}
+        >
           <textarea
+            ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Skriv dit spørgsmål..."
+            placeholder="Skriv dit spørgsmål…"
             rows={1}
-            className="flex-1 bg-transparent text-stone-800 text-sm resize-none outline-none placeholder-stone-400 max-h-28"
-            style={{ lineHeight: '1.5' }}
+            className="flex-1 bg-transparent text-sm resize-none outline-none"
+            style={{
+              color: 'var(--color-text-primary)',
+              lineHeight: '1.6',
+              maxHeight: '120px',
+              caretColor: 'var(--color-accent)',
+            }}
           />
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-40"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity cursor-pointer disabled:opacity-30"
+            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+            aria-label="Send besked"
           >
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
-        <p className="text-center text-xs text-stone-400 mt-2 px-2">
-          AI-assistenten kan lave fejl og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.
+        <p className="text-center text-xs mt-2 px-4" style={{ color: 'var(--color-text-muted)' }}>
+          AI-assistenten kan lave fejl og erstatter ikke lægefaglig rådgivning.
         </p>
       </div>
     </div>
