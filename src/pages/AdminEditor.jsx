@@ -309,8 +309,8 @@ export default function AdminEditor() {
   }
 
   // ── LIST VIEW ──────────────────────────────────────────────
-  const items = activeTab === 'BlogPost' ? blogPosts : articles;
-  const isLoading = activeTab === 'BlogPost' ? loadingBlogs : loadingArticles;
+  const items = activeTab === 'BlogPost' ? blogPosts : activeTab === 'KnowledgeArticle' ? articles : legalItems;
+  const isLoading = activeTab === 'BlogPost' ? loadingBlogs : activeTab === 'KnowledgeArticle' ? loadingArticles : loadingLegal;
 
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
