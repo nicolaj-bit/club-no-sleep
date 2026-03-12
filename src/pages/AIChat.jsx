@@ -83,7 +83,7 @@ export default function AIChat() {
           </div>
           <div>
             <p className="font-semibold text-stone-800 text-sm">Baby & Søvn Ekspert</p>
-            <p className="text-xs text-stone-400">Spørg om alt</p>
+            <p className="text-xs text-amber-600 font-medium">🤖 AI · Erstatter ikke lægefaglig rådgivning</p>
           </div>
         </div>
       </div>
