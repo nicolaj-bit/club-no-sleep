@@ -373,9 +373,59 @@ export default function AdminEditor() {
         ))}
       </div>
 
+      {/* Help Modal Editor */}
+      {activeTab === 'HelpModal' && (
+        <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Om appen (dansk)</Label>
+            <textarea
+              value={helpForm.help_about_text_da || ''}
+              onChange={e => setHelpForm({ ...helpForm, help_about_text_da: e.target.value })}
+              rows={3}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Om appen (engelsk)</Label>
+            <textarea
+              value={helpForm.help_about_text_en || ''}
+              onChange={e => setHelpForm({ ...helpForm, help_about_text_en: e.target.value })}
+              rows={3}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Kontakt e-mail</Label>
+            <Input
+              type="email"
+              value={helpForm.help_contact_email || ''}
+              onChange={e => setHelpForm({ ...helpForm, help_contact_email: e.target.value })}
+              placeholder="hej@lalatoto.dk"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>FAQ URL</Label>
+            <Input
+              type="url"
+              value={helpForm.help_faq_url || ''}
+              onChange={e => setHelpForm({ ...helpForm, help_faq_url: e.target.value })}
+              placeholder="https://lalatoto.dk/faq"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <Button onClick={handleSaveHelp} disabled={helpSaving} className="w-full"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
+            {helpSaving ? 'Gemmer...' : 'Gem'}
+          </Button>
+        </div>
+      )}
+
       {/* List */}
       <div className="p-4 space-y-2 mt-2">
-        {isLoading ? (
+        {activeTab === 'HelpModal' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>
