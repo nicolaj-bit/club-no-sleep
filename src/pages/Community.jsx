@@ -164,28 +164,18 @@ export default function Community() {
     window.location.href = createPageUrl(`Chat?id=${conv.id}`);
   };
 
-  const handleExpertAreaSearch = async () => {
+  const handleExpertAreaSearch = () => {
     if (expertSearchMode === 'area') {
       setExpertSearchMode('all');
       return;
     }
     if (!userLocation) {
-      if (!navigator.geolocation) {
-        toast.error('Din browser understøtter ikke lokation');
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-          setLocationEnabled(true);
-          setExpertSearchMode('area');
-        },
-        () => toast.error('Kunne ikke hente lokation')
-      );
-    } else {
-      setExpertSearchMode('area');
+      // Show same consent dialog before requesting location
+      setShowLocationConsent(true);
+      // After consent is granted (doEnableLocation), user can tap the button again
+      return;
     }
+    setExpertSearchMode('area');
   };
 
   // Filter experts by area (city match) or show all
