@@ -407,12 +407,12 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>FAQ URL</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Telefonnummer</Label>
             <Input
-              type="url"
-              value={helpForm.help_faq_url || ''}
-              onChange={e => setHelpForm({ ...helpForm, help_faq_url: e.target.value })}
-              placeholder="https://lalatoto.dk/faq"
+              type="tel"
+              value={helpForm.help_phone || ''}
+              onChange={e => setHelpForm({ ...helpForm, help_phone: e.target.value })}
+              placeholder="+45 12 34 56 78"
               style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
             />
           </div>
