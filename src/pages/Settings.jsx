@@ -220,22 +220,16 @@ export default function Settings() {
 
       {/* Privacy Bottom Sheet */}
       <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title="Privatliv">
-        <div className="px-5 py-4 space-y-4">
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-            Indsæt din privatlivspolitik eller andre privatlivsrelaterede oplysninger herunder.
-          </p>
-          <Textarea
-            value={privacyText}
-            onChange={(e) => setPrivacyText(e.target.value)}
-            placeholder="Skriv privatlivsindhold her..."
-            className="min-h-[200px] text-sm"
-          />
-          <Button className="w-full" onClick={() => {
-            toast.success('Gemt');
-            setPrivacyOpen(false);
-          }}>
-            Gem
-          </Button>
+        <div className="px-5 py-4">
+          {privacyLoading ? (
+            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+          ) : privacyContent ? (
+            <div className="text-sm leading-relaxed whitespace-pre-wrap pb-4" style={{ color: 'var(--color-text-primary)' }}>
+              {privacyContent.content}
+            </div>
+          ) : (
+            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen privatlivspolitik tilgængelig endnu.</p>
+          )}
           <div className="h-2" />
         </div>
       </BottomSheet>
