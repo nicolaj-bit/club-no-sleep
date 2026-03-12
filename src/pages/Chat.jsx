@@ -220,6 +220,13 @@ export default function Chat() {
         <div ref={messagesEndRef} />
       </div>
 
+      <ReportSheet
+        open={!!reportTarget}
+        onClose={() => setReportTarget(null)}
+        reportedEmail={reportTarget?.email || ''}
+        messageId={reportTarget?.messageId}
+      />
+
       {/* Input */}
       <div className="sticky bottom-0 border-t p-4 safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-2">
