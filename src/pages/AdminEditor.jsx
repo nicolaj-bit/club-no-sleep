@@ -343,8 +343,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : 'Artikler'}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : <Scale className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : 'Juridisk'}
           </button>
         ))}
       </div>
