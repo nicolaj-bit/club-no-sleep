@@ -17,7 +17,7 @@ export function BottomSheet({ open, onOpenChange, children, snapPoints, title })
       <Drawer.Portal>
         <Drawer.Overlay
           className="fixed inset-0 z-50"
-          style={{ backgroundColor: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
         />
         <Drawer.Content
           className={cn(
