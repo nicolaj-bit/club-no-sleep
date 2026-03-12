@@ -54,6 +54,15 @@ export default function AdminEditor() {
     enabled: activeTab === 'LegalContent',
   });
 
+  useEffect(() => {
+    if (activeTab !== 'HelpModal') return;
+    base44.entities.AppConfig.filter({ key: 'help_modal' }).then(results => {
+      const config = results[0] || { key: 'help_modal', help_about_text_da: '', help_about_text_en: '', help_contact_email: '', help_faq_url: '' };
+      setHelpConfig(config);
+      setHelpForm({ ...config });
+    });
+  }, [activeTab]);
+
   const saveBlogMutation = useMutation({
     mutationFn: async (data) => {
       if (isNew) return base44.entities.BlogPost.create(data);
