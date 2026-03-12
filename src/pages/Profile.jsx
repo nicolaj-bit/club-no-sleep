@@ -30,6 +30,12 @@ export default function Profile() {
   const [helpConfig, setHelpConfig] = useState(null);
 
   useEffect(() => {
+    base44.entities.AppConfig.filter({ key: 'help_modal' }).then(results => {
+      if (results[0]) setHelpConfig(results[0]);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
     const loadUser = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
