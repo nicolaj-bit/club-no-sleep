@@ -141,7 +141,7 @@ export default function AdminEditor() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
           <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>
-            {isNew ? 'Nyt indlæg' : 'Rediger'} — {isBlog ? 'Blog' : 'Artikel'}
+            {isNew ? 'Nyt indlæg' : 'Rediger'} — {isBlog ? 'Blog' : isLegal ? 'Juridisk indhold' : 'Artikel'}
           </h1>
           <Button size="sm" onClick={handleSave} disabled={isSaving}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
