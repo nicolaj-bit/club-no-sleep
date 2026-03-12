@@ -40,9 +40,12 @@ export default function Chat() {
     queryKey: ['conversation', conversationId],
     queryFn: async () => {
       const convs = await base44.entities.ChatConversation.filter({ id: conversationId });
-      return convs[0];
+      const conv = convs[0];
+      // Access control: only participants can view
+      if (conv && user && !conv.participants?.includes(user.email)) return null;
+      return conv;
     },
-    enabled: !!conversationId,
+    enabled: !!conversationId && !!user,
   });
 
   const { data: messages = [], isLoading: loadingMessages } = useQuery({
