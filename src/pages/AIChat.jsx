@@ -91,36 +91,30 @@ export default function AIChat() {
 
       {/* Header */}
       <div
-        className="flex items-center gap-3 px-4 pb-4 border-b"
+        className="flex items-center gap-3 px-4 py-3"
         style={{
-          paddingTop: 'max(48px, env(safe-area-inset-top, 48px))',
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
+          paddingTop: 'max(44px, env(safe-area-inset-top, 44px))',
+          background: 'linear-gradient(135deg, #C8A882, #8B5E3C)',
         }}
       >
         <Link
           to={createPageUrl('Home')}
-          className="p-2 rounded-full transition-colors cursor-pointer"
-          style={{ color: 'var(--color-text-secondary)' }}
+          className="p-1.5 rounded-full cursor-pointer"
+          style={{ color: 'rgba(255,255,255,0.9)' }}
           aria-label="Gå tilbage"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
 
-        <div className="flex items-center gap-3 flex-1">
-          <div
-            className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-          >
-            <Sparkles className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-2 flex-1">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
-              Baby & Søvn Ekspert
-            </p>
+            <p className="font-semibold text-sm text-white">Baby & Søvn Ekspert</p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>AI-assistent · Online</p>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block" />
+              <p className="text-xs text-white/70">AI-assistent · Online</p>
             </div>
           </div>
         </div>
