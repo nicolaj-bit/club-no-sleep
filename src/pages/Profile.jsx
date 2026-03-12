@@ -389,7 +389,7 @@ export default function Profile() {
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                       {lang === 'da' ? 'Ofte stillede spørgsmål' : 'Frequently asked questions'}
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>lalatoto.dk/faq</p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_faq_url || 'lalatoto.dk/faq'}</p>
                   </div>
                 </a>
               </div>
