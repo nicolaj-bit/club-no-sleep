@@ -301,6 +301,96 @@ export default function Profile() {
         <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>{t.v1}</p>
       </div>
 
+      {/* Help modal */}
+      <AnimatePresence>
+        {helpOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50"
+              style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
+              onClick={() => setHelpOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
+              style={{
+                bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
+                backgroundColor: isDark ? '#121212' : '#FFFFFF',
+                boxShadow: isDark
+                  ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
+                  : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
+              }}
+            >
+              <div className="flex items-center justify-between px-6 pt-5 pb-4">
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
+                  {lang === 'da' ? 'Hjælp & kontakt' : 'Help & contact'}
+                </span>
+                <button
+                  onClick={() => setHelpOpen(false)}
+                  className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50 transition-opacity"
+                  style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}
+                >
+                  <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
+                </button>
+              </div>
+
+              <div className="px-4 pb-5 flex flex-col gap-2.5">
+                {/* App info */}
+                <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}>
+                  <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>
+                    {lang === 'da' ? 'Om appen' : 'About the app'}
+                  </p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                    {lang === 'da'
+                      ? 'LALATOTO er din digitale følgesvend som forælder — med community, søvnlogning, viden og AI-støtte.'
+                      : 'LALATOTO is your digital companion as a parent — with community, sleep tracking, knowledge and AI support.'}
+                  </p>
+                </div>
+
+                {/* Contact */}
+                <a
+                  href="mailto:hej@lalatoto.dk"
+                  className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
+                  style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
+                >
+                  <Mail className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                      {lang === 'da' ? 'Skriv til os' : 'Contact us'}
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>hej@lalatoto.dk</p>
+                  </div>
+                </a>
+
+                {/* FAQ link */}
+                <a
+                  href="https://lalatoto.dk/faq"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
+                  style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
+                >
+                  <MessageCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                      {lang === 'da' ? 'Ofte stillede spørgsmål' : 'Frequently asked questions'}
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>lalatoto.dk/faq</p>
+                  </div>
+                </a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Language picker modal */}
       <AnimatePresence>
         {langSheetOpen && (
