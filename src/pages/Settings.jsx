@@ -25,6 +25,9 @@ export default function Settings() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [privacyContent, setPrivacyContent] = useState(null);
   const [privacyLoading, setPrivacyLoading] = useState(false);
+  const [faqContent, setFaqContent] = useState(null);
+  const [supportContent, setSupportContent] = useState(null);
+  const [helpLoaded, setHelpLoaded] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
