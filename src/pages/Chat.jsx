@@ -135,9 +135,22 @@ export default function Chat() {
           <div className="flex-1">
             <h1 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{otherName}</h1>
           </div>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="w-5 h-5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="text-red-500 gap-2"
+                onClick={() => setReportTarget({ email: conversation?.participants?.find(p => p !== user?.email) })}
+              >
+                <Flag className="w-4 h-4" />
+                Indberetning
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
