@@ -101,7 +101,9 @@ export default function AdminEditor() {
 
   const handleNew = () => {
     setIsNew(true);
-    setEditing(activeTab === 'BlogPost' ? { ...emptyBlog } : { ...emptyArticle });
+    if (activeTab === 'BlogPost') setEditing({ ...emptyBlog });
+    else if (activeTab === 'KnowledgeArticle') setEditing({ ...emptyArticle });
+    else setEditing({ ...emptyLegal });
   };
 
   const handleEdit = (item) => {
