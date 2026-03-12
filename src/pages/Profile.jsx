@@ -264,6 +264,19 @@ export default function Profile() {
           </button>
         </div>
 
+        {/* Mine data & GDPR */}
+        <Link
+          to={createPageUrl('MyData')}
+          className="w-full py-4 px-5 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-between"
+          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-secondary)' }}
+        >
+          <span className="flex items-center gap-2">
+            <Shield className="w-4 h-4" />
+            Mine data & privatliv
+          </span>
+          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>GDPR</span>
+        </Link>
+
         {/* Log out */}
         <button
           onClick={() => base44.auth.logout('/')}
