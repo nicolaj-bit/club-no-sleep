@@ -41,6 +41,17 @@ export default function Settings() {
 
   const isAdmin = user?.role === 'admin';
 
+  const openPrivacy = async () => {
+    setPrivacyOpen(true);
+    setPrivacyLoading(true);
+    try {
+      const results = await base44.entities.LegalContent.filter({ type: 'privacy' });
+      setPrivacyContent(results[0] || null);
+    } finally {
+      setPrivacyLoading(false);
+    }
+  };
+
   const gridItems = [
     ...(isAdmin ? [{ icon: FileText, label: t.blogAndArticles, link: 'AdminEditor' }] : []),
     { icon: Lock, label: t.password, action: () => setPasswordOpen(true) },
