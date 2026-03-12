@@ -24,7 +24,8 @@ export default function Settings() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [passwordForm, setPasswordForm] = useState({ current: '', new: '', confirm: '' });
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [privacyText, setPrivacyText] = useState('');
+  const [privacyContent, setPrivacyContent] = useState(null);
+  const [privacyLoading, setPrivacyLoading] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
