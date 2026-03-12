@@ -376,20 +376,18 @@ export default function Profile() {
                     </div>
                     </a>
 
-                    {/* FAQ link */}
+                    {/* Phone link */}
                     <a
-                    href={helpConfig?.help_faq_url || 'https://lalatoto.dk/faq'}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                    href={`tel:${helpConfig?.help_phone || ''}`}
                   className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
                   style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
                 >
-                  <MessageCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+                  <Phone className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
                   <div>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      {lang === 'da' ? 'Ofte stillede spørgsmål' : 'Frequently asked questions'}
+                      {lang === 'da' ? 'Ring til os' : 'Call us'}
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_faq_url || 'lalatoto.dk/faq'}</p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_phone || ''}</p>
                   </div>
                 </a>
               </div>
