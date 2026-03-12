@@ -365,7 +365,7 @@ export default function AdminEditor() {
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                  {item.category || '—'}
+                  {activeTab === 'LegalContent' ? (item.type || '—') : (item.category || '—')}
                   {activeTab === 'BlogPost' && (item.published ? ' · Publiceret' : ' · Skjult')}
                 </p>
               </div>
