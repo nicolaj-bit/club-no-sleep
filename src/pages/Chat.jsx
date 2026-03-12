@@ -121,6 +121,18 @@ export default function Chat() {
     );
   }
 
+  // Access denied
+  if (!loadingConv && conversation === null) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <p style={{ color: 'var(--color-text-muted)' }}>Ingen adgang til denne samtale.</p>
+        <Link to={createPageUrl('Community')}>
+          <Button variant="outline">Tilbage</Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
