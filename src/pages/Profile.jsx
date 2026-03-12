@@ -356,8 +356,8 @@ export default function Profile() {
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                     {lang === 'da'
-                      ? 'LALATOTO er din digitale følgesvend som forælder — med community, søvnlogning, viden og AI-støtte.'
-                      : 'LALATOTO is your digital companion as a parent — with community, sleep tracking, knowledge and AI support.'}
+                      ? (helpConfig?.help_about_text_da || 'LALATOTO er din digitale følgesvend som forælder — med community, søvnlogning, viden og AI-støtte.')
+                      : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent — with community, sleep tracking, knowledge and AI support.')}
                   </p>
                 </div>
 
