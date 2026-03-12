@@ -126,10 +126,12 @@ export default function AskQuestion() {
           <Textarea
             id="content"
             value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            onChange={(e) => setForm({ ...form, content: e.target.value.slice(0, 2000) })}
             placeholder="Beskriv dit spørgsmål i detaljer..."
             rows={6}
+            maxLength={2000}
           />
+          <p className="text-xs text-right" style={{ color: 'var(--color-text-muted)' }}>{form.content.length}/2000</p>
         </div>
 
         <Button 
