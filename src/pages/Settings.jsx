@@ -180,8 +180,8 @@ export default function Settings() {
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.contactSupport}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                Send en email til <a href="mailto:support@lalatoto.dk" className="underline" style={{ color: 'var(--color-accent)' }}>support@lalatoto.dk</a>
+              <AccordionContent className="px-5 pb-4 text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text-muted)' }}>
+                {supportContent ? supportContent.content : (!helpLoaded ? 'Indlæser...' : 'Ingen supportinfo tilgængelig endnu.')}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
