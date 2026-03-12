@@ -179,6 +179,9 @@ export default function AIChat() {
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
+        <p className="text-center text-xs text-stone-400 mt-2 px-2">
+          AI-assistenten kan lave fejl og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.
+        </p>
       </div>
     </div>
   );
