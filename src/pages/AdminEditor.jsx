@@ -129,7 +129,8 @@ export default function AdminEditor() {
   // ── EDIT VIEW ──────────────────────────────────────────────
   if (editing) {
     const isBlog = activeTab === 'BlogPost';
-    const isSaving = saveBlogMutation.isPending || saveArticleMutation.isPending;
+    const isLegal = activeTab === 'LegalContent';
+    const isSaving = saveBlogMutation.isPending || saveArticleMutation.isPending || saveLegalMutation.isPending;
 
     return (
       <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
