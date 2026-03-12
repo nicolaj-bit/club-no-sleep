@@ -182,8 +182,10 @@ export default function Settings() {
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.contactSupport}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4 text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text-muted)' }}>
-                {supportContent ? supportContent.content : (!helpLoaded ? 'Indlæser...' : 'Ingen supportinfo tilgængelig endnu.')}
+              <AccordionContent className="px-5 pb-4 text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
+                {supportContent
+                  ? <div dangerouslySetInnerHTML={{ __html: supportContent.content }} />
+                  : (!helpLoaded ? 'Indlæser...' : 'Ingen supportinfo tilgængelig endnu.')}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
