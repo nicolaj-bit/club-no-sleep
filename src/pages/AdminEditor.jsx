@@ -12,10 +12,11 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
+const emptyLegal = { type: 'faq', title: '', content: '' };
 
 export default function AdminEditor() {
   const queryClient = useQueryClient();
