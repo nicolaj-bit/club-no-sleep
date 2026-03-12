@@ -3,13 +3,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Send, MoreVertical } from 'lucide-react';
+import { ChevronLeft, Send, MoreVertical, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import UserAvatar from '@/components/community/UserAvatar';
+import ReportSheet from '@/components/community/ReportSheet';
 import { format, isToday, isYesterday } from 'date-fns';
 import { da } from 'date-fns/locale';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Chat() {
   const urlParams = new URLSearchParams(window.location.search);
