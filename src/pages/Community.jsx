@@ -489,7 +489,6 @@ export default function Community() {
         </Tabs>
       </div>
     </div>
-    </>
     </PullToRefresh>
   );
 }
