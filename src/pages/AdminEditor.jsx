@@ -113,13 +113,15 @@ export default function AdminEditor() {
 
   const handleSave = () => {
     if (activeTab === 'BlogPost') saveBlogMutation.mutate(editing);
-    else saveArticleMutation.mutate(editing);
+    else if (activeTab === 'KnowledgeArticle') saveArticleMutation.mutate(editing);
+    else saveLegalMutation.mutate(editing);
   };
 
   const handleDelete = (id) => {
     if (!confirm('Er du sikker?')) return;
     if (activeTab === 'BlogPost') deleteBlogMutation.mutate(id);
-    else deleteArticleMutation.mutate(id);
+    else if (activeTab === 'KnowledgeArticle') deleteArticleMutation.mutate(id);
+    else deleteLegalMutation.mutate(id);
   };
 
   if (!user) return null;
