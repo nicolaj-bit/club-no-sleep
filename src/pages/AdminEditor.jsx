@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
