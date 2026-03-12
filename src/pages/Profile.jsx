@@ -233,6 +233,16 @@ export default function Profile() {
           })}
         </div>
 
+        {/* Help button */}
+        <button
+          onClick={() => setHelpOpen(true)}
+          className="w-full rounded-2xl p-5 flex items-center gap-3 cursor-pointer active:opacity-70 transition-opacity border text-left"
+          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
+        >
+          <HelpCircle className="w-6 h-6 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</span>
+        </button>
+
         {/* Privacy toggles */}
         <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
