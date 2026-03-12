@@ -159,11 +159,7 @@ export default function AIChat() {
 
       {/* Input */}
       <div className="px-4 pb-8 pt-3 bg-white border-t border-stone-100">
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-2">
-          <p className="text-xs text-amber-800 leading-relaxed">
-            <span className="font-semibold">🤖 Du chatter med en AI-assistent.</span> Den kan generere forkerte oplysninger og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.
-          </p>
-        </div>
+
         <div className="flex items-end gap-2 bg-stone-50 rounded-2xl px-4 py-3 border border-stone-200">
           <textarea
             value={input}
