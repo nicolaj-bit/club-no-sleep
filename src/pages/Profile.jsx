@@ -96,9 +96,7 @@ export default function Profile() {
   const gridItems = [
     { icon: Bookmark, label: t.favorites, page: 'Favorites' },
     { icon: Bell, label: t.notifications, page: 'Settings' },
-    { icon: HelpCircle, label: t.questions, page: 'MyQuestions' },
     { icon: Settings, label: t.settings, page: 'Settings' },
-    { icon: Help, label: t.help, page: 'Settings' },
   ];
 
   return (
