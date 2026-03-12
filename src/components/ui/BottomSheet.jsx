@@ -13,7 +13,6 @@ export function BottomSheet({ open, onOpenChange, children, snapPoints, title })
       open={open}
       onOpenChange={onOpenChange}
       snapPoints={snapPoints}
-      shouldScaleBackground
     >
       <Drawer.Portal>
         <Drawer.Overlay
