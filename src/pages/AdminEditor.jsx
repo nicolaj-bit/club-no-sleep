@@ -111,6 +111,18 @@ export default function AdminEditor() {
     onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
   });
 
+  const handleSaveHelp = async () => {
+    setHelpSaving(true);
+    if (helpConfig?.id) {
+      await base44.entities.AppConfig.update(helpConfig.id, helpForm);
+    } else {
+      const created = await base44.entities.AppConfig.create({ ...helpForm, key: 'help_modal' });
+      setHelpConfig(created);
+    }
+    setHelpSaving(false);
+    toast.success('Gemt!');
+  };
+
   const handleNew = () => {
     setIsNew(true);
     if (activeTab === 'BlogPost') setEditing({ ...emptyBlog });
