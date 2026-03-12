@@ -239,9 +239,9 @@ export default function Settings() {
           {privacyLoading ? (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
           ) : privacyContent ? (
-            <div className="text-sm leading-relaxed whitespace-pre-wrap pb-4" style={{ color: 'var(--color-text-primary)' }}>
-              {privacyContent.content}
-            </div>
+            <div className="text-sm leading-relaxed prose prose-sm max-w-none pb-4" style={{ color: 'var(--color-text-primary)' }}
+              dangerouslySetInnerHTML={{ __html: privacyContent.content }}
+            />
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen privatlivspolitik tilgængelig endnu.</p>
           )}
