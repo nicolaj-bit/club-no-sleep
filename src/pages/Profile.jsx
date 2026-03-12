@@ -363,7 +363,7 @@ export default function Profile() {
 
                 {/* Contact */}
                 <a
-                  href="mailto:hej@lalatoto.dk"
+                  href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`}
                   className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
                   style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
                 >
