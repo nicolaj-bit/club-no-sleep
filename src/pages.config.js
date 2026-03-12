@@ -61,6 +61,7 @@ import ExpertDetail from './pages/ExpertDetail';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
+import MyData from './pages/MyData';
 import MyQuestions from './pages/MyQuestions';
 import Onboarding from './pages/Onboarding';
 import ProductDetail from './pages/ProductDetail';
@@ -69,7 +70,6 @@ import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
 import Shop from './pages/Shop';
 import SleepLog from './pages/SleepLog';
-import MyData from './pages/MyData';
 import __Layout from './Layout.jsx';
 
 
@@ -88,6 +88,7 @@ export const PAGES = {
     "Favorites": Favorites,
     "Home": Home,
     "Knowledge": Knowledge,
+    "MyData": MyData,
     "MyQuestions": MyQuestions,
     "Onboarding": Onboarding,
     "ProductDetail": ProductDetail,
@@ -96,7 +97,6 @@ export const PAGES = {
     "Settings": Settings,
     "Shop": Shop,
     "SleepLog": SleepLog,
-    "MyData": MyData,
 }
 
 export const pagesConfig = {
