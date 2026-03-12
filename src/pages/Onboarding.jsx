@@ -84,6 +84,13 @@ export default function Onboarding() {
       ...profileData,
       user_email: user.email,
     });
+    // Gem GDPR consent-log
+    await base44.entities.ConsentLog.create({
+      user_email: user.email,
+      terms_version: '1.0',
+      privacy_version: '1.0',
+      accepted_at: new Date().toISOString(),
+    });
     window.location.href = createPageUrl('Home');
   };
 

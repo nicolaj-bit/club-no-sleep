@@ -99,30 +99,37 @@ export default function Community() {
     queryFn: () => base44.entities.Expert.filter({ is_active: true }),
   });
 
-  const handleEnableLocation = async () => {
+  const [showLocationConsent, setShowLocationConsent] = useState(false);
+
+  const handleEnableLocation = () => {
+    // Vis consent-dialog INDEN OS-tilladelse anmodes
+    setShowLocationConsent(true);
+  };
+
+  const doEnableLocation = async () => {
+    setShowLocationConsent(false);
     if (!navigator.geolocation) {
       toast.error('Din browser understøtter ikke lokation');
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        setUserLocation({ lat: latitude, lng: longitude });
+        // Gem kun afrundet (ca. 1 km præcision) – aldrig eksakt GPS
+        const approxLat = Math.round(latitude * 100) / 100;
+        const approxLon = Math.round(longitude * 100) / 100;
+        setUserLocation({ lat: approxLat, lng: approxLon });
         setLocationEnabled(true);
-        
         if (userProfile) {
           await base44.entities.UserProfile.update(userProfile.id, {
-            latitude,
-            longitude,
+            latitude: approxLat,
+            longitude: approxLon,
             location_enabled: true,
           });
         }
         toast.success('Lokation aktiveret');
       },
-      (error) => {
-        toast.error('Kunne ikke hente lokation');
-      }
+      () => toast.error('Kunne ikke hente lokation')
     );
   };
 
