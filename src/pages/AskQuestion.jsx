@@ -134,6 +134,11 @@ export default function AskQuestion() {
           <p className="text-xs text-right" style={{ color: 'var(--color-text-muted)' }}>{form.content.length}/2000</p>
         </div>
 
+        <div className="rounded-xl p-3 flex gap-2 text-sm" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
+          <span>🤖</span>
+          <p><strong>Du chatter med en AI-assistent.</strong> Den kan generere forkerte oplysninger og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.</p>
+        </div>
+
         <Button 
           type="submit" 
           className="w-full h-12 rounded-full gap-2"
