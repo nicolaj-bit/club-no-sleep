@@ -10,10 +10,29 @@ Deno.serve(async (req) => {
     const deleteType = body.type || 'all'; // 'all' | 'chat' | 'location'
 
     if (deleteType === 'chat' || deleteType === 'all') {
-      // Delete all chat messages
+      // Delete all sent chat messages
       const messages = await base44.entities.ChatMessage.filter({ sender_email: user.email });
       for (const msg of messages) {
         await base44.entities.ChatMessage.delete(msg.id);
+      }
+      // Remove user from conversations (leave all conversations they're part of)
+      const conversations = await base44.entities.ChatConversation.filter({ participants: user.email });
+      for (const conv of conversations) {
+        const remainingParticipants = (conv.participants || []).filter(p => p !== user.email);
+        if (remainingParticipants.length === 0) {
+          await base44.entities.ChatConversation.delete(conv.id);
+        } else {
+          // Anonymise the participant slot
+          const idx = (conv.participants || []).indexOf(user.email);
+          const usernames = [...(conv.participant_usernames || [])];
+          const images = [...(conv.participant_images || [])];
+          if (idx !== -1) { usernames[idx] = 'Slettet bruger'; images[idx] = null; }
+          await base44.entities.ChatConversation.update(conv.id, {
+            participants: remainingParticipants,
+            participant_usernames: usernames.filter((_, i) => i !== idx || remainingParticipants.length > 0),
+            participant_images: images.filter((_, i) => i !== idx || remainingParticipants.length > 0),
+          });
+        }
       }
     }
 
