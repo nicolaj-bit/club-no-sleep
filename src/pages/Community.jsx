@@ -201,6 +201,42 @@ export default function Community() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
+    <>
+    {/* Location consent dialog */}
+    <Dialog open={showLocationConsent} onOpenChange={setShowLocationConsent}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+            Brug af lokation
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+            Aktiver lokation for at opdage mødre i nærheden, der også er vågne. <strong>Din præcise lokation deles aldrig med andre brugere</strong> — kun en omtrentlig afstand vises (fx "2 km væk").
+          </p>
+          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+            Lokation bruges udelukkende til at finde brugere i nærheden. Du kan til enhver tid deaktivere det igen under indstillinger.
+          </p>
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={() => setShowLocationConsent(false)}
+              className="flex-1 py-3 rounded-xl text-sm font-medium border"
+              style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+            >
+              Nej tak
+            </button>
+            <button
+              onClick={doEnableLocation}
+              className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              Aktiver lokation
+            </button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <header
