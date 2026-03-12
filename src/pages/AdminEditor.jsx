@@ -86,6 +86,19 @@ export default function AdminEditor() {
     onSuccess: () => { queryClient.invalidateQueries(['adminArticles']); toast.success('Slettet'); },
   });
 
+  const saveLegalMutation = useMutation({
+    mutationFn: async (data) => {
+      if (isNew) return base44.entities.LegalContent.create(data);
+      return base44.entities.LegalContent.update(editing.id, data);
+    },
+    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Gemt!'); setEditing(null); },
+  });
+
+  const deleteLegalMutation = useMutation({
+    mutationFn: (id) => base44.entities.LegalContent.delete(id),
+    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
+  });
+
   const handleNew = () => {
     setIsNew(true);
     setEditing(activeTab === 'BlogPost' ? { ...emptyBlog } : { ...emptyArticle });
