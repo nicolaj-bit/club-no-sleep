@@ -206,6 +206,28 @@ export default function Settings() {
         </div>
       </BottomSheet>
 
+      {/* Privacy Bottom Sheet */}
+      <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title="Privatliv">
+        <div className="px-5 py-4 space-y-4">
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            Indsæt din privatlivspolitik eller andre privatlivsrelaterede oplysninger herunder.
+          </p>
+          <Textarea
+            value={privacyText}
+            onChange={(e) => setPrivacyText(e.target.value)}
+            placeholder="Skriv privatlivsindhold her..."
+            className="min-h-[200px] text-sm"
+          />
+          <Button className="w-full" onClick={() => {
+            toast.success('Gemt');
+            setPrivacyOpen(false);
+          }}>
+            Gem
+          </Button>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
+
       {/* Delete Account Bottom Sheet */}
       <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title={t.deleteAccount}>
         <div className="px-5 py-4 space-y-4">
