@@ -201,7 +201,6 @@ export default function Community() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-    <>
     {/* Location consent dialog */}
     <Dialog open={showLocationConsent} onOpenChange={setShowLocationConsent}>
       <DialogContent>
