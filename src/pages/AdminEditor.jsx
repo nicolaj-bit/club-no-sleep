@@ -25,6 +25,9 @@ export default function AdminEditor() {
   const [editing, setEditing] = useState(null); // null = list view, object = edit view
   const [isNew, setIsNew] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [helpConfig, setHelpConfig] = useState(null);
+  const [helpForm, setHelpForm] = useState({});
+  const [helpSaving, setHelpSaving] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
