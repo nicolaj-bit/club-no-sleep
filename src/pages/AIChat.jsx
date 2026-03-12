@@ -93,7 +93,7 @@ export default function AIChat() {
       <div
         className="flex items-center gap-3 px-4 py-3"
         style={{
-          paddingTop: 'max(44px, env(safe-area-inset-top, 44px))',
+          paddingTop: 'max(40px, env(safe-area-inset-top, 40px))',
           background: 'linear-gradient(135deg, #C8A882, #8B5E3C)',
         }}
       >

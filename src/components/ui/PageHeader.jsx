@@ -14,7 +14,7 @@ export default function PageHeader({
 }) {
   return (
     <header className={cn(
-      "sticky top-0 z-40 px-4 py-3",
+      "sticky top-0 z-40 px-4 py-2",
       transparent 
         ? "bg-transparent" 
         : "bg-white/80 backdrop-blur-xl border-b border-slate-100",

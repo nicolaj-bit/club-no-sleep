@@ -202,7 +202,7 @@ export default function SleepLog() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b px-4 pt-12 pb-3 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <div className="sticky top-0 z-10 border-b px-4 pt-10 pb-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-3">
           <Link to={createPageUrl('Home')} className="p-2 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
             <ChevronLeft className="w-5 h-5" />
