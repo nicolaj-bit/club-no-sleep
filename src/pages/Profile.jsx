@@ -27,6 +27,7 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({});
   const [langSheetOpen, setLangSheetOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [helpConfig, setHelpConfig] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
