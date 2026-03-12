@@ -169,9 +169,8 @@ export default function Settings() {
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.faq}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4 text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                <p className="mb-3"><strong style={{ color: 'var(--color-text-secondary)' }}>{t.faqQ1}</strong><br />{t.faqA1}</p>
-                <p><strong style={{ color: 'var(--color-text-secondary)' }}>{t.faqQ2}</strong><br />{t.faqA2}</p>
+              <AccordionContent className="px-5 pb-4 text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--color-text-muted)' }}>
+                {faqContent ? faqContent.content : (!helpLoaded ? 'Indlæser...' : 'Ingen FAQ tilgængelig endnu.')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support" className="border-0">
