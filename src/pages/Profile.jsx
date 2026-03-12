@@ -372,13 +372,13 @@ export default function Profile() {
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                       {lang === 'da' ? 'Skriv til os' : 'Contact us'}
                     </p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>hej@lalatoto.dk</p>
-                  </div>
-                </a>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_contact_email || 'hej@lalatoto.dk'}</p>
+                    </div>
+                    </a>
 
-                {/* FAQ link */}
-                <a
-                  href="https://lalatoto.dk/faq"
+                    {/* FAQ link */}
+                    <a
+                    href={helpConfig?.help_faq_url || 'https://lalatoto.dk/faq'}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
