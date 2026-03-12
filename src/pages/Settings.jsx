@@ -43,6 +43,16 @@ export default function Settings() {
 
   const isAdmin = user?.role === 'admin';
 
+  useEffect(() => {
+    const loadHelp = async () => {
+      const results = await base44.entities.LegalContent.list();
+      setFaqContent(results.find(r => r.type === 'faq') || null);
+      setSupportContent(results.find(r => r.type === 'support') || null);
+      setHelpLoaded(true);
+    };
+    loadHelp();
+  }, []);
+
   const openPrivacy = async () => {
     setPrivacyOpen(true);
     setPrivacyLoading(true);
