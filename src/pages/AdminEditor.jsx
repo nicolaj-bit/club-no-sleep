@@ -246,7 +246,7 @@ export default function AdminEditor() {
           </div>
 
           {/* Article-only: order */}
-          {!isBlog && (
+          {!isBlog && !isLegal && (
             <div className="space-y-1.5">
               <Label style={{ color: 'var(--color-text-secondary)' }}>Sorteringsrækkefølge</Label>
               <Input
@@ -255,6 +255,24 @@ export default function AdminEditor() {
                 onChange={e => setEditing({ ...editing, order: Number(e.target.value) })}
                 style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
               />
+            </div>
+          )}
+
+          {/* Legal-only: type */}
+          {isLegal && (
+            <div className="space-y-1.5">
+              <Label style={{ color: 'var(--color-text-secondary)' }}>Type</Label>
+              <select
+                value={editing.type || 'faq'}
+                onChange={e => setEditing({ ...editing, type: e.target.value })}
+                className="w-full rounded-md border px-3 py-2 text-sm"
+                style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+              >
+                <option value="faq">FAQ</option>
+                <option value="support">Support</option>
+                <option value="privacy">Privatlivspolitik</option>
+                <option value="terms">Handelsbetingelser</option>
+              </select>
             </div>
           )}
 
