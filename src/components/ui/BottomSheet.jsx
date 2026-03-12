@@ -26,7 +26,7 @@ export function BottomSheet({ open, onOpenChange, children, snapPoints, title })
             'rounded-t-[24px]'
           )}
           style={{
-            backgroundColor: 'var(--color-bg-card)',
+            backgroundColor: '#E7D3B1',
             paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
             maxHeight: '92dvh',
           }}
