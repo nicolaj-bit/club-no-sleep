@@ -13,6 +13,7 @@ export function BottomSheet({ open, onOpenChange, children, snapPoints, title })
       open={open}
       onOpenChange={onOpenChange}
       snapPoints={snapPoints}
+      noBodyStyles
     >
       <Drawer.Portal>
         <Drawer.Overlay
