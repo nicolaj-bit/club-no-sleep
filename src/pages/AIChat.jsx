@@ -96,12 +96,7 @@ export default function AIChat() {
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-stone-800 mb-2">Hej! Jeg er her for dig 🤍</h2>
-            {/* AI Disclosure – krav fra App Store & Google Play */}
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-4 text-left max-w-xs">
-              <p className="text-xs text-amber-800 leading-relaxed">
-                <span className="font-semibold">🤖 Du chatter med en AI-assistent.</span> Den kan generere forkerte oplysninger og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.
-              </p>
-            </div>
+
             <p className="text-stone-500 text-sm leading-relaxed mb-6">Jeg er ekspert i babysøvn, amning, barnets udvikling og meget mere. Spørg mig om alt!</p>
             <div className="space-y-2 w-full max-w-xs">
               {[
