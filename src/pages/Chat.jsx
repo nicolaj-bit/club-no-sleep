@@ -21,6 +21,7 @@ export default function Chat() {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [message, setMessage] = useState('');
+  const [reportTarget, setReportTarget] = useState(null); // { email, messageId? }
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
