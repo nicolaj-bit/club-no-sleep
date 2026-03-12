@@ -45,6 +45,12 @@ export default function AdminEditor() {
     enabled: activeTab === 'KnowledgeArticle',
   });
 
+  const { data: legalItems = [], isLoading: loadingLegal } = useQuery({
+    queryKey: ['adminLegal'],
+    queryFn: () => base44.entities.LegalContent.list('-created_date', 50),
+    enabled: activeTab === 'LegalContent',
+  });
+
   const saveBlogMutation = useMutation({
     mutationFn: async (data) => {
       if (isNew) return base44.entities.BlogPost.create(data);
