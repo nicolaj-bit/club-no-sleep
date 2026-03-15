@@ -252,7 +252,7 @@ export default function BlogPost() {
               ),
             }}
           >
-            {translated?.content || post.content}
+            {stripHtml(translated?.content || post.content)}
           </ReactMarkdown>
         </div>
 
