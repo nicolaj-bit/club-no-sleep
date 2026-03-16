@@ -37,6 +37,7 @@ function getGreeting(lang, gender) {
 }
 
 export default function Home() {
+  const headerVisible = useScrollDirection();
   const { t, lang } = useLanguage();
   const [user, setUser] = useState(null);
   const [, setCurrentTime] = useState(new Date());
