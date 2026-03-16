@@ -1,31 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const MESSAGES_DA = [
-  "Du gør det fantastisk! 5 dage med søvnlog – det er virkelig dedikeret forældreskab. 💛",
-  "Kæmpe ros til dig! Du holder styr på barnets søvn som en mester. 🌙",
-  "Vidste du, at konsekvens er nøglen til god søvn? Du er allerede godt i gang! ⭐",
-  "5 dage i træk – det er ikke let, men du klarer det. Blid med dig selv, du gør det godt. 🤍",
-  "Husk: Alle forældre har svære nætter. Du er ikke alene, og du gør en kæmpe forskel. 🌟",
-];
-
-const TIPS_BY_AGE_DA = [
-  { maxMonths: 3, tip: "Nyfødte har brug for mange lure. Prøv at følge barnets naturlige søvnrytme frem for at tvinge faste tider." },
-  { maxMonths: 6, tip: "Omkring 4 måneder sker der et søvnspring. Det er normalt at søvnen bliver rodet en tid – det går over!" },
-  { maxMonths: 9, tip: "Fast sengetidsrutine hjælper meget nu: Bad, mad, sang, seng. Gentag det samme hver aften." },
-  { maxMonths: 12, tip: "De fleste babyer kan nu klare en sammenhængende natsøvn. Konsekvent sengetid er din bedste ven." },
-  { maxMonths: 24, tip: "Overtrætte småbørn har svært ved at falde i søvn. Prøv at lægge barnet lidt tidligere end du tror." },
-  { maxMonths: 999, tip: "Søvnbehovet varierer meget fra barn til barn. Stol på din mavefornemmelse – du kender dit barn bedst." },
-];
-
-function getTip(childAgeMonths) {
-  const tip = TIPS_BY_AGE_DA.find(t => childAgeMonths <= t.maxMonths);
-  return tip ? tip.tip : TIPS_BY_AGE_DA[TIPS_BY_AGE_DA.length - 1].tip;
-}
-
-function getRandomMessage() {
-  return MESSAGES_DA[Math.floor(Math.random() * MESSAGES_DA.length)];
-}
-
 function getLast5Days() {
   const days = [];
   for (let i = 0; i < 5; i++) {
@@ -43,61 +17,109 @@ function getChildAgeMonths(birthdateStr) {
   return Math.floor((now - birth) / (30.44 * 24 * 60 * 60 * 1000));
 }
 
+async function analyzeLogsWithAI(base44, logs, ageMonths) {
+  const logSummary = logs.map(l => ({
+    date: l.date,
+    bedtime: l.bedtime,
+    sleep_time: l.sleep_time,
+    wake_time: l.wake_time,
+    minutes_to_sleep: l.minutes_to_sleep,
+    night_wakings: l.night_wakings?.length || 0,
+    naps: l.naps?.length || 0,
+    sleep_method: l.sleep_method,
+    bedtime_mood: l.bedtime_mood,
+    parent_note: l.parent_note || '',
+  }));
+
+  const prompt = `Du er en varm og empatisk baby-søvnekspert. Analyser disse søvnlogs for en baby på ${ageMonths} måneder over de seneste 5 dage:
+
+${JSON.stringify(logSummary, null, 2)}
+
+Identificer det VIGTIGSTE mønster eller problem (fx mange natopvågninger, meget tidlig opvågning, lang indsovningstid, dårligt humør, forælderens egne noter om bekymringer).
+
+Returner en push-notifikation med:
+1. En kort, varm titel (maks 8 ord) med relevant emoji
+2. En kærlig besked på 1-2 sætninger der anerkender situationen + giver ét konkret, handlingsorienteret råd baseret på det identificerede mønster.
+
+Skriv på dansk. Vær varm, ikke klinisk. Undgå at lyde som en robot.
+
+Svar KUN som JSON: { "title": "...", "message": "..." }`;
+
+  const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
+    prompt,
+    response_json_schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        message: { type: 'string' },
+      },
+    },
+  });
+
+  return result;
+}
+
+async function sendPushNotification(apiKey, appId, userEmail, title, message) {
+  const body = {
+    app_id: appId,
+    include_aliases: { external_id: [userEmail] },
+    target_channel: 'push',
+    headings: { da: title, en: title },
+    contents: { da: message, en: message },
+    url: 'https://app.lalatoto.dk/SleepLog',
+  };
+
+  const res = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${apiKey}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  return res.ok;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
     const appId = Deno.env.get('ONESIGNAL_APP_ID');
 
-    // Get all profiles with notifications enabled
     const profiles = await base44.asServiceRole.entities.UserProfile.list();
     const last5Days = getLast5Days();
 
     let notificationsSent = 0;
+    let skipped = 0;
 
     for (const profile of profiles) {
-      if (!profile.wonderweeks_notifications) continue;
-      if (!profile.user_email) continue;
+      if (!profile.wonderweeks_notifications) { skipped++; continue; }
+      if (!profile.user_email) { skipped++; continue; }
 
-      // Get this user's sleep logs for the last 5 days
-      const logs = await base44.asServiceRole.entities.SleepLog.filter({ user_email: profile.user_email });
+      // Get this user's sleep logs
+      const allLogs = await base44.asServiceRole.entities.SleepLog.filter({ user_email: profile.user_email });
+      const logDates = allLogs.map(l => l.date);
 
-      const logDates = logs.map(l => l.date);
+      // Only proceed if user has logged all 5 days
       const hasAll5Days = last5Days.every(day => logDates.includes(day));
+      if (!hasAll5Days) { skipped++; continue; }
 
-      if (!hasAll5Days) continue;
+      // Get the actual log objects for the last 5 days
+      const recentLogs = allLogs.filter(l => last5Days.includes(l.date));
 
-      // Only send once – check if today (day 5) was just completed
-      // i.e. today is in the logs and exactly 5 consecutive days
       const ageMonths = getChildAgeMonths(profile.child_birthdate);
-      const tip = getTip(ageMonths);
-      const praise = getRandomMessage();
 
-      const body = {
-        app_id: appId,
-        include_aliases: { external_id: [profile.user_email] },
-        target_channel: 'push',
-        headings: { da: '💤 Du gør det fantastisk!', en: '💤 You are doing amazing!' },
-        contents: {
-          da: `${praise}\n\n💡 Tip: ${tip}`,
-          en: `${praise}\n\n💡 Tip: ${tip}`,
-        },
-        url: 'https://app.lalatoto.dk/SleepLog',
-      };
+      // Ask AI to analyze and generate a personalized notification
+      const aiResult = await analyzeLogsWithAI(base44, recentLogs, ageMonths);
 
-      const res = await fetch('https://onesignal.com/api/v1/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${apiKey}`,
-        },
-        body: JSON.stringify(body),
-      });
+      if (!aiResult?.title || !aiResult?.message) { skipped++; continue; }
 
-      if (res.ok) notificationsSent++;
+      const sent = await sendPushNotification(apiKey, appId, profile.user_email, aiResult.title, aiResult.message);
+      if (sent) notificationsSent++;
     }
 
-    return Response.json({ success: true, notificationsSent });
+    return Response.json({ success: true, notificationsSent, skipped });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
