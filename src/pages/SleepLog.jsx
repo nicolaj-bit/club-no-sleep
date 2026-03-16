@@ -85,6 +85,8 @@ export default function SleepLog() {
   const [user, setUser] = useState(null);
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
+  const [aiCard, setAiCard] = useState(null); // null | 'loading' | { title, message, pattern }
+
 
   const [form, setForm] = useState({
     date: today,
