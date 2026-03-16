@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
         target_channel: 'push',
         headings: { en: `🌟 ${leap.name}`, da: `🌟 ${leap.name}` },
         contents: {
-          en: `Dit barn starter nu på ${leap.name}! Læs om hvad du kan forvente.`,
+          en: `Your baby starts ${leap.name} tomorrow! Read about what to expect.`,
           da: `Dit barn starter på ${leap.name} i morgen! Læs om hvad du kan forvente.`,
         },
         url: 'https://app.lalatoto.dk/Knowledge',
