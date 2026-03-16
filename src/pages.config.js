@@ -98,6 +98,7 @@ export const PAGES = {
     "Settings": Settings,
     "Shop": Shop,
     "SleepLog": SleepLog,
+    "SleepAdviceFeedback": SleepAdviceFeedback,
 }
 
 export const pagesConfig = {
