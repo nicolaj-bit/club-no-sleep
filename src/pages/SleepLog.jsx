@@ -203,8 +203,12 @@ export default function SleepLog() {
 
       {/* Header */}
       <div
-        className="sticky top-0 z-10 border-b px-4 pt-10 pb-2 flex items-center justify-between"
-        style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+        className="sticky top-0 z-10 border-b px-4 pt-10 pb-2 flex items-center justify-between transition-transform duration-300"
+        style={{
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
+        }}
       >
         <div className="flex items-center gap-2">
           <Link to={createPageUrl('Home')} className="p-1.5 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
