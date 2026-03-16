@@ -14,11 +14,11 @@ const WONDER_WEEKS = [
   { number: 10, week: 75, name: 'Tigerspring 10 – Systemer' },
 ];
 
-function getAgeInWeeks(dueDateStr) {
+function getAgeInDays(dueDateStr) {
   const due = new Date(dueDateStr);
   const now = new Date();
   const diffMs = now - due;
-  return Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+  return Math.floor(diffMs / (24 * 60 * 60 * 1000));
 }
 
 Deno.serve(async (req) => {
