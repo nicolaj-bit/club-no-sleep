@@ -449,6 +449,43 @@ export default function SleepLog() {
             />
           </Card>
 
+          {/* AI Card */}
+          {aiCard && (
+            <div
+              className="rounded-2xl p-5 relative"
+              style={{ background: 'linear-gradient(135deg, #FDF6EC 0%, #F5E8D4 100%)', border: '1px solid #E8D5B7' }}
+            >
+              <button
+                onClick={() => setAiCard(null)}
+                className="absolute top-3 right-3 p-1 rounded-full opacity-40 hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                <X className="w-4 h-4" />
+              </button>
+              {aiCard === 'loading' ? (
+                <div className="flex items-center gap-3 py-2">
+                  <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>AI-eksperten analyserer jeres søvndata…</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-start gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <p className="font-semibold text-sm" style={{ color: '#5C3A1E', fontFamily: 'Georgia, serif' }}>{aiCard.title}</p>
+                  </div>
+                  <p className="text-sm leading-relaxed" style={{ color: '#7A4F2F' }}>{aiCard.message}</p>
+                  <button
+                    onClick={fetchAiAnalysis}
+                    className="flex items-center gap-1.5 mt-3 text-xs"
+                    style={{ color: '#A0785A' }}
+                  >
+                    <RefreshCw className="w-3 h-3" /> Opdater analyse
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="space-y-3 pb-4">
             <button
@@ -461,12 +498,13 @@ export default function SleepLog() {
             </button>
 
             <button
-              onClick={() => navigate(createPageUrl('AIChat') + '?with_logs=1')}
-              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border"
+              onClick={fetchAiAnalysis}
+              disabled={aiCard === 'loading'}
+              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border disabled:opacity-50"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
-              Få AI-analyse af min søvndata
+              {aiCard && aiCard !== 'loading' ? 'Opdater AI-råd' : 'Få AI-råd til søvnen'}
             </button>
           </div>
         </div>
