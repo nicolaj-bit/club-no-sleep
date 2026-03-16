@@ -83,6 +83,7 @@ function Chip({ label, color }) {
 export default function SleepLog() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const headerVisible = useScrollDirection();
   const [user, setUser] = useState(null);
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
