@@ -39,10 +39,11 @@ Deno.serve(async (req) => {
       const dateStr = profile.child_due_date || profile.child_birthdate;
       if (!dateStr) continue;
 
-      const ageWeeks = getAgeInWeeks(dateStr);
+      const ageDays = getAgeInDays(dateStr);
 
-      // Check if today is exactly the start week of a wonder week
-      const leap = WONDER_WEEKS.find(ww => ww.week === ageWeeks);
+      // Check if tomorrow is exactly the start week of a wonder week (notify 1 day before)
+      const tomorrowWeeks = Math.floor((ageDays + 1) / 7);
+      const leap = WONDER_WEEKS.find(ww => ww.week === tomorrowWeeks && (ageDays + 1) % 7 === 0);
       if (!leap) continue;
 
       // Send targeted notification to this user via external_user_id
