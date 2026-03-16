@@ -165,6 +165,16 @@ export default function SleepLog() {
     }
   });
 
+  const fetchAiAnalysis = async () => {
+    setAiCard('loading');
+    try {
+      const res = await base44.functions.invoke('analyzeSleepLogs', {});
+      setAiCard(res.data);
+    } catch (e) {
+      setAiCard({ title: '💛 En kærlig hilsen', message: 'Kunne ikke hente analyse lige nu. Prøv igen om lidt — du gør det godt!', pattern: null });
+    }
+  };
+
   const calcNightMinutes = () => {
     if (!form.bedtime || !form.wake_time) return null;
     const [bh, bm] = form.bedtime.split(':').map(Number);
