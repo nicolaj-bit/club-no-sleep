@@ -92,7 +92,7 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-4">
+      <div className="px-5 pt-12 pb-4" style={{ position: 'static' }}>
          <p className="text-sm capitalize" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
          <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>{greeting}</h1>
        </div>
