@@ -125,11 +125,15 @@ export default function BottomNav() {
 
       {/* Bottom tab bar */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 flex justify-center px-6"
-        style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}
+        className="fixed bottom-0 left-0 right-0 z-40 border-t"
+        style={{
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+          backgroundColor: 'var(--color-bg-card)',
+          borderColor: 'var(--color-border)',
+        }}
       >
         <div
-          className="flex items-center justify-around h-16 px-6 w-full max-w-sm rounded-full border"
+          className="flex items-center justify-around h-16 px-6 w-full"
           style={{
             backgroundColor: isDark ? '#111111' : '#FFFFFF',
             borderColor: isDark ? '#2A2A2A' : '#E8DDD3',
