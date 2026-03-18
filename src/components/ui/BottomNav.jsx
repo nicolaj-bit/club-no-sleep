@@ -136,10 +136,6 @@ export default function BottomNav() {
           className="flex items-center justify-around h-16 px-6 w-full"
           style={{
             backgroundColor: isDark ? '#111111' : '#FFFFFF',
-            borderColor: isDark ? '#2A2A2A' : '#E8DDD3',
-            boxShadow: isDark
-              ? '0 8px 32px rgba(0,0,0,0.8)'
-              : '0 8px 32px rgba(44,26,14,0.15)',
           }}
         >
           <Link
