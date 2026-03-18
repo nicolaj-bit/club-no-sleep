@@ -107,9 +107,7 @@ export default function Layout({ children, currentPageName }) {
             className={showNav ? "pb-20" : ""}
             style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
           >
-            <div className="mx-auto w-full max-w-lg">
-              {children}
-            </div>
+            {children}
           </motion.main>
         </AnimatePresence>
 
