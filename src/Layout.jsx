@@ -91,30 +91,29 @@ export default function Layout({ children, currentPageName }) {
 
         <Toaster position="top-center" />
 
-        {/* Mobile-width container — centers content on tablet/desktop */}
-        <div className="mx-auto w-full" style={{ maxWidth: '480px', position: 'relative' }}>
-          <AnimatePresence mode="wait">
-            <motion.main
-              key={currentPageName}
-              initial={rootTabPages.includes(currentPageName)
-                ? { opacity: 0 }
-                : { opacity: 0, x: 20 }}
-              animate={rootTabPages.includes(currentPageName)
-                ? { opacity: 1 }
-                : { opacity: 1, x: 0 }}
-              exit={rootTabPages.includes(currentPageName)
-                ? { opacity: 0 }
-                : { opacity: 0, x: -20 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className={showNav ? "pb-20" : ""}
-              style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
-            >
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={currentPageName}
+            initial={rootTabPages.includes(currentPageName)
+              ? { opacity: 0 }
+              : { opacity: 0, x: 20 }}
+            animate={rootTabPages.includes(currentPageName)
+              ? { opacity: 1 }
+              : { opacity: 1, x: 0 }}
+            exit={rootTabPages.includes(currentPageName)
+              ? { opacity: 0 }
+              : { opacity: 0, x: -20 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className={showNav ? "pb-20" : ""}
+            style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+          >
+            <div className="mx-auto w-full max-w-lg">
               {children}
-            </motion.main>
-          </AnimatePresence>
+            </div>
+          </motion.main>
+        </AnimatePresence>
 
-          {showNav && <BottomNav />}
-        </div>
+        {showNav && <BottomNav />}
       </div>
     </TabStateProvider>
     </LanguageProvider>
