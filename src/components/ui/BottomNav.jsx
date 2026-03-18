@@ -129,7 +129,7 @@ export default function BottomNav() {
         style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}
       >
         <div
-          className="flex items-center justify-around h-16 px-6 w-full max-w-xs rounded-full border"
+          className="flex items-center justify-around h-16 px-6 w-full max-w-sm rounded-full border"
           style={{
             backgroundColor: isDark ? '#111111' : '#FFFFFF',
             borderColor: isDark ? '#2A2A2A' : '#E8DDD3',
