@@ -25,7 +25,7 @@ export default function Calendar() {
   const { data: events = [] } = useQuery({
     queryKey: ['calendarEvents', user?.email],
     queryFn: () => base44.entities.CalendarEvent.filter({ user_email: user.email }, 'start_datetime'),
-    enabled: !!user?.email,
+    enabled: !!user?.email
   });
 
   const createEvent = useMutation({
@@ -35,7 +35,7 @@ export default function Calendar() {
       setShowForm(false);
       setForm({ title: '', description: '', start_datetime: '', end_datetime: '' });
       toast.success('Aftale oprettet');
-    },
+    }
   });
 
   const deleteEvent = useMutation({
@@ -43,14 +43,14 @@ export default function Calendar() {
     onSuccess: () => {
       queryClient.invalidateQueries(['calendarEvents', user?.email]);
       toast.success('Aftale slettet');
-    },
+    }
   });
 
   const monthDays = eachDayOfInterval({ start: startOfMonth(currentMonth), end: endOfMonth(currentMonth) });
   const startWeekday = (startOfMonth(currentMonth).getDay() + 6) % 7; // Monday-first
   const blanks = Array(startWeekday).fill(null);
 
-  const eventsOnDay = (day) => events.filter(e => isSameDay(parseISO(e.start_datetime), day));
+  const eventsOnDay = (day) => events.filter((e) => isSameDay(parseISO(e.start_datetime), day));
   const selectedDayEvents = eventsOnDay(selectedDay);
 
   const handleSubmit = (e) => {
@@ -64,7 +64,7 @@ export default function Calendar() {
 
   const prefillTime = () => {
     const d = format(selectedDay, 'yyyy-MM-dd');
-    setForm(f => ({ ...f, start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00` }));
+    setForm((f) => ({ ...f, start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00` }));
     setShowForm(true);
   };
 
@@ -76,36 +76,36 @@ export default function Calendar() {
         <button
           onClick={prefillTime}
           className="w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
-        >
+          style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+          
           <Plus className="w-5 h-5 text-white" />
         </button>
       </div>
 
       {/* Month navigation */}
       <div className="px-5 mb-4 flex items-center justify-between">
-        <button onClick={() => setCurrentMonth(m => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+        <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
         <h2 className="text-base font-semibold capitalize" style={{ color: 'var(--color-text-primary)' }}>
           {format(currentMonth, 'MMMM yyyy', { locale: da })}
         </h2>
-        <button onClick={() => setCurrentMonth(m => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+        <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           <ChevronRight className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
       </div>
 
       {/* Weekday labels */}
       <div className="px-5 grid grid-cols-7 mb-1">
-        {['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].map(d => (
-          <div key={d} className="text-center text-xs font-medium py-1" style={{ color: 'var(--color-text-muted)' }}>{d}</div>
-        ))}
+        {['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].map((d) =>
+        <div key={d} className="text-center text-xs font-medium py-1" style={{ color: 'var(--color-text-muted)' }}>{d}</div>
+        )}
       </div>
 
       {/* Calendar grid */}
       <div className="px-5 grid grid-cols-7 gap-1 mb-6">
         {blanks.map((_, i) => <div key={`b-${i}`} />)}
-        {monthDays.map(day => {
+        {monthDays.map((day) => {
           const dayEvents = eventsOnDay(day);
           const isSelected = isSameDay(day, selectedDay);
           const todayDay = isToday(day);
@@ -115,24 +115,24 @@ export default function Calendar() {
               onClick={() => setSelectedDay(day)}
               className="flex flex-col items-center justify-start py-1.5 rounded-xl transition-all active:scale-95"
               style={{
-                backgroundColor: isSelected
-                  ? 'var(--color-primary)'
-                  : todayDay ? 'var(--color-bg-subtle)' : 'transparent',
-                minHeight: '52px',
-              }}
-            >
+                backgroundColor: isSelected ?
+                'var(--color-primary)' :
+                todayDay ? 'var(--color-bg-subtle)' : 'transparent',
+                minHeight: '52px'
+              }}>
+              
               <span className="text-sm font-medium" style={{
                 color: isSelected ? 'var(--color-bg)' : todayDay ? 'var(--color-accent)' : 'var(--color-text-primary)'
               }}>
                 {format(day, 'd')}
               </span>
               <div className="flex gap-0.5 mt-0.5 flex-wrap justify-center px-1">
-                {dayEvents.slice(0, 3).map((_, i) => (
-                  <div key={i} className="w-1 h-1 rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.7)' : 'var(--color-accent)' }} />
-                ))}
+                {dayEvents.slice(0, 3).map((_, i) =>
+                <div key={i} className="w-1 h-1 rounded-full" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.7)' : 'var(--color-accent)' }} />
+                )}
               </div>
-            </button>
-          );
+            </button>);
+
         })}
       </div>
 
@@ -147,16 +147,16 @@ export default function Calendar() {
           </button>
         </div>
 
-        {selectedDayEvents.length === 0 ? (
-          <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>Ingen aftaler denne dag</p>
-        ) : (
-          <div className="space-y-2">
-            {selectedDayEvents.map(event => (
-              <div
-                key={event.id}
-                className="flex items-start gap-3 rounded-2xl p-4 border"
-                style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-              >
+        {selectedDayEvents.length === 0 ?
+        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>Ingen aftaler denne dag</p> :
+
+        <div className="space-y-2">
+            {selectedDayEvents.map((event) =>
+          <div
+            key={event.id}
+            className="flex items-start gap-3 rounded-2xl p-4 border"
+            style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>{event.title}</p>
                   <div className="flex items-center gap-1 mt-0.5">
@@ -166,43 +166,43 @@ export default function Calendar() {
                       {event.end_datetime && ` – ${format(parseISO(event.end_datetime), 'HH:mm')}`}
                     </span>
                   </div>
-                  {event.description && (
-                    <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{event.description}</p>
-                  )}
+                  {event.description &&
+              <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{event.description}</p>
+              }
                 </div>
                 <button
-                  onClick={() => deleteEvent.mutate(event.id)}
-                  className="p-1.5 rounded-lg active:opacity-60"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
+              onClick={() => deleteEvent.mutate(event.id)}
+              className="p-1.5 rounded-lg active:opacity-60"
+              style={{ color: 'var(--color-text-muted)' }}>
+              
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-            ))}
+          )}
           </div>
-        )}
+        }
       </div>
 
       {/* Add event bottom sheet */}
       <AnimatePresence>
-        {showForm && (
-          <>
+        {showForm &&
+        <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50"
-              style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
-              onClick={() => setShowForm(false)}
-            />
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50"
+            style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
+            onClick={() => setShowForm(false)} />
+          
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl p-6"
-              style={{ backgroundColor: 'var(--color-bg)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}
-            >
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="bg-transparent p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50"
+
+            style={{ backgroundColor: 'var(--color-bg)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
+            
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Ny aftale</h3>
                 <button onClick={() => setShowForm(false)}>
@@ -213,45 +213,45 @@ export default function Calendar() {
                 <div className="space-y-1.5">
                   <Label>Titel *</Label>
                   <Input
-                    value={form.title}
-                    onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                    placeholder="Fx lægebesøg, vaccination..."
-                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-                  />
+                  value={form.title}
+                  onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                  placeholder="Fx lægebesøg, vaccination..."
+                  style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
+                
                 </div>
                 <div className="space-y-1.5">
                   <Label style={{ color: 'var(--color-text-primary)' }}>Start *</Label>
                   <Input
-                    type="datetime-local"
-                    value={form.start_datetime}
-                    onChange={e => setForm(f => ({ ...f, start_datetime: e.target.value }))}
-                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-                  />
+                  type="datetime-local"
+                  value={form.start_datetime}
+                  onChange={(e) => setForm((f) => ({ ...f, start_datetime: e.target.value }))}
+                  style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
+                
                 </div>
                 <div className="space-y-1.5">
                   <Label style={{ color: 'var(--color-text-primary)' }}>Slut (valgfrit)</Label>
                   <Input
-                    type="datetime-local"
-                    value={form.end_datetime}
-                    onChange={e => setForm(f => ({ ...f, end_datetime: e.target.value }))}
-                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-                  />
+                  type="datetime-local"
+                  value={form.end_datetime}
+                  onChange={(e) => setForm((f) => ({ ...f, end_datetime: e.target.value }))}
+                  style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
+                
                 </div>
                 <div className="space-y-1.5">
                   <Label style={{ color: 'var(--color-text-primary)' }}>Beskrivelse (valgfrit)</Label>
                   <Input
-                    value={form.description}
-                    onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                    placeholder="Evt. adresse eller noter..."
-                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-                  />
+                  value={form.description}
+                  onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                  placeholder="Evt. adresse eller noter..."
+                  style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
+                
                 </div>
                 <Button
-                  type="submit"
-                  className="w-full h-12 rounded-xl font-semibold"
-                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-                  disabled={createEvent.isPending}
-                >
+                type="submit"
+                className="w-full h-12 rounded-xl font-semibold"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+                disabled={createEvent.isPending}>
+                
                   {createEvent.isPending ? 'Gemmer...' : 'Gem aftale'}
                 </Button>
               </form>
@@ -260,8 +260,8 @@ export default function Calendar() {
               </p>
             </motion.div>
           </>
-        )}
+        }
       </AnimatePresence>
-    </div>
-  );
+    </div>);
+
 }
