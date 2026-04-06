@@ -1,0 +1,36 @@
+{
+  "name": "ShopCategory",
+  "type": "object",
+  "properties": {
+    "label_da": {
+      "type": "string",
+      "description": "Kategorinavn p\u00e5 dansk (vises i UI)"
+    },
+    "label_en": {
+      "type": "string",
+      "description": "Category name in English"
+    },
+    "key": {
+      "type": "string",
+      "description": "Matcher category-feltet p\u00e5 produkterne i databasen (fx 'Pleje')"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Emoji der vises foran kategorinavnet (fx \ud83e\uddf4)"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "R\u00e6kkef\u00f8lge (lavest vises f\u00f8rst)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om kategorien vises i appen"
+    }
+  },
+  "required": [
+    "label_da",
+    "key"
+  ]
+}

@@ -13,13 +13,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
-const CATEGORY_CONFIG = [
-  { key: 'all',       label_da: 'Alle',      label_en: 'All',         icon: '✨', emoji: true },
-  { key: 'Pleje',     label_da: 'Pleje',     label_en: 'Care',        icon: '🧴', emoji: true },
-  { key: 'Tilbehør',  label_da: 'Tilbehør',  label_en: 'Accessories', icon: '🎀', emoji: true },
-  { key: 'Udstyr',    label_da: 'Udstyr',    label_en: 'Equipment',   icon: '🛒', emoji: true },
-  { key: 'Bøger',     label_da: 'Bøger',     label_en: 'Books',       icon: '📚', emoji: true },
-];
+const ALL_CATEGORY = { key: 'all', label_da: 'Alle', label_en: 'All', icon: '✨' };
 
 const SORT_OPTIONS = [
   { value: 'newest',     label_da: 'Nyeste',           label_en: 'Newest' },
@@ -39,15 +33,24 @@ export default function Shop() {
   const [filterOpen, setFilterOpen] = useState(false);
   const categoryRef = useRef(null);
 
-  const categories = CATEGORY_CONFIG.map(c => ({
-    ...c,
-    label: lang === 'en' ? c.label_en : c.label_da,
-  }));
-
   const sortOptions = SORT_OPTIONS.map(o => ({
     ...o,
     label: lang === 'en' ? o.label_en : o.label_da,
   }));
+
+  const { data: shopCategories = [] } = useQuery({
+    queryKey: ['shopCategories'],
+    queryFn: () => base44.entities.ShopCategory.filter({ is_active: true }, 'order'),
+  });
+
+  const categories = [
+    { ...ALL_CATEGORY, label: lang === 'en' ? ALL_CATEGORY.label_en : ALL_CATEGORY.label_da },
+    ...shopCategories.map(c => ({
+      key: c.key,
+      label: lang === 'en' && c.label_en ? c.label_en : c.label_da,
+      icon: c.icon || '🏷️',
+    })),
+  ];
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products'],
