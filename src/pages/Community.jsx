@@ -5,7 +5,7 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { MapPin, MessageCircle, Users, Radio, Calendar, ChevronRight, Shield } from 'lucide-react';
+import { MapPin, MessageCircle, Users, Radio, Calendar, ChevronRight, Shield, Heart } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -254,6 +254,10 @@ export default function Community() {
               <Calendar className="w-4 h-4" />
               Behandlere
             </TabsTrigger>
+            <TabsTrigger value="about" className="flex-1 rounded-lg gap-1.5">
+              <Heart className="w-4 h-4" />
+              Om os
+            </TabsTrigger>
           </TabsList>
 
           {/* Nearby Tab */}
@@ -475,6 +479,24 @@ export default function Community() {
               </>
             )}
           </TabsContent>
+          {/* About Tab */}
+          <TabsContent value="about" className="mt-4">
+            <Link
+              to={createPageUrl('AboutUs')}
+              className="flex items-center gap-4 rounded-2xl p-5 border active:opacity-70 transition-opacity"
+              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+            >
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+                🧡
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-base mb-0.5" style={{ color: 'var(--color-text-primary)' }}>Mød familien bag LALATOTO</h3>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Lær Sara & Nicolaj at kende, og send os en besked</p>
+              </div>
+              <ChevronRight className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+            </Link>
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>
