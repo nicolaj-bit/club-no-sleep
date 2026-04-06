@@ -1,0 +1,80 @@
+{
+  "name": "Expert",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Reference til User"
+    },
+    "name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titel/speciale"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "behandler",
+        "skanningsklinik",
+        "jordemoder",
+        "fysioterapeut",
+        "psykolog",
+        "ern\u00e6ringsr\u00e5dgiver",
+        "andet"
+      ],
+      "description": "Kategori"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Kort biografi"
+    },
+    "profile_image": {
+      "type": "string"
+    },
+    "specialties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specialeomr\u00e5der"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "description": "Timepris i DKK"
+    },
+    "city": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Gennemsnitlig rating (1-5)"
+    },
+    "review_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Kontakt email"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Telefonnummer"
+    },
+    "opening_hours": {
+      "type": "string",
+      "description": "\u00c5bningstider (fritekst, fx 'Man-fre 9-17, L\u00f8r 10-14')"
+    }
+  },
+  "required": [
+    "user_email",
+    "name",
+    "title"
+  ]
+}

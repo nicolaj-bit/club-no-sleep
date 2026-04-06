@@ -46,6 +46,7 @@ export default function Community() {
   const [isVisible, setIsVisible] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [expertSearchMode, setExpertSearchMode] = useState('all'); // 'all' | 'area'
+  const [expertCategory, setExpertCategory] = useState('all');
 
   useEffect(() => {
     const loadUser = async () => {
@@ -186,10 +187,21 @@ export default function Community() {
     setExpertSearchMode('area');
   };
 
-  // Filter experts by area (city match) or show all
-  const filteredExperts = expertSearchMode === 'area'
-    ? experts.filter(e => e.city) // In area mode, show experts that have a city listed
-    : experts;
+  const EXPERT_CATEGORIES = [
+    { value: 'all', label: 'Alle' },
+    { value: 'behandler', label: 'Behandlere' },
+    { value: 'skanningsklinik', label: 'Skanningsklinik' },
+    { value: 'jordemoder', label: 'Jordemoder' },
+    { value: 'fysioterapeut', label: 'Fysioterapeut' },
+    { value: 'psykolog', label: 'Psykolog' },
+    { value: 'ernæringsrådgiver', label: 'Ernæringsrådgiver' },
+    { value: 'andet', label: 'Andet' },
+  ];
+
+  // Filter experts by area and/or category
+  const filteredExperts = experts
+    .filter(e => expertSearchMode === 'area' ? !!e.city : true)
+    .filter(e => expertCategory === 'all' ? true : e.category === expertCategory);
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries(['nearbyUsers']);
@@ -461,6 +473,24 @@ export default function Community() {
 
           {/* Experts Tab */}
           {activeTab === 'experts' && <div className="space-y-4">
+            {/* Category pills */}
+            <div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+              <div className="flex gap-2 w-max pb-1">
+                {EXPERT_CATEGORIES.map(cat => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setExpertCategory(cat.value)}
+                    className="flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
+                    style={expertCategory === cat.value
+                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                      : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Search area button */}
             <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div>
