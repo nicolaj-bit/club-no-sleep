@@ -199,7 +199,7 @@ export default function Calendar() {
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="bg-transparent p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50"
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="bg-transparent text-[#a35252] p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50"
 
             style={{ backgroundColor: 'var(--color-bg)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             
