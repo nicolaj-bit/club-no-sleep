@@ -1,0 +1,99 @@
+{
+  "name": "SleepLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Reference til bruger"
+    },
+    "profile_id": {
+      "type": "string",
+      "description": "Reference til UserProfile (aktiv profil ved logning)"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Dato for log"
+    },
+    "child_age_months": {
+      "type": "number",
+      "description": "Barnets alder i m\u00e5neder"
+    },
+    "bedtime": {
+      "type": "string",
+      "description": "Sengetid (HH:mm)"
+    },
+    "sleep_time": {
+      "type": "string",
+      "description": "Tid barnet faldt i s\u00f8vn (HH:mm)"
+    },
+    "wake_time": {
+      "type": "string",
+      "description": "Tid barnet v\u00e5gnede for dagen (HH:mm)"
+    },
+    "minutes_to_sleep": {
+      "type": "number",
+      "description": "Minutter fra lagt i seng til faldt i s\u00f8vn"
+    },
+    "night_wakings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Natlige opv\u00e5gninger"
+    },
+    "naps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Lure i l\u00f8bet af dagen"
+    },
+    "sleep_method": {
+      "type": "string",
+      "enum": [
+        "selv",
+        "amning",
+        "flaske",
+        "vugning",
+        "barnevogn",
+        "med_for\u00e6lder"
+      ],
+      "description": "Hvordan faldt barnet i s\u00f8vn"
+    },
+    "bedtime_mood": {
+      "type": "string",
+      "enum": [
+        "frisk",
+        "lidt_tr\u00e6t",
+        "meget_tr\u00e6t",
+        "overtr\u00e6t"
+      ],
+      "description": "Hum\u00f8r f\u00f8r sengetid"
+    },
+    "parent_note": {
+      "type": "string",
+      "description": "Noter fra for\u00e6lder"
+    }
+  },
+  "required": [
+    "user_email",
+    "date"
+  ]
+}

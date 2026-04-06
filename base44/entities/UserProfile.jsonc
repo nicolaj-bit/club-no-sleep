@@ -1,0 +1,100 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "description": "Unikt brugernavn"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Visningsnavn (valgfrit)"
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "URL til profilbillede"
+    },
+    "profile_label": {
+      "type": "string",
+      "enum": [
+        "mor",
+        "far"
+      ],
+      "description": "Profil-type: mor eller far"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "female",
+        "male"
+      ],
+      "description": "K\u00f8n"
+    },
+    "city": {
+      "type": "string",
+      "description": "By (valgfrit)"
+    },
+    "child_birthdate": {
+      "type": "string",
+      "format": "date",
+      "description": "Barnets f\u00f8dselsdag"
+    },
+    "child_due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Terminsdato (bruges til beregning af tigerspring)"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Brugerens breddegrad"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Brugerens l\u00e6ngdegrad"
+    },
+    "location_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om brugeren deler lokation"
+    },
+    "is_visible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Vis mig som synlig for andre"
+    },
+    "is_online": {
+      "type": "boolean",
+      "default": false,
+      "description": "Online status"
+    },
+    "last_active": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Sidst aktiv tidspunkt"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "expert",
+        "admin"
+      ],
+      "default": "user",
+      "description": "Brugerrolle"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Reference til User entity"
+    },
+    "wonderweeks_notifications": {
+      "type": "boolean",
+      "default": true,
+      "description": "Modtag notifikationer om tigerspring"
+    }
+  },
+  "required": [
+    "username",
+    "user_email",
+    "profile_label"
+  ]
+}

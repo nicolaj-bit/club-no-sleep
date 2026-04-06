@@ -22,6 +22,7 @@ export default function Onboarding() {
   const [form, setForm] = useState({
     username: '',
     display_name: '',
+    profile_label: '', // 'mor' | 'far'
     city: '',
     profile_image: '',
     child_birthdate: '',
@@ -59,6 +60,13 @@ export default function Onboarding() {
 
   const validateStep0 = () => {
     const newErrors = {};
+    if (!form.profile_label) newErrors.profile_label = 'Vælg om du er mor eller far';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep1 = () => {
+    const newErrors = {};
     if (!form.display_name.trim()) newErrors.display_name = 'Indtast dit navn';
     if (!form.username.trim()) newErrors.username = 'Vælg et brugernavn';
     else if (form.username.length < 3) newErrors.username = 'Mindst 3 tegn';
@@ -82,6 +90,7 @@ export default function Onboarding() {
     const { accept_terms, accept_privacy, ...profileData } = form;
     await base44.entities.UserProfile.create({
       ...profileData,
+      gender: form.profile_label === 'mor' ? 'female' : 'male',
       user_email: user.email,
     });
     // Gem GDPR consent-log
@@ -95,6 +104,7 @@ export default function Onboarding() {
   };
 
   const STEPS = [
+    { icon: Shield, title: 'Hvem er du?', subtitle: 'Vælg din rolle i familien' },
     { icon: Shield, title: 'Velkommen til LALATOTO', subtitle: 'Opret din profil og acceptér betingelserne' },
     { icon: MapPin, title: 'Hvor bor du?', subtitle: 'Find mødre i nærheden af dig' },
     { icon: Baby, title: 'Om dit barn', subtitle: 'Så kan vi beregne tigerspring for dig' },
@@ -156,9 +166,62 @@ export default function Onboarding() {
         <div className="flex-1 px-6 overflow-y-auto">
           <AnimatePresence mode="wait">
 
-            {/* STEP 0 */}
+            {/* STEP 0 – Mor eller far */}
             {step === 0 && (
-              <motion.div key="s0" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
+              <motion.div key="s0" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-6">
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  LALATOTO er bygget til hele familien. Vælg din rolle, så vi kan tilpasse oplevelsen til dig.
+                </p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { label: 'Mor', value: 'mor', emoji: '🤍', desc: 'Community, søvnlog & mere' },
+                    { label: 'Far', value: 'far', emoji: '💙', desc: 'Søvnlog & viden' },
+                  ].map(option => {
+                    const active = form.profile_label === option.value;
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => { setField('profile_label', option.value); setErrors({}); }}
+                        className="flex flex-col items-center gap-3 p-5 rounded-3xl transition-all active:scale-95"
+                        style={{
+                          backgroundColor: active ? 'transparent' : 'var(--color-bg-subtle)',
+                          border: `2px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                          background: active ? 'linear-gradient(135deg, rgba(200,168,130,0.18), rgba(160,120,90,0.12))' : '',
+                        }}
+                      >
+                        <span className="text-4xl">{option.emoji}</span>
+                        <div className="text-center">
+                          <p className="font-bold text-base" style={{ color: 'var(--color-text-primary)' }}>{option.label}</p>
+                          <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{option.desc}</p>
+                        </div>
+                        {active && (
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent)' }}>
+                            <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                              <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                {errors.profile_label && <p className="text-xs text-red-500 text-center">{errors.profile_label}</p>}
+
+                {form.profile_label === 'mor' && (
+                  <div className="rounded-2xl p-4 text-sm leading-relaxed" style={{ backgroundColor: 'rgba(200,168,130,0.12)', border: '1px solid rgba(200,168,130,0.25)' }}>
+                    <p className="font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>🌙 Natteensomhed</p>
+                    <p style={{ color: 'var(--color-text-secondary)' }}>
+                      Vores community er et trygt rum kun for mødre — for dem der er vågne om natten og har brug for at vide, at de ikke er alene.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* STEP 1 – Profil & betingelser */}
+            {step === 1 && (
+              <motion.div key="s1" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
 
                 {/* Profilbillede */}
                 <div className="flex flex-col items-center gap-2 pb-2">
@@ -248,9 +311,9 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {/* STEP 1 – Lokation */}
-            {step === 1 && (
-              <motion.div key="s1" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
+            {/* STEP 2 – Lokation */}
+            {step === 2 && (
+              <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <MapPin className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-accent)' }} />
                   <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
@@ -269,9 +332,9 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {/* STEP 2 – Barn */}
-            {step === 2 && (
-              <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
+            {/* STEP 3 – Barn */}
+            {step === 3 && (
+              <motion.div key="s3" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <span className="text-4xl">🐯</span>
                   <p className="text-sm mt-3" style={{ color: 'var(--color-text-secondary)' }}>

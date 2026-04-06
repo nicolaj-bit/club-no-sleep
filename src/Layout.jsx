@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { TabStateProvider } from '@/components/ui/TabStateContext';
 import { LanguageProvider } from '@/components/ui/LanguageContext';
 import DarkModeNudge from '@/components/ui/DarkModeNudge';
+import { ActiveProfileProvider } from '@/components/ui/ActiveProfileContext';
 
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
@@ -74,6 +75,7 @@ export default function Layout({ children, currentPageName }) {
   return (
     <ThemeProvider>
     <LanguageProvider>
+    <ActiveProfileProvider>
     <TabStateProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
@@ -116,6 +118,7 @@ export default function Layout({ children, currentPageName }) {
         <DarkModeNudge />
       </div>
     </TabStateProvider>
+    </ActiveProfileProvider>
     </LanguageProvider>
     </ThemeProvider>
   );

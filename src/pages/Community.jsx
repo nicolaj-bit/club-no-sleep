@@ -5,7 +5,8 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { MapPin, MessageCircle, Users, Radio, Calendar, ChevronRight, Shield, Heart } from 'lucide-react';
+import { MapPin, MessageCircle, Users, Radio, Calendar, ChevronRight, Shield, Heart, Lock } from 'lucide-react';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -38,6 +39,7 @@ const TABS = [
 export default function Community() {
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
+  const { isMom, activeProfile } = useActiveProfile();
   const [activeTab, setActiveTab] = useState('nearby');
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -271,8 +273,26 @@ export default function Community() {
         </div>
         <div>
 
+          {/* Far-profil blokeringsbesked for community-tabs */}
+          {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && (
+            <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+              <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+                <Lock className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+                Kun for mødre
+              </h3>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                Community-funktionen er forbeholdt mor-profiler. Vores mission er at bekæmpe natteensomhed blandt mødre — et trygt rum kun for dem.
+              </p>
+              <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>
+                Skift til din mor-profil for at få adgang.
+              </p>
+            </div>
+          )}
+
           {/* Nearby Tab */}
-          {activeTab === 'nearby' && <div className="space-y-4">
+          {activeTab === 'nearby' && isMom && <div className="space-y-4">
             {/* Privacy Settings */}
             <div className="rounded-xl p-4 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="flex items-center justify-between">
@@ -387,7 +407,7 @@ export default function Community() {
           </div>}
 
           {/* Chats Tab */}
-          {activeTab === 'chats' && <div className="space-y-3">
+          {activeTab === 'chats' && isMom && <div className="space-y-3">
             {loadingChats ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (

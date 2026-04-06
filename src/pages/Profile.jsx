@@ -16,11 +16,14 @@ import UserAvatar from '@/components/community/UserAvatar';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import ProfileSwitcher from '@/components/profile/ProfileSwitcher';
 
 export default function Profile() {
   const { isDark } = useTheme();
   const { t, lang, setLang } = useLanguage();
   const queryClient = useQueryClient();
+  const { activeProfile, allProfiles, refreshProfiles } = useActiveProfile();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
@@ -51,14 +54,8 @@ export default function Profile() {
     loadUser();
   }, []);
 
-  const { data: profile, isLoading: loadingProfile } = useQuery({
-    queryKey: ['userProfile', user?.email],
-    queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-      return profiles[0] || null;
-    },
-    enabled: !!user?.email,
-  });
+  // Brug aktiv profil fra context
+  const profile = activeProfile;
 
   const { data: favorites = [] } = useQuery({
     queryKey: ['myFavorites', user?.email],
@@ -75,7 +72,7 @@ export default function Profile() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['userProfile']);
+      refreshProfiles();
       setEditOpen(false);
       toast.success(t.profileUpdated);
     },
@@ -88,7 +85,7 @@ export default function Profile() {
     updateProfileMutation.mutate({ profile_image: file_url });
   };
 
-  if (loading || loadingProfile) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center pt-24 gap-4 px-4" style={{ background: 'var(--color-bg)' }}>
         <Skeleton className="w-24 h-24 rounded-full" />
@@ -109,11 +106,34 @@ export default function Profile() {
   return (
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="pt-8 pb-4 px-5 flex items-center justify-center relative">
+      <div className="pt-8 pb-4 px-5 flex items-center justify-between">
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
           {t.profileTitle}
         </h1>
+        {allProfiles.length > 0 && <ProfileSwitcher />}
       </div>
+
+      {/* Profil-label banner */}
+      {profile && (
+        <div className="mx-4 mb-3 px-4 py-2.5 rounded-2xl flex items-center gap-2"
+          style={{
+            background: profile.profile_label === 'mor'
+              ? 'linear-gradient(135deg, rgba(200,168,130,0.15), rgba(160,120,90,0.1))'
+              : 'linear-gradient(135deg, rgba(100,140,200,0.12), rgba(60,100,180,0.08))',
+            border: `1px solid ${profile.profile_label === 'mor' ? 'rgba(200,168,130,0.3)' : 'rgba(100,140,200,0.25)'}`,
+          }}
+        >
+          <span className="text-lg">{profile.profile_label === 'mor' ? '🤍' : '💙'}</span>
+          <div>
+            <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+              {profile.display_name || profile.username}
+            </p>
+            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              {profile.profile_label === 'mor' ? 'Mor-profil · Adgang til community' : 'Far-profil · Søvnlog'}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="px-4 space-y-3">
         {/* Profile hero card */}

@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, RefreshCw, X } from 'lucide-react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { Link, useNavigate } from 'react-router-dom';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
@@ -84,6 +85,7 @@ export default function SleepLog() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const headerVisible = useScrollDirection();
+  const { activeProfile } = useActiveProfile();
   const [user, setUser] = useState(null);
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
@@ -117,9 +119,11 @@ export default function SleepLog() {
     }).catch(() => base44.auth.redirectToLogin());
   }, []);
 
+  const profileId = activeProfile?.id;
+
   const { data: todayLog } = useQuery({
-    queryKey: ['sleeplog-today', user?.email, today],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, date: today }),
+    queryKey: ['sleeplog-today', user?.email, profileId, today],
+    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, profile_id: profileId || null, date: today }),
     enabled: !!user,
     onSuccess: (data) => {
       if (data?.length > 0) {
@@ -141,8 +145,8 @@ export default function SleepLog() {
   });
 
   const { data: history } = useQuery({
-    queryKey: ['sleeplog-history', user?.email],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email }, '-date', 30),
+    queryKey: ['sleeplog-history', user?.email, profileId],
+    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, profile_id: profileId || null }, '-date', 30),
     enabled: !!user && view === 'history',
   });
 
@@ -155,7 +159,7 @@ export default function SleepLog() {
         mts = (sh * 60 + sm) - (bh * 60 + bm);
         if (mts < 0) mts += 24 * 60;
       }
-      const payload = { ...data, user_email: user.email, minutes_to_sleep: mts };
+      const payload = { ...data, user_email: user.email, profile_id: profileId || null, minutes_to_sleep: mts };
       const existing = todayLog?.[0];
       if (existing) return base44.entities.SleepLog.update(existing.id, payload);
       return base44.entities.SleepLog.create(payload);
