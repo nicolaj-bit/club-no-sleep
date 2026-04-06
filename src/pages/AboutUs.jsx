@@ -52,17 +52,22 @@ const partnerMembers = [
   },
 ];
 
-function PersonCard({ person }) {
-  const [expanded, setExpanded] = useState(false);
-  const { isDark } = useTheme();
+function PersonCard({ person, expandedId, setExpandedId }) {
+  const expanded = expandedId === person.name;
+
 
   return (
     <div
       className="rounded-2xl overflow-hidden border"
       style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
     >
-      <div className="aspect-[3/4] overflow-hidden">
-        <img src={person.image} alt={person.name} className="w-full h-full object-cover" />
+      <div className="aspect-[3/4] overflow-hidden bg-gray-100">
+        <img
+          src={person.image}
+          alt={person.name}
+          className="w-full h-full object-cover object-top"
+          style={{ imageRendering: 'auto' }}
+        />
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{person.name}</h3>
@@ -81,11 +86,11 @@ function PersonCard({ person }) {
         )}
 
         <button
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => setExpandedId(expanded ? null : person.name)}
           className="flex items-center gap-1.5 text-sm font-medium"
           style={{ color: 'var(--color-accent)' }}
         >
-          5 fun facts om mig
+          {person.facts.length} fun facts om mig
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
@@ -109,6 +114,7 @@ export default function AboutUs() {
   const { lang } = useLanguage();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -183,7 +189,7 @@ export default function AboutUs() {
           <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Teamet bag</h2>
           <div className="grid grid-cols-2 gap-4">
             {teamMembers.map(person => (
-              <PersonCard key={person.name} person={person} />
+              <PersonCard key={person.name} person={person} expandedId={expandedId} setExpandedId={setExpandedId} />
             ))}
           </div>
         </section>
@@ -196,7 +202,7 @@ export default function AboutUs() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             {partnerMembers.map(person => (
-              <PersonCard key={person.name} person={person} />
+              <PersonCard key={person.name} person={person} expandedId={expandedId} setExpandedId={setExpandedId} />
             ))}
           </div>
         </section>
