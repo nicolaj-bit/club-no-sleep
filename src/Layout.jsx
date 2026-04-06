@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { TabStateProvider } from '@/components/ui/TabStateContext';
 import { LanguageProvider } from '@/components/ui/LanguageContext';
+import DarkModeNudge from '@/components/ui/DarkModeNudge';
 
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
@@ -112,6 +113,7 @@ export default function Layout({ children, currentPageName }) {
         </AnimatePresence>
 
         {showNav && <BottomNav />}
+        <DarkModeNudge />
       </div>
     </TabStateProvider>
     </LanguageProvider>
