@@ -1,0 +1,43 @@
+{
+  "name": "CalendarEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Aftalens titel"
+    },
+    "description": {
+      "type": "string",
+      "description": "Beskrivelse (valgfrit)"
+    },
+    "start_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Startdato og -tid"
+    },
+    "end_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Slutdato og -tid (valgfrit)"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Ejers email"
+    },
+    "notify_day_before_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om notifikation dagen f\u00f8r er sendt"
+    },
+    "notify_30min_before_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om notifikation 30 min f\u00f8r er sendt"
+    }
+  },
+  "required": [
+    "title",
+    "start_datetime",
+    "user_email"
+  ]
+}

@@ -14,6 +14,7 @@ const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 // Pages that should NOT show bottom nav
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding'];
 
+
 // Root-level tab pages — use crossfade (no slide) to feel like native tab switch
 const rootTabPages = ['Home', 'Shop', 'Blog', 'SleepLog', 'Knowledge', 'Community', 'Profile', 'AIChat'];
 

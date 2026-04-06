@@ -10,6 +10,7 @@ const translations = {
     sleepLog: 'Søvnlog',
     knowledge: 'Viden',
     community: 'Community',
+    calendar: 'Kalender',
     profile: 'Profil',
 
     // Home
@@ -150,6 +151,7 @@ const translations = {
     sleepLog: 'Sleep log',
     knowledge: 'Knowledge',
     community: 'Community',
+    calendar: 'Calendar',
     profile: 'Profile',
 
     // Home
