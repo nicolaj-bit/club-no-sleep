@@ -22,13 +22,13 @@ function getGreeting(lang, gender) {
   let greeting;
   
   if (hour >= 5 && hour < 12) {
-    greeting = lang === 'da' ? 'God morgen' : 'Good morning';
+    greeting = lang === 'da' ? 'Godmorgen' : 'Good morning';
   } else if (hour >= 12 && hour < 17) {
-    greeting = lang === 'da' ? 'God eftermiddag' : 'Good afternoon';
+    greeting = lang === 'da' ? 'Godeftermiddag' : 'Good afternoon';
   } else if (hour >= 17 && hour < 21) {
-    greeting = lang === 'da' ? 'God aften' : 'Good evening';
+    greeting = lang === 'da' ? 'Godaften' : 'Good evening';
   } else {
-    greeting = lang === 'da' ? 'God aften' : 'Good night';
+    greeting = lang === 'da' ? 'Godaften' : 'Good night';
   }
   
   const suffix = gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom');
