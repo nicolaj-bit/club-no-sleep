@@ -36,7 +36,6 @@ export default function AIRelevantPosts({ profile, allPosts }) {
     const context = getContext(profile);
 
     if (!context) {
-      // No profile context — just show latest 3
       setRelevantPosts(allPosts.slice(0, 3));
       setLoading(false);
       return;
@@ -77,10 +76,12 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
     <div className="px-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Relevant for dig</h2>
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+            <Sparkles className="w-3.5 h-3.5 text-white" />
+          </div>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Relevant for dig</h2>
         </div>
-        <Link to={createPageUrl('Blog')} className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+        <Link to={createPageUrl('Blog')} className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
           Se alle →
         </Link>
       </div>
@@ -88,7 +89,7 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-28 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-subtle)' }} />
+            <div key={i} className="h-24 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-subtle)' }} />
           ))}
         </div>
       ) : (

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Baby, CalendarDays } from 'lucide-react';
-import { differenceInWeeks, differenceInDays, format, isAfter } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { ChevronRight } from 'lucide-react';
+import { differenceInWeeks, differenceInDays, isAfter } from 'date-fns';
 
 function getAgeDisplay(profile) {
   if (!profile) return null;
@@ -16,10 +15,15 @@ function getAgeDisplay(profile) {
     const weeks = differenceInWeeks(today, birthdate);
     const days = differenceInDays(today, birthdate) % 7;
     if (weeks < 16) {
-      return { label: `${weeks} uger${days > 0 ? ` og ${days} dag${days !== 1 ? 'e' : ''}` : ''}`, subtitle: 'gammel' };
+      return {
+        big: `${weeks}`,
+        unit: `uge${weeks !== 1 ? 'r' : ''}${days > 0 ? ` + ${days}d` : ''}`,
+        subtitle: 'gammel',
+        isPregnant: false,
+      };
     }
     const months = Math.floor(weeks / 4.33);
-    return { label: `${months} måneder`, subtitle: 'gammel' };
+    return { big: `${months}`, unit: `mdr`, subtitle: 'gammel', isPregnant: false };
   }
 
   if (dueDate) {
@@ -28,8 +32,10 @@ function getAgeDisplay(profile) {
       const weeksLeft = Math.floor(daysLeft / 7);
       const daysRem = daysLeft % 7;
       return {
-        label: weeksLeft > 0 ? `${weeksLeft} uge${weeksLeft !== 1 ? 'r' : ''}${daysRem > 0 ? ` og ${daysRem} dag${daysRem !== 1 ? 'e' : ''}` : ''}` : `${daysLeft} dag${daysLeft !== 1 ? 'e' : ''}`,
-        subtitle: 'til termin'
+        big: weeksLeft > 0 ? `${weeksLeft}` : `${daysLeft}`,
+        unit: weeksLeft > 0 ? `uge${weeksLeft !== 1 ? 'r' : ''}${daysRem > 0 ? ` + ${daysRem}d` : ''}` : `dag${daysLeft !== 1 ? 'e' : ''}`,
+        subtitle: 'til termin',
+        isPregnant: true,
       };
     }
   }
@@ -41,30 +47,30 @@ export default function ChildDevelopmentCard({ profile }) {
   const age = getAgeDisplay(profile);
   if (!age) return null;
 
-  const isPregnant = profile?.child_due_date && !profile?.child_birthdate
-    ? differenceInDays(new Date(profile.child_due_date), new Date()) > 0
-    : false;
-
   return (
-    <Link to={createPageUrl('Knowledge')} className="block mx-5 mb-4">
+    <Link to={createPageUrl('Knowledge')} className="block mx-5 mb-4 cursor-pointer">
       <div
-        className="rounded-2xl p-4 flex items-center gap-4"
-        style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+        className="rounded-3xl overflow-hidden relative"
+        style={{ background: 'linear-gradient(135deg, #C8A882 0%, #8B5E3C 100%)' }}
       >
-        <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl"
-          style={{ background: 'linear-gradient(135deg, #C8A882 0%, #A0785A 100%)' }}
-        >
-          {isPregnant ? '🤰' : '👶'}
+        {/* decorative blobs */}
+        <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-white" />
+        <div className="absolute -bottom-8 -left-4 w-24 h-24 rounded-full opacity-10 bg-white" />
+
+        <div className="relative p-5 flex items-center gap-4">
+          <div className="text-4xl leading-none">{age.isPregnant ? '🤰' : '👶'}</div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white/70 text-xs font-medium uppercase tracking-widest mb-0.5">
+              {age.isPregnant ? 'Termin om' : 'Dit barn er'}
+            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold text-white">{age.big}</span>
+              <span className="text-white/80 text-sm font-medium">{age.unit}</span>
+            </div>
+            <p className="text-white/60 text-xs mt-0.5">{age.subtitle}</p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-white/50 flex-shrink-0" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium uppercase tracking-wide mb-0.5" style={{ color: 'var(--color-text-muted)' }}>
-            {isPregnant ? 'Termin om' : 'Dit barn er'}
-          </p>
-          <p className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{age.label}</p>
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{age.subtitle}</p>
-        </div>
-        <Baby className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
       </div>
     </Link>
   );

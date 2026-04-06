@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Moon, Plus } from 'lucide-react';
+import { Moon } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 
 function formatDuration(bedtime, wakeTime) {
@@ -12,14 +12,14 @@ function formatDuration(bedtime, wakeTime) {
   if (mins < 0) mins += 24 * 60;
   const hours = Math.floor(mins / 60);
   const rem = mins % 60;
-  return `${hours}t ${rem > 0 ? `${rem}m` : ''}`.trim();
+  return { hours, rem };
 }
 
 export default function SleepSummaryCard({ userEmail }) {
-  const [log, setLog] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const [log, setLog] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!userEmail) return;
     import('@/api/base44Client').then(({ base44 }) => {
       const today = format(new Date(), 'yyyy-MM-dd');
@@ -32,37 +32,42 @@ export default function SleepSummaryCard({ userEmail }) {
     });
   }, [userEmail]);
 
-  const duration = log ? formatDuration(log.sleep_time || log.bedtime, log.wake_time) : null;
+  const dur = log ? formatDuration(log.sleep_time || log.bedtime, log.wake_time) : null;
   const wakings = log?.night_wakings?.length ?? null;
 
   return (
-    <Link to={createPageUrl('SleepLog')} className="block flex-1">
+    <Link to={createPageUrl('SleepLog')} className="block flex-1 cursor-pointer">
       <div
-        className="rounded-2xl p-4 h-full"
-        style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+        className="rounded-3xl p-4 h-full relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #2D1B69 0%, #5B3FA6 100%)' }}
       >
-        <div className="flex items-center justify-between mb-3">
-          <Moon className="w-5 h-5" style={{ color: '#7C6CF0' }} />
-          {!log && !loading && (
-            <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              <Plus className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
-            </div>
-          )}
+        <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-20 bg-white" />
+        <div className="mb-3">
+          <Moon className="w-5 h-5 text-white/80" />
         </div>
-        <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>Søvn i nat</p>
+        <p className="text-white/60 text-xs font-medium mb-1">Søvn i nat</p>
         {loading ? (
-          <div className="h-6 w-16 rounded animate-pulse" style={{ backgroundColor: 'var(--color-bg-subtle)' }} />
-        ) : log ? (
+          <div className="h-7 w-14 rounded-lg animate-pulse bg-white/20" />
+        ) : dur ? (
           <>
-            <p className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{duration || '–'}</p>
+            <div className="flex items-baseline gap-0.5">
+              <span className="text-2xl font-bold text-white">{dur.hours}</span>
+              <span className="text-white/70 text-sm">t</span>
+              {dur.rem > 0 && (
+                <>
+                  <span className="text-2xl font-bold text-white ml-1">{dur.rem}</span>
+                  <span className="text-white/70 text-sm">m</span>
+                </>
+              )}
+            </div>
             {wakings !== null && (
-              <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+              <p className="text-white/50 text-xs mt-1">
                 {wakings} {wakings === 1 ? 'opvågning' : 'opvågninger'}
               </p>
             )}
           </>
         ) : (
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Log søvn</p>
+          <p className="text-white/60 text-sm mt-1">Log søvn →</p>
         )}
       </div>
     </Link>

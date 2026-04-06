@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { CalendarDays, Plus } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 import { format, isToday, isTomorrow, parseISO } from 'date-fns';
 import { da } from 'date-fns/locale';
 
 export default function UpcomingEventCard({ userEmail }) {
-  const [event, setEvent] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!userEmail) return;
     import('@/api/base44Client').then(({ base44 }) => {
       const now = new Date().toISOString();
       base44.entities.CalendarEvent.filter({ user_email: userEmail }, 'start_datetime', 5).then(events => {
-        const upcoming = events.filter(e => e.start_datetime >= now).sort((a, b) =>
-          a.start_datetime.localeCompare(b.start_datetime)
-        );
+        const upcoming = events
+          .filter(e => e.start_datetime >= now)
+          .sort((a, b) => a.start_datetime.localeCompare(b.start_datetime));
         setEvent(upcoming[0] || null);
         setLoading(false);
       });
@@ -30,38 +30,28 @@ export default function UpcomingEventCard({ userEmail }) {
     return format(d, 'EEE d. MMM', { locale: da });
   }
 
-  function getTimeLabel(dt) {
-    return format(parseISO(dt), 'HH:mm');
-  }
-
   return (
-    <Link to={createPageUrl('Calendar')} className="block flex-1">
+    <Link to={createPageUrl('Calendar')} className="block flex-1 cursor-pointer">
       <div
-        className="rounded-2xl p-4 h-full"
-        style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
+        className="rounded-3xl p-4 h-full relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #7C2D12 0%, #C2410C 100%)' }}
       >
-        <div className="flex items-center justify-between mb-3">
-          <CalendarDays className="w-5 h-5" style={{ color: '#E07A5F' }} />
-          {!event && !loading && (
-            <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              <Plus className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
-            </div>
-          )}
+        <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-20 bg-white" />
+        <div className="mb-3">
+          <CalendarDays className="w-5 h-5 text-white/80" />
         </div>
-        <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>Næste aftale</p>
+        <p className="text-white/60 text-xs font-medium mb-1">Næste aftale</p>
         {loading ? (
-          <div className="h-6 w-20 rounded animate-pulse" style={{ backgroundColor: 'var(--color-bg-subtle)' }} />
+          <div className="h-7 w-20 rounded-lg animate-pulse bg-white/20" />
         ) : event ? (
           <>
-            <p className="text-sm font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-              {event.title}
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-              {getDateLabel(event.start_datetime)} kl. {getTimeLabel(event.start_datetime)}
+            <p className="text-sm font-bold text-white leading-snug line-clamp-2">{event.title}</p>
+            <p className="text-white/50 text-xs mt-1">
+              {getDateLabel(event.start_datetime)} · {format(parseISO(event.start_datetime), 'HH:mm')}
             </p>
           </>
         ) : (
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen aftaler</p>
+          <p className="text-white/60 text-sm mt-1">Tilføj aftale →</p>
         )}
       </div>
     </Link>

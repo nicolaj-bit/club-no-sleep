@@ -86,21 +86,24 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-4">
-        <p className="text-sm capitalize" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-        <h1 className="text-2xl font-semibold mt-0.5" style={{ color: 'var(--color-text-primary)' }}>{greeting}</h1>
+      <div className="px-5 pt-12 pb-5">
+        <p className="text-xs font-medium uppercase tracking-widest capitalize mb-1" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+        <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{greeting}</h1>
       </div>
 
       {/* Daily Affirmation */}
       <div className="mx-5 mb-5">
         <div
-          className="rounded-2xl p-6 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #C8A882 0%, #A0785A 100%)' }}
+          className="rounded-3xl p-6 relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #C8A882 0%, #7A4F2E 100%)' }}
         >
-          <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 bg-white -translate-y-8 translate-x-8" />
-          <div className="absolute bottom-0 left-0 w-20 h-20 rounded-full opacity-10 bg-white translate-y-6 -translate-x-6" />
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-3">{t.dailyWord}</p>
-          <p className="text-white text-lg font-medium leading-relaxed relative z-10">{displayAffirmation}</p>
+          <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full opacity-15 bg-white" />
+          <div className="absolute -bottom-10 -left-6 w-28 h-28 rounded-full opacity-10 bg-white" />
+          <div className="absolute top-4 right-4 w-8 h-8 rounded-full opacity-20 bg-white" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-3">{t.dailyWord}</p>
+          <p className="text-white text-base font-medium leading-relaxed relative z-10" style={{ textWrap: 'pretty' }}>
+            {displayAffirmation}
+          </p>
         </div>
       </div>
 
