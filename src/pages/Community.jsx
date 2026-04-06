@@ -109,6 +109,11 @@ export default function Community() {
     queryFn: () => base44.entities.Expert.filter({ is_active: true }),
   });
 
+  const { data: expertCategories = [] } = useQuery({
+    queryKey: ['expertCategories'],
+    queryFn: () => base44.entities.ExpertCategory.filter({ is_active: true }, 'order'),
+  });
+
   const [showLocationConsent, setShowLocationConsent] = useState(false);
 
   const handleEnableLocation = () => {
@@ -189,13 +194,7 @@ export default function Community() {
 
   const EXPERT_CATEGORIES = [
     { value: 'all', label: 'Alle' },
-    { value: 'behandler', label: 'Behandlere' },
-    { value: 'skanningsklinik', label: 'Skanningsklinik' },
-    { value: 'jordemoder', label: 'Jordemoder' },
-    { value: 'fysioterapeut', label: 'Fysioterapeut' },
-    { value: 'psykolog', label: 'Psykolog' },
-    { value: 'ernæringsrådgiver', label: 'Ernæringsrådgiver' },
-    { value: 'andet', label: 'Andet' },
+    ...expertCategories.map(c => ({ value: c.key, label: c.label })),
   ];
 
   // Filter experts by area and/or category

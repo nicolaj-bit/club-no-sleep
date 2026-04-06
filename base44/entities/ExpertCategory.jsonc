@@ -1,0 +1,28 @@
+{
+  "name": "ExpertCategory",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Kategorinavn (vises i UI)"
+    },
+    "key": {
+      "type": "string",
+      "description": "Unik n\u00f8gle (fx 'skanningsklinik')"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "R\u00e6kkef\u00f8lge (lavest vises f\u00f8rst)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om kategorien vises"
+    }
+  },
+  "required": [
+    "label",
+    "key"
+  ]
+}
