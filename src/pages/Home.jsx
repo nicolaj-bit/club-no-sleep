@@ -14,6 +14,7 @@ import ChildDevelopmentCard from '@/components/home/ChildDevelopmentCard';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
+import SleepAdviceCard from '@/components/home/SleepAdviceCard';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -124,6 +125,9 @@ export default function Home() {
           <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
         </div>
       )}
+
+      {/* AI Sleep Advice — only shown when 5+ logs exist */}
+      {user && <SleepAdviceCard userEmail={user.email} />}
 
       {/* AI-curated blog posts */}
       <AIRelevantPosts profile={profile} allPosts={posts} />
