@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserAvatar from '@/components/community/UserAvatar';
 import NearbyUserCard from '@/components/community/NearbyUserCard';
 import ExpertCard from '@/components/booking/ExpertCard';
@@ -29,9 +28,17 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
+const TABS = [
+  { value: 'nearby', icon: Radio, label: 'Nær mig' },
+  { value: 'chats', icon: MessageCircle, label: 'Chats' },
+  { value: 'experts', icon: Calendar, label: 'Behandlere' },
+  { value: 'about', icon: Heart, label: 'Om os' },
+];
+
 export default function Community() {
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('nearby');
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
@@ -240,28 +247,32 @@ export default function Community() {
       </header>
 
       <div className="p-4">
-        <Tabs defaultValue="nearby" className="w-full">
-          <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-            <TabsTrigger value="nearby" className="flex-1 rounded-lg gap-1.5">
-              <Radio className="w-4 h-4" />
-              Nær mig
-            </TabsTrigger>
-            <TabsTrigger value="chats" className="flex-1 rounded-lg gap-1.5">
-              <MessageCircle className="w-4 h-4" />
-              Chats
-            </TabsTrigger>
-            <TabsTrigger value="experts" className="flex-1 rounded-lg gap-1.5">
-              <Calendar className="w-4 h-4" />
-              Behandlere
-            </TabsTrigger>
-            <TabsTrigger value="about" className="flex-1 rounded-lg gap-1.5">
-              <Heart className="w-4 h-4" />
-              Om os
-            </TabsTrigger>
-          </TabsList>
+        {/* Pill tab navigation */}
+        <div className="overflow-x-auto mb-4" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-2 w-max">
+            {TABS.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => setActiveTab(tab.value)}
+                  className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
+                  style={isActive
+                    ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', boxShadow: '0 2px 12px rgba(160,120,90,0.35)' }
+                    : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div>
 
           {/* Nearby Tab */}
-          <TabsContent value="nearby" className="mt-4 space-y-4">
+          {activeTab === 'nearby' && <div className="space-y-4">
             {/* Privacy Settings */}
             <div className="rounded-xl p-4 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="flex items-center justify-between">
@@ -373,10 +384,10 @@ export default function Community() {
                 ))}
               </div>
             )}
-          </TabsContent>
+          </div>}
 
           {/* Chats Tab */}
-          <TabsContent value="chats" className="mt-4 space-y-3">
+          {activeTab === 'chats' && <div className="space-y-3">
             {loadingChats ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (
@@ -418,10 +429,10 @@ export default function Community() {
                 );
               })
             )}
-          </TabsContent>
+          </div>}
 
           {/* Experts Tab */}
-          <TabsContent value="experts" className="mt-4 space-y-4">
+          {activeTab === 'experts' && <div className="space-y-4">
             {/* Search area button */}
             <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div>
@@ -478,9 +489,10 @@ export default function Community() {
                 ))}
               </>
             )}
-          </TabsContent>
+          </div>}
+
           {/* About Tab */}
-          <TabsContent value="about" className="mt-4">
+          {activeTab === 'about' && <div>
             <Link
               to={createPageUrl('AboutUs')}
               className="flex items-center gap-4 rounded-2xl p-5 border active:opacity-70 transition-opacity"
@@ -495,9 +507,9 @@ export default function Community() {
               </div>
               <ChevronRight className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
             </Link>
-          </TabsContent>
+          </div>}
 
-        </Tabs>
+        </div>
       </div>
     </div>
     </PullToRefresh>
