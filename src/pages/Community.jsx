@@ -261,56 +261,30 @@ export default function Community() {
           </TabsList>
 
           {/* Nearby Tab */}
-          <TabsContent value="nearby" className="mt-4 space-y-4">
-            {/* Privacy Settings */}
-            <div className="rounded-xl p-4 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                    <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-                  </div>
-                  <div>
-                    <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Lokation</p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Find folk i nærheden</p>
-                  </div>
-                </div>
-                {locationEnabled ? (
-                  <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                    Aktiv
-                  </span>
-                ) : (
-                  <Button size="sm" onClick={handleEnableLocation}>
-                    Aktiver
-                  </Button>
-                )}
-              </div>
-              
-              {locationEnabled && (
-                <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                  <Label htmlFor="visibility" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Vis mig som synlig for andre
-                  </Label>
-                  <Switch
-                    id="visibility"
-                    checked={isVisible}
-                    onCheckedChange={handleToggleVisibility}
-                  />
-                </div>
-              )}
-            </div>
+          <TabsContent value="nearby" className="mt-5 space-y-5">
 
-            {/* Denmark Map */}
-            <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
-              <div className="px-4 pt-3 pb-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Aktive mødre i Danmark</p>
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {allVisibleUsers.filter(u => u.user_email !== user?.email).length} aktive nu
-                  </p>
+            {/* Map card */}
+            <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
+              <DenmarkMap
+                users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
+                currentUserLocation={locationEnabled && isVisible ? userLocation : null}
+                onStartChat={handleStartChat}
+              />
+              {/* Map footer: legend + visibility toggle */}
+              <div className="px-4 py-3 flex items-center justify-between" style={{ borderTop: '1px solid var(--color-border)' }}>
+                <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-indigo-400" />
+                    <span>Dig</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                    <span>{allVisibleUsers.filter(u => u.user_email !== user?.email).length} aktive</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {isVisible ? 'Synlig' : 'Skjult'}
+                    {isVisible && locationEnabled ? 'Synlig' : 'Skjult'}
                   </span>
                   <Switch
                     checked={isVisible && locationEnabled}
@@ -324,49 +298,45 @@ export default function Community() {
                   />
                 </div>
               </div>
-              <DenmarkMap
-                users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
-                currentUserLocation={locationEnabled && isVisible ? userLocation : null}
-                onStartChat={handleStartChat}
-              />
-              <div className="px-4 py-2 flex items-center gap-4 text-xs" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)' }}>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
-                  <span>Dig</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                  <span>Andre aktive</span>
-                </div>
-              </div>
             </div>
 
-            {/* Nearby Users */}
+            {/* Nearby users list */}
             {!locationEnabled ? (
-              <div className="text-center py-12">
-                <Radio className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>Aktiver lokation for at se hvem der er i nærheden</p>
+              <div className="rounded-2xl px-5 py-10 text-center" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
+                <div className="w-12 h-12 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                </div>
+                <p className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>Find mødre i nærheden</p>
+                <p className="text-sm mb-5" style={{ color: 'var(--color-text-muted)' }}>Del din omtrentlige lokation for at opdage andre vågne forældre</p>
+                <button
+                  onClick={handleEnableLocation}
+                  className="px-6 py-2.5 rounded-full text-sm font-medium text-white"
+                  style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
+                >
+                  Aktiver lokation
+                </button>
               </div>
             ) : loadingNearby ? (
               <div className="space-y-3">
-                {[1, 2, 3].map(i => (
-                  <Skeleton key={i} className="h-24 rounded-2xl" />
-                ))}
+                {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 rounded-2xl" />)}
               </div>
             ) : nearbyUsers.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>Ingen brugere i nærheden (20 km)</p>
+              <div className="rounded-2xl px-5 py-10 text-center" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
+                <div className="w-12 h-12 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <Users className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+                </div>
+                <p className="font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>Ingen i nærheden endnu</p>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen inden for 20 km er online lige nu</p>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  {nearbyUsers.length} {nearbyUsers.length === 1 ? 'person' : 'personer'} indenfor 20 km
+                <p className="text-xs font-semibold uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
+                  {nearbyUsers.length} {nearbyUsers.length === 1 ? 'person' : 'personer'} inden for 20 km
                 </p>
                 {nearbyUsers.map(nearbyUser => (
-                  <NearbyUserCard 
-                    key={nearbyUser.id} 
-                    user={nearbyUser} 
+                  <NearbyUserCard
+                    key={nearbyUser.id}
+                    user={nearbyUser}
                     distance={nearbyUser.distance}
                     onStartChat={handleStartChat}
                   />
