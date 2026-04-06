@@ -55,7 +55,6 @@ const partnerMembers = [
 function PersonCard({ person, expandedId, setExpandedId }) {
   const expanded = expandedId === person.name;
 
-
   return (
     <div
       className="rounded-2xl overflow-hidden border"
