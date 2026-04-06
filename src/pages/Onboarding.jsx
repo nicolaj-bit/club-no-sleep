@@ -380,13 +380,15 @@ export default function Onboarding() {
               if (step === 0) {
                 if (validateStep0()) setStep(1);
               } else if (step === 1) {
-                setStep(2);
+                if (validateStep1()) setStep(2);
+              } else if (step === 2) {
+                setStep(3);
               } else {
                 handleFinish();
               }
             }}
           >
-            {saving ? 'Gemmer...' : step === 2 ? 'Kom i gang 🎉' : (
+            {saving ? 'Gemmer...' : step === 3 ? 'Kom i gang 🎉' : (
               <span className="flex items-center gap-2">Næste <ArrowRight className="w-5 h-5" /></span>
             )}
           </Button>
@@ -401,9 +403,10 @@ export default function Onboarding() {
             </button>
           )}
 
-          {step > 0 && step < 2 && (
+          {/* Skip for step 2 (city) and step 3 (child date) */}
+          {step === 2 && (
             <button
-              onClick={() => setStep(s => s + 1)}
+              onClick={() => setStep(3)}
               className="w-full py-2 text-sm text-center"
               style={{ color: 'var(--color-text-muted)' }}
             >
@@ -411,7 +414,7 @@ export default function Onboarding() {
             </button>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <button
               onClick={handleFinish}
               disabled={saving}

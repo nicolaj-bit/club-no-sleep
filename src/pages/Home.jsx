@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+// useQuery still used for blog posts
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -10,6 +11,7 @@ import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
 import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -37,6 +39,7 @@ function getGreeting(lang, gender) {
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  const { activeProfile, loading: profileLoading } = useActiveProfile();
   const [user, setUser] = useState(null);
   const [, setCurrentTime] = useState(new Date());
 
@@ -53,24 +56,19 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // Redirect to onboarding if no profile exists after loading
+  useEffect(() => {
+    if (!profileLoading && user && activeProfile === null) {
+      window.location.href = createPageUrl('Onboarding');
+    }
+  }, [profileLoading, user, activeProfile]);
+
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date', 3),
   });
 
-  const { data: profile } = useQuery({
-    queryKey: ['userProfileHome', user?.email],
-    queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-      const p = profiles[0] || null;
-      // Ny bruger uden profil → send til onboarding
-      if (!p) {
-        window.location.href = createPageUrl('Onboarding');
-      }
-      return p;
-    },
-    enabled: !!user?.email,
-  });
+  const profile = activeProfile;
 
   const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
