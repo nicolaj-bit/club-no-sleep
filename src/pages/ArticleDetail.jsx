@@ -20,6 +20,8 @@ export default function ArticleDetail() {
   const articleId = urlParams.get('id');
   const articleSlug = urlParams.get('slug');
 
+  const [translatedArticle, setTranslatedArticle] = useState(null);
+
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', articleId, articleSlug],
     queryFn: async () => {
