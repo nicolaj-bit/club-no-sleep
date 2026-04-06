@@ -33,7 +33,6 @@ const TABS = [
   { value: 'nearby', icon: Radio, label: 'Nær mig' },
   { value: 'chats', icon: MessageCircle, label: 'Chats' },
   { value: 'experts', icon: Calendar, label: 'Behandlere' },
-  { value: 'about', icon: Heart, label: 'Om os' },
 ];
 
 export default function Community() {
@@ -251,25 +250,34 @@ export default function Community() {
       <div className="p-4">
         {/* Pill tab navigation */}
         <div className="overflow-x-auto mb-4" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-2 w-max">
-            {TABS.map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.value;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
-                  style={isActive
-                    ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', boxShadow: '0 2px 12px rgba(160,120,90,0.35)' }
-                    : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+        <div className="flex gap-2 w-max">
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
+                style={isActive
+                  ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', boxShadow: '0 2px 12px rgba(160,120,90,0.35)' }
+                  : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+          {/* Om os – direkte link */}
+          <Link
+            to={createPageUrl('AboutUs')}
+            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
+            style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+          >
+            <Heart className="w-4 h-4" />
+            Om os
+          </Link>
+        </div>
         </div>
         <div>
 
@@ -511,23 +519,7 @@ export default function Community() {
             )}
           </div>}
 
-          {/* About Tab */}
-          {activeTab === 'about' && <div>
-            <Link
-              to={createPageUrl('AboutUs')}
-              className="flex items-center gap-4 rounded-2xl p-5 border active:opacity-70 transition-opacity"
-              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-            >
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-                🧡
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-base mb-0.5" style={{ color: 'var(--color-text-primary)' }}>Mød familien bag LALATOTO</h3>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Lær Sara & Nicolaj at kende, og send os en besked</p>
-              </div>
-              <ChevronRight className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-            </Link>
-          </div>}
+
 
         </div>
       </div>
