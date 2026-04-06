@@ -3,7 +3,7 @@ import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { base44 } from '@/api/base44Client';
-import { Search, SlidersHorizontal, X, ShoppingBag, Sparkles, BookOpen, Wrench, Baby } from 'lucide-react';
+import { Search, SlidersHorizontal, X, LayoutGrid } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,6 +31,7 @@ export default function Shop() {
   const [sortBy, setSortBy] = useState('newest');
   const [showSearch, setShowSearch] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const categoryRef = useRef(null);
 
   const sortOptions = SORT_OPTIONS.map(o => ({
@@ -122,6 +123,9 @@ export default function Shop() {
                 <div className="flex items-center gap-1">
                   <Button variant="ghost" size="icon" onClick={() => setShowSearch(true)}>
                     <Search className="w-5 h-5" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => setCategoryOpen(true)}>
+                    <LayoutGrid className="w-5 h-5" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => setFilterOpen(true)}>
                     <SlidersHorizontal className="w-5 h-5" />
@@ -215,6 +219,30 @@ export default function Shop() {
           )}
         </div>
       </div>
+
+      {/* Category Bottom Sheet */}
+      <BottomSheet open={categoryOpen} onOpenChange={setCategoryOpen} title={lang === 'en' ? 'Categories' : 'Kategorier'}>
+        <div className="px-5 py-4 space-y-2">
+          {categories.map(cat => {
+            const isActive = activeCategory === cat.key;
+            return (
+              <button
+                key={cat.key}
+                onClick={() => { setActiveCategory(cat.key); setCategoryOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] active:opacity-60 transition-opacity"
+                style={isActive
+                  ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+              >
+                <span className="text-xl">{cat.icon}</span>
+                <span className="flex-1 text-left">{cat.label}</span>
+                {isActive && <span className="text-xs font-bold">✓</span>}
+              </button>
+            );
+          })}
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
 
       {/* Filter & Sort Bottom Sheet */}
       <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title={lang === 'en' ? 'Filters & Sorting' : 'Filtre & Sortering'}>
