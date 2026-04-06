@@ -201,7 +201,7 @@ export default function Calendar() {
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
               className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl p-6"
-              style={{ backgroundColor: 'var(--color-bg-card)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}
+              style={{ backgroundColor: 'var(--color-bg)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}
             >
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Ny aftale</h3>
@@ -216,34 +216,34 @@ export default function Calendar() {
                     value={form.title}
                     onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                     placeholder="Fx lægebesøg, vaccination..."
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Start *</Label>
+                  <Label style={{ color: 'var(--color-text-primary)' }}>Start *</Label>
                   <Input
                     type="datetime-local"
                     value={form.start_datetime}
                     onChange={e => setForm(f => ({ ...f, start_datetime: e.target.value }))}
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Slut (valgfrit)</Label>
+                  <Label style={{ color: 'var(--color-text-primary)' }}>Slut (valgfrit)</Label>
                   <Input
                     type="datetime-local"
                     value={form.end_datetime}
                     onChange={e => setForm(f => ({ ...f, end_datetime: e.target.value }))}
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Beskrivelse (valgfrit)</Label>
+                  <Label style={{ color: 'var(--color-text-primary)' }}>Beskrivelse (valgfrit)</Label>
                   <Input
                     value={form.description}
                     onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                     placeholder="Evt. adresse eller noter..."
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                    style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
                 </div>
                 <Button
