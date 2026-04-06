@@ -199,9 +199,9 @@ export default function Calendar() {
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="bg-transparent text-black p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50"
-
-            style={{ backgroundColor: 'var(--color-bg)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
+            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            className="p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50"
+            style={{ backgroundColor: 'var(--color-bg-card)', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             
               <div className="flex items-center justify-between mb-5">
                 <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Ny aftale</h3>
