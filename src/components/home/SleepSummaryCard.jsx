@@ -41,7 +41,7 @@ export default function SleepSummaryCard({ userEmail }) {
         className="rounded-3xl p-4 h-full relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #2D1B69 0%, #5B3FA6 100%)' }}
       >
-        <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-20 bg-white" />
+
         <div className="mb-3">
           <Moon className="w-5 h-5 text-white/80" />
         </div>
