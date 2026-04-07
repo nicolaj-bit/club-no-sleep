@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import VariantSelector from '@/components/shop/VariantSelector';
 
 const trustPoints = [
   { icon: Leaf, label: 'Naturlige\nmaterialer' },
@@ -205,97 +206,12 @@ export default function ProductDetail() {
 
         {/* Variants */}
         {product.variants?.length > 0 && (
-          <div>
-            <p className="text-xs uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
-              {lang === 'en' ? 'Your choice' : 'Dit valg'}{selectedVariant ? `: ${selectedVariant.name}` : ''}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {product.variants.map((variant, i) => {
-                const colorMap = {
-                  // Danish names
-                  'støvet blå': '#8B9FAE',
-                  'fløjl': '#C8B8A2',
-                  'kakao': '#6B4A2F',
-                  'sart rosa': '#E8C5B8',
-                  'karry': '#C8952A',
-                  'støvet blå / kakao': 'linear-gradient(135deg, #8B9FAE 50%, #6B4A2F 50%)',
-                  'sart rosa / karry': 'linear-gradient(135deg, #E8C5B8 50%, #C8952A 50%)',
-                  // English names
-                  'dusty blue': '#8B9FAE',
-                  'velvet': '#C8B8A2',
-                  'cocoa': '#6B4A2F',
-                  'soft pink': '#E8C5B8',
-                  'curry': '#C8952A',
-                  // Generic fallbacks
-                  'hvid': '#F5F0EB',
-                  'white': '#F5F0EB',
-                  'grå': '#9CA3AF',
-                  'grey': '#9CA3AF',
-                  'sort': '#1C1C1E',
-                  'black': '#1C1C1E',
-                };
-                const key = variant.name?.toLowerCase();
-                const colorValue = colorMap[key];
-                const isGradient = colorValue?.startsWith('linear-gradient');
-                const isSelected = selectedVariant?.name === variant.name;
-                const isDisabled = !variant.in_stock;
-
-                // If we have a color swatch, show circular swatch
-                if (colorValue) {
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => !isDisabled && setSelectedVariant(variant)}
-                      disabled={isDisabled}
-                      title={variant.name}
-                      className="flex flex-col items-center gap-1.5 transition-all"
-                      style={{ opacity: isDisabled ? 0.4 : 1 }}
-                    >
-                      <div
-                        className="w-9 h-9 rounded-full transition-all"
-                        style={{
-                          background: colorValue,
-                          outline: isSelected ? '2px solid var(--color-primary)' : '2px solid transparent',
-                          outlineOffset: '2px',
-                          boxShadow: isSelected ? '0 0 0 1px var(--color-primary)' : 'inset 0 0 0 1px rgba(0,0,0,0.1)',
-                          cursor: isDisabled ? 'not-allowed' : 'pointer',
-                          position: 'relative',
-                        }}
-                      >
-                        {isDisabled && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-full h-px rotate-45" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }} />
-                          </div>
-                        )}
-                      </div>
-                      <span style={{ fontSize: '9px', color: isSelected ? 'var(--color-text-primary)' : 'var(--color-text-muted)', textAlign: 'center', maxWidth: '42px', lineHeight: 1.2 }}>
-                        {variant.name}
-                      </span>
-                    </button>
-                  );
-                }
-
-                // Fallback: text button for non-color variants (size, material, etc.)
-                return (
-                  <button
-                    key={i}
-                    onClick={() => !isDisabled && setSelectedVariant(variant)}
-                    disabled={isDisabled}
-                    className="px-4 py-2 rounded text-sm border transition-all"
-                    style={
-                      isSelected
-                        ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
-                        : isDisabled
-                          ? { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', borderColor: 'var(--color-border)', cursor: 'not-allowed', opacity: 0.5 }
-                          : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }
-                    }
-                  >
-                    {variant.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <VariantSelector
+            variants={product.variants}
+            selectedVariant={selectedVariant}
+            onSelect={setSelectedVariant}
+            lang={lang}
+          />
         )}
 
         {/* ── 4 trust icons ── */}
