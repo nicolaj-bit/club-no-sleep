@@ -95,7 +95,7 @@ export default function Settings() {
 
             if (item.toggle) {
               return (
-                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3 border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
+                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3 border" style={{ background: isDark ? '#1E1E1E' : '#F8F3ED', borderColor: isDark ? '#2A2A2A' : '#F8F3ED' }}>
                   <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
@@ -123,7 +123,7 @@ export default function Settings() {
         </div>
 
         {/* Tema – Lys / Mørk */}
-        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
+        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: isDark ? '#1E1E1E' : '#F8F3ED', borderColor: isDark ? '#2A2A2A' : '#F8F3ED' }}>
           <div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.theme}</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.chooseTheme}</p>
@@ -160,7 +160,7 @@ export default function Settings() {
         {isAdmin && <PushNotificationSender />}
 
         {/* FAQ + Support */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
+        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#1E1E1E' : '#F8F3ED', borderColor: isDark ? '#2A2A2A' : '#F8F3ED' }}>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <AccordionTrigger className="px-5 hover:no-underline py-4">
@@ -195,7 +195,7 @@ export default function Settings() {
         <button
           onClick={() => setDeleteOpen(true)}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-muted)' }}
+          style={{ background: isDark ? '#1E1E1E' : '#F8F3ED', borderColor: isDark ? '#2A2A2A' : '#F8F3ED', color: 'var(--color-text-muted)' }}
         >
           <span className="flex items-center justify-center gap-2">
             <Trash2 className="w-4 h-4" />
