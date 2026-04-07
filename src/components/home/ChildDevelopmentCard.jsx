@@ -53,9 +53,7 @@ export default function ChildDevelopmentCard({ profile }) {
         className="rounded-3xl overflow-hidden relative"
         style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
       >
-        {/* decorative blobs */}
-        <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-white" />
-        <div className="absolute -bottom-8 -left-4 w-24 h-24 rounded-full opacity-10 bg-white" />
+
 
         <div className="relative p-5 flex items-center gap-4">
           <div className="text-4xl leading-none">{age.isPregnant ? '🤰' : '👶'}</div>

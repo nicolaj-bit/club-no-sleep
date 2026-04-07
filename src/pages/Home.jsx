@@ -98,8 +98,7 @@ export default function Home() {
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
         >
-          <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full opacity-10 bg-white" />
-          <div className="absolute -bottom-8 -left-4 w-24 h-24 rounded-full opacity-8 bg-white" />
+
           <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-white/50 mb-3">{t.dailyWord}</p>
           <p className="text-white text-[15px] font-light leading-relaxed relative z-10" style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '17px', lineHeight: '1.55' }}>
             {displayAffirmation}
