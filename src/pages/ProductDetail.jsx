@@ -3,20 +3,25 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Heart, Share2, ExternalLink, Check, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, Heart, Share2, Leaf, Package, Shirt, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 
+const trustPoints = [
+  { icon: Leaf, label: 'Naturlige\nmaterialer' },
+  { icon: Package, label: 'Nej tak til\npolyester' },
+  { icon: Shirt, label: 'Håndsyet i\nVietnam' },
+  { icon: Truck, label: 'Gratis fragt\nover 599 kr.' },
+];
+
 export default function ProductDetail() {
-  const { theme } = useTheme();
   const { lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
-  
+
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -46,16 +51,13 @@ export default function ProductDetail() {
       : []
   );
 
-  const displayProduct = lang === 'en' && translations.length > 0 && translations[0] 
-    ? { ...product, ...translations[0] } 
+  const displayProduct = lang === 'en' && translations.length > 0 && translations[0]
+    ? { ...product, ...translations[0] }
     : product;
 
   const handleShare = async () => {
     try {
-      await navigator.share({
-        title: product.title,
-        url: window.location.href,
-      });
+      await navigator.share({ title: product.title, url: window.location.href });
     } catch {
       navigator.clipboard.writeText(window.location.href);
       toast.success('Link kopieret');
@@ -63,7 +65,7 @@ export default function ProductDetail() {
   };
 
   const handleBuyNow = () => {
-    if (product.shopify_url) {
+    if (product?.shopify_url) {
       window.open(product.shopify_url, '_blank');
     } else {
       toast.error('Køb link ikke tilgængeligt');
@@ -74,7 +76,7 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
         <Skeleton className="aspect-square w-full" />
-        <div className="p-4 space-y-4">
+        <div className="p-5 space-y-4">
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-6 w-1/4" />
           <Skeleton className="h-24 w-full" />
@@ -96,116 +98,130 @@ export default function ProductDetail() {
   const hasDiscount = product.compare_at_price && product.compare_at_price > product.price;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Image Gallery */}
-      <div className="relative">
-        <div className="aspect-square" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+    <div className="min-h-screen pb-36" style={{ backgroundColor: 'var(--color-bg)' }}>
+
+      {/* ── Main image ── */}
+      <div className="relative bg-[#F5EFE6]">
+        <div className="aspect-square">
           {currentImage ? (
-            <img 
-              src={currentImage} 
-              alt={product.title}
-              className="w-full h-full object-cover"
-            />
+            <img src={currentImage} alt={product.title} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <ShoppingBag className="w-16 h-16" style={{ color: 'var(--color-text-muted)' }} />
+              <span style={{ color: 'var(--color-text-muted)', fontSize: 48 }}>🛍️</span>
             </div>
           )}
         </div>
-        
-        {/* Navigation */}
-        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between">
+
+        {/* Nav buttons */}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <Link to={createPageUrl('Shop')}>
-            <Button size="icon" variant="secondary" className="rounded-full backdrop-blur shadow-md" style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}>
+            <button
+              className="w-9 h-9 rounded-full flex items-center justify-center shadow-md"
+              style={{ backgroundColor: isDark ? 'rgba(20,20,20,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#F5F0EB' : '#2C1A0E' }}
+            >
               <ChevronLeft className="w-5 h-5" />
-            </Button>
+            </button>
           </Link>
           <div className="flex gap-2">
-            <Button
-              size="icon"
-              variant="secondary"
-              className="rounded-full backdrop-blur shadow-md"
-              style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isFavorite ? '#f43f5e' : (isDark ? '#FFFFFF' : '#000000') }}
+            <button
+              className="w-9 h-9 rounded-full flex items-center justify-center shadow-md"
+              style={{ backgroundColor: isDark ? 'rgba(20,20,20,0.85)' : 'rgba(255,255,255,0.9)', color: isFavorite ? '#f43f5e' : (isDark ? '#F5F0EB' : '#2C1A0E') }}
               onClick={() => setIsFavorite(!isFavorite)}
             >
-              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-rose-500' : ''}`} />
-            </Button>
-            <Button
-              size="icon"
-              variant="secondary"
-              className="rounded-full backdrop-blur shadow-md"
-              style={{ backgroundColor: isDark ? '#1a1a1a' : 'rgba(255,255,255,0.9)', color: isDark ? '#FFFFFF' : '#000000' }}
+              <Heart className={`w-4.5 h-4.5 ${isFavorite ? 'fill-rose-500' : ''}`} />
+            </button>
+            <button
+              className="w-9 h-9 rounded-full flex items-center justify-center shadow-md"
+              style={{ backgroundColor: isDark ? 'rgba(20,20,20,0.85)' : 'rgba(255,255,255,0.9)', color: isDark ? '#F5F0EB' : '#2C1A0E' }}
               onClick={handleShare}
             >
-              <Share2 className="w-5 h-5" />
-            </Button>
+              <Share2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
-        
-        {/* Image Dots */}
-        {images.length > 1 && (
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedImageIndex(i)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  i === selectedImageIndex ? 'bg-slate-900 w-4' : 'bg-slate-400'
-                }`}
-              />
-            ))}
+
+        {/* Discount badge */}
+        {hasDiscount && (
+          <div className="absolute top-14 left-4">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-sm tracking-wide" style={{ backgroundColor: '#5C3317', color: '#FAF6F1' }}>
+              TILBUD
+            </span>
           </div>
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
-        {/* Title & Price */}
-         <div>
-           <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{displayProduct.title}</h1>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              {product.price} kr
+      {/* ── Thumbnail strip ── */}
+      {images.length > 1 && (
+        <div className="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto no-scrollbar">
+          {images.map((img, i) => (
+            <button
+              key={i}
+              onClick={() => setSelectedImageIndex(i)}
+              className="flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-all"
+              style={{ borderColor: i === selectedImageIndex ? 'var(--color-primary)' : 'var(--color-border)' }}
+            >
+              <img src={img} alt="" className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ── Product info ── */}
+      <div className="px-5 pt-5 space-y-5">
+
+        {/* Title */}
+        <div>
+          <h1
+            className="font-display text-3xl font-light tracking-wide leading-tight uppercase"
+            style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}
+          >
+            {displayProduct.title}
+          </h1>
+
+          {/* Price */}
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-xl font-medium" style={{ color: 'var(--color-text-primary)' }}>
+              {hasDiscount ? (
+                <>
+                  <span className="font-semibold">{lang === 'en' ? 'Sale price' : 'Salgspris'}</span>{' '}
+                  {product.price.toLocaleString('da-DK')},00 kr
+                </>
+              ) : (
+                <>{product.price.toLocaleString('da-DK')},00 kr</>
+              )}
             </span>
             {hasDiscount && (
-              <span className="text-lg line-through" style={{ color: 'var(--color-text-muted)' }}>
-                {product.compare_at_price} kr
+              <span className="text-base line-through" style={{ color: 'var(--color-text-muted)' }}>
+                {product.compare_at_price.toLocaleString('da-DK')},00 kr
               </span>
             )}
           </div>
         </div>
 
-        {/* Stock Status */}
-        <div className="flex items-center gap-2">
-          {product.in_stock ? (
-            <>
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-sm text-emerald-600 font-medium">{lang === 'en' ? 'In stock' : 'På lager'}</span>
-            </>
-          ) : (
-            <>
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-text-muted)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>{lang === 'en' ? 'Out of stock' : 'Udsolgt'}</span>
-            </>
-          )}
-        </div>
+        {/* Delivery notice */}
+        <p className="text-sm italic" style={{ color: 'var(--color-accent)' }}>
+          {lang === 'en' ? 'Delivery 1–2 business days.' : 'Levering 1–2 hverdage.'}
+        </p>
 
         {/* Variants */}
         {product.variants?.length > 0 && (
           <div>
-            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>{lang === 'en' ? 'Variant' : 'Variant'}</h3>
+            <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
+              {lang === 'en' ? 'Your choice' : 'Dit valg'}
+            </p>
             <div className="flex flex-wrap gap-2">
               {product.variants.map((variant, i) => (
                 <button
                   key={i}
                   onClick={() => setSelectedVariant(variant)}
                   disabled={!variant.in_stock}
-                  className="px-4 py-2 rounded-lg text-sm font-medium border transition-all"
-                  style={selectedVariant?.name === variant.name
-                    ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
-                    : variant.in_stock
-                      ? { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }
-                      : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', borderColor: 'var(--color-border)', cursor: 'not-allowed' }
+                  className="px-4 py-2 rounded text-sm border transition-all"
+                  style={
+                    selectedVariant?.name === variant.name
+                      ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', borderColor: 'var(--color-primary)' }
+                      : variant.in_stock
+                        ? { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }
+                        : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', borderColor: 'var(--color-border)', cursor: 'not-allowed', opacity: 0.5 }
                   }
                 >
                   {variant.name}
@@ -215,10 +231,24 @@ export default function ProductDetail() {
           </div>
         )}
 
+        {/* ── 4 trust icons ── */}
+        <div
+          className="grid grid-cols-4 gap-2 py-4 border-t border-b"
+          style={{ borderColor: 'var(--color-border)' }}
+        >
+          {trustPoints.map(({ icon: Icon, label }) => (
+            <div key={label} className="flex flex-col items-center gap-1.5">
+              <Icon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+              <span className="text-center leading-tight" style={{ fontSize: '10px', color: 'var(--color-text-secondary)' }}>
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+
         {/* Description */}
         {displayProduct.description && (
-          <div className="pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
-            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>{lang === 'en' ? 'Description' : 'Beskrivelse'}</h3>
+          <div>
             <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-text-secondary)' }}>
               {displayProduct.description}
             </p>
@@ -227,11 +257,11 @@ export default function ProductDetail() {
 
         {/* Tags */}
         {product.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-4">
+          <div className="flex flex-wrap gap-2">
             {product.tags.map((tag, i) => (
-              <span 
+              <span
                 key={i}
-                className="px-2.5 py-1 text-xs rounded-full"
+                className="px-2.5 py-1 text-xs rounded-sm uppercase tracking-wider"
                 style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 {tag}
@@ -239,19 +269,32 @@ export default function ProductDetail() {
             ))}
           </div>
         )}
+
+        {/* Stock notice */}
+        {!product.in_stock && (
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            {lang === 'en' ? 'Out of stock' : 'Udsolgt'}
+          </p>
+        )}
       </div>
 
-      {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)' }}>
+      {/* ── Bottom CTA ── */}
+      <div
+        className="fixed bottom-0 left-0 right-0 px-4 py-4 border-t"
+        style={{
+          backgroundColor: isDark ? 'var(--color-bg-card)' : '#FFFFFF',
+          borderColor: 'var(--color-border)',
+          paddingBottom: 'max(16px, env(safe-area-inset-bottom))',
+        }}
+      >
         <button
-          className="w-full h-12 rounded-full text-base font-semibold flex items-center justify-center gap-2 shadow-lg disabled:opacity-40"
-          style={{ backgroundColor: isDark ? 'var(--button-bg-dark)' : '#000000', color: '#FFFFFF' }}
-          disabled={!product.in_stock}
           onClick={handleBuyNow}
-          >
-          <ExternalLink className="w-5 h-5" />
+          disabled={!product.in_stock}
+          className="w-full h-12 rounded text-sm font-semibold uppercase tracking-widest flex items-center justify-center gap-2 transition-opacity disabled:opacity-40"
+          style={{ backgroundColor: '#5C3317', color: '#FAF6F1' }}
+        >
           {lang === 'en' ? 'Buy now in webshop' : 'Køb nu i webshop'}
-          </button>
+        </button>
       </div>
     </div>
   );
