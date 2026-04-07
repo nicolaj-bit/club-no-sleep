@@ -133,26 +133,24 @@ export default function Settings() {
               onClick={() => isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: !isDark ? 'var(--color-cappuccino)' : 'var(--color-bg-card)',
+                background: !isDark ? 'var(--color-cappuccino)' : 'transparent',
                 borderColor: !isDark ? 'var(--color-cappuccino)' : 'var(--color-border)',
-                color: 'var(--color-text-primary)',
-                opacity: isDark ? 0.5 : 1,
+                color: !isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
               }}
             >
-              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
+              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }} />
               {t.light}
             </button>
             <button
               onClick={() => !isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: isDark ? 'var(--color-cappuccino)' : 'var(--color-bg-card)',
+                background: isDark ? 'var(--color-cappuccino)' : 'transparent',
                 borderColor: isDark ? 'var(--color-cappuccino)' : 'var(--color-border)',
-                color: 'var(--color-text-primary)',
-                opacity: !isDark ? 0.5 : 1,
+                color: isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
               }}
             >
-              <Moon className="w-4 h-4 mx-auto mb-1" style={{ color: 'var(--color-text-muted)' }} />
+              <Moon className="w-4 h-4 mx-auto mb-1" style={{ color: isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }} />
               {t.dark}
             </button>
           </div>
