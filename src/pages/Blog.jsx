@@ -118,7 +118,7 @@ export default function Blog() {
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.blogTitle}</h1>
+              <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>{t.blogTitle}</h1>
               <Button 
                 variant="ghost" 
                 size="icon"
@@ -138,8 +138,8 @@ export default function Blog() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 style={activeCategory === cat
-                  ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
-                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                  ? { background: 'linear-gradient(135deg, #5C3317, #A0785A)', color: '#fff' }
+                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
                 className="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
               >
                 {cat}

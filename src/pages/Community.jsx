@@ -255,7 +255,7 @@ export default function Community() {
           transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
         }}
       >
-        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Community</h1>
+        <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>Community</h1>
       </header>
 
       <div className="p-4">

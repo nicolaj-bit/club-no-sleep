@@ -132,11 +132,11 @@ export default function BottomNav() {
         <div
           className="flex items-center justify-around h-16 px-6 w-full max-w-xs rounded-full border"
           style={{
-            backgroundColor: isDark ? '#111111' : '#FFFFFF',
-            borderColor: isDark ? '#2A2A2A' : '#E8DDD3',
+            backgroundColor: isDark ? '#141414' : '#FFFFFF',
+            borderColor: isDark ? '#2A2A2A' : '#EDE4D8',
             boxShadow: isDark
-              ? '0 8px 32px rgba(0,0,0,0.8)'
-              : '0 8px 32px rgba(44,26,14,0.15)',
+              ? '0 8px 40px rgba(0,0,0,0.85)'
+              : '0 8px 40px rgba(92,51,23,0.12)',
           }}
         >
           <Link

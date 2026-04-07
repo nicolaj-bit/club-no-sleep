@@ -107,7 +107,7 @@ export default function Profile() {
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="pt-8 pb-4 px-5 flex items-center justify-between">
-        <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+        <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
           {t.profileTitle}
         </h1>
         {allProfiles.length > 0 && <ProfileSwitcher />}
@@ -140,7 +140,7 @@ export default function Profile() {
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
             className="rounded-3xl p-5"
-            style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
+            style={{ background: isDark ? '#1E1E1E' : '#F3EDE4', borderColor: isDark ? '#2A2A2A' : '#EDE4D8' }}
           >
             <DialogTrigger asChild>
               <button

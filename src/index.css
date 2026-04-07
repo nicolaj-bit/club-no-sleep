@@ -2,80 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================
+   LALATOTO Design System
+   Warm sand & chocolate — reflecting lalatoto.dk
+   ===================================================== */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* Tailwind shadcn tokens */
+    --background: 36 47% 97%;
+    --foreground: 22 62% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 22 62% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --popover-foreground: 22 62% 12%;
+    --primary: 22 62% 22%;
+    --primary-foreground: 36 47% 97%;
+    --secondary: 33 32% 92%;
+    --secondary-foreground: 22 62% 22%;
+    --muted: 33 28% 90%;
+    --muted-foreground: 24 20% 48%;
+    --accent: 33 32% 88%;
+    --accent-foreground: 22 62% 22%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 33 30% 88%;
+    --input: 33 30% 88%;
+    --ring: 22 62% 22%;
+    --chart-1: 26 70% 45%;
+    --chart-2: 32 60% 55%;
+    --chart-3: 200 35% 55%;
+    --chart-4: 42 65% 55%;
+    --chart-5: 355 60% 60%;
+    --radius: 0.75rem;
+    --sidebar-background: 36 47% 97%;
+    --sidebar-foreground: 22 62% 12%;
+    --sidebar-primary: 22 62% 22%;
+    --sidebar-primary-foreground: 36 47% 97%;
+    --sidebar-accent: 33 32% 92%;
+    --sidebar-accent-foreground: 22 62% 22%;
+    --sidebar-border: 33 30% 88%;
+    --sidebar-ring: 22 62% 22%;
+
+    /* LALATOTO custom CSS vars */
+    --color-bg: #FAF6F1;
+    --color-bg-card: #FFFFFF;
+    --color-bg-subtle: #F3EDE4;
+    --color-border: #EDE4D8;
+    --color-text-primary: #2C1A0E;
+    --color-text-secondary: #6B4A2F;
+    --color-text-muted: #9C816A;
+    --color-primary: #5C3317;
+    --color-primary-light: #7A4F2E;
+    --color-accent: #A0785A;
+    --color-cappuccino: #C8A882;
   }
 
+  /* ── Dark mode – deep black with warm text ── */
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 0 0% 4%;
+    --foreground: 36 20% 95%;
+    --card: 0 0% 8%;
+    --card-foreground: 36 20% 95%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 36 20% 95%;
+    --primary: 36 20% 95%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 36 20% 95%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 36 20% 95%;
+    --destructive: 0 62.8% 40%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 0 0% 17%;
+    --input: 0 0% 17%;
+    --ring: 36 20% 70%;
+    --sidebar-background: 22 18% 10%;
+    --sidebar-foreground: 36 30% 88%;
+    --sidebar-primary: 36 30% 88%;
+    --sidebar-primary-foreground: 22 18% 10%;
+    --sidebar-accent: 22 12% 18%;
+    --sidebar-accent-foreground: 36 30% 88%;
+    --sidebar-border: 22 12% 20%;
+    --sidebar-ring: 36 30% 70%;
+
+    --color-bg: #0A0A0A;
+    --color-bg-card: #141414;
+    --color-bg-subtle: #111111;
+    --color-border: #2A2A2A;
+    --color-text-primary: #F5F0EB;
+    --color-text-secondary: #C8B8A8;
+    --color-text-muted: #8A7060;
+    --color-primary: #F5F0EB;
+    --color-primary-light: #C8B8A8;
+    --color-accent: #C8A882;
+    --color-cappuccino: #A0785A;
   }
 }
-
-
 
 @layer base {
   * {
@@ -84,5 +109,48 @@
 
   body {
     @apply bg-background text-foreground;
+    background-color: var(--color-bg) !important;
+    color: var(--color-text-primary) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark {
+    background-color: #0A0A0A !important;
+    color: #F5F0EB !important;
+  }
+  html.dark body {
+    background-color: #0A0A0A !important;
+    color: #F5F0EB !important;
+  }
+  html.dark * {
+    --color-bg: #0A0A0A;
+    --color-bg-card: #141414;
+    --color-bg-subtle: #111111;
+    --color-border: #2A2A2A;
+    --color-text-primary: #F5F0EB;
+    --color-text-secondary: #C8B8A8;
+    --color-text-muted: #8A7060;
+    --color-primary: #F5F0EB;
+    --color-primary-light: #C8B8A8;
+    --color-accent: #C8A882;
+  }
+
+  button, a, [role="button"], nav, [data-nav] {
+    -webkit-user-select: none;
+    user-select: none;
   }
 }
+
+/* ── Safe area helpers ── */
+.safe-top  { padding-top: env(safe-area-inset-top, 0px); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.header-safe { padding-top: max(12px, env(safe-area-inset-top)); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C8A882; border-radius: 2px; }

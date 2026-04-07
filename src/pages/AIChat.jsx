@@ -111,7 +111,7 @@ export default function AIChat() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-sm text-white">Baby & Søvn Ekspert</p>
+            <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>Baby & Søvn Ekspert</p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block" />
               <p className="text-xs text-white/70">AI-assistent · Online</p>
@@ -133,7 +133,7 @@ export default function AIChat() {
               <Sparkles className="w-10 h-10 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--color-text-primary)' }}>
+              <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                 Hej! Jeg er her for dig 🤍
               </h2>
               <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-text-muted)' }}>

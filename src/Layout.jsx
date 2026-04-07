@@ -80,6 +80,7 @@ export default function Layout({ children, currentPageName }) {
     <TabStateProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }
           .safe-area-bottom {
             padding-bottom: max(var(--safe-area-inset-bottom, 0px), 8px);
@@ -87,10 +88,14 @@ export default function Layout({ children, currentPageName }) {
           body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
           }
-          ::-webkit-scrollbar { width: 4px; height: 4px; }
+          h1, h2, h3, .font-display {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+          }
+          ::-webkit-scrollbar { width: 3px; height: 3px; }
           ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+          ::-webkit-scrollbar-thumb { background: #C8A882; border-radius: 2px; }
         `}</style>
 
         <Toaster position="top-center" />

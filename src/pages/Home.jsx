@@ -87,22 +87,21 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-5">
-        <p className="text-xs font-medium uppercase tracking-widest capitalize mb-1" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-        <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{greeting}</h1>
+      <div className="px-5 pt-12 pb-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] capitalize mb-1.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+        <h1 className="text-4xl font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
       </div>
 
       {/* Daily Affirmation */}
       <div className="mx-5 mb-5">
         <div
-          className="rounded-3xl p-6 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #C8A882 0%, #7A4F2E 100%)' }}
+          className="rounded-2xl p-6 relative overflow-hidden"
+          style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
         >
-          <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full opacity-15 bg-white" />
-          <div className="absolute -bottom-10 -left-6 w-28 h-28 rounded-full opacity-10 bg-white" />
-          <div className="absolute top-4 right-4 w-8 h-8 rounded-full opacity-20 bg-white" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-3">{t.dailyWord}</p>
-          <p className="text-white text-base font-medium leading-relaxed relative z-10" style={{ textWrap: 'pretty' }}>
+          <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full opacity-10 bg-white" />
+          <div className="absolute -bottom-8 -left-4 w-24 h-24 rounded-full opacity-8 bg-white" />
+          <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-white/50 mb-3">{t.dailyWord}</p>
+          <p className="text-white text-[15px] font-light leading-relaxed relative z-10" style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '17px', lineHeight: '1.55' }}>
             {displayAffirmation}
           </p>
         </div>

@@ -81,7 +81,7 @@ export default function Settings() {
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </button>
         </Link>
-        <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+        <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
           {t.settingsTitle}
         </h1>
       </div>
@@ -113,7 +113,7 @@ export default function Settings() {
                 key={i}
                 {...wrapperProps}
                 className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
+                style={{ background: isDark ? '#1E1E1E' : '#F3EDE4', borderColor: isDark ? '#2A2A2A' : '#EDE4D8' }}
               >
                 <Icon className="w-6 h-6" style={{ color: 'var(--color-text-muted)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>

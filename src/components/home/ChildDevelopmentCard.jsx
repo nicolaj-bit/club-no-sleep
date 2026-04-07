@@ -51,7 +51,7 @@ export default function ChildDevelopmentCard({ profile }) {
     <Link to={createPageUrl('Knowledge')} className="block mx-5 mb-4 cursor-pointer">
       <div
         className="rounded-3xl overflow-hidden relative"
-        style={{ background: 'linear-gradient(135deg, #C8A882 0%, #8B5E3C 100%)' }}
+        style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
       >
         {/* decorative blobs */}
         <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-20 bg-white" />
@@ -64,7 +64,7 @@ export default function ChildDevelopmentCard({ profile }) {
               {age.isPregnant ? 'Termin om' : 'Dit barn er'}
             </p>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-bold text-white">{age.big}</span>
+              <span className="text-4xl font-light text-white" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{age.big}</span>
               <span className="text-white/80 text-sm font-medium">{age.unit}</span>
             </div>
             <p className="text-white/60 text-xs mt-0.5">{age.subtitle}</p>
