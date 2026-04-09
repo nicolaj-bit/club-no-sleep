@@ -15,7 +15,7 @@ const WEEK_DATA = {
     },
     mom: {
       symptoms: ['Udeblevet menstruation', 'Ømme og tunge bryster', 'Let træthed', 'Måske let kvalme om morgenen', 'Hyppigere vandladning begynder'],
-      body: "Din livmoder er stadig kun på størrelse med en ærtepotre, men kroppen er allerede i fuld gang med at tilpasse sig. Blodvolumen begynder at stige – i løbet af graviditeten øges den med op til 50%. Dit immunsystem dæmpes en smule for at acceptere det 'fremmede' foster. Progesteronniveauet stiger markant og giver træthed og blødere ledbånd.", men kroppen er allerede i fuld gang med at tilpasse sig. Blodvolumen begynder at stige – i løbet af graviditeten øges den med op til 50%. Dit immunsystem dæmpes en smule for at acceptere det 'fremmede' foster. Progesteronniveauet stiger markant og giver træthed og blødere ledbånd.',
+      body: "Din livmoder er stadig kun på størrelse med en ærtepotre, men kroppen er allerede i fuld gang med at tilpasse sig. Blodvolumen begynder at stige – i løbet af graviditeten øges den med op til 50%. Dit immunsystem dæmpes en smule for at acceptere det 'fremmede' foster. Progesteronniveauet stiger markant og giver træthed og blødere ledbånd.",
     },
     nutrition: 'Folinsyre er altafgørende nu – du bør tage 400 mikrogram dagligt. Det beskytter direkte mod alvorlige neuralrørsdefekter som spina bifida. Spis grønne bladgrøntsager, bønner og berigede kornprodukter. Undgå alkohol, rå fisk og upasteuriserede mejeriprodukter fra nu af.',
     tips: [
@@ -71,7 +71,7 @@ const WEEK_DATA = {
       'Undgå at ligge på ryggen i længere tid – det kan give svimmelhed',
       'Lær at anerkende og respektere din træthed – din krop arbejder hårdt',
     ],
-    emotional: "Første trimester er præget af ambivalens for mange. Du kan elske at være gravid og samtidig savne dit 'gamle' liv. Det er normalt. Tal med din partner om dine forventninger til forældreskabet – jo tidligere jo bedre.", Det er normalt. Tal med din partner om dine forventninger til forældreskabet – jo tidligere jo bedre.',
+    emotional: "Første trimester er præget af ambivalens for mange. Du kan elske at være gravid og samtidig savne dit 'gamle' liv. Det er normalt. Tal med din partner om dine forventninger til forældreskabet – jo tidligere jo bedre.",
     warning: 'En blødning i første trimester er ikke altid farligt, men skal altid undersøges. Tag kontakt til din jordemoder eller vagtlæge.',
   },
   7: {
