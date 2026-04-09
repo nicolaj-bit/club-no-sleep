@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ArticleCard from '@/components/knowledge/ArticleCard';
+import PregnancyTab from '@/components/knowledge/PregnancyTab';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
@@ -218,6 +219,10 @@ export default function Knowledge() {
 
             <TabsContent value="tigerspring" className="mt-4">
               <WonderWeeksTab />
+            </TabsContent>
+
+            <TabsContent value="graviditet" className="mt-4">
+              <PregnancyTab />
             </TabsContent>
 
             <TabsContent value="faq" className="mt-4 space-y-2">
