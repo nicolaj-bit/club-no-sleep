@@ -265,7 +265,6 @@ export default function Profile() {
           onClick={() => setHelpOpen(true)}
           className="w-full rounded-2xl p-5 flex items-center gap-3 cursor-pointer active:opacity-70 transition-opacity border text-left"
           style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
         >
           <HelpCircle className="w-6 h-6 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
           <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</span>
