@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ChevronDown, ChevronUp, Baby, Heart, Sparkles } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
@@ -111,6 +112,13 @@ function WeekCard({ week, data, isCurrent }) {
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{data.tip}</p>
           </div>
+          <Link
+            to={`/PregnancyWeekDetail?week=${week}`}
+            className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            Læs meget mere om uge {week} →
+          </Link>
         </div>
       )}
     </div>
