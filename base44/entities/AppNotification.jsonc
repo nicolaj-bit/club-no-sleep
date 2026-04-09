@@ -1,0 +1,37 @@
+{
+  "name": "AppNotification",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Notifikationstitel"
+    },
+    "message": {
+      "type": "string",
+      "description": "Besked"
+    },
+    "link": {
+      "type": "string",
+      "description": "Link til relevant side (fx /PregnancyWeekDetail?week=12)"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji der vises ved notifikation"
+    },
+    "target_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Hvilke emails skal se notifikationen (tomt = alle)"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "title",
+    "message"
+  ]
+}

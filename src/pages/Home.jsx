@@ -15,6 +15,7 @@ import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
+import NotificationBell from '@/components/ui/NotificationBell';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -88,8 +89,13 @@ export default function Home() {
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="px-5 pt-12 pb-6">
+        <div className="flex items-start justify-between">
+        <div>
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] capitalize mb-1.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
         <h1 className="text-4xl font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
+        </div>
+        {user && <NotificationBell userEmail={user.email} />}
+        </div>
       </div>
 
       {/* Daily Affirmation */}
