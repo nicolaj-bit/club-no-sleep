@@ -782,6 +782,7 @@ const WEEK_DATA = {
       'Aftal kørsel til hospitalet – hvem kører, hvornår tager I af sted',
       'Lær veer at kende: aktive fødselsveer er regelmæssige (5 min mellemrum), stærke og varer 45–60 sek',
       'Brug tiden på afslapning, gåture og hygge med din partner',
+      '🎁 Hent Lalatoto\'s gratis pakkeliste til hospitalstasken – se download-link nedenfor',
     ],
     emotional: 'At nå den fuldbårne milepæl er en enorm lettelse for mange. Nu er det op til babyen at bestemme hvornår det er tid. Overgivelse til processen er dit vigtigste redskab nu.',
     warning: 'Ring til hospitalet ved: veer 5 min ad gangen i 1 time, vandafgang, kraftig blødning, barnet er meget stille.',
@@ -1065,6 +1066,23 @@ export default function PregnancyWeekDetail() {
             </Link>
           ) : <div />}
         </div>
+
+        {week === 37 && (
+          <a
+            href="https://media.base44.com/files/public/699f47a86e7e0a874d1159ed/34c43112a_DenUltimativepakkelistetilhospitalstasken.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            className="flex items-center justify-between w-full rounded-2xl p-4 border"
+            style={{ backgroundColor: 'var(--color-primary)', borderColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            <div>
+              <p className="text-sm font-semibold">📋 Den Ultimative Pakkeliste</p>
+              <p className="text-xs opacity-80 mt-0.5">Hent gratis PDF fra Lalatoto of Denmark</p>
+            </div>
+            <span className="text-xs font-medium px-3 py-1.5 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Download</span>
+          </a>
+        )}
 
         <div className="rounded-2xl p-4 flex items-start gap-3 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <BookOpen className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-text-muted)' }} />
