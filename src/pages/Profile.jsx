@@ -249,7 +249,7 @@ export default function Profile() {
                 key={i}
                 to={createPageUrl(item.page)}
                 className="rounded-2xl p-5 flex flex-col gap-3 cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-primary)' }}
+                style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
               >
                 <Icon className="w-6 h-6" style={{ color: 'var(--color-text-secondary)' }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
@@ -264,6 +264,7 @@ export default function Profile() {
         <button
           onClick={() => setHelpOpen(true)}
           className="w-full rounded-2xl p-5 flex items-center gap-3 cursor-pointer active:opacity-70 transition-opacity border text-left"
+          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
           style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}
         >
           <HelpCircle className="w-6 h-6 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
@@ -271,7 +272,7 @@ export default function Profile() {
         </button>
 
         {/* Privacy toggles */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED' }}>
+        <div className="rounded-2xl overflow-hidden border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center gap-3">
               <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
@@ -304,7 +305,7 @@ export default function Profile() {
         <Link
           to={createPageUrl('MyData')}
           className="w-full py-4 px-5 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-between"
-          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-secondary)' }}
+          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
         >
           <span className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
@@ -317,7 +318,7 @@ export default function Profile() {
         <button
           onClick={() => base44.auth.logout('/')}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: isDark ? '#E7D3B1' : '#F8F3ED', borderColor: isDark ? '#E7D3B1' : '#F8F3ED', color: 'var(--color-text-muted)' }}
+          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
         >
           <span className="flex items-center justify-center gap-2">
             <LogOut className="w-4 h-4" />
