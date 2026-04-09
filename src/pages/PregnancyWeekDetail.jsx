@@ -923,7 +923,7 @@ export default function PregnancyWeekDetail() {
     <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
       <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="px-4 py-3 flex items-center justify-between">
-          <Link to="/Knowledge" className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+          <Link to="/Knowledge?tab=graviditet" className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </Link>
           <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>

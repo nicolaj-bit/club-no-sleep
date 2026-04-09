@@ -18,6 +18,8 @@ import { useTranslation } from '@/components/hooks/useTranslation';
 export default function Knowledge() {
   const headerVisible = useScrollDirection();
   const [search, setSearch] = useState('');
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialTab = urlParams.get('tab') || null;
   const [showSearch, setShowSearch] = useState(false);
   const { lang, t } = useLanguage();
 
@@ -184,7 +186,7 @@ export default function Knowledge() {
       ) : (
         /* Main Content */
         <div className="p-4">
-          <Tabs defaultValue={activeTabs[0]?.key || 'articles'} className="w-full">
+          <Tabs defaultValue={initialTab || activeTabs[0]?.key || 'articles'} className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
               {activeTabs.map(tab => {
                 const displayLabel = getTranslated(tabTranslations, tab.id, 'label', tab.label);
