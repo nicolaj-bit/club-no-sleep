@@ -164,6 +164,19 @@ export default function SleepLog() {
       if (existing) return base44.entities.SleepLog.update(existing.id, payload);
       return base44.entities.SleepLog.create(payload);
     },
+    onMutate: async (data) => {
+      await queryClient.cancelQueries(['sleeplog-today']);
+      const prev = queryClient.getQueryData(['sleeplog-today', user?.email, profileId, today]);
+      // Optimistically update the cache
+      queryClient.setQueryData(['sleeplog-today', user?.email, profileId, today], old => {
+        if (old?.length > 0) return [{ ...old[0], ...data }];
+        return [{ ...data, id: '__optimistic__' }];
+      });
+      return { prev };
+    },
+    onError: (_err, _data, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(['sleeplog-today', user?.email, profileId, today], ctx.prev);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['sleeplog-today']);
       queryClient.invalidateQueries(['sleeplog-history']);
@@ -320,19 +333,28 @@ export default function SleepLog() {
                     className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none"
                     style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                   />
-                  <select
-                    value={w.method}
-                    onChange={(e) => {
-                      const updated = [...form.night_wakings];
-                      updated[i] = { ...updated[i], method: e.target.value };
-                      setForm(f => ({ ...f, night_wakings: updated }));
-                    }}
-                    className="flex-1 px-3 py-2 rounded-xl border text-sm focus:outline-none"
-                    style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-                  >
-                    <option value="">Metode...</option>
-                    {WAKING_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
-                  </select>
+                  <div className="flex-1 overflow-x-auto">
+                    <div className="flex gap-1.5">
+                      {WAKING_METHODS.map(m => {
+                        const sel = w.method === m;
+                        return (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => {
+                              const updated = [...form.night_wakings];
+                              updated[i] = { ...updated[i], method: sel ? '' : m };
+                              setForm(f => ({ ...f, night_wakings: updated }));
+                            }}
+                            className="flex-shrink-0 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all"
+                            style={sel
+                              ? { background: 'linear-gradient(135deg,#C8A882,#A0785A)', color: '#fff', borderColor: 'transparent' }
+                              : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
+                          >{m}</button>
+                        );
+                      })}
+                    </div>
+                  </div>
                   <button
                     onClick={() => setForm(f => ({ ...f, night_wakings: f.night_wakings.filter((_, idx) => idx !== i) }))}
                     className="p-2 rounded-full transition-colors"

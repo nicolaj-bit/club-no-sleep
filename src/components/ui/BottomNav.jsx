@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTabState } from '@/components/ui/TabStateContext';
 import { Home, Sparkles, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+  const { saveTabPath, getTabPath, clearTabPath } = useTabState();
   const { isDark } = useTheme();
   const { t } = useLanguage();
   const menuItems = menuItemsConfig.map(item => ({ ...item, name: t[item.key] }));
@@ -31,10 +33,33 @@ export default function BottomNav() {
     return currentPath === url || currentPath.startsWith(url + '?');
   };
 
+  // Save current path to tab history whenever location changes
+  useEffect(() => {
+    const allPages = ['Home', 'AIChat', ...menuItemsConfig.map(m => m.page)];
+    allPages.forEach(page => {
+      const url = createPageUrl(page);
+      if (currentPath === url || currentPath.startsWith(url + '?')) {
+        saveTabPath(page, currentPath + location.search);
+      }
+    });
+  }, [currentPath, location.search]);
+
+  const handleNavPress = (page) => {
+    const rootUrl = createPageUrl(page);
+    if (isActive(page)) {
+      // Already on this tab — reset to root
+      clearTabPath(page);
+      navigate(rootUrl);
+    } else {
+      // Navigate to last visited path in this tab, or root
+      const lastPath = getTabPath(page);
+      navigate(lastPath && lastPath !== rootUrl ? lastPath : rootUrl);
+    }
+  };
+
   const handleMenuItemPress = (page) => {
     setMenuOpen(false);
-    // Small delay so sheet close animation finishes before navigation
-    setTimeout(() => navigate(createPageUrl(page)), 50);
+    setTimeout(() => handleNavPress(page), 50);
   };
 
   return (

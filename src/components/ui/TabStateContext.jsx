@@ -13,10 +13,10 @@ import React, { createContext, useContext, useRef } from 'react';
 const TabStateContext = createContext({});
 
 export function TabStateProvider({ children }) {
-  // scrollPositions: { [tabKey]: number }
   const scrollPositions = useRef({});
-  // genericState: { [tabKey]: any } — for active tab indices etc.
   const genericState = useRef({});
+  // Stores the last visited full path per tab page key
+  const tabLastPath = useRef({});
 
   const saveScroll = (tabKey, position) => {
     scrollPositions.current[tabKey] = position;
@@ -36,8 +36,18 @@ export function TabStateProvider({ children }) {
 
   const getState = (tabKey) => genericState.current[tabKey];
 
+  const saveTabPath = (pageKey, path) => {
+    tabLastPath.current[pageKey] = path;
+  };
+
+  const getTabPath = (pageKey) => tabLastPath.current[pageKey] || null;
+
+  const clearTabPath = (pageKey) => {
+    delete tabLastPath.current[pageKey];
+  };
+
   return (
-    <TabStateContext.Provider value={{ saveScroll, restoreScroll, saveState, getState }}>
+    <TabStateContext.Provider value={{ saveScroll, restoreScroll, saveState, getState, saveTabPath, getTabPath, clearTabPath }}>
       {children}
     </TabStateContext.Provider>
   );

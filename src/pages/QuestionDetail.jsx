@@ -66,15 +66,32 @@ export default function QuestionDetail() {
         author_image: userProfile?.profile_image,
         author_role: userProfile?.role || 'user',
       });
-      
-      // Update question answer count
       await base44.entities.Question.update(questionId, {
         answer_count: (question?.answer_count || 0) + 1,
         status: 'answered',
       });
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries(['answers', questionId]);
+      const prevAnswers = queryClient.getQueryData(['answers', questionId]);
+      const optimisticAnswer = {
+        id: '__optimistic__' + Date.now(),
+        question_id: questionId,
+        content: answerText,
+        author_username: userProfile?.username || user?.full_name || user?.email?.split('@')[0],
+        author_image: userProfile?.profile_image,
+        author_role: userProfile?.role || 'user',
+        is_accepted: false,
+        created_date: new Date().toISOString(),
+      };
+      queryClient.setQueryData(['answers', questionId], old => [...(old || []), optimisticAnswer]);
       setAnswerText('');
+      return { prevAnswers };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prevAnswers) queryClient.setQueryData(['answers', questionId], ctx.prevAnswers);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries(['answers', questionId]);
       queryClient.invalidateQueries(['question', questionId]);
       toast.success('Svar sendt');
