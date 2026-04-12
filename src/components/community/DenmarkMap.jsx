@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
@@ -7,6 +7,19 @@ const DENMARK_CENTER = [56.0, 10.5];
 
 export default function DenmarkMap({ users = [], currentUserLocation = null, onStartChat }) {
   const mappedUsers = users.filter(u => u.latitude && u.longitude);
+
+  const isNightMode = useMemo(() => {
+    const hour = new Date().getHours();
+    return hour >= 20 || hour < 5;
+  }, []);
+
+  const tileUrl = isNightMode
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+
+  const goldColor = isNightMode ? '#FFD700' : '#C8A882';
+  const goldBorder = isNightMode ? '#FFA500' : '#A0785A';
+  const meColor = isNightMode ? '#818cf8' : '#6366f1';
 
   return (
     <div style={{ height: 300, position: 'relative', zIndex: 0 }}>
@@ -30,9 +43,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         scrollWheelZoom={false}
         attributionControl={false}
       >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        />
+        <TileLayer url={tileUrl} />
 
         {/* Other active users — gold dots */}
         {mappedUsers.map((u, i) => (
@@ -41,9 +52,9 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
             center={[u.latitude, u.longitude]}
             radius={7}
             pathOptions={{
-              fillColor: '#C8A882',
+              fillColor: goldColor,
               fillOpacity: 1,
-              color: '#A0785A',
+              color: goldBorder,
               weight: 1.5,
             }}
           >
@@ -78,7 +89,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
             center={[currentUserLocation.lat, currentUserLocation.lng]}
             radius={10}
             pathOptions={{
-              fillColor: '#6366f1',
+              fillColor: meColor,
               fillOpacity: 0.95,
               color: '#fff',
               weight: 2,
