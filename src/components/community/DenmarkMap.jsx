@@ -34,17 +34,17 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
 
-        {/* Other active users */}
+        {/* Other active users — gold dots */}
         {mappedUsers.map((u, i) => (
           <CircleMarker
             key={u.id || i}
             center={[u.latitude, u.longitude]}
-            radius={8}
+            radius={7}
             pathOptions={{
-              fillColor: '#22c55e',
-              fillOpacity: 0.9,
-              color: '#fff',
-              weight: 2,
+              fillColor: '#C8A882',
+              fillOpacity: 1,
+              color: '#A0785A',
+              weight: 1.5,
             }}
           >
             <Popup>
