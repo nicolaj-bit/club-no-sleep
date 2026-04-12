@@ -22,7 +22,7 @@ export default function AdminEditor() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('BlogPost');
-  const [editing, setEditing] = useState(null); // null = list view, object = edit view
+  const [editing, setEditing] = useState(null);
   const [isNew, setIsNew] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [helpConfig, setHelpConfig] = useState(null);
@@ -158,7 +158,6 @@ export default function AdminEditor() {
 
     return (
       <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
-        {/* Header */}
         <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b backdrop-blur-xl"
           style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <button onClick={() => setEditing(null)} className="p-2 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
@@ -174,7 +173,6 @@ export default function AdminEditor() {
         </div>
 
         <div className="p-4 space-y-5 max-w-2xl mx-auto">
-          {/* Title */}
           <div className="space-y-1.5">
             <Label style={{ color: 'var(--color-text-secondary)' }}>Titel</Label>
             <Input
@@ -185,7 +183,6 @@ export default function AdminEditor() {
             />
           </div>
 
-          {/* Blog-only fields */}
           {isBlog && (
             <>
               <div className="space-y-1.5">
@@ -258,7 +255,6 @@ export default function AdminEditor() {
             </>
           )}
 
-          {/* Kategori */}
           <div className="space-y-1.5">
             <Label style={{ color: 'var(--color-text-secondary)' }}>Kategori</Label>
             <Input
@@ -269,7 +265,6 @@ export default function AdminEditor() {
             />
           </div>
 
-          {/* Article-only: order */}
           {!isBlog && !isLegal && (
             <div className="space-y-1.5">
               <Label style={{ color: 'var(--color-text-secondary)' }}>Sorteringsrækkefølge</Label>
@@ -282,7 +277,6 @@ export default function AdminEditor() {
             </div>
           )}
 
-          {/* Legal-only: type */}
           {isLegal && (
             <div className="space-y-1.5">
               <Label style={{ color: 'var(--color-text-secondary)' }}>Type</Label>
@@ -300,7 +294,6 @@ export default function AdminEditor() {
             </div>
           )}
 
-          {/* Content — rich text editor */}
           <div className="space-y-1.5">
             <Label style={{ color: 'var(--color-text-secondary)' }}>Indhold</Label>
             <div className="rounded-xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
@@ -313,7 +306,7 @@ export default function AdminEditor() {
                     [{ header: [1, 2, 3, false] }],
                     ['bold', 'italic', 'underline', { color: [] }],
                     [{ align: [] }],
-                    ['link', 'image', 'video', { table: [] }],
+                    ['link', 'image', 'video'],
                     [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                     ['clean'],
                   ],
@@ -338,7 +331,6 @@ export default function AdminEditor() {
 
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
       <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b backdrop-blur-xl"
         style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Link to="/Settings">
@@ -361,13 +353,12 @@ export default function AdminEditor() {
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 px-4 pt-4">
+      <div className="flex gap-2 px-4 pt-4 overflow-x-auto">
         {TABS.map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap"
             style={activeTab === tab
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
@@ -378,7 +369,6 @@ export default function AdminEditor() {
         ))}
       </div>
 
-      {/* Help Modal Editor */}
       {activeTab === 'HelpModal' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
           <div className="space-y-1.5">
@@ -428,7 +418,6 @@ export default function AdminEditor() {
         </div>
       )}
 
-      {/* List */}
       <div className="p-4 space-y-2 mt-2">
         {activeTab === 'HelpModal' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
