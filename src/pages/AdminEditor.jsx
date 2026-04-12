@@ -341,12 +341,17 @@ export default function AdminEditor() {
       {/* Header */}
       <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b backdrop-blur-xl"
         style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <Link to={createPageUrl('Settings')}>
+        <Link to="/Settings">
           <button className="p-2 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
         </Link>
         <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>Admin Editor</h1>
+        <Link to="/AdminNotifications">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
+            <Bell className="w-3.5 h-3.5" /> Notifikationer
+          </button>
+        </Link>
         <button
           onClick={handleNew}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"

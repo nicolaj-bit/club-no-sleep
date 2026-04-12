@@ -1,0 +1,71 @@
+{
+  "name": "PushNotificationRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Navn p\u00e5 reglen (intern brug)"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "scheduled",
+        "calendar_event",
+        "new_blog",
+        "new_question",
+        "sleep_log"
+      ],
+      "description": "Hvorn\u00e5r/hvad trigger notifikationen"
+    },
+    "schedule_time": {
+      "type": "string",
+      "description": "Tidspunkt for daglig udsendelse (HH:mm), fx '09:00'"
+    },
+    "schedule_days": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Ugedage (0=s\u00f8ndag, 1=mandag ... 6=l\u00f8rdag). Tom = alle dage"
+    },
+    "title": {
+      "type": "string",
+      "description": "Push-notifikationens titel"
+    },
+    "message": {
+      "type": "string",
+      "description": "Push-notifikationens besked"
+    },
+    "url": {
+      "type": "string",
+      "description": "Valgfrit link der \u00e5bnes ved klik"
+    },
+    "target_segment": {
+      "type": "string",
+      "enum": [
+        "all",
+        "moms",
+        "dads"
+      ],
+      "default": "all",
+      "description": "Hvem skal modtage notifikationen"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om reglen er aktiv"
+    },
+    "last_triggered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Senest trigget tidspunkt"
+    }
+  },
+  "required": [
+    "name",
+    "trigger_type",
+    "title",
+    "message"
+  ]
+}
