@@ -22,7 +22,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function Shop() {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const { isDark } = useTheme();
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
@@ -103,7 +103,7 @@ export default function Shop() {
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                   <Input
-                    placeholder={lang === 'en' ? 'Search products...' : 'Søg produkter...'}
+                    placeholder={t.searchProducts}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="pl-9 border-0 rounded-xl"
@@ -177,11 +177,11 @@ export default function Shop() {
             </div>
             <div>
               <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-0.5">
-                {lang === 'en' ? 'Category' : 'Kategori'}
+                {t.categoryLabel}
               </p>
               <h2 className="text-white text-2xl font-semibold">{activeCat?.label}</h2>
               <p className="text-white/80 text-sm mt-0.5">
-                {filteredProducts.length} {lang === 'en' ? 'products' : 'produkter'}
+                {filteredProducts.length} {t.productsLabel}
               </p>
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function Shop() {
             <div className="text-center py-16 flex flex-col items-center gap-3">
               <div className="text-5xl">🛍️</div>
               <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                {lang === 'en' ? 'No products found' : 'Ingen produkter fundet'}
+                {t.noProducts}
               </p>
             </div>
           ) : (
@@ -221,7 +221,7 @@ export default function Shop() {
       </div>
 
       {/* Category Bottom Sheet */}
-      <BottomSheet open={categoryOpen} onOpenChange={setCategoryOpen} title={lang === 'en' ? 'Categories' : 'Kategorier'}>
+      <BottomSheet open={categoryOpen} onOpenChange={setCategoryOpen} title={t.categoriesTitle}>
         <div className="px-5 py-4 space-y-2">
           {categories.map(cat => {
             const isActive = activeCategory === cat.key;
@@ -245,11 +245,11 @@ export default function Shop() {
       </BottomSheet>
 
       {/* Filter & Sort Bottom Sheet */}
-      <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title={lang === 'en' ? 'Filters & Sorting' : 'Filtre & Sortering'}>
+      <BottomSheet open={filterOpen} onOpenChange={setFilterOpen} title={t.filtersAndSorting}>
         <div className="px-5 py-4 space-y-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--color-text-muted)' }}>
-              {lang === 'en' ? 'Sort by' : 'Sorter efter'}
+              {t.sortBy}
             </p>
             <div className="space-y-2">
               {sortOptions.map(opt => (

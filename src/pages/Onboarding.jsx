@@ -8,9 +8,11 @@ import { toast } from 'sonner';
 import { Camera, ArrowRight, ArrowLeft, Baby, MapPin, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Onboarding() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -60,18 +62,18 @@ export default function Onboarding() {
 
   const validateStep0 = () => {
     const newErrors = {};
-    if (!form.profile_label) newErrors.profile_label = 'Vælg om du er mor eller far';
+    if (!form.profile_label) newErrors.profile_label = t.errorChooseRole;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateStep1 = () => {
     const newErrors = {};
-    if (!form.display_name.trim()) newErrors.display_name = 'Indtast dit navn';
-    if (!form.username.trim()) newErrors.username = 'Vælg et brugernavn';
-    else if (form.username.length < 3) newErrors.username = 'Mindst 3 tegn';
-    if (!form.accept_terms) newErrors.accept_terms = 'Du skal acceptere handelsbetingelserne';
-    if (!form.accept_privacy) newErrors.accept_privacy = 'Du skal acceptere privatlivspolitikken';
+    if (!form.display_name.trim()) newErrors.display_name = t.errorEnterName;
+    if (!form.username.trim()) newErrors.username = t.errorChooseUsername;
+    else if (form.username.length < 3) newErrors.username = t.errorUsernameMin;
+    if (!form.accept_terms) newErrors.accept_terms = t.errorAcceptTerms;
+    if (!form.accept_privacy) newErrors.accept_privacy = t.errorAcceptPrivacy;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -104,10 +106,10 @@ export default function Onboarding() {
   };
 
   const STEPS = [
-    { icon: Shield, title: 'Hvem er du?', subtitle: 'Vælg din rolle i familien' },
-    { icon: Shield, title: 'Velkommen til LALATOTO', subtitle: 'Opret din profil og acceptér betingelserne' },
-    { icon: MapPin, title: 'Hvor bor du?', subtitle: 'Find mødre i nærheden af dig' },
-    { icon: Baby, title: 'Om dit barn', subtitle: 'Så kan vi beregne tigerspring for dig' },
+    { icon: Shield, title: t.whoAreYou, subtitle: t.chooseRoleSubtitle },
+    { icon: Shield, title: t.welcomeTitle, subtitle: t.welcomeSubtitle },
+    { icon: MapPin, title: t.whereDoYouLive, subtitle: t.findNearbyMoms },
+    { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
   ];
 
   const current = STEPS[step];
@@ -120,7 +122,7 @@ export default function Onboarding() {
         <DialogContent className="max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>
-              {openModal === 'terms' ? 'Handelsbetingelser' : 'Privatlivspolitik'}
+              {openModal === 'terms' ? t.termsTitle : t.privacyTitle}
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="h-80 pr-4">
@@ -170,13 +172,13 @@ export default function Onboarding() {
             {step === 0 && (
               <motion.div key="s0" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-6">
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                  LALATOTO er bygget til hele familien. Vælg din rolle, så vi kan tilpasse oplevelsen til dig.
+                  {t.lalatotoBuiltForFamily}
                 </p>
 
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'Mor', value: 'mor', emoji: '🤍', desc: 'Community, søvnlog & mere' },
-                    { label: 'Far', value: 'far', emoji: '💙', desc: 'Søvnlog & viden' },
+                    { label: t.mom, value: 'mor', emoji: '🤍', desc: t.momDesc },
+                    { label: t.dad, value: 'far', emoji: '💙', desc: t.dadDesc },
                   ].map(option => {
                     const active = form.profile_label === option.value;
                     return (
@@ -210,9 +212,9 @@ export default function Onboarding() {
 
                 {form.profile_label === 'mor' && (
                   <div className="rounded-2xl p-4 text-sm leading-relaxed" style={{ backgroundColor: 'rgba(200,168,130,0.12)', border: '1px solid rgba(200,168,130,0.25)' }}>
-                    <p className="font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>🌙 Natteensomhed</p>
+                    <p className="font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>{t.nightLonelinessTitle}</p>
                     <p style={{ color: 'var(--color-text-secondary)' }}>
-                      Vores community er et trygt rum kun for mødre — for dem der er vågne om natten og har brug for at vide, at de ikke er alene.
+                      {t.nightLonelinessDesc}
                     </p>
                   </div>
                 )}
@@ -238,17 +240,17 @@ export default function Onboarding() {
                     </label>
                   </div>
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {uploading ? 'Uploader...' : 'Tilføj profilbillede (valgfrit)'}
+                    {uploading ? t.uploadingLabel : t.addProfilePic}
                   </span>
                 </div>
 
                 {/* Navn */}
                 <div className="space-y-1.5">
-                  <Label>Dit navn</Label>
+                  <Label>{t.yourName}</Label>
                   <Input
                     value={form.display_name}
                     onChange={e => setField('display_name', e.target.value)}
-                    placeholder="Navn..."
+                    placeholder={t.namePlaceholder}
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: errors.display_name ? '#ef4444' : 'var(--color-border)' }}
                   />
                   {errors.display_name && <p className="text-xs text-red-500">{errors.display_name}</p>}
@@ -256,7 +258,7 @@ export default function Onboarding() {
 
                 {/* Brugernavn */}
                 <div className="space-y-1.5">
-                  <Label>Brugernavn</Label>
+                  <Label>{t.usernameLabel}</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--color-text-muted)' }}>@</span>
                     <Input
@@ -269,7 +271,7 @@ export default function Onboarding() {
                   </div>
                   {errors.username
                     ? <p className="text-xs text-red-500">{errors.username}</p>
-                    : <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Kun bogstaver, tal og underscore</p>
+                    : <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.usernameHint}</p>
                   }
                 </div>
 
@@ -283,9 +285,9 @@ export default function Onboarding() {
                       className="w-5 h-5 mt-0.5 cursor-pointer flex-shrink-0"
                     />
                     <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Jeg accepterer{' '}
+                      {t.iAcceptTerms}{' '}
                       <button type="button" onClick={() => setOpenModal('terms')} className="underline font-semibold" style={{ color: 'var(--color-accent)' }}>
-                        handelsbetingelserne
+                        {t.termsLinkLabel}
                       </button>
                     </span>
                   </label>
@@ -299,9 +301,9 @@ export default function Onboarding() {
                       className="w-5 h-5 mt-0.5 cursor-pointer flex-shrink-0"
                     />
                     <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Jeg accepterer{' '}
+                      {t.iAcceptTerms}{' '}
                       <button type="button" onClick={() => setOpenModal('privacy')} className="underline font-semibold" style={{ color: 'var(--color-accent)' }}>
-                        privatlivspolitikken
+                        {t.privacyLinkLabel}
                       </button>
                     </span>
                   </label>
@@ -317,15 +319,15 @@ export default function Onboarding() {
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <MapPin className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-accent)' }} />
                   <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Vi bruger din by til at vise dig andre mødre i nærheden — helt frivilligt.
+                    {t.cityDesc}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label>Din by</Label>
+                  <Label>{t.yourCity}</Label>
                   <Input
                     value={form.city}
                     onChange={e => setField('city', e.target.value)}
-                    placeholder="fx København, Aarhus..."
+                    placeholder={t.cityPlaceholder}
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                   />
                 </div>
@@ -338,11 +340,11 @@ export default function Onboarding() {
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <span className="text-4xl">🐯</span>
                   <p className="text-sm mt-3" style={{ color: 'var(--color-text-secondary)' }}>
-                    Vi bruger barnets fødselsdato eller terminsdato til at beregne udviklingsspring og sende dig relevante notifikationer.
+                    {t.calculateWonderWeeksSubtitle}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <Label>Barnets fødselsdato</Label>
+                  <Label>{t.childBirthdateLabel}</Label>
                   <Input
                     type="date"
                     value={form.child_birthdate}
@@ -352,11 +354,11 @@ export default function Onboarding() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>eller</span>
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
                   <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Terminsdato (hvis ikke født endnu)</Label>
+                  <Label>{t.dueDateLabel}</Label>
                   <Input
                     type="date"
                     value={form.child_due_date}
@@ -388,8 +390,8 @@ export default function Onboarding() {
               }
             }}
           >
-            {saving ? 'Gemmer...' : step === 3 ? 'Kom i gang 🎉' : (
-              <span className="flex items-center gap-2">Næste <ArrowRight className="w-5 h-5" /></span>
+            {saving ? t.saving : step === 3 ? t.getStarted : (
+              <span className="flex items-center gap-2">{t.next} <ArrowRight className="w-5 h-5" /></span>
             )}
           </Button>
 
@@ -399,7 +401,7 @@ export default function Onboarding() {
               className="w-full py-3 text-sm flex items-center justify-center gap-2"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              <ArrowLeft className="w-4 h-4" /> Tilbage
+              <ArrowLeft className="w-4 h-4" /> {t.back}
             </button>
           )}
 
@@ -410,7 +412,7 @@ export default function Onboarding() {
               className="w-full py-2 text-sm text-center"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              Spring over
+              {t.skip}
             </button>
           )}
 
@@ -421,7 +423,7 @@ export default function Onboarding() {
               className="w-full py-2 text-sm text-center"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              Spring over
+              {t.skip}
             </button>
           )}
         </div>

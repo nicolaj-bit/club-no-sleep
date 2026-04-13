@@ -172,7 +172,7 @@ export default function Settings() {
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {faqContent
                   ? <div dangerouslySetInnerHTML={{ __html: faqContent.content }} />
-                  : (!helpLoaded ? 'Indlæser...' : 'Ingen FAQ tilgængelig endnu.')}
+                   : (!helpLoaded ? t.loading : t.noFaqAvailable)}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support" className="border-0">
@@ -185,7 +185,7 @@ export default function Settings() {
               <AccordionContent className="px-5 pb-4 text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {supportContent
                   ? <div dangerouslySetInnerHTML={{ __html: supportContent.content }} />
-                  : (!helpLoaded ? 'Indlæser...' : 'Ingen supportinfo tilgængelig endnu.')}
+                    : (!helpLoaded ? t.loading : t.noSupportInfo)}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -234,16 +234,16 @@ export default function Settings() {
       </BottomSheet>
 
       {/* Privacy Bottom Sheet */}
-      <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title="Privatliv">
+      <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title={t.privacy}>
         <div className="px-5 py-4">
           {privacyLoading ? (
-            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.loading}</p>
           ) : privacyContent ? (
             <div className="text-sm leading-relaxed prose prose-sm max-w-none pb-4" style={{ color: 'var(--color-text-primary)' }}
               dangerouslySetInnerHTML={{ __html: privacyContent.content }}
             />
           ) : (
-            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen privatlivspolitik tilgængelig endnu.</p>
+            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.noPrivacyPolicy}</p>
           )}
           <div className="h-2" />
         </div>

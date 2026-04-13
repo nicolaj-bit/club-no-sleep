@@ -40,7 +40,7 @@ export default function Blog() {
   const postTranslations = useTranslation(postsToTranslate);
   const categoryTranslations = useTranslation(categoriesToTranslate);
 
-  const allLabel = lang === 'en' ? 'All' : 'Alle';
+  const allLabel = t.allCategories;
   const activeCategories = categoryRecords.filter(c => c.is_active);
 
   // Helper to get translated text

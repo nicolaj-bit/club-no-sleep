@@ -129,7 +129,7 @@ export default function Profile() {
               {profile.display_name || profile.username}
             </p>
             <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              {profile.profile_label === 'mor' ? 'Mor-profil · Adgang til community' : 'Far-profil · Søvnlog'}
+              {profile.profile_label === 'mor' ? t.momProfileLabel : t.dadProfileLabel}
             </p>
           </div>
         </div>
@@ -193,9 +193,9 @@ export default function Profile() {
                  <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
                </div>
                <div className="space-y-2">
-                 <Label>{lang === 'da' ? 'Køn' : 'Gender'}</Label>
+                 <Label>{t.genderLabel}</Label>
                  <div className="flex gap-3">
-                   {[{ value: 'female', label: lang === 'da' ? 'Kvinde' : 'Female' }, { value: 'male', label: lang === 'da' ? 'Mand' : 'Male' }].map(option => (
+                   {[{ value: 'female', label: t.female }, { value: 'male', label: t.male }].map(option => (
                      <label
                        key={option.value}
                        className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
@@ -220,7 +220,7 @@ export default function Profile() {
                  </div>
                  {profile?.gender && (
                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                     {lang === 'da' ? 'Køn kan ikke ændres efter valg' : 'Gender cannot be changed after selection'}
+                     {t.genderLocked}
                    </p>
                  )}
                </div>
@@ -308,7 +308,7 @@ export default function Profile() {
         >
           <span className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
-            Mine data & privatliv
+            {t.myDataPrivacy}
           </span>
           <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>GDPR</span>
         </Link>
@@ -357,7 +357,7 @@ export default function Profile() {
             >
               <div className="flex items-center justify-between px-6 pt-5 pb-4">
                 <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
-                  {lang === 'da' ? 'Hjælp & kontakt' : 'Help & contact'}
+                 {t.helpAndContact}
                 </span>
                 <button
                   onClick={() => setHelpOpen(false)}
@@ -372,7 +372,7 @@ export default function Profile() {
                 {/* App info */}
                 <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}>
                   <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>
-                    {lang === 'da' ? 'Om appen' : 'About the app'}
+                    {t.aboutApp}
                   </p>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                     {lang === 'da'
@@ -390,7 +390,7 @@ export default function Profile() {
                   <Mail className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
                   <div>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      {lang === 'da' ? 'Skriv til os' : 'Contact us'}
+                      {t.writeToUs}
                     </p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_contact_email || 'hej@lalatoto.dk'}</p>
                     </div>
@@ -405,7 +405,7 @@ export default function Profile() {
                   <Phone className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
                   <div>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      {lang === 'da' ? 'Ring til os' : 'Call us'}
+                      {t.callUs}
                     </p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_phone || ''}</p>
                   </div>
