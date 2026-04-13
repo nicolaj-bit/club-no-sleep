@@ -1,9 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
+
+// Branded LALATOTO AI avatar
+function AIAvatar({ size = 'sm' }) {
+  const dim = size === 'lg' ? 80 : 28;
+  const r1 = size === 'lg' ? 37 : 12.5;
+  const r2 = size === 'lg' ? 28 : 9.5;
+  const headRx = size === 'lg' ? 13 : 4.5;
+  const headRy = size === 'lg' ? 14 : 4.8;
+  const headCy = size === 'lg' ? 26 : 9;
+  const bodyD = size === 'lg'
+    ? 'M14 70 C14 52 22 45 40 45 C58 45 66 52 66 70'
+    : 'M5 26 C5 20 8 17 14 17 C20 17 23 20 23 26';
+  const leafD = size === 'lg'
+    ? 'M34 32 Q40 24 46 32 Q40 40 34 32Z'
+    : 'M12 11.5 Q14 9 16 11.5 Q14 14 12 11.5Z';
+  return (
+    <div
+      style={{
+        width: dim, height: dim, flexShrink: 0,
+        background: 'linear-gradient(145deg, #F3EDE4 0%, #E8D9C8 100%)',
+        borderRadius: size === 'lg' ? 20 : 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        border: '1.5px solid #C8A882',
+        boxShadow: size === 'lg' ? '0 4px 16px rgba(160,120,90,0.18)' : '0 1px 4px rgba(160,120,90,0.15)',
+      }}
+    >
+      <svg viewBox={`0 0 ${dim} ${dim}`} width={dim} height={dim} aria-hidden>
+        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="#C8A882" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
+        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="#C8A882" strokeWidth="0.5" opacity="0.3" />
+        <ellipse cx={dim/2} cy={headCy} rx={headRx} ry={headRy} fill="#A0785A" opacity="0.88" />
+        <path d={bodyD} fill="#A0785A" opacity="0.72" />
+        <path d={leafD} fill="#C8A882" opacity="0.95" />
+        {/* small sparkle dots */}
+        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2.5 : 1} fill="#C8A882" opacity="0.7" />
+        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.5 : 0.7} fill="#C8A882" opacity="0.5" />
+      </svg>
+    </div>
+  );
+}
 
 const SUGGESTIONS = [
   "Hvordan hjælper jeg min baby til at sove bedre?",
@@ -107,9 +146,7 @@ export default function AIChat() {
         </Link>
 
         <div className="flex items-center gap-2 flex-1">
-          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
+          <AIAvatar size="sm" />
           <div>
             <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>Baby & Søvn Ekspert</p>
             <div className="flex items-center gap-1.5">
@@ -126,12 +163,7 @@ export default function AIChat() {
         {/* Empty state */}
         {visibleMessages.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
-            <div
-              className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-lg"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-            >
-              <Sparkles className="w-10 h-10 text-white" />
-            </div>
+            <AIAvatar size="lg" />
             <div>
               <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                 Hej! Jeg er her for dig 🤍
@@ -166,14 +198,7 @@ export default function AIChat() {
           const isUser = msg.role === 'user';
           return (
             <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
-              {!isUser && (
-                <div
-                  className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-white" />
-                </div>
-              )}
+              {!isUser && <AIAvatar size="sm" />}
               <div
                 className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${
                   isUser
@@ -204,12 +229,7 @@ export default function AIChat() {
         {/* Loading dots */}
         {isLoading && (
           <div className="flex items-end gap-2 justify-start">
-            <div
-              className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-            </div>
+            <AIAvatar size="sm" />
             <div
               className="rounded-2xl rounded-bl-md border px-4 py-3 shadow-sm"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
