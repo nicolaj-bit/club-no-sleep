@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronRight } from 'lucide-react';
 import { differenceInWeeks, differenceInDays, isAfter } from 'date-fns';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
-function getAgeDisplay(profile) {
+function getAgeDisplay(profile, t) {
   if (!profile) return null;
 
   const today = new Date();
@@ -17,13 +18,13 @@ function getAgeDisplay(profile) {
     if (weeks < 16) {
       return {
         big: `${weeks}`,
-        unit: `uge${weeks !== 1 ? 'r' : ''}${days > 0 ? ` + ${days}d` : ''}`,
-        subtitle: 'gammel',
+        unit: `${weeks !== 1 ? t.weekPlural : t.weekSingular}${days > 0 ? ` + ${days}d` : ''}`,
+        subtitle: t.old,
         isPregnant: false,
       };
     }
     const months = Math.floor(weeks / 4.33);
-    return { big: `${months}`, unit: `mdr`, subtitle: 'gammel', isPregnant: false };
+    return { big: `${months}`, unit: t.monthsShort, subtitle: t.old, isPregnant: false };
   }
 
   if (dueDate) {
@@ -33,8 +34,10 @@ function getAgeDisplay(profile) {
       const daysRem = daysLeft % 7;
       return {
         big: weeksLeft > 0 ? `${weeksLeft}` : `${daysLeft}`,
-        unit: weeksLeft > 0 ? `uge${weeksLeft !== 1 ? 'r' : ''}${daysRem > 0 ? ` + ${daysRem}d` : ''}` : `dag${daysLeft !== 1 ? 'e' : ''}`,
-        subtitle: 'til termin',
+        unit: weeksLeft > 0
+          ? `${weeksLeft !== 1 ? t.weekPlural : t.weekSingular}${daysRem > 0 ? ` + ${daysRem}d` : ''}`
+          : `${daysLeft !== 1 ? t.dayPlural : t.daySingular}`,
+        subtitle: t.untilDue,
         isPregnant: true,
       };
     }
@@ -44,7 +47,8 @@ function getAgeDisplay(profile) {
 }
 
 export default function ChildDevelopmentCard({ profile }) {
-  const age = getAgeDisplay(profile);
+  const { t } = useLanguage();
+  const age = getAgeDisplay(profile, t);
   if (!age) return null;
 
   return (
@@ -59,7 +63,7 @@ export default function ChildDevelopmentCard({ profile }) {
           <div className="text-4xl leading-none">{age.isPregnant ? '🤰' : '👶'}</div>
           <div className="flex-1 min-w-0">
             <p className="text-white/70 text-xs font-medium uppercase tracking-widest mb-0.5">
-              {age.isPregnant ? 'Termin om' : 'Dit barn er'}
+              {age.isPregnant ? t.dueIn : t.yourChildIs}
             </p>
             <div className="flex items-baseline gap-1.5">
               <span className="text-4xl font-light text-white" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{age.big}</span>

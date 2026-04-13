@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Sparkles } from 'lucide-react';
 import BlogCard from '@/components/blog/BlogCard';
 import { differenceInWeeks, differenceInDays, isAfter } from 'date-fns';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function getContext(profile) {
   if (!profile) return null;
@@ -27,6 +28,7 @@ function getContext(profile) {
 }
 
 export default function AIRelevantPosts({ profile, allPosts }) {
+  const { t } = useLanguage();
   const [relevantPosts, setRelevantPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -79,10 +81,10 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
           <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
             <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
-          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Relevant for dig</h2>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.relevantForYou}</h2>
         </div>
         <Link to={createPageUrl('Blog')} className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
-          Se alle →
+          {t.seeAll}
         </Link>
       </div>
 

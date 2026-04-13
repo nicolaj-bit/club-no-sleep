@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { da, enUS } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2 } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +12,8 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Calendar() {
+  const { t, lang } = useLanguage();
+  const dateLocale = lang === 'en' ? enUS : da;
   const [user, setUser] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
@@ -34,7 +37,7 @@ export default function Calendar() {
       queryClient.invalidateQueries(['calendarEvents', user?.email]);
       setShowForm(false);
       setForm({ title: '', description: '', start_datetime: '', end_datetime: '' });
-      toast.success('Aftale oprettet');
+      toast.success(t.eventCreated);
     }
   });
 
@@ -42,7 +45,7 @@ export default function Calendar() {
     mutationFn: (id) => base44.entities.CalendarEvent.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['calendarEvents', user?.email]);
-      toast.success('Aftale slettet');
+      toast.success(t.eventDeleted);
     }
   });
 
@@ -56,7 +59,7 @@ export default function Calendar() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.start_datetime) {
-      toast.error('Udfyld titel og starttidspunkt');
+      toast.error(t.fillTitleAndTime);
       return;
     }
     createEvent.mutate(form);
@@ -72,7 +75,7 @@ export default function Calendar() {
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="px-5 pt-12 pb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Kalender</h1>
+        <h1 className="text-2xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.calendarTitle}</h1>
         <button
           onClick={prefillTime}
           className="w-9 h-9 rounded-full flex items-center justify-center"
@@ -88,7 +91,7 @@ export default function Calendar() {
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
         <h2 className="text-base font-semibold capitalize" style={{ color: 'var(--color-text-primary)' }}>
-          {format(currentMonth, 'MMMM yyyy', { locale: da })}
+          {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
         </h2>
         <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           <ChevronRight className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
@@ -97,7 +100,7 @@ export default function Calendar() {
 
       {/* Weekday labels */}
       <div className="px-5 grid grid-cols-7 mb-1">
-        {['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].map((d) =>
+        {t.weekdaysShort.map((d) =>
         <div key={d} className="text-center text-xs font-medium py-1" style={{ color: 'var(--color-text-muted)' }}>{d}</div>
         )}
       </div>
@@ -140,15 +143,15 @@ export default function Calendar() {
       <div className="px-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold capitalize" style={{ color: 'var(--color-text-secondary)' }}>
-            {format(selectedDay, "EEEE 'd.' d. MMMM", { locale: da })}
+            {format(selectedDay, lang === 'en' ? 'EEEE, MMMM d' : "EEEE 'd.' d. MMMM", { locale: dateLocale })}
           </h3>
           <button onClick={prefillTime} className="text-xs flex items-center gap-1" style={{ color: 'var(--color-accent)' }}>
-            <Plus className="w-3.5 h-3.5" /> Tilføj
+            <Plus className="w-3.5 h-3.5" /> {t.addEvent}
           </button>
         </div>
 
         {selectedDayEvents.length === 0 ?
-        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>Ingen aftaler denne dag</p> :
+        <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>{t.noEventsToday}</p> :
 
         <div className="space-y-2">
             {selectedDayEvents.map((event) =>
@@ -204,23 +207,23 @@ export default function Calendar() {
             style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Ny aftale</h3>
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.newEvent}</h3>
                 <button onClick={() => setShowForm(false)}>
                   <X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label>Titel *</Label>
+                  <Label>{t.eventTitle}</Label>
                   <Input
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                  placeholder="Fx lægebesøg, vaccination..."
+                  placeholder={t.eventTitlePlaceholder}
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
                 
                 </div>
                 <div className="space-y-1.5">
-                  <Label style={{ color: 'var(--color-text-primary)' }}>Start *</Label>
+                  <Label style={{ color: 'var(--color-text-primary)' }}>{t.eventStart}</Label>
                   <Input
                   type="datetime-local"
                   value={form.start_datetime}
@@ -229,7 +232,7 @@ export default function Calendar() {
                 
                 </div>
                 <div className="space-y-1.5">
-                  <Label style={{ color: 'var(--color-text-primary)' }}>Slut (valgfrit)</Label>
+                  <Label style={{ color: 'var(--color-text-primary)' }}>{t.eventEnd}</Label>
                   <Input
                   type="datetime-local"
                   value={form.end_datetime}
@@ -238,11 +241,11 @@ export default function Calendar() {
                 
                 </div>
                 <div className="space-y-1.5">
-                  <Label style={{ color: 'var(--color-text-primary)' }}>Beskrivelse (valgfrit)</Label>
-                  <Input
+                  <Label style={{ color: 'var(--color-text-primary)' }}>{t.eventDescription}</Label>
+                   <Input
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  placeholder="Evt. adresse eller noter..."
+                  placeholder={t.eventDescPlaceholder}
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
                 
                 </div>
@@ -252,11 +255,11 @@ export default function Calendar() {
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
                 disabled={createEvent.isPending}>
                 
-                  {createEvent.isPending ? 'Gemmer...' : 'Gem aftale'}
+                  {createEvent.isPending ? t.saving : t.saveEvent}
                 </Button>
               </form>
               <p className="text-xs text-center mt-3" style={{ color: 'var(--color-text-muted)' }}>
-                📲 Du får besked dagen før og 30 min før aftalen
+                {t.calendarReminderNote}
               </p>
             </motion.div>
           </>

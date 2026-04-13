@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronDown, ChevronUp, Sparkles, Clock, ArrowRight } from 'lucide-react';
 import { useWonderWeekEmojis } from './useWonderWeekEmojis';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
+  const { t } = useLanguage();
   const [expanded, setExpanded] = useState(false);
   const emojiMap = useWonderWeekEmojis();
   const emoji = emojiMap[wonderWeek?.number] || wonderWeek?.emoji;
@@ -41,12 +43,12 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
                 style={{ backgroundColor: wonderWeek.color }}
               >
                 <Sparkles className="w-3 h-3" />
-                TIGERSPRING {wonderWeek.number} · AKTIV NU
+                {t.wonderWeekActiveLabel} {wonderWeek.number} · {t.wonderWeekActiveNow}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
                 <Clock className="w-3 h-3" />
-                Næste spring om {wonderWeek.weeksUntil} {wonderWeek.weeksUntil === 1 ? 'uge' : 'uger'}
+                {t.nextLeapIn} {wonderWeek.weeksUntil} {wonderWeek.weeksUntil === 1 ? t.weekSingular : t.weekPlural}
               </span>
             )}
           </div>
@@ -73,8 +75,8 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
           {isActive && wonderWeek.weeksLeft !== undefined && (
             <div className="mt-4">
               <div className="flex justify-between text-xs mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
-                <span>Fremgang</span>
-                <span>{wonderWeek.weeksLeft > 0 ? `ca. ${wonderWeek.weeksLeft} uge(r) tilbage` : 'Næsten forbi'}</span>
+                <span>{t.progress}</span>
+                <span>{wonderWeek.weeksLeft > 0 ? `${t.approx} ${wonderWeek.weeksLeft} ${t.weeksLeft}` : t.almostOver}</span>
               </div>
               <div className="h-1 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <div
@@ -96,7 +98,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
               className="mt-4 w-full flex items-center justify-center gap-1.5 text-sm font-medium py-2.5 rounded-xl transition-all"
               style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
             >
-              {expanded ? 'Skjul detaljer' : 'Se tegn & tips'}
+              {expanded ? t.hideDetails : t.seeSigns}
               {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
           )}
@@ -117,7 +119,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
               {/* Signs */}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
-                  Typiske tegn
+                  {t.typicalSigns}
                 </p>
                 <ul className="space-y-1.5">
                   {wonderWeek.signs.map((sign, i) => (
@@ -132,7 +134,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
               {/* Tips */}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-text-muted)' }}>
-                  Tips til dig
+                  {t.tipsForYou}
                 </p>
                 <ul className="space-y-1.5">
                   {wonderWeek.tips.map((tip, i) => (
@@ -150,7 +152,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
                 className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium"
                 style={{ backgroundColor: wonderWeek.color, color: '#fff' }}
               >
-                Læs mere om tigerspring
+                {t.readMoreWonderWeeks}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -159,7 +161,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
           {/* Upcoming teaser */}
           {isUpcoming && (
             <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              Bliv klar – dit barn er snart klar til sit næste store spring 🌱
+              {t.getReadyLeap}
             </p>
           )}
         </div>

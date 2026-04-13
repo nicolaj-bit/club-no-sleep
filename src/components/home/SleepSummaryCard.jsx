@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Moon } from 'lucide-react';
 import { format, subDays } from 'date-fns';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function formatDuration(bedtime, wakeTime) {
   if (!bedtime || !wakeTime) return null;
@@ -16,6 +17,7 @@ function formatDuration(bedtime, wakeTime) {
 }
 
 export default function SleepSummaryCard({ userEmail }) {
+  const { t } = useLanguage();
   const [log, setLog] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,29 +47,29 @@ export default function SleepSummaryCard({ userEmail }) {
         <div className="mb-3">
           <Moon className="w-5 h-5 text-white/80" />
         </div>
-        <p className="text-white/60 text-xs font-medium mb-1">Søvn i nat</p>
+        <p className="text-white/60 text-xs font-medium mb-1">{t.sleepLastNight}</p>
         {loading ? (
           <div className="h-7 w-14 rounded-lg animate-pulse bg-white/20" />
         ) : dur ? (
           <>
             <div className="flex items-baseline gap-0.5">
               <span className="text-2xl font-bold text-white">{dur.hours}</span>
-              <span className="text-white/70 text-sm">t</span>
+              <span className="text-white/70 text-sm">{t.hoursShort}</span>
               {dur.rem > 0 && (
                 <>
                   <span className="text-2xl font-bold text-white ml-1">{dur.rem}</span>
-                  <span className="text-white/70 text-sm">m</span>
+                  <span className="text-white/70 text-sm">{t.minutesShort}</span>
                 </>
               )}
             </div>
             {wakings !== null && (
               <p className="text-white/50 text-xs mt-1">
-                {wakings} {wakings === 1 ? 'opvågning' : 'opvågninger'}
+                {wakings} {wakings === 1 ? t.wakingSingular : t.wakingPlural}
               </p>
             )}
           </>
         ) : (
-          <p className="text-white/60 text-sm mt-1">Log søvn →</p>
+          <p className="text-white/60 text-sm mt-1">{t.logSleepCta}</p>
         )}
       </div>
     </Link>

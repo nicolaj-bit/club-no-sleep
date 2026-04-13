@@ -321,6 +321,74 @@ const translations = {
     errorAcceptTerms: 'Du skal acceptere handelsbetingelserne',
     errorAcceptPrivacy: 'Du skal acceptere privatlivspolitikken',
     usernameOnlyChars: 'Kun bogstaver, tal og underscore',
+
+    // ChildDevelopmentCard
+    dueIn: 'Termin om',
+    yourChildIs: 'Dit barn er',
+    old: 'gammel',
+    untilDue: 'til termin',
+    weekSingular: 'uge',
+    weekPlural: 'uger',
+    daySingular: 'dag',
+    dayPlural: 'dage',
+    monthsShort: 'mdr',
+    hoursShort: 't',
+    minutesShort: 'm',
+
+    // SleepSummaryCard
+    sleepLastNight: 'Søvn i nat',
+    wakingSingular: 'opvågning',
+    wakingPlural: 'opvågninger',
+    logSleepCta: 'Log søvn →',
+
+    // UpcomingEventCard
+    nextAppointment: 'Næste aftale',
+    today: 'I dag',
+    tomorrow: 'I morgen',
+    addAppointmentCta: 'Tilføj aftale →',
+
+    // SleepAdviceCard
+    sleepAdviceTitle: 'Søvnråd fra eksperten',
+    seeSleepLog: 'Se søvnlog →',
+    basedOnLogs: 'Baseret på dine seneste',
+    logsLabel: 'logs',
+
+    // AIRelevantPosts
+    relevantForYou: 'Relevant for dig',
+    seeAll: 'Se alle →',
+
+    // WonderWeekCard
+    wonderWeekActiveLabel: 'TIGERSPRING',
+    wonderWeekActiveNow: 'AKTIV NU',
+    nextLeapIn: 'Næste spring om',
+    progress: 'Fremgang',
+    weeksLeft: 'uge(r) tilbage',
+    almostOver: 'Næsten forbi',
+    approx: 'ca.',
+    hideDetails: 'Skjul detaljer',
+    seeSigns: 'Se tegn & tips',
+    typicalSigns: 'Typiske tegn',
+    tipsForYou: 'Tips til dig',
+    readMoreWonderWeeks: 'Læs mere om tigerspring',
+    getReadyLeap: 'Bliv klar – dit barn er snart klar til sit næste store spring 🌱',
+
+    // Calendar
+    calendarTitle: 'Kalender',
+    eventCreated: 'Aftale oprettet',
+    eventDeleted: 'Aftale slettet',
+    fillTitleAndTime: 'Udfyld titel og starttidspunkt',
+    noEventsToday: 'Ingen aftaler denne dag',
+    addEvent: 'Tilføj',
+    newEvent: 'Ny aftale',
+    eventTitle: 'Titel *',
+    eventStart: 'Start *',
+    eventEnd: 'Slut (valgfrit)',
+    eventDescription: 'Beskrivelse (valgfrit)',
+    saveEvent: 'Gem aftale',
+    calendarReminderNote: '📲 Du får besked dagen før og 30 min før aftalen',
+    eventTitlePlaceholder: 'Fx lægebesøg, vaccination...',
+    eventDescPlaceholder: 'Evt. adresse eller noter...',
+    weekdaysShort: ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'],
   },
 
   en: {
@@ -643,6 +711,74 @@ const translations = {
     errorAcceptTerms: 'You must accept the terms of service',
     errorAcceptPrivacy: 'You must accept the privacy policy',
     usernameOnlyChars: 'Only letters, numbers and underscores',
+
+    // ChildDevelopmentCard
+    dueIn: 'Due in',
+    yourChildIs: 'Your child is',
+    old: 'old',
+    untilDue: 'until due date',
+    weekSingular: 'week',
+    weekPlural: 'weeks',
+    daySingular: 'day',
+    dayPlural: 'days',
+    monthsShort: 'mo',
+    hoursShort: 'h',
+    minutesShort: 'm',
+
+    // SleepSummaryCard
+    sleepLastNight: 'Sleep last night',
+    wakingSingular: 'waking',
+    wakingPlural: 'wakings',
+    logSleepCta: 'Log sleep →',
+
+    // UpcomingEventCard
+    nextAppointment: 'Next appointment',
+    today: 'Today',
+    tomorrow: 'Tomorrow',
+    addAppointmentCta: 'Add appointment →',
+
+    // SleepAdviceCard
+    sleepAdviceTitle: 'Sleep advice from the expert',
+    seeSleepLog: 'See sleep log →',
+    basedOnLogs: 'Based on your last',
+    logsLabel: 'logs',
+
+    // AIRelevantPosts
+    relevantForYou: 'Relevant for you',
+    seeAll: 'See all →',
+
+    // WonderWeekCard
+    wonderWeekActiveLabel: 'WONDER WEEK',
+    wonderWeekActiveNow: 'ACTIVE NOW',
+    nextLeapIn: 'Next leap in',
+    progress: 'Progress',
+    weeksLeft: 'week(s) left',
+    almostOver: 'Almost over',
+    approx: 'approx.',
+    hideDetails: 'Hide details',
+    seeSigns: 'See signs & tips',
+    typicalSigns: 'Typical signs',
+    tipsForYou: 'Tips for you',
+    readMoreWonderWeeks: 'Read more about wonder weeks',
+    getReadyLeap: 'Get ready – your child is almost ready for their next big leap 🌱',
+
+    // Calendar
+    calendarTitle: 'Calendar',
+    eventCreated: 'Appointment created',
+    eventDeleted: 'Appointment deleted',
+    fillTitleAndTime: 'Fill in title and start time',
+    noEventsToday: 'No appointments today',
+    addEvent: 'Add',
+    newEvent: 'New appointment',
+    eventTitle: 'Title *',
+    eventStart: 'Start *',
+    eventEnd: 'End (optional)',
+    eventDescription: 'Description (optional)',
+    saveEvent: 'Save appointment',
+    calendarReminderNote: '📲 You will be notified the day before and 30 min before the appointment',
+    eventTitlePlaceholder: 'e.g. doctor visit, vaccination...',
+    eventDescPlaceholder: 'Optional address or notes...',
+    weekdaysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   },
 };
 

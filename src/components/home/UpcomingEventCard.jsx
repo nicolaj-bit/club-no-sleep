@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { CalendarDays } from 'lucide-react';
 import { format, isToday, isTomorrow, parseISO } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { da, enUS } from 'date-fns/locale';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function UpcomingEventCard({ userEmail }) {
+  const { t, lang } = useLanguage();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,9 +27,9 @@ export default function UpcomingEventCard({ userEmail }) {
 
   function getDateLabel(dt) {
     const d = parseISO(dt);
-    if (isToday(d)) return 'I dag';
-    if (isTomorrow(d)) return 'I morgen';
-    return format(d, 'EEE d. MMM', { locale: da });
+    if (isToday(d)) return t.today;
+    if (isTomorrow(d)) return t.tomorrow;
+    return format(d, lang === 'en' ? 'EEE MMM d' : 'EEE d. MMM', { locale: lang === 'en' ? enUS : da });
   }
 
   return (
@@ -40,7 +42,7 @@ export default function UpcomingEventCard({ userEmail }) {
         <div className="mb-3">
           <CalendarDays className="w-5 h-5 text-white/80" />
         </div>
-        <p className="text-white/60 text-xs font-medium mb-1">Næste aftale</p>
+        <p className="text-white/60 text-xs font-medium mb-1">{t.nextAppointment}</p>
         {loading ? (
           <div className="h-7 w-20 rounded-lg animate-pulse bg-white/20" />
         ) : event ? (
@@ -51,7 +53,7 @@ export default function UpcomingEventCard({ userEmail }) {
             </p>
           </>
         ) : (
-          <p className="text-white/60 text-sm mt-1">Tilføj aftale →</p>
+          <p className="text-white/60 text-sm mt-1">{t.addAppointmentCta}</p>
         )}
       </div>
     </Link>

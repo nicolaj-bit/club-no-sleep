@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { Loader2, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function SleepAdviceCard({ userEmail }) {
+  const { t } = useLanguage();
   const [advice, setAdvice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [logsCount, setLogsCount] = useState(0);
@@ -38,10 +40,10 @@ export default function SleepAdviceCard({ userEmail }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-base">🌙</span>
-          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Søvnråd fra eksperten</h2>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.sleepAdviceTitle}</h2>
         </div>
         <Link to={createPageUrl('SleepLog')} className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
-          Se søvnlog →
+          {t.seeSleepLog}
         </Link>
       </div>
 
@@ -58,7 +60,7 @@ export default function SleepAdviceCard({ userEmail }) {
             {advice.message}
           </p>
           <div className="flex items-center gap-1 mt-3 relative z-10">
-            <span className="text-white/40 text-xs">Baseret på dine seneste {logsCount} logs</span>
+            <span className="text-white/40 text-xs">{t.basedOnLogs} {logsCount} {t.logsLabel}</span>
             <ChevronRight className="w-3 h-3 text-white/30" />
           </div>
         </div>
