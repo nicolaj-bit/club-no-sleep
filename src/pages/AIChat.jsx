@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Pencil, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
 
 // Branded LALATOTO AI avatar
-function AIAvatar({ size = 'sm' }) {
+function AIAvatar({ size = 'sm', iconUrl = null }) {
+  if (iconUrl) {
+    const dim = size === 'lg' ? 80 : 28;
+    const radius = size === 'lg' ? 20 : 10;
+    return (
+      <img
+        src={iconUrl}
+        alt="AI"
+        style={{ width: dim, height: dim, borderRadius: radius, objectFit: 'cover', flexShrink: 0, border: '1.5px solid #C8A882' }}
+      />
+    );
+  }
   const dim = size === 'lg' ? 80 : 28;
   const r1 = size === 'lg' ? 37 : 12.5;
   const r2 = size === 'lg' ? 28 : 9.5;
@@ -36,7 +47,6 @@ function AIAvatar({ size = 'sm' }) {
         <ellipse cx={dim/2} cy={headCy} rx={headRx} ry={headRy} fill="#A0785A" opacity="0.88" />
         <path d={bodyD} fill="#A0785A" opacity="0.72" />
         <path d={leafD} fill="#C8A882" opacity="0.95" />
-        {/* small sparkle dots */}
         <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2.5 : 1} fill="#C8A882" opacity="0.7" />
         <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.5 : 0.7} fill="#C8A882" opacity="0.5" />
       </svg>
@@ -55,10 +65,43 @@ export default function AIChat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [iconUrl, setIconUrl] = useState(null);
+  const [iconConfig, setIconConfig] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
   const urlParams = new URLSearchParams(window.location.search);
   const withLogs = urlParams.get('with_logs') === '1';
+
+  useEffect(() => {
+    // Load AI icon from AppConfig
+    base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {
+      if (results?.[0]?.icon_url) {
+        setIconUrl(results[0].icon_url);
+        setIconConfig(results[0]);
+      } else if (results?.[0]) {
+        setIconConfig(results[0]);
+      }
+    }).catch(() => {});
+    // Check admin
+    base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+  }, []);
+
+  const handleIconUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    if (iconConfig?.id) {
+      await base44.entities.AppConfig.update(iconConfig.id, { icon_url: file_url });
+    } else {
+      const created = await base44.entities.AppConfig.create({ key: 'ai_chat_icon', icon_url: file_url });
+      setIconConfig(created);
+    }
+    setIconUrl(file_url);
+    setUploading(false);
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -146,7 +189,15 @@ export default function AIChat() {
         </Link>
 
         <div className="flex items-center gap-2 flex-1">
-          <AIAvatar size="sm" />
+          <div className="relative">
+            <AIAvatar size="sm" iconUrl={iconUrl} />
+            {isAdmin && (
+              <label className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow">
+                <Pencil className="w-2.5 h-2.5" style={{ color: '#8B5E3C' }} />
+                <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleIconUpload} />
+              </label>
+            )}
+          </div>
           <div>
             <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>Baby & Søvn Ekspert</p>
             <div className="flex items-center gap-1.5">
@@ -163,7 +214,22 @@ export default function AIChat() {
         {/* Empty state */}
         {visibleMessages.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
-            <AIAvatar size="lg" />
+            <div className="relative">
+              <AIAvatar size="lg" iconUrl={iconUrl} />
+              {isAdmin && (
+                <label
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                >
+                  {uploading ? (
+                    <div className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Upload className="w-3.5 h-3.5 text-white" />
+                  )}
+                  <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleIconUpload} />
+                </label>
+              )}
+            </div>
             <div>
               <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                 Hej! Jeg er her for dig 🤍
@@ -198,7 +264,7 @@ export default function AIChat() {
           const isUser = msg.role === 'user';
           return (
             <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
-              {!isUser && <AIAvatar size="sm" />}
+              {!isUser && <AIAvatar size="sm" iconUrl={iconUrl} />}
               <div
                 className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${
                   isUser
@@ -229,7 +295,7 @@ export default function AIChat() {
         {/* Loading dots */}
         {isLoading && (
           <div className="flex items-end gap-2 justify-start">
-            <AIAvatar size="sm" />
+            <AIAvatar size="sm" iconUrl={iconUrl} />
             <div
               className="rounded-2xl rounded-bl-md border px-4 py-3 shadow-sm"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}

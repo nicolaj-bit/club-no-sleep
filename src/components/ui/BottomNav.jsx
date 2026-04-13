@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
-import { Home, Sparkles, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { Home, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -23,10 +24,17 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [aiIconUrl, setAiIconUrl] = useState(null);
   const { saveTabPath, getTabPath, clearTabPath } = useTabState();
   const { isDark } = useTheme();
   const { t } = useLanguage();
   const menuItems = menuItemsConfig.map(item => ({ ...item, name: t[item.key] }));
+
+  useEffect(() => {
+    base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {
+      if (results?.[0]?.icon_url) setAiIconUrl(results[0].icon_url);
+    }).catch(() => {});
+  }, []);
 
   const isActive = (page) => {
     const url = createPageUrl(page);
@@ -183,10 +191,18 @@ export default function BottomNav() {
 
           <Link to={createPageUrl('AIChat')} className="flex flex-col items-center gap-0.5">
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
+              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden"
+              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
             >
-              <Sparkles className="w-5 h-5 text-white" />
+              {aiIconUrl ? (
+                <img src={aiIconUrl} alt="AI" className="w-full h-full object-cover" />
+              ) : (
+                <svg viewBox="0 0 40 44" width="22" height="24" fill="#FFFFFF" aria-hidden>
+                  <ellipse cx="20" cy="10" rx="7.5" ry="8" opacity="0.9" />
+                  <path d="M4 38 C4 28 8 24 20 24 C32 24 36 28 36 38" opacity="0.75" />
+                  <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="#F3EDE4" opacity="0.9" />
+                </svg>
+              )}
             </div>
           </Link>
 
