@@ -4,6 +4,7 @@ import { ArrowLeft, Send, Pencil, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 // Branded LALATOTO AI avatar
 function AIAvatar({ size = 'sm', iconUrl = null }) {
@@ -54,13 +55,10 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
   );
 }
 
-const SUGGESTIONS = [
-  "Hvordan hjælper jeg min baby til at sove bedre?",
-  "Hvad er søvnregression?",
-  "Min baby sover kun 20 min ad gangen — hjælp!",
-];
+
 
 export default function AIChat() {
+  const { t } = useLanguage();
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -183,7 +181,7 @@ export default function AIChat() {
           to={createPageUrl('Home')}
           className="p-1.5 rounded-full cursor-pointer"
           style={{ color: 'rgba(255,255,255,0.9)' }}
-          aria-label="Gå tilbage"
+          aria-label={t.backLabel}
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -199,10 +197,10 @@ export default function AIChat() {
             )}
           </div>
           <div>
-            <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>Baby & Søvn Ekspert</p>
+            <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>{t.aiChatTitle}</p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block" />
-              <p className="text-xs text-white/70">AI-assistent · Online</p>
+              <p className="text-xs text-white/70">{t.aiOnline}</p>
             </div>
           </div>
         </div>
@@ -232,16 +230,16 @@ export default function AIChat() {
             </div>
             <div>
               <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                Hej! Jeg er her for dig 🤍
+                {t.aiGreeting}
               </h2>
               <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
-                Ekspert i babysøvn, amning og barnets udvikling. Spørg mig om alt!
+                {t.aiSubtitle}
               </p>
             </div>
 
             {/* Suggestion chips */}
             <div className="w-full max-w-sm space-y-2 mt-2">
-              {SUGGESTIONS.map(q => (
+              {[t.aiSuggestion1, t.aiSuggestion2, t.aiSuggestion3].map(q => (
                 <button
                   key={q}
                   onClick={() => setInput(q)}
@@ -333,7 +331,7 @@ export default function AIChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Skriv dit spørgsmål…"
+            placeholder={t.aiPlaceholder}
             rows={1}
             className="flex-1 bg-transparent text-sm resize-none outline-none"
             style={{
@@ -348,13 +346,13 @@ export default function AIChat() {
             disabled={!input.trim() || isLoading}
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity cursor-pointer disabled:opacity-30"
             style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-            aria-label="Send besked"
+            aria-label={t.sendLabel}
           >
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
         <p className="text-center text-xs mt-2 px-4" style={{ color: 'var(--color-text-muted)' }}>
-          AI-assistenten kan lave fejl og erstatter ikke lægefaglig rådgivning.
+          {t.aiDisclaimer}
         </p>
       </div>
     </div>

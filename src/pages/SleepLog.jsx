@@ -7,26 +7,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
-import { da } from 'date-fns/locale';
+import { da, enUS } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
-const SLEEP_METHODS = [
-  { value: 'selv', label: 'Selv', emoji: '🧸' },
-  { value: 'amning', label: 'Amning', emoji: '🤱' },
-  { value: 'flaske', label: 'Flaske', emoji: '🍼' },
-  { value: 'vugning', label: 'Vugning', emoji: '🎵' },
-  { value: 'barnevogn', label: 'Barnevogn', emoji: '🚗' },
-  { value: 'med_forælder', label: 'Med forælder', emoji: '🫶' },
-];
 
-const MOODS = [
-  { value: 'frisk', label: 'Frisk', emoji: '😊' },
-  { value: 'lidt_træt', label: 'Lidt træt', emoji: '😴' },
-  { value: 'meget_træt', label: 'Meget træt', emoji: '😪' },
-  { value: 'overtræt', label: 'Overtræt', emoji: '😩' },
-];
-
-const WAKING_METHODS = ['Amning', 'Flaske', 'Vugning', 'Sig i søvn', 'Barnevogn', 'Sov selv'];
 
 function TimeInput({ label, value, onChange }) {
   return (
@@ -86,6 +71,24 @@ export default function SleepLog() {
   const queryClient = useQueryClient();
   const headerVisible = useScrollDirection();
   const { activeProfile } = useActiveProfile();
+  const { t, lang } = useLanguage();
+  const dateLocale = lang === 'en' ? enUS : da;
+
+  const SLEEP_METHODS = [
+    { value: 'selv', label: t.sleepMethodSelf, emoji: '🧸' },
+    { value: 'amning', label: t.sleepMethodNursing, emoji: '🤱' },
+    { value: 'flaske', label: t.sleepMethodBottle, emoji: '🍼' },
+    { value: 'vugning', label: t.sleepMethodRocking, emoji: '🎵' },
+    { value: 'barnevogn', label: t.sleepMethodPram, emoji: '🚗' },
+    { value: 'med_forælder', label: t.sleepMethodParent, emoji: '🫶' },
+  ];
+  const MOODS = [
+    { value: 'frisk', label: t.moodFresh, emoji: '😊' },
+    { value: 'lidt_træt', label: t.moodLittleTired, emoji: '😴' },
+    { value: 'meget_træt', label: t.moodVeryTired, emoji: '😪' },
+    { value: 'overtræt', label: t.moodOvertired, emoji: '😩' },
+  ];
+  const WAKING_METHODS = [t.wakingMethodNursing, t.wakingMethodBottle, t.wakingMethodRocking, t.wakingMethodSing, t.wakingMethodPram, t.wakingMethodSelf];
   const [user, setUser] = useState(null);
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
@@ -180,7 +183,7 @@ export default function SleepLog() {
     onSuccess: () => {
       queryClient.invalidateQueries(['sleeplog-today']);
       queryClient.invalidateQueries(['sleeplog-history']);
-      toast.success('Søvnlog gemt ✓');
+      toast.success(t.sleepLogSaved);
     }
   });
 
@@ -190,7 +193,7 @@ export default function SleepLog() {
       const res = await base44.functions.invoke('analyzeSleepLogs', {});
       setAiCard(res.data);
     } catch (e) {
-      setAiCard({ title: '💛 En kærlig hilsen', message: 'Kunne ikke hente analyse lige nu. Prøv igen om lidt — du gør det godt!', pattern: null });
+      setAiCard({ title: t.aiErrorTitle, message: t.aiErrorMsg, pattern: null });
     }
   };
 
@@ -231,7 +234,7 @@ export default function SleepLog() {
           <Link to={createPageUrl('Home')} className="p-1.5 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
             <ChevronLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>Søvnlog</h1>
+          <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>{t.sleepLogTitle}</h1>
         </div>
         <button
           onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
@@ -239,12 +242,12 @@ export default function SleepLog() {
           style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
         >
           <BookOpen className="w-3.5 h-3.5" />
-          {view === 'log' ? 'Historik' : 'Log i dag'}
+          {view === 'log' ? t.historyBtn : t.logTodayBtn}
         </button>
       </div>
 
       {view === 'history' ? (
-        <HistoryView history={history} />
+        <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />
       ) : (
         <div className="px-4 py-5 space-y-4 max-w-lg mx-auto">
 
@@ -255,13 +258,13 @@ export default function SleepLog() {
           >
             <div className="absolute top-0 right-0 w-28 h-28 rounded-full opacity-10 bg-white -translate-y-8 translate-x-8" />
             <div className="absolute bottom-0 left-0 w-16 h-16 rounded-full opacity-10 bg-white translate-y-5 -translate-x-5" />
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-1">Dagens log</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-1">{t.todayLog}</p>
             <p className="text-white font-semibold text-lg relative z-10">
-              {format(new Date(form.date), "EEEE 'd.' d. MMMM", { locale: da })}
+              {format(new Date(form.date), lang === 'en' ? "EEEE, MMMM d" : "EEEE 'd.' d. MMMM", { locale: dateLocale })}
             </p>
             {nightMinutes !== null && (
               <p className="text-white/80 text-sm mt-1 relative z-10">
-                🌙 {Math.floor(nightMinutes / 60)}t {nightMinutes % 60}m natsøvn
+                🌙 {Math.floor(nightMinutes / 60)}h {nightMinutes % 60}m {t.nightNap}
               </p>
             )}
           </div>
@@ -270,7 +273,7 @@ export default function SleepLog() {
           <Card>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Dato</label>
+                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.date}</label>
                 <input
                   type="date"
                   value={form.date}
@@ -280,12 +283,12 @@ export default function SleepLog() {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Alder (måneder)</label>
+                <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.ageMonths}</label>
                 <input
                   type="number"
                   value={form.child_age_months}
                   onChange={(e) => setForm(f => ({ ...f, child_age_months: e.target.value }))}
-                  placeholder="f.eks. 8"
+                  placeholder={t.agePlaceholder}
                   className="px-3 py-2.5 rounded-xl border text-sm focus:outline-none"
                   style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                 />
@@ -295,20 +298,20 @@ export default function SleepLog() {
 
           {/* Night sleep */}
           <Card>
-            <SectionTitle icon={<Moon className="w-4 h-4" />} title="Natsøvn" />
+            <SectionTitle icon={<Moon className="w-4 h-4" />} title={t.nightSleep} />
             <div className="grid grid-cols-3 gap-3">
-              <TimeInput label="Sengetid" value={form.bedtime} onChange={(v) => setForm(f => ({ ...f, bedtime: v }))} />
-              <TimeInput label="Faldt i søvn" value={form.sleep_time} onChange={(v) => setForm(f => ({ ...f, sleep_time: v }))} />
-              <TimeInput label="Vågnede" value={form.wake_time} onChange={(v) => setForm(f => ({ ...f, wake_time: v }))} />
+              <TimeInput label={t.bedtime} value={form.bedtime} onChange={(v) => setForm(f => ({ ...f, bedtime: v }))} />
+              <TimeInput label={t.fellAsleep} value={form.sleep_time} onChange={(v) => setForm(f => ({ ...f, sleep_time: v }))} />
+              <TimeInput label={t.wokeUp} value={form.wake_time} onChange={(v) => setForm(f => ({ ...f, wake_time: v }))} />
             </div>
             {(nightMinutes !== null || fallAsleepMinutes !== null) && (
               <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 {nightMinutes !== null && (
-                  <Chip label={`Nat: ${Math.floor(nightMinutes / 60)}t ${nightMinutes % 60}m`} color="blue" />
+                  <Chip label={`🌙 ${Math.floor(nightMinutes / 60)}h ${nightMinutes % 60}m`} color="blue" />
                 )}
                 {fallAsleepMinutes !== null && (
                   <Chip
-                    label={`Sovnet på: ${fallAsleepMinutes} min`}
+                    label={`${t.felAsleepIn} ${fallAsleepMinutes} min`}
                     color={fallAsleepMinutes > 30 ? 'red' : fallAsleepMinutes > 15 ? 'yellow' : 'green'}
                   />
                 )}
@@ -318,7 +321,7 @@ export default function SleepLog() {
 
           {/* Night wakings */}
           <Card>
-            <SectionTitle icon={<Moon className="w-4 h-4 opacity-40" />} title="Natlige opvågninger" />
+            <SectionTitle icon={<Moon className="w-4 h-4 opacity-40" />} title={t.nightWakings} />
             <div className="space-y-2">
               {form.night_wakings.map((w, i) => (
                 <div key={i} className="flex gap-2 items-center">
@@ -370,13 +373,13 @@ export default function SleepLog() {
               className="flex items-center gap-2 text-sm mt-2"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              <Plus className="w-4 h-4" /> Tilføj opvågning
+              <Plus className="w-4 h-4" /> {t.addWaking}
             </button>
           </Card>
 
           {/* Naps */}
           <Card>
-            <SectionTitle icon={<Sun className="w-4 h-4" />} title="Lure" />
+            <SectionTitle icon={<Sun className="w-4 h-4" />} title={t.naps} />
             <div className="space-y-2">
               {form.naps.map((nap, i) => {
                 let mins = null;
@@ -388,7 +391,7 @@ export default function SleepLog() {
                 }
                 return (
                   <div key={i} className="flex gap-2 items-center">
-                    <span className="text-xs w-10 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>Lur {i + 1}</span>
+                    <span className="text-xs w-10 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }}>{t.nap} {i + 1}</span>
                     <input
                       type="time"
                       value={nap.start}
@@ -428,15 +431,15 @@ export default function SleepLog() {
                 onClick={() => setForm(f => ({ ...f, naps: [...f.naps, { start: '', end: '' }] }))}
                 className="flex items-center gap-2 text-sm mt-2"
                 style={{ color: 'var(--color-text-muted)' }}
-              >
-                <Plus className="w-4 h-4" /> Tilføj lur
+                >
+                <Plus className="w-4 h-4" /> {t.addNap}
               </button>
             )}
           </Card>
 
           {/* Sleep method */}
           <Card>
-            <SectionTitle icon={<Clock className="w-4 h-4" />} title="Hvordan faldt barnet i søvn?" />
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
             <div className="flex flex-wrap gap-2">
               {SLEEP_METHODS.map(m => {
                 const active = form.sleep_method === m.value;
@@ -458,7 +461,7 @@ export default function SleepLog() {
 
           {/* Mood */}
           <Card>
-            <SectionTitle icon={<span className="text-sm">😊</span>} title="Humør før sengetid" />
+            <SectionTitle icon={<span className="text-sm">😊</span>} title={t.moodBeforeBed} />
             <div className="flex flex-wrap gap-2">
               {MOODS.map(m => {
                 const active = form.bedtime_mood === m.value;
@@ -480,11 +483,11 @@ export default function SleepLog() {
 
           {/* Notes */}
           <Card>
-            <SectionTitle icon={<span className="text-sm">📝</span>} title="Noter" />
+            <SectionTitle icon={<span className="text-sm">📝</span>} title={t.notes} />
             <textarea
               value={form.parent_note}
               onChange={(e) => setForm(f => ({ ...f, parent_note: e.target.value }))}
-              placeholder="Hvad skete der i dag? Urolig aften? Ny tand?"
+              placeholder={t.notesPlaceholder}
               rows={3}
               className="w-full px-3 py-2.5 rounded-xl border text-sm resize-none focus:outline-none"
               style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
@@ -507,7 +510,7 @@ export default function SleepLog() {
               {aiCard === 'loading' ? (
                 <div className="flex items-center gap-3 py-2">
                   <div className="w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>AI-eksperten analyserer jeres søvndata…</p>
+                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.aiAnalyzing}</p>
                 </div>
               ) : (
                 <>
@@ -521,7 +524,7 @@ export default function SleepLog() {
                     className="flex items-center gap-1.5 mt-3 text-xs"
                     style={{ color: '#A0785A' }}
                   >
-                    <RefreshCw className="w-3 h-3" /> Opdater analyse
+                    <RefreshCw className="w-3 h-3" /> {t.updateAnalysis}
                   </button>
                 </>
               )}
@@ -536,7 +539,7 @@ export default function SleepLog() {
               className="w-full py-4 rounded-2xl text-white font-semibold text-sm transition-all disabled:opacity-60"
               style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
             >
-              {saveMutation.isPending ? 'Gemmer...' : 'Gem søvnlog'}
+              {saveMutation.isPending ? t.saving : t.saveSleepLog}
             </button>
 
             <button
@@ -546,7 +549,7 @@ export default function SleepLog() {
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
-              {aiCard && aiCard !== 'loading' ? 'Opdater AI-råd' : 'Få AI-råd til søvnen'}
+              {aiCard && aiCard !== 'loading' ? t.updateAiAdvice : t.getAiAdvice}
             </button>
           </div>
         </div>
@@ -555,7 +558,7 @@ export default function SleepLog() {
   );
 }
 
-function HistoryView({ history }) {
+function HistoryView({ history, t, lang, dateLocale, MOODS }) {
   if (!history) return (
     <div className="flex justify-center py-20">
       <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--color-border)', borderTopColor: 'var(--color-text-secondary)' }} />
@@ -565,7 +568,7 @@ function HistoryView({ history }) {
   if (history.length === 0) return (
     <div className="flex flex-col items-center justify-center py-20 gap-3" style={{ color: 'var(--color-text-muted)' }}>
       <Moon className="w-10 h-10 opacity-30" />
-      <p className="text-sm">Ingen logs endnu</p>
+      <p className="text-sm">{t.noLogsYet}</p>
     </div>
   );
 
@@ -601,18 +604,18 @@ function HistoryView({ history }) {
               <div className="flex items-center gap-2">
                 {mood && <span className="text-lg">{mood.emoji}</span>}
                 <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                  {format(new Date(log.date), 'd. MMMM', { locale: da })}
+                  {format(new Date(log.date), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
                 </span>
               </div>
               {log.bedtime && (
-                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Seng {log.bedtime}</span>
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.bedAt} {log.bedtime}</span>
               )}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {nightMins !== null && <Chip label={`🌙 ${Math.floor(nightMins / 60)}t ${nightMins % 60}m`} color="blue" />}
-              {(log.night_wakings?.length || 0) > 0 && <Chip label={`${log.night_wakings.length} opvågning${log.night_wakings.length > 1 ? 'er' : ''}`} color="yellow" />}
-              {totalNapMins > 0 && <Chip label={`☀️ ${Math.floor(totalNapMins / 60)}t ${totalNapMins % 60}m lure`} color="green" />}
-              {log.minutes_to_sleep != null && <Chip label={`Sovnet: ${log.minutes_to_sleep}m`} color={log.minutes_to_sleep > 30 ? 'red' : 'green'} />}
+              {(log.night_wakings?.length || 0) > 0 && <Chip label={`${log.night_wakings.length} ${log.night_wakings.length === 1 ? t.wakings : t.wakingsPlural}`} color="yellow" />}
+              {totalNapMins > 0 && <Chip label={`☀️ ${Math.floor(totalNapMins / 60)}h ${totalNapMins % 60}m ${t.napTotal}`} color="green" />}
+              {log.minutes_to_sleep != null && <Chip label={`${t.felAsleepIn} ${log.minutes_to_sleep}m`} color={log.minutes_to_sleep > 30 ? 'red' : 'green'} />}
             </div>
             {log.parent_note && (
               <p className="text-xs mt-2 italic" style={{ color: 'var(--color-text-muted)' }}>"{log.parent_note}"</p>

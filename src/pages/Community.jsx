@@ -17,6 +17,7 @@ import NearbyUserCard from '@/components/community/NearbyUserCard';
 import ExpertCard from '@/components/booking/ExpertCard';
 import DenmarkMap from '@/components/community/DenmarkMap';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in km
@@ -29,16 +30,18 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-const TABS = [
-  { value: 'nearby', icon: Radio, label: 'Nær mig' },
-  { value: 'chats', icon: MessageCircle, label: 'Chats' },
-  { value: 'experts', icon: Calendar, label: 'Behandlere' },
-];
+
 
 export default function Community() {
   const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const { isMom, activeProfile } = useActiveProfile();
+  const { t } = useLanguage();
+  const TABS = [
+    { value: 'nearby', icon: Radio, label: t.nearMe },
+    { value: 'chats', icon: MessageCircle, label: t.chats },
+    { value: 'experts', icon: Calendar, label: t.practitioners },
+  ];
   const [activeTab, setActiveTab] = useState('nearby');
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -124,7 +127,7 @@ export default function Community() {
   const doEnableLocation = async () => {
     setShowLocationConsent(false);
     if (!navigator.geolocation) {
-      toast.error('Din browser understøtter ikke lokation');
+      toast.error(t.browserNoLocation);
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -142,9 +145,9 @@ export default function Community() {
             location_enabled: true,
           });
         }
-        toast.success('Lokation aktiveret');
+        toast.success(t.locationActivated);
       },
-      () => toast.error('Kunne ikke hente lokation')
+      () => toast.error(t.locationError)
     );
   };
 
@@ -193,7 +196,7 @@ export default function Community() {
   };
 
   const EXPERT_CATEGORIES = [
-    { value: 'all', label: 'Alle' },
+    { value: 'all', label: t.all },
     ...expertCategories.map(c => ({ value: c.key, label: c.label })),
   ];
 
@@ -216,15 +219,15 @@ export default function Community() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-            Brug af lokation
+            {t.locationConsentTitle}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            Aktiver lokation for at opdage mødre i nærheden, der også er vågne. <strong>Din præcise lokation deles aldrig med andre brugere</strong> — kun en omtrentlig afstand vises (fx "2 km væk").
+            {t.locationConsentDesc}
           </p>
           <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-            Lokation bruges udelukkende til at finde brugere i nærheden. Du kan til enhver tid deaktivere det igen under indstillinger.
+            {t.locationConsentNote}
           </p>
           <div className="flex gap-3 pt-2">
             <button
@@ -232,7 +235,7 @@ export default function Community() {
               className="flex-1 py-3 rounded-xl text-sm font-medium border"
               style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
             >
-              Nej tak
+              {t.noThanks}
             </button>
             <button
               onClick={doEnableLocation}
@@ -286,7 +289,7 @@ export default function Community() {
             style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
           >
             <Heart className="w-4 h-4" />
-            Om os
+            {t.aboutUs}
           </Link>
         </div>
         </div>
@@ -299,13 +302,13 @@ export default function Community() {
                 <Lock className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-                Kun for mødre
+                {t.onlyForMoms}
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                Community-funktionen er forbeholdt mor-profiler. Vores mission er at bekæmpe natteensomhed blandt mødre — et trygt rum kun for dem.
+                {t.onlyForMomsDesc}
               </p>
               <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>
-                Skift til din mor-profil for at få adgang.
+                {t.switchToMomProfile}
               </p>
             </div>
           )}
@@ -320,17 +323,17 @@ export default function Community() {
                     <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                   </div>
                   <div>
-                    <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Lokation</p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Find folk i nærheden</p>
+                    <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.location}</p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.findNearby}</p>
                   </div>
                 </div>
                 {locationEnabled ? (
                   <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                    Aktiv
+                    {t.locationActive}
                   </span>
                 ) : (
                   <Button size="sm" onClick={handleEnableLocation}>
-                    Aktiver
+                    {t.enableLocation}
                   </Button>
                 )}
               </div>
@@ -338,7 +341,7 @@ export default function Community() {
               {locationEnabled && (
                 <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                   <Label htmlFor="visibility" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    Vis mig som synlig for andre
+                    {t.showMeVisible}
                   </Label>
                   <Switch
                     id="visibility"
@@ -353,14 +356,14 @@ export default function Community() {
             <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
               <div className="px-4 pt-3 pb-2 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Aktive mødre i Danmark</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.activeMomsInDenmark}</p>
                   <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {allVisibleUsers.filter(u => u.user_email !== user?.email).length} aktive nu
+                    {allVisibleUsers.filter(u => u.user_email !== user?.email).length} {t.activeNow}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {isVisible ? 'Synlig' : 'Skjult'}
+                    {isVisible ? t.visible : t.hidden}
                   </span>
                   <Switch
                     checked={isVisible && locationEnabled}
@@ -382,11 +385,11 @@ export default function Community() {
               <div className="px-4 py-2 flex items-center gap-4 text-xs" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-muted)' }}>
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
-                  <span>Dig</span>
+                  <span>{t.you}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#C8A882' }} />
-                  <span>Andre aktive</span>
+                  <span>{t.othersActive}</span>
                 </div>
               </div>
             </div>
@@ -395,7 +398,7 @@ export default function Community() {
             {!locationEnabled ? (
               <div className="text-center py-12">
                 <Radio className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>Aktiver lokation for at se hvem der er i nærheden</p>
+                <p style={{ color: 'var(--color-text-muted)' }}>{t.enableLocationToSee}</p>
               </div>
             ) : loadingNearby ? (
               <div className="space-y-3">
@@ -406,12 +409,12 @@ export default function Community() {
             ) : nearbyUsers.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>Ingen brugere i nærheden (20 km)</p>
+                <p style={{ color: 'var(--color-text-muted)' }}>{t.noUsersNearby}</p>
               </div>
             ) : (
               <div className="space-y-3">
                 <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                  {nearbyUsers.length} {nearbyUsers.length === 1 ? 'person' : 'personer'} indenfor 20 km
+                  {nearbyUsers.length} {nearbyUsers.length === 1 ? t.personWithin : t.personsWithin}
                 </p>
                 {nearbyUsers.map(nearbyUser => (
                   <NearbyUserCard 
@@ -436,13 +439,13 @@ export default function Community() {
             ) : conversations.length === 0 ? (
               <div className="text-center py-12">
                 <MessageCircle className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>Ingen samtaler endnu</p>
-                <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Start en chat med nogen i nærheden</p>
+                <p style={{ color: 'var(--color-text-muted)' }}>{t.noConversations}</p>
+                <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{t.startChatNearby}</p>
               </div>
             ) : (
               conversations.map(conv => {
                 const otherIndex = conv.participants?.findIndex(p => p !== user?.email) || 0;
-                const otherName = conv.participant_usernames?.[otherIndex] || 'Ukendt';
+                const otherName = conv.participant_usernames?.[otherIndex] || t.unknown;
                 const otherImage = conv.participant_images?.[otherIndex];
                 
                 return (
@@ -493,11 +496,11 @@ export default function Community() {
             {/* Search area button */}
             <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div>
-                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find behandler</p>
+                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.findPractitioner}</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                   {expertSearchMode === 'area' && userLocation
-                    ? `Viser eksperter i dit område`
-                    : 'Viser anbefalede behandlere'}
+                    ? t.showingInArea
+                    : t.showingRecommended}
                 </p>
               </div>
               <Button
@@ -507,7 +510,7 @@ export default function Community() {
                 onClick={handleExpertAreaSearch}
               >
                 <MapPin className="w-4 h-4" />
-                {expertSearchMode === 'area' ? 'Alle' : 'Søg i mit område'}
+                {expertSearchMode === 'area' ? t.all : t.searchInMyArea}
               </Button>
             </div>
 
@@ -521,16 +524,16 @@ export default function Community() {
               <div className="text-center py-12">
                 <MapPin className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
                 <p style={{ color: 'var(--color-text-muted)' }}>
-                  {expertSearchMode === 'area'
-                    ? 'Ingen eksperter fundet i dit område'
-                    : 'Ingen eksperter tilgængelige'}
+                {expertSearchMode === 'area'
+                  ? t.noExpertsInArea
+                  : t.noExpertsAvailable}
                 </p>
                 {expertSearchMode === 'area' && (
                   <button
                     className="text-sm text-blue-500 mt-2"
                     onClick={() => setExpertSearchMode('all')}
                   >
-                    Vis alle eksperter
+                    {t.showAllExperts}
                   </button>
                 )}
               </div>
@@ -538,7 +541,7 @@ export default function Community() {
               <>
                 {expertSearchMode === 'all' && (
                   <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
-                    Anbefalede behandlere
+                    {t.recommendedPractitioners}
                   </p>
                 )}
                 {filteredExperts.map(expert => (
