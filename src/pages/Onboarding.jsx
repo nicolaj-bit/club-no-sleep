@@ -94,6 +94,8 @@ export default function Onboarding() {
       ...profileData,
       gender: form.profile_label === 'mor' ? 'female' : 'male',
       user_email: user.email,
+      subscription_status: 'trial',
+      trial_started_at: new Date().toISOString(),
     });
     // Gem GDPR consent-log
     await base44.entities.ConsentLog.create({
