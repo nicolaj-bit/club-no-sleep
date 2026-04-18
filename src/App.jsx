@@ -8,7 +8,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 import AboutUs from './pages/AboutUs';
-import Subscription from './pages/Subscription';
+import Subscription from './pages/Subscription.jsx';
 import AdminNotifications from './pages/AdminNotifications';
 import PregnancyWeekDetail from './pages/PregnancyWeekDetail';
 import Calendar from './pages/Calendar';
