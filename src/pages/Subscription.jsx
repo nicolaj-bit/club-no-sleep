@@ -86,8 +86,8 @@ export default function Subscription() {
         </h1>
         <p className="text-sm text-center mb-8 max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
           {da
-            ? '30 dages gratis prøveperiode, derefter 49 kr./md.'
-            : '30-day free trial, then 49 DKK/month.'}
+            ? '30 dages gratis prøveperiode, derefter 59 kr./md.'
+            : '30-day free trial, then 59 DKK/month.'}
         </p>
 
         {/* Features */}
