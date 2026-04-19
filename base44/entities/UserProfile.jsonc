@@ -90,6 +90,35 @@
       "type": "boolean",
       "default": true,
       "description": "Modtag notifikationer om tigerspring"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "active",
+        "expired"
+      ],
+      "default": "trial",
+      "description": "Abonnementsstatus"
+    },
+    "subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID"
+    },
+    "subscription_started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Dato for abonnement start"
+    },
+    "trial_started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Dato for pr\u00f8veperiode start"
+    },
+    "subscription_cancel_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Planlagt opsigelsesdato (l\u00f8bende m\u00e5ned + 1 mdr.)"
     }
   },
   "required": [

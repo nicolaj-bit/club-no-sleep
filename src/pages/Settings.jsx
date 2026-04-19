@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun } from 'lucide-react';
+import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -28,18 +28,39 @@ export default function Settings() {
   const [faqContent, setFaqContent] = useState(null);
   const [supportContent, setSupportContent] = useState(null);
   const [helpLoaded, setHelpLoaded] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const u = await base44.auth.me();
         setUser(u);
+        const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
+        if (profiles.length) setProfile(profiles[0]);
       } catch {
         base44.auth.redirectToLogin();
       }
     };
     loadUser();
   }, []);
+
+  const handleCancelSubscription = async () => {
+    setCancelLoading(true);
+    try {
+      const res = await base44.functions.invoke('cancelSubscription', {});
+      const cancelDate = new Date(res.data.cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+      toast.success(`Abonnement opsagt. Du har adgang til ${cancelDate}.`);
+      setCancelOpen(false);
+      // Opdater lokal profil
+      setProfile(p => ({ ...p, subscription_cancel_at: res.data.cancel_at }));
+    } catch (e) {
+      toast.error(e.message || 'Noget gik galt. Prøv igen.');
+    } finally {
+      setCancelLoading(false);
+    }
+  };
 
   const isAdmin = user?.role === 'admin';
 
@@ -191,6 +212,22 @@ export default function Settings() {
           </Accordion>
         </div>
 
+        {/* Opsig abonnement */}
+        {profile?.subscription_status === 'active' && (
+          <button
+            onClick={() => setCancelOpen(true)}
+            className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
+            style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              {profile.subscription_cancel_at
+                ? `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}`
+                : 'Opsig abonnement'}
+            </span>
+          </button>
+        )}
+
         {/* Delete account */}
         <button
           onClick={() => setDeleteOpen(true)}
@@ -245,6 +282,35 @@ export default function Settings() {
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.noPrivacyPolicy}</p>
           )}
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
+
+      {/* Cancel Subscription Bottom Sheet */}
+      <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
+        <div className="px-5 py-4 space-y-4">
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
+            Jf. vores handelsbetingelser er opsigelsesfristen <strong>løbende måned + 1 måned</strong>.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Dit abonnement vil fortsat være aktivt indtil opsigelsesperiodens udløb — du betaler kun for den tid du bruger.
+          </p>
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={handleCancelSubscription}
+            disabled={cancelLoading}
+          >
+            <CreditCard className="w-4 h-4 mr-2" />
+            {cancelLoading ? 'Opsiger…' : 'Bekræft opsigelse'}
+          </Button>
+          <button
+            onClick={() => setCancelOpen(false)}
+            className="w-full py-3 text-sm"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Fortryd
+          </button>
           <div className="h-2" />
         </div>
       </BottomSheet>
