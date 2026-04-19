@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -22,6 +22,38 @@ export default function Knowledge() {
   const initialTab = urlParams.get('tab') || null;
   const [showSearch, setShowSearch] = useState(false);
   const { lang, t } = useLanguage();
+  const [autoTab, setAutoTab] = useState(null);
+
+  // Hent profil og bestem automatisk tab baseret på terminsdato
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const u = await base44.auth.me();
+        const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
+        const profile = profiles[0];
+        if (!profile) return;
+
+        const dueDate = profile.child_due_date;
+        if (!dueDate) return;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const due = new Date(dueDate);
+        due.setHours(0, 0, 0, 0);
+
+        if (today > due) {
+          // Terminsdatoen er overskredet → barnet er født → tigerspring
+          setAutoTab('tigerspring');
+        } else {
+          // Stadig gravid → graviditet
+          setAutoTab('graviditet');
+        }
+      } catch {
+        // Ignorer fejl
+      }
+    };
+    loadProfile();
+  }, []);
 
   const { data: articles = [], isLoading: loadingArticles } = useQuery({
     queryKey: ['articles'],
@@ -186,7 +218,7 @@ export default function Knowledge() {
       ) : (
         /* Main Content */
         <div className="p-4">
-          <Tabs defaultValue={initialTab || activeTabs[0]?.key || 'articles'} className="w-full">
+          <Tabs defaultValue={initialTab || autoTab || activeTabs[0]?.key || 'articles'} className="w-full">
             <TabsList className="w-full p-1 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
               {activeTabs.map(tab => {
                 const displayLabel = getTranslated(tabTranslations, tab.id, 'label', tab.label);
