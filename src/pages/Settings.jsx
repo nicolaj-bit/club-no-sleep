@@ -213,20 +213,18 @@ export default function Settings() {
         </div>
 
         {/* Opsig abonnement */}
-        {profile?.subscription_status === 'active' && (
-          <button
-            onClick={() => setCancelOpen(true)}
-            className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-            style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
-          >
-            <span className="flex items-center justify-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              {profile.subscription_cancel_at
-                ? `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}`
-                : 'Opsig abonnement'}
-            </span>
-          </button>
-        )}
+        <button
+          onClick={() => setCancelOpen(true)}
+          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
+          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+        >
+          <span className="flex items-center justify-center gap-2">
+            <CreditCard className="w-4 h-4" />
+            {profile?.subscription_cancel_at
+              ? `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}`
+              : 'Opsig abonnement'}
+          </span>
+        </button>
 
         {/* Delete account */}
         <button
