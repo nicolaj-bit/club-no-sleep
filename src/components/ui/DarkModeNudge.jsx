@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { Moon } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function DarkModeNudge() {
   const { isDark, toggle } = useTheme();
@@ -17,8 +18,18 @@ export default function DarkModeNudge() {
     const dismissed = sessionStorage.getItem('dark-nudge-dismissed');
     if (dismissed) return;
 
-    const timer = setTimeout(() => setVisible(true), 3000);
-    return () => clearTimeout(timer);
+    // Kun vis hvis brugeren har en profil (dvs. ikke er i onboarding)
+    const checkProfile = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (!user) return;
+        const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+        if (!profiles.length) return;
+        const timer = setTimeout(() => setVisible(true), 3000);
+        return () => clearTimeout(timer);
+      } catch {}
+    };
+    checkProfile();
   }, [isDark]);
 
   const handleAccept = () => {
