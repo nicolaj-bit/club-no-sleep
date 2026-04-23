@@ -1,0 +1,68 @@
+{
+  "name": "FamilyInvite",
+  "type": "object",
+  "properties": {
+    "inviter_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den der inviterer"
+    },
+    "invitee_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den der inviteres"
+    },
+    "invitee_title": {
+      "type": "string",
+      "description": "Titel p\u00e5 familiemedlem (Far, Farmor, Mormor osv.)"
+    },
+    "can_see_sleep_log": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kan se s\u00f8vnlog"
+    },
+    "can_see_wonder_weeks": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kan se tigerspring"
+    },
+    "can_see_calendar": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kan se kalender"
+    },
+    "can_see_knowledge": {
+      "type": "boolean",
+      "default": false,
+      "description": "Kan se viden/artikler"
+    },
+    "notify_wonder_weeks": {
+      "type": "boolean",
+      "default": true,
+      "description": "F\u00e5 notifikationer om tigerspring"
+    },
+    "notify_sleep": {
+      "type": "boolean",
+      "default": false,
+      "description": "F\u00e5 notifikationer om s\u00f8vnlog"
+    },
+    "notify_calendar": {
+      "type": "boolean",
+      "default": true,
+      "description": "F\u00e5 notifikationer om kalenderbegivenheder"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Status p\u00e5 invitation"
+    }
+  },
+  "required": [
+    "inviter_email",
+    "invitee_email",
+    "invitee_title"
+  ]
+}
