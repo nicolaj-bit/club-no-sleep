@@ -17,7 +17,6 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
-import ProfileSwitcher from '@/components/profile/ProfileSwitcher';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -111,7 +110,7 @@ export default function Profile() {
         <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
           {t.profileTitle}
         </h1>
-        {allProfiles.length > 0 && <ProfileSwitcher />}
+
       </div>
 
       {/* Profil-label banner */}
