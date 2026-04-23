@@ -10,14 +10,14 @@ import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 
-const TITLES = ['Far', 'Farmor', 'Farfar', 'Mormor', 'Morfar', 'Søster', 'Bror', 'Veninde', 'Ven', 'Andet'];
+const TITLE_SUGGESTIONS = ['Far', 'Farmor', 'Farfar', 'Mormor', 'Morfar', 'Søster', 'Bror', 'Veninde', 'Ven'];
 
 const PERMISSIONS = [
-  { key: 'can_see_sleep_log', label: 'Se søvnlog', emoji: '😴' },
-  { key: 'can_see_wonder_weeks', label: 'Se tigerspring', emoji: '🐯' },
-  { key: 'can_see_calendar', label: 'Se kalender', emoji: '📅' },
-  { key: 'can_see_knowledge', label: 'Se viden & artikler', emoji: '📚' },
-];
+  { key: 'can_see_sleep_log', label: 'Søvnlog', emoji: '😴' },
+  { key: 'can_see_wonder_weeks', label: 'Tigerspring', emoji: '🐯' },
+  { key: 'can_see_calendar', label: 'Kalender', emoji: '📅' },
+  { key: 'can_see_knowledge', label: 'Viden & artikler', emoji: '📚' },
+  ];
 
 const NOTIFICATIONS = [
   { key: 'notify_wonder_weeks', label: 'Notifikationer om tigerspring', emoji: '🐯' },
@@ -129,7 +129,7 @@ export default function FamilyInvite() {
           <ArrowLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
         </Link>
         <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
-          Familieadgang
+          Deling & adgang
         </h1>
       </div>
 
@@ -226,12 +226,17 @@ export default function FamilyInvite() {
           {/* Titel */}
           <div className="space-y-1.5">
             <Label>Titel</Label>
-            <div className="flex flex-wrap gap-2">
-              {TITLES.map(title => (
+            <Input
+              placeholder="fx Farmor, Bedste, Tante Lise..."
+              value={form.invitee_title}
+              onChange={e => setForm({ ...form, invitee_title: e.target.value })}
+            />
+            <div className="flex flex-wrap gap-2 pt-1">
+              {TITLE_SUGGESTIONS.map(title => (
                 <button
                   key={title}
                   onClick={() => setForm({ ...form, invitee_title: title })}
-                  className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all active:scale-95"
+                  className="px-3 py-1 rounded-full text-xs border transition-all active:scale-95"
                   style={{
                     backgroundColor: form.invitee_title === title ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
                     borderColor: form.invitee_title === title ? 'var(--color-primary)' : 'var(--color-border)',
@@ -246,7 +251,7 @@ export default function FamilyInvite() {
 
           {/* Adgang */}
           <div className="space-y-1.5">
-            <Label>Hvad må de se?</Label>
+            <Label>Hvad skal deles?</Label>
             <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: 'var(--color-border)' }}>
               {PERMISSIONS.map(p => (
                 <div key={p.key} className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>

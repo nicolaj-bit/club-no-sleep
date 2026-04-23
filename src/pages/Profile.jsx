@@ -100,7 +100,7 @@ export default function Profile() {
     { icon: Bookmark, label: t.favorites, page: 'Favorites' },
     { icon: Bell, label: t.notifications, page: 'Settings' },
     { icon: Settings, label: t.settings, page: 'Settings' },
-    { icon: UserPlus, label: 'Familieadgang', page: 'FamilyInvite' },
+    { icon: UserPlus, label: 'Deling & adgang', page: 'FamilyInvite' },
   ];
 
   return (
