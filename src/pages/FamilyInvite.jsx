@@ -29,6 +29,7 @@ export default function FamilyInvite() {
   const [user, setUser] = useState(null);
   const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pageConfig, setPageConfig] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -49,8 +50,12 @@ export default function FamilyInvite() {
       try {
         const u = await base44.auth.me();
         setUser(u);
-        const data = await base44.entities.FamilyInvite.filter({ inviter_email: u.email });
+        const [data, configs] = await Promise.all([
+          base44.entities.FamilyInvite.filter({ inviter_email: u.email }),
+          base44.entities.AppConfig.filter({ key: 'sharing_page' }),
+        ]);
         setInvites(data);
+        if (configs[0]) setPageConfig(configs[0]);
       } catch {
         base44.auth.redirectToLogin();
       } finally {
@@ -137,7 +142,7 @@ export default function FamilyInvite() {
         {/* Intro */}
         <div className="rounded-2xl p-4 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Invitér et familiemedlem til at følge med — de får adgang til præcis det, du vælger, og kan modtage notifikationer om barnets milepæle.
+            {pageConfig?.intro_text || 'Invitér et familiemedlem til at følge med — de får adgang til præcis det, du vælger, og kan modtage notifikationer om barnets milepæle.'}
           </p>
         </div>
 
@@ -148,7 +153,7 @@ export default function FamilyInvite() {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           <UserPlus className="w-5 h-5" />
-          Invitér familiemedlem
+          {pageConfig?.invite_button_label || 'Invitér familiemedlem'}
         </Button>
 
         {/* Existing invites */}

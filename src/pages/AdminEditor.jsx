@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2 } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -28,6 +28,10 @@ export default function AdminEditor() {
   const [helpConfig, setHelpConfig] = useState(null);
   const [helpForm, setHelpForm] = useState({});
   const [helpSaving, setHelpSaving] = useState(false);
+
+  const [sharingConfig, setSharingConfig] = useState(null);
+  const [sharingForm, setSharingForm] = useState({});
+  const [sharingSaving, setShareSaving] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(u => {
@@ -62,6 +66,27 @@ export default function AdminEditor() {
       setHelpForm({ ...config });
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'SharingPage') return;
+    base44.entities.AppConfig.filter({ key: 'sharing_page' }).then(results => {
+      const config = results[0] || { key: 'sharing_page', intro_text: '', invite_button_label: '' };
+      setSharingConfig(config);
+      setSharingForm({ ...config });
+    });
+  }, [activeTab]);
+
+  const handleSaveSharing = async () => {
+    setShareSaving(true);
+    if (sharingConfig?.id) {
+      await base44.entities.AppConfig.update(sharingConfig.id, sharingForm);
+    } else {
+      const created = await base44.entities.AppConfig.create({ ...sharingForm, key: 'sharing_page' });
+      setSharingConfig(created);
+    }
+    setShareSaving(false);
+    toast.success('Gemt!');
+  };
 
   const saveBlogMutation = useMutation({
     mutationFn: async (data) => {
@@ -363,8 +388,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : <HelpCircle className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : 'Hjælp'}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : 'Deling'}
           </button>
         ))}
       </div>
@@ -418,8 +443,37 @@ export default function AdminEditor() {
         </div>
       )}
 
+      {activeTab === 'SharingPage' && (
+        <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Introtekst på "Deling & adgang"-siden</Label>
+            <textarea
+              value={sharingForm.intro_text || ''}
+              onChange={e => setSharingForm({ ...sharingForm, intro_text: e.target.value })}
+              rows={4}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              placeholder="Invitér et familiemedlem til at følge med..."
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Tekst på invitationsknap</Label>
+            <Input
+              value={sharingForm.invite_button_label || ''}
+              onChange={e => setSharingForm({ ...sharingForm, invite_button_label: e.target.value })}
+              placeholder="Invitér familiemedlem"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <Button onClick={handleSaveSharing} disabled={sharingSaving} className="w-full"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
+            {sharingSaving ? 'Gemmer...' : 'Gem'}
+          </Button>
+        </div>
+      )}
+
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>
