@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -82,9 +82,11 @@ export default function Home() {
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
   const greeting = getGreeting(lang, profile?.gender);
 
-  const translatedAffirmations = useTranslation(
-    lang === 'da' && affirmation ? [{ text: affirmation }] : []
+  const affirmationItems = useMemo(
+    () => (lang === 'da' && affirmation ? [{ text: affirmation }] : []),
+    [lang, affirmation]
   );
+  const translatedAffirmations = useTranslation(affirmationItems);
   const displayAffirmation = lang === 'da' && translatedAffirmations[0]?.text
     ? translatedAffirmations[0].text
     : affirmation;
