@@ -16,6 +16,7 @@ import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
 import NotificationBell from '@/components/ui/NotificationBell';
+import PregnancyHomeView from '@/components/home/PregnancyHomeView';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -70,6 +71,9 @@ export default function Home() {
 
   const profile = activeProfile;
 
+  // Kommende forældre: har terminsdato men ikke fødselsdato
+  const isExpecting = profile?.child_due_date && !profile?.child_birthdate;
+
   const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
@@ -84,6 +88,10 @@ export default function Home() {
   const displayAffirmation = lang === 'da' && translatedAffirmations[0]?.text
     ? translatedAffirmations[0].text
     : affirmation;
+
+  if (isExpecting) {
+    return <PregnancyHomeView profile={profile} user={user} posts={posts} />;
+  }
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
