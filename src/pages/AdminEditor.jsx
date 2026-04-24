@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -28,6 +28,9 @@ export default function AdminEditor() {
   const [helpConfig, setHelpConfig] = useState(null);
   const [helpForm, setHelpForm] = useState({});
   const [helpSaving, setHelpSaving] = useState(false);
+  const [sharingConfig, setSharingConfig] = useState(null);
+  const [sharingForm, setSharingForm] = useState({});
+  const [sharingSaving, setShareSaving] = useState(false);
 
 
   useEffect(() => {
@@ -112,6 +115,27 @@ export default function AdminEditor() {
     mutationFn: (id) => base44.entities.LegalContent.delete(id),
     onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
   });
+
+  useEffect(() => {
+    if (activeTab !== 'SharingPage') return;
+    base44.entities.AppConfig.filter({ key: 'sharing_page' }).then(results => {
+      const config = results[0] || { key: 'sharing_page', intro_text: '', invite_button_label: '' };
+      setSharingConfig(config);
+      setSharingForm({ ...config });
+    });
+  }, [activeTab]);
+
+  const handleSaveSharing = async () => {
+    setShareSaving(true);
+    if (sharingConfig?.id) {
+      await base44.entities.AppConfig.update(sharingConfig.id, sharingForm);
+    } else {
+      const created = await base44.entities.AppConfig.create({ ...sharingForm, key: 'sharing_page' });
+      setSharingConfig(created);
+    }
+    setShareSaving(false);
+    toast.success('Gemt!');
+  };
 
   const handleSaveHelp = async () => {
     setHelpSaving(true);
@@ -371,6 +395,35 @@ export default function AdminEditor() {
         ))}
       </div>
 
+      {activeTab === 'SharingPage' && (
+        <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Introtekst på "Deling & adgang"-siden</Label>
+            <textarea
+              value={sharingForm.intro_text || ''}
+              onChange={e => setSharingForm({ ...sharingForm, intro_text: e.target.value })}
+              rows={4}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              placeholder="Invitér et familiemedlem til at følge med..."
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Tekst på invitationsknap</Label>
+            <Input
+              value={sharingForm.invite_button_label || ''}
+              onChange={e => setSharingForm({ ...sharingForm, invite_button_label: e.target.value })}
+              placeholder="Invitér familiemedlem"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <Button onClick={handleSaveSharing} disabled={sharingSaving} className="w-full"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
+            {sharingSaving ? 'Gemmer...' : 'Gem'}
+          </Button>
+        </div>
+      )}
+
       {activeTab === 'HelpModal' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
           <div className="space-y-1.5">
@@ -422,7 +475,7 @@ export default function AdminEditor() {
 
 
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>
