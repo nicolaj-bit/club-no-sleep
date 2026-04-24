@@ -40,15 +40,14 @@ function ProgressRing({ week }) {
   );
 }
 
-function getGreeting(lang, gender) {
+function getGreeting(lang, name) {
   const hour = new Date().getHours();
   let greeting;
   if (hour >= 5 && hour < 12) greeting = lang === 'da' ? 'Godmorgen' : 'Good morning';
   else if (hour >= 12 && hour < 17) greeting = lang === 'da' ? 'Godeftermiddag' : 'Good afternoon';
   else if (hour >= 17 && hour < 21) greeting = lang === 'da' ? 'Godaften' : 'Good evening';
   else greeting = lang === 'da' ? 'Godnat' : 'Good night';
-  const suffix = gender === 'male' ? (lang === 'da' ? 'kommende far' : 'dad-to-be') : (lang === 'da' ? 'kommende mor' : 'mom-to-be');
-  return `${greeting}, ${suffix} 🤍`;
+  return `${greeting}, ${name} 🤍`;
 }
 
 const PREGNANCY_FACTS = {
@@ -81,7 +80,8 @@ const PREGNANCY_FACTS = {
 export default function PregnancyHomeView({ profile, user, posts = [] }) {
   const { t, lang } = useLanguage();
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
-  const greeting = getGreeting(lang, profile?.gender);
+  const displayName = profile?.display_name || user?.full_name || (lang === 'da' ? 'kommende mor' : 'mom-to-be');
+  const greeting = getGreeting(lang, displayName);
 
   const pregnancy = profile?.child_due_date ? getPregnancyWeek(profile.child_due_date) : null;
   const dueDate = profile?.child_due_date ? new Date(profile.child_due_date) : null;

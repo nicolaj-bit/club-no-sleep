@@ -24,7 +24,7 @@ function getDailyAffirmationIndex() {
   return dayOfYear;
 }
 
-function getGreeting(lang, gender) {
+function getGreeting(lang, name) {
   const hour = new Date().getHours();
   let greeting;
   if (hour >= 5 && hour < 12) {
@@ -36,8 +36,7 @@ function getGreeting(lang, gender) {
   } else {
     greeting = lang === 'da' ? 'Godnat' : 'Good night';
   }
-  const suffix = gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom');
-  return `${greeting}, ${suffix} 🤍`;
+  return `${greeting}, ${name} 🤍`;
 }
 
 export default function Home() {
@@ -80,7 +79,8 @@ export default function Home() {
   const affirmationIndex = getDailyAffirmationIndex();
   const affirmation = t.affirmations[affirmationIndex % t.affirmations.length];
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
-  const greeting = getGreeting(lang, profile?.gender);
+  const displayName = profile?.display_name || user?.full_name || (profile?.gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom'));
+  const greeting = getGreeting(lang, displayName);
 
   const affirmationItems = useMemo(
     () => (lang === 'da' && affirmation ? [{ text: affirmation }] : []),
