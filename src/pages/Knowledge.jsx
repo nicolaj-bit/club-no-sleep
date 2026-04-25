@@ -274,7 +274,7 @@ export default function Knowledge() {
           </div>
 
           <div className="px-4 pb-6">
-            <Tabs defaultValue={initialTab || autoTab || activeTabs[0]?.key || 'articles'} className="w-full">
+            <Tabs defaultValue={initialTab || 'tigerspring'} className="w-full">
               {/* Custom tab bar */}
               <KnowledgeTabBar
                 tabs={activeTabs}

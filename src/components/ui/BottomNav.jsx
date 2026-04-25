@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays, BookHeart } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -29,10 +29,9 @@ export default function BottomNav() {
   const menuItemsConfig = [
     { key: 'shop', icon: ShoppingBag, page: 'Shop' },
     { key: 'blog', icon: BookOpen, page: 'Blog' },
-    isExpecting
-      ? { key: 'diary', icon: BookHeart, page: 'PregnancyDiary', name: 'Dagbog' }
-      : { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
-    { key: 'knowledge', icon: Lightbulb, page: 'Knowledge' },
+    { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
+    { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
+    { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
     { key: 'community', icon: Users, page: 'Community' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
     { key: 'profile', icon: User, page: 'Profile' },
@@ -56,7 +55,7 @@ export default function BottomNav() {
 
   // Save current path to tab history whenever location changes
   useEffect(() => {
-    const allPages = ['Home', 'AIChat', 'SleepLog', 'PregnancyDiary', ...menuItemsConfig.map(m => m.page)];
+    const allPages = ['Home', 'AIChat', 'SleepLog', 'PregnancyWeeks', ...menuItemsConfig.map(m => m.page)];
     allPages.forEach(page => {
       const url = createPageUrl(page);
       if (currentPath === url || currentPath.startsWith(url + '?')) {

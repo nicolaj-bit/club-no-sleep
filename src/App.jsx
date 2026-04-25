@@ -13,6 +13,7 @@ import Subscription from './pages/Subscription.jsx';
 import AdminNotifications from './pages/AdminNotifications';
 import PregnancyWeekDetail from './pages/PregnancyWeekDetail';
 import Calendar from './pages/Calendar';
+import PregnancyWeeks from './pages/PregnancyWeeks';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -71,6 +72,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminNotifications" element={<LayoutWrapper currentPageName="AdminNotifications"><AdminNotifications /></LayoutWrapper>} />
       <Route path="/Subscription" element={<LayoutWrapper currentPageName="Subscription"><Subscription /></LayoutWrapper>} />
       <Route path="/FamilyInvite" element={<LayoutWrapper currentPageName="FamilyInvite"><FamilyInvite /></LayoutWrapper>} />
+      <Route path="/PregnancyWeeks" element={<LayoutWrapper currentPageName="PregnancyWeeks"><PregnancyWeeks /></LayoutWrapper>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
