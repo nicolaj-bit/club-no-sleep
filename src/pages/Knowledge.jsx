@@ -14,9 +14,55 @@ import PregnancyTab from '@/components/knowledge/PregnancyTab';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import { useTheme } from '@/components/ui/ThemeProvider';
+
+function KnowledgeTabBar({ tabs, tabTranslations, getTranslated, isDark }) {
+  const [active, setActive] = React.useState(null);
+
+  return (
+    <>
+      <style>{`
+        [data-knowledge-tab][data-state="active"] {
+          background: var(--color-primary) !important;
+          border-color: var(--color-primary) !important;
+          color: var(--color-bg) !important;
+          box-shadow: 0 4px 16px rgba(92,51,23,0.18);
+        }
+        [data-knowledge-tab][data-state="active"] span {
+          color: inherit !important;
+          opacity: 1 !important;
+        }
+      `}</style>
+      <TabsList className="w-full h-auto bg-transparent p-0 mb-5" style={{ display: 'flex', gap: '8px' }}>
+        {tabs.map(tab => {
+          const displayLabel = getTranslated(tabTranslations, tab.id, 'label', tab.label);
+          return (
+            <TabsTrigger
+              key={tab.key}
+              value={tab.key}
+              data-knowledge-tab
+              className="flex-1 h-auto flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl border transition-all duration-200"
+              style={{
+                backgroundColor: 'var(--color-bg-card)',
+                borderColor: 'var(--color-border)',
+                color: 'var(--color-text-muted)',
+              }}
+            >
+              {tab.emoji && <span className="text-xl leading-none">{tab.emoji}</span>}
+              <span className="leading-tight text-center font-medium" style={{ fontSize: '10px' }}>
+                {displayLabel}
+              </span>
+            </TabsTrigger>
+          );
+        })}
+      </TabsList>
+    </>
+  );
+}
 
 export default function Knowledge() {
   const headerVisible = useScrollDirection();
+  const { isDark } = useTheme();
   const [search, setSearch] = useState('');
   const urlParams = new URLSearchParams(window.location.search);
   const initialTab = urlParams.get('tab') || null;
@@ -229,20 +275,13 @@ export default function Knowledge() {
 
           <div className="px-4 pb-6">
             <Tabs defaultValue={initialTab || autoTab || activeTabs[0]?.key || 'articles'} className="w-full">
-              {/* Tab bar */}
-              <TabsList
-                className="w-full p-1 rounded-2xl mb-5"
-                style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-              >
-                {activeTabs.map(tab => {
-                  const displayLabel = getTranslated(tabTranslations, tab.id, 'label', tab.label);
-                  return (
-                    <TabsTrigger key={tab.key} value={tab.key} className="flex-1 rounded-xl text-xs">
-                      {tab.emoji ? `${tab.emoji} ` : ''}{displayLabel}
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
+              {/* Custom tab bar */}
+              <KnowledgeTabBar
+                tabs={activeTabs}
+                tabTranslations={tabTranslations}
+                getTranslated={getTranslated}
+                isDark={isDark}
+              />
 
               {/* Articles tab */}
               <TabsContent value="articles" className="space-y-6">
