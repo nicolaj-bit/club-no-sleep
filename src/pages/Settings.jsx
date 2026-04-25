@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
+import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard, ExternalLink } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import UserColorThemePicker from '@/components/ui/UserColorThemePicker';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -32,6 +32,9 @@ export default function Settings() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [termsContent, setTermsContent] = useState(null);
+  const [termsLoading, setTermsLoading] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -76,13 +79,36 @@ export default function Settings() {
   }, []);
 
   const openPrivacy = async () => {
-    setPrivacyOpen(true);
     setPrivacyLoading(true);
     try {
       const results = await base44.entities.LegalContent.filter({ type: 'privacy' });
-      setPrivacyContent(results[0] || null);
+      const doc = results[0] || null;
+      if (doc?.pdf_url) {
+        window.open(doc.pdf_url, '_blank');
+        setPrivacyLoading(false);
+        return;
+      }
+      setPrivacyContent(doc);
+      setPrivacyOpen(true);
     } finally {
       setPrivacyLoading(false);
+    }
+  };
+
+  const openTerms = async () => {
+    setTermsLoading(true);
+    try {
+      const results = await base44.entities.LegalContent.filter({ type: 'terms' });
+      const doc = results[0] || null;
+      if (doc?.pdf_url) {
+        window.open(doc.pdf_url, '_blank');
+        setTermsLoading(false);
+        return;
+      }
+      setTermsContent(doc);
+      setTermsOpen(true);
+    } finally {
+      setTermsLoading(false);
     }
   };
 
@@ -214,6 +240,28 @@ export default function Settings() {
           </Accordion>
         </div>
 
+        {/* Handelsbetingelser + Privatlivspolitik */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={openTerms}
+            disabled={termsLoading}
+            className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
+            style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+          >
+            <FileText className="w-4 h-4" />
+            {termsLoading ? '…' : 'Betingelser'}
+          </button>
+          <button
+            onClick={openPrivacy}
+            disabled={privacyLoading}
+            className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
+            style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+          >
+            <Shield className="w-4 h-4" />
+            {privacyLoading ? '…' : 'Privatliv'}
+          </button>
+        </div>
+
         {/* Opsig abonnement */}
         <button
           onClick={() => setCancelOpen(true)}
@@ -266,6 +314,20 @@ export default function Settings() {
           }}>
             {t.updatePassword}
           </Button>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
+
+      {/* Terms Bottom Sheet (fallback hvis ingen PDF) */}
+      <BottomSheet open={termsOpen} onOpenChange={setTermsOpen} title="Handelsbetingelser">
+        <div className="px-5 py-4">
+          {termsContent ? (
+            <div className="text-sm leading-relaxed prose prose-sm max-w-none pb-4" style={{ color: 'var(--color-text-primary)' }}
+              dangerouslySetInnerHTML={{ __html: termsContent.content }}
+            />
+          ) : (
+            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen handelsbetingelser tilgængelige</p>
+          )}
           <div className="h-2" />
         </div>
       </BottomSheet>
