@@ -12,7 +12,6 @@ import { useTranslation } from '@/components/hooks/useTranslation';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import ChildDevelopmentCard from '@/components/home/ChildDevelopmentCard';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
-import PregnancyDiaryCard from '@/components/home/PregnancyDiaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
@@ -146,9 +145,7 @@ export default function Home() {
       {/* Sleep/Diary + Calendar row */}
       {user && (
         <div className="mx-5 mb-5 flex gap-3">
-          {profile?.child_due_date
-            ? <PregnancyDiaryCard week={ageInWeeks !== null ? Math.max(1, Math.min(42, 40 - Math.ceil((new Date(profile.child_due_date) - new Date()) / (7 * 86400000)))) : null} userEmail={user.email} />
-            : <SleepSummaryCard userEmail={user.email} />}
+          <SleepSummaryCard userEmail={user.email} />
           <UpcomingEventCard userEmail={user.email} />
         </div>
       )}
