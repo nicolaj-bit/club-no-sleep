@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import { Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,6 +13,7 @@ import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function QuestionDetail() {
   const { theme } = useTheme();
@@ -149,17 +149,7 @@ export default function QuestionDetail() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center gap-3">
-          <Link to={createPageUrl('Knowledge')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Spørgsmål</span>
-        </div>
-      </header>
+      <PageHeader title="Spørgsmål" backUrl={createPageUrl('Knowledge')} />
 
       {/* Question */}
       <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>

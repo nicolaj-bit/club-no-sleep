@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Send } from 'lucide-react';
+import { Send, ChevronDown, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { BottomSheet } from '@/components/ui/BottomSheet';
 import { toast } from 'sonner';
+import PageHeader from '@/components/ui/PageHeader';
 
 const categories = [
   'Generelt',
@@ -23,17 +17,14 @@ const categories = [
   'Udstyr',
   'Sundhed',
   'Træning',
-  'Andet'
+  'Andet',
 ];
 
 export default function AskQuestion() {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-  const [form, setForm] = useState({
-    title: '',
-    content: '',
-    category: '',
-  });
+  const [form, setForm] = useState({ title: '', content: '', category: '' });
+  const [showCategorySheet, setShowCategorySheet] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -79,38 +70,29 @@ export default function AskQuestion() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center gap-3">
-          <Link to={createPageUrl('Knowledge')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Stil et spørgsmål</h1>
-        </div>
-      </header>
+      <PageHeader title="Stil et spørgsmål" backUrl={createPageUrl('Knowledge')} />
 
       <form onSubmit={handleSubmit} className="p-4 space-y-6">
+        {/* Category picker */}
         <div className="space-y-2">
-          <Label htmlFor="category">Kategori</Label>
-          <Select 
-            value={form.category} 
-            onValueChange={(value) => setForm({ ...form, category: value })}
+          <Label style={{ color: 'var(--color-text-secondary)' }}>Kategori</Label>
+          <button
+            type="button"
+            onClick={() => setShowCategorySheet(true)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border text-sm"
+            style={{
+              backgroundColor: 'var(--color-bg-card)',
+              borderColor: 'var(--color-border)',
+              color: form.category ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+            }}
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Vælg kategori" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map(cat => (
-                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <span>{form.category || 'Vælg kategori'}</span>
+            <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+          </button>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="title">Titel</Label>
+          <Label htmlFor="title" style={{ color: 'var(--color-text-secondary)' }}>Titel</Label>
           <Input
             id="title"
             value={form.title}
@@ -122,7 +104,7 @@ export default function AskQuestion() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="content">Uddyb dit spørgsmål</Label>
+          <Label htmlFor="content" style={{ color: 'var(--color-text-secondary)' }}>Uddyb dit spørgsmål</Label>
           <Textarea
             id="content"
             value={form.content}
@@ -139,15 +121,43 @@ export default function AskQuestion() {
           <p><strong>Du chatter med en AI-assistent.</strong> Den kan generere forkerte oplysninger og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.</p>
         </div>
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full h-12 rounded-full gap-2"
           disabled={createMutation.isPending}
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           <Send className="w-5 h-5" />
           Send spørgsmål
         </Button>
       </form>
+
+      {/* Category BottomSheet */}
+      <BottomSheet
+        open={showCategorySheet}
+        onOpenChange={setShowCategorySheet}
+        title="Vælg kategori"
+      >
+        <div className="py-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => {
+                setForm({ ...form, category: cat });
+                setShowCategorySheet(false);
+              }}
+              className="w-full flex items-center justify-between px-5 py-4 active:opacity-60 transition-opacity text-left"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              <span className="text-[15px] font-medium">{cat}</span>
+              {form.category === cat && (
+                <Check className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+              )}
+            </button>
+          ))}
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
     </div>
   );
 }

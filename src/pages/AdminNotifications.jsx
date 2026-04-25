@@ -236,18 +236,32 @@ export default function AdminNotifications() {
           </div>
 
           {/* Target segment */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label style={{ color: 'var(--color-text-secondary)' }}>Modtagere</Label>
-            <select
-              value={editing.target_segment || 'all'}
-              onChange={e => setEditing({ ...editing, target_segment: e.target.value })}
-              className="w-full rounded-md border px-3 py-2 text-sm"
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-            >
-              <option value="all">Alle brugere</option>
-              <option value="moms">Kun mødre</option>
-              <option value="dads">Kun fædre</option>
-            </select>
+            <div className="space-y-2">
+              {[
+                { value: 'all', label: 'Alle brugere' },
+                { value: 'moms', label: 'Kun mødre' },
+                { value: 'dads', label: 'Kun fædre' },
+              ].map(seg => {
+                const selected = (editing.target_segment || 'all') === seg.value;
+                return (
+                  <button
+                    key={seg.value}
+                    type="button"
+                    onClick={() => setEditing({ ...editing, target_segment: seg.value })}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-all"
+                    style={{
+                      backgroundColor: selected ? 'var(--color-primary)' : 'var(--color-bg-card)',
+                      borderColor: selected ? 'var(--color-primary)' : 'var(--color-border)',
+                      color: selected ? 'var(--color-bg)' : 'var(--color-text-primary)',
+                    }}
+                  >
+                    <span className="text-sm font-medium">{seg.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Active */}

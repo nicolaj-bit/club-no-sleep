@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { format, addDays, startOfWeek, isSameDay, isAfter, parseISO } from 'date-fns';
 import { da } from 'date-fns/locale';
 import UserAvatar from '@/components/community/UserAvatar';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function Booking() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -141,20 +142,14 @@ export default function Booking() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center justify-between">
-          <Link to={createPageUrl(`ExpertDetail?id=${expertId}`)}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
+      <PageHeader
+        backUrl={createPageUrl(`ExpertDetail?id=${expertId}`)}
+        rightAction={
+          <span className="text-sm font-medium pr-1" style={{ color: 'var(--color-text-muted)' }}>
             Trin {step} af 3
           </span>
-          <div className="w-9" />
-        </div>
-      </header>
+        }
+      />
 
       {/* Expert Info */}
       <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>

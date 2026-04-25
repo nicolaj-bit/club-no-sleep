@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Share2, FileText, HelpCircle } from 'lucide-react';
+import { Share2, FileText, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
@@ -11,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function ArticleDetail() {
   const { theme } = useTheme();
@@ -94,22 +94,18 @@ Return format:
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Sticky header */}
-      <header
-        className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3"
-        style={{ backgroundColor: isDark ? 'rgba(17,17,17,0.85)' : 'rgba(255,255,255,0.85)', borderColor: 'var(--color-border)' }}
-      >
-        <div className="flex items-center justify-between max-w-2xl mx-auto">
-          <Link to={createPageUrl('Knowledge')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <Button variant="ghost" size="icon" onClick={handleShare}>
-            <Share2 className="w-4 h-4" />
-          </Button>
-        </div>
-      </header>
+      <PageHeader
+        backUrl={createPageUrl('Knowledge')}
+        rightAction={
+          <button
+            onClick={handleShare}
+            className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
+            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+          >
+            <Share2 className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+          </button>
+        }
+      />
 
       {/* Article body */}
       <article className="max-w-2xl mx-auto px-5 pt-8 pb-16">

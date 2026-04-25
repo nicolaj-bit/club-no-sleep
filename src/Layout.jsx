@@ -12,6 +12,7 @@ import { ActiveProfileProvider } from '@/components/ui/ActiveProfileContext';
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
 // Pages that should NOT show bottom nav
+// AIChat is a full-screen immersive UI — suppress the nav, but it remains accessible via the bottom tab AI button
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding'];
 
 
