@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Baby, Heart, Sparkles, Apple, Activity, BookOpen, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Baby, Heart, Sparkles, Apple, Activity, AlertCircle } from 'lucide-react';
 
 const WEEK_DATA = {
   4: {
@@ -1084,13 +1084,6 @@ export default function PregnancyWeekDetail() {
           </a>
         )}
 
-        <div className="rounded-2xl p-4 flex items-start gap-3 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <BookOpen className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-text-muted)' }} />
-          <div>
-            <p className="text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>Politikens Graviditetsbog</p>
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>af Lene Skou Jensen – Indhold er inspireret af og baseret på denne bog.</p>
-          </div>
-        </div>
       </div>
     </div>
   );
