@@ -147,7 +147,7 @@ export default function Home() {
       {user && (
         <div className="mx-5 mb-5 flex gap-3">
           {profile?.child_due_date
-            ? <PregnancyDiaryCard week={ageInWeeks !== null ? Math.max(1, Math.min(42, 40 - Math.ceil((new Date(profile.child_due_date) - new Date()) / (7 * 86400000)))) : null} />
+            ? <PregnancyDiaryCard week={ageInWeeks !== null ? Math.max(1, Math.min(42, 40 - Math.ceil((new Date(profile.child_due_date) - new Date()) / (7 * 86400000)))) : null} userEmail={user.email} />
             : <SleepSummaryCard userEmail={user.email} />}
           <UpcomingEventCard userEmail={user.email} />
         </div>
