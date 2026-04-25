@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
+import { ArrowLeft } from 'lucide-react';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
@@ -11,7 +12,7 @@ export default function Knowledge() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Sticky header */}
+      {/* Header */}
       <header
         className="sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300"
         style={{
@@ -20,7 +21,14 @@ export default function Knowledge() {
           transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
         }}
       >
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 flex items-center gap-3">
+          <button
+            onClick={() => window.history.back()}
+            className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
+            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+          >
+            <ArrowLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
+          </button>
           <h1
             className="text-2xl font-light"
             style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}
