@@ -43,12 +43,17 @@ export default function Home() {
   const { t, lang } = useLanguage();
   const { activeProfile, loading: profileLoading } = useActiveProfile();
   const [user, setUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
   const [, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
-      if (isAuth) base44.auth.me().then(setUser).catch(() => {});
-    });
+      if (isAuth) {
+        base44.auth.me().then(u => { setUser(u); setUserLoading(false); }).catch(() => setUserLoading(false));
+      } else {
+        setUserLoading(false);
+      }
+    }).catch(() => setUserLoading(false));
   }, []);
 
   useEffect(() => {
@@ -91,8 +96,8 @@ export default function Home() {
     ? translatedAffirmations[0].text
     : affirmation;
 
-  // Vent til profil OG user er loaded før vi beslutter view
-  if (profileLoading || (user === null && profile !== null)) {
+  // Vent til BÅDE profil OG user er loaded før vi beslutter view
+  if (profileLoading || userLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
