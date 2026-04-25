@@ -3,8 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2 } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
+import ColorThemePicker from '@/components/admin/ColorThemePicker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,7 +13,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -370,13 +371,15 @@ export default function AdminEditor() {
             <Bell className="w-3.5 h-3.5" /> Notifikationer
           </button>
         </Link>
-        <button
-          onClick={handleNew}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
-          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-        >
-          <Plus className="w-4 h-4" /> Ny
-        </button>
+        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && (
+          <button
+            onClick={handleNew}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            <Plus className="w-4 h-4" /> Ny
+          </button>
+        )}
       </div>
 
       <div className="flex gap-2 px-4 pt-4 overflow-x-auto">
@@ -389,8 +392,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : 'Deling'}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : <Palette className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : 'Farvetema'}
           </button>
         ))}
       </div>
@@ -474,8 +477,10 @@ export default function AdminEditor() {
       )}
 
 
+      {activeTab === 'ColorTheme' && <ColorThemePicker />}
+
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' || activeTab === 'SharingPage' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>

@@ -1,0 +1,60 @@
+{
+  "name": "AppConfig",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unik n\u00f8gle (fx 'help_modal')"
+    },
+    "help_about_text_da": {
+      "type": "string",
+      "description": "Om appen tekst (dansk)"
+    },
+    "help_about_text_en": {
+      "type": "string",
+      "description": "Om appen tekst (engelsk)"
+    },
+    "help_contact_email": {
+      "type": "string",
+      "description": "Kontakt e-mail"
+    },
+    "help_phone": {
+      "type": "string",
+      "description": "Telefonnummer (Ring til os)"
+    },
+    "color_theme": {
+      "type": "string",
+      "enum": [
+        "sand",
+        "rose",
+        "sage",
+        "slate",
+        "lavender",
+        "midnight"
+      ],
+      "default": "sand",
+      "description": "Appens farvetema (v\u00e6lges af admin)"
+    }
+  },
+  "required": [
+    "key"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
