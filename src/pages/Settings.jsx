@@ -357,6 +357,14 @@ export default function Settings() {
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
           </p>
+          <button
+            onClick={openTerms}
+            disabled={termsLoading}
+            className="text-sm underline underline-offset-2 cursor-pointer"
+            style={{ color: 'var(--color-accent)' }}
+          >
+            {termsLoading ? '…' : 'Læs handelsbetingelserne →'}
+          </button>
           <Button
             variant="destructive"
             className="w-full"
