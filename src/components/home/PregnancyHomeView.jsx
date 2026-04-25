@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { differenceInWeeks, differenceInDays } from 'date-fns';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { ChevronRight, Heart, BookOpen, Calendar } from 'lucide-react';
+import { ChevronRight, Heart, BookOpen, Calendar, Baby, Sparkles, ArrowRight } from 'lucide-react';
 import NotificationBell from '@/components/ui/NotificationBell';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import { format } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
+import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 
 function getPregnancyWeek(dueDate) {
   if (!dueDate) return null;
@@ -16,14 +17,13 @@ function getPregnancyWeek(dueDate) {
   const today = new Date();
   const daysLeft = differenceInDays(due, today);
   if (daysLeft < 0) return null;
-  // Pregnancy is 40 weeks, so current week = 40 - weeksLeft
   const weeksLeft = Math.ceil(daysLeft / 7);
   const currentWeek = 40 - weeksLeft;
-  return { currentWeek: Math.max(1, Math.min(40, currentWeek)), weeksLeft, daysLeft };
+  return { currentWeek: Math.max(1, Math.min(42, currentWeek)), weeksLeft, daysLeft };
 }
 
 function ProgressRing({ week }) {
-  const pct = (week / 40);
+  const pct = Math.min(1, week / 40);
   const r = 42;
   const circ = 2 * Math.PI * r;
   const dash = circ * pct;
@@ -50,33 +50,6 @@ function getGreeting(lang, name) {
   return `${greeting}, ${name} 🤍`;
 }
 
-const PREGNANCY_FACTS = {
-  da: [
-    'Din baby kan nu høre din stemme og genkende den efter fødslen.',
-    'Fosteret bevæger sig aktivt og øver vejrtrækning inde i livmoderen.',
-    'Dit hjerte pumper op til 50% mere blod end normalt for at forsyne jer begge.',
-    'Babyen kan smage det, du spiser, via fostervandet.',
-    'Dit barn udvikler sit eget fingeraftryk i denne periode.',
-    'Babyen sover og vågner i cyklusser — ligesom du gør.',
-    'Hjernen vokser hurtigt og danner millioner af neuroner om dagen.',
-    'Babyen kan blinke og har nu øjenvipper og øjenbryn.',
-    'Fostertræk og spark styrker musklerne — øvelse til livet udenfor.',
-    'Din krop producerer relaxin for at forberede bækkenet til fødslen.',
-  ],
-  en: [
-    'Your baby can now hear your voice and recognize it after birth.',
-    'The fetus moves actively and practices breathing inside the womb.',
-    'Your heart pumps up to 50% more blood to supply both of you.',
-    'Your baby can taste what you eat through the amniotic fluid.',
-    'Your child is developing their own fingerprints during this period.',
-    'Your baby sleeps and wakes in cycles — just like you do.',
-    'The brain grows rapidly, forming millions of neurons per day.',
-    'Baby can blink and now has eyelashes and eyebrows.',
-    'Kicks and stretches strengthen muscles — practice for life outside.',
-    'Your body produces relaxin to prepare the pelvis for birth.',
-  ],
-};
-
 export default function PregnancyHomeView({ profile, user, posts = [] }) {
   const { t, lang } = useLanguage();
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
@@ -87,9 +60,8 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
   const dueDate = profile?.child_due_date ? new Date(profile.child_due_date) : null;
   const dueDateStr = dueDate ? format(dueDate, 'd. MMMM yyyy', { locale: lang === 'en' ? enUS : da }) : null;
 
-  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-  const facts = PREGNANCY_FACTS[lang] || PREGNANCY_FACTS.da;
-  const todayFact = facts[dayOfYear % facts.length];
+  const week = pregnancy?.currentWeek ?? null;
+  const weekData = week !== null ? PREGNANCY_WEEKS[week] || PREGNANCY_WEEKS[Math.min(42, Math.max(4, week))] : null;
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -120,7 +92,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
                 <p className="text-white/60 text-[10px] font-semibold uppercase tracking-widest mb-1">
                   {lang === 'da' ? 'Din graviditet' : 'Your pregnancy'}
                 </p>
-                <p className="text-white text-lg font-light leading-snug" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                <p className="text-white text-xl font-light leading-snug" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                   {lang === 'da' ? `Uge ${pregnancy.currentWeek} af 40` : `Week ${pregnancy.currentWeek} of 40`}
                 </p>
                 {pregnancy.weeksLeft > 0 ? (
@@ -130,7 +102,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
                       : (lang === 'da' ? `${pregnancy.weeksLeft} uger til termin` : `${pregnancy.weeksLeft} weeks until due`)}
                   </p>
                 ) : (
-                  <p className="text-white/70 text-sm mt-1">{lang === 'da' ? 'Termin er nær!' : 'Due date is near!'}</p>
+                  <p className="text-white/70 text-sm mt-1">{lang === 'da' ? '🎉 Termin er nær!' : '🎉 Due date is near!'}</p>
                 )}
                 {dueDateStr && (
                   <p className="text-white/50 text-xs mt-0.5">📅 {dueDateStr}</p>
@@ -141,22 +113,78 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
         </div>
       )}
 
-      {/* Dagens fakta om graviditeten */}
-      <div className="mx-5 mb-5">
-        <div className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: 'var(--color-text-muted)' }}>
-            {lang === 'da' ? 'Vidste du' : 'Did you know'}
-          </p>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '16px', lineHeight: '1.6' }}>
-            {todayFact}
-          </p>
+      {/* Ugentlig milepæl */}
+      {weekData && week !== null && (
+        <div className="mx-5 mb-5">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-text-muted)' }}>
+              {lang === 'da' ? `Uge ${week} – hvad sker der?` : `Week ${week} – what's happening?`}
+            </p>
+          </div>
+
+          {/* Baby */}
+          <div className="rounded-2xl border overflow-hidden mb-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            <div className="px-4 pt-4 pb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+                  <Baby className="w-3.5 h-3.5 text-white" />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>
+                  {lang === 'da' ? 'Babyen' : 'Your baby'}
+                </span>
+              </div>
+              <p className="text-[15px] leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.6' }}>
+                {weekData.baby}
+              </p>
+            </div>
+          </div>
+
+          {/* Mor */}
+          <div className="rounded-2xl border overflow-hidden mb-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            <div className="px-4 pt-4 pb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+                  <Heart className="w-3.5 h-3.5 text-white" />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>
+                  {lang === 'da' ? 'Din krop' : 'Your body'}
+                </span>
+              </div>
+              <p className="text-[15px] leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.6' }}>
+                {weekData.mom}
+              </p>
+            </div>
+          </div>
+
+          {/* Tip */}
+          <div className="rounded-2xl px-4 py-3 mb-3 border" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-cappuccino)' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-cappuccino)' }}>
+                {lang === 'da' ? 'Ugens tip' : 'Tip of the week'}
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{weekData.tip}</p>
+          </div>
+
+          {/* Læs mere om ugen */}
+          <Link
+            to={`/PregnancyWeekDetail?week=${week}`}
+            className="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl font-medium text-sm transition-opacity active:opacity-70"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            <span style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '16px' }}>
+              {lang === 'da' ? `Læs alt om uge ${week}` : `Read all about week ${week}`}
+            </span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-      </div>
+      )}
 
       {/* Quick links */}
       <div className="mx-5 mb-5 grid grid-cols-2 gap-3">
         <Link to={createPageUrl('Knowledge')} className="rounded-2xl p-4 border flex items-center gap-3 active:opacity-70" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
             <BookOpen className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -164,12 +192,12 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
               {lang === 'da' ? 'Viden' : 'Knowledge'}
             </p>
             <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              {lang === 'da' ? 'Artikler & FAQ' : 'Articles & FAQ'}
+              {lang === 'da' ? 'Alle uger' : 'All weeks'}
             </p>
           </div>
         </Link>
         <Link to={createPageUrl('Calendar')} className="rounded-2xl p-4 border flex items-center gap-3 active:opacity-70" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
             <Calendar className="w-4 h-4 text-white" />
           </div>
           <div>
