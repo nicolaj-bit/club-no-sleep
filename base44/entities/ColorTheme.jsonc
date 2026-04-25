@@ -1,0 +1,113 @@
+{
+  "name": "ColorTheme",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Temaets navn (fx 'Sand & Chokolade')"
+    },
+    "description": {
+      "type": "string",
+      "description": "Kort beskrivelse"
+    },
+    "preview_gradient": {
+      "type": "string",
+      "description": "CSS gradient til preview (fx 'linear-gradient(135deg, #FAF6F1 0%, #C8A882 100%)')"
+    },
+    "preview_dot": {
+      "type": "string",
+      "description": "Accent farve til preview dot (hex)"
+    },
+    "light_bg": {
+      "type": "string"
+    },
+    "light_card": {
+      "type": "string"
+    },
+    "light_subtle": {
+      "type": "string"
+    },
+    "light_border": {
+      "type": "string"
+    },
+    "light_primary": {
+      "type": "string"
+    },
+    "light_accent": {
+      "type": "string"
+    },
+    "light_cappuccino": {
+      "type": "string"
+    },
+    "light_text_primary": {
+      "type": "string"
+    },
+    "light_text_secondary": {
+      "type": "string"
+    },
+    "light_text_muted": {
+      "type": "string"
+    },
+    "dark_bg": {
+      "type": "string"
+    },
+    "dark_card": {
+      "type": "string"
+    },
+    "dark_subtle": {
+      "type": "string"
+    },
+    "dark_border": {
+      "type": "string"
+    },
+    "dark_primary": {
+      "type": "string"
+    },
+    "dark_accent": {
+      "type": "string"
+    },
+    "dark_cappuccino": {
+      "type": "string"
+    },
+    "dark_text_primary": {
+      "type": "string"
+    },
+    "dark_text_secondary": {
+      "type": "string"
+    },
+    "dark_text_muted": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Vises til brugerne"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

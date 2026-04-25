@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
-import ColorThemePicker from '@/components/admin/ColorThemePicker';
+import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -477,7 +477,7 @@ export default function AdminEditor() {
       )}
 
 
-      {activeTab === 'ColorTheme' && <ColorThemePicker />}
+      {activeTab === 'ColorTheme' && <ColorThemeEditor />}
 
       <div className="p-4 space-y-2 mt-2">
         {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' ? null : isLoading ? (

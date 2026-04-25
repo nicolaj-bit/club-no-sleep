@@ -1,7 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { COLOR_THEMES } from '@/components/admin/ColorThemePicker';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 
-const ThemeContext = createContext({ isDark: false, toggle: () => {}, colorTheme: 'sand', setColorTheme: () => {} });
+const ThemeContext = createContext({ isDark: false, toggle: () => {}, colorTheme: null, setColorTheme: () => {} });
+
+// Cache fetched DB themes in memory so we don't re-fetch every render
+const themeCache = {};
 
 function applyDarkMode(dark) {
   if (dark) {
@@ -13,72 +15,90 @@ function applyDarkMode(dark) {
   }
 }
 
-function applyColorTheme(themeId, isDark) {
-  const theme = COLOR_THEMES.find(t => t.id === themeId) || COLOR_THEMES[0];
-  const vars = isDark ? theme.dark : theme.light;
+function applyThemeObject(theme, isDark) {
+  if (!theme) return;
+  const prefix = isDark ? 'dark_' : 'light_';
   const root = document.documentElement;
-  root.style.setProperty('--color-bg', vars.bg);
-  root.style.setProperty('--color-bg-card', vars.card);
-  root.style.setProperty('--color-bg-subtle', vars.subtle);
-  root.style.setProperty('--color-border', vars.border);
-  root.style.setProperty('--color-primary', vars.primary);
-  root.style.setProperty('--color-accent', vars.accent);
-  root.style.setProperty('--color-cappuccino', vars.cappuccino);
-  root.style.setProperty('--color-text-primary', vars.textPrimary);
-  root.style.setProperty('--color-text-secondary', vars.textSecondary);
-  root.style.setProperty('--color-text-muted', vars.textMuted);
-  root.style.setProperty('--color-primary-light', vars.accent);
-  document.body.style.backgroundColor = vars.bg;
-  document.body.style.color = vars.textPrimary;
-  if (isDark) {
-    document.documentElement.style.backgroundColor = vars.bg;
-  } else {
-    document.documentElement.style.backgroundColor = '';
-  }
+  const set = (cssVar, field) => {
+    const val = theme[prefix + field];
+    if (val) root.style.setProperty(cssVar, val);
+  };
+  set('--color-bg', 'bg');
+  set('--color-bg-card', 'card');
+  set('--color-bg-subtle', 'subtle');
+  set('--color-border', 'border');
+  set('--color-primary', 'primary');
+  set('--color-accent', 'accent');
+  set('--color-cappuccino', 'cappuccino');
+  set('--color-text-primary', 'text_primary');
+  set('--color-text-secondary', 'text_secondary');
+  set('--color-text-muted', 'text_muted');
+  root.style.setProperty('--color-primary-light', theme[prefix + 'accent'] || '');
+  const bg = theme[prefix + 'bg'] || '';
+  const textPrimary = theme[prefix + 'text_primary'] || '';
+  document.body.style.backgroundColor = bg;
+  document.body.style.color = textPrimary;
+  document.documentElement.style.backgroundColor = isDark ? bg : '';
+}
+
+async function fetchThemeById(id) {
+  if (!id) return null;
+  if (themeCache[id]) return themeCache[id];
+  const { base44 } = await import('@/api/base44Client');
+  const results = await base44.entities.ColorTheme.filter({ id });
+  const theme = results[0] || null;
+  if (theme) themeCache[id] = theme;
+  return theme;
 }
 
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('lalatoto-theme') === 'dark');
-  const [colorTheme, setColorTheme_state] = useState(() => localStorage.getItem('lalatoto-color-theme') || 'sand');
+  const [colorThemeId, setColorThemeId] = useState(() => localStorage.getItem('lalatoto-color-theme-id') || null);
+  const currentThemeRef = useRef(null);
+  const isDarkRef = useRef(isDark);
+  isDarkRef.current = isDark;
 
-  // Apply immediately on mount
+  // Apply dark mode immediately
   useEffect(() => {
     applyDarkMode(isDark);
-    applyColorTheme(colorTheme, isDark);
   }, []);
 
-  // Fetch color theme from DB (non-blocking)
+  // Load and apply the saved theme on mount
   useEffect(() => {
-    import('@/api/base44Client').then(({ base44 }) => {
-      base44.entities.AppConfig.filter({ key: 'app_theme' }).then(results => {
-        const dbTheme = results[0]?.color_theme;
-        if (dbTheme && dbTheme !== colorTheme) {
-          setColorTheme(dbTheme);
-          localStorage.setItem('lalatoto-color-theme', dbTheme);
-          applyColorTheme(dbTheme, isDark);
-        }
-      }).catch(() => {});
-    });
+    if (!colorThemeId) return;
+    fetchThemeById(colorThemeId).then(theme => {
+      if (theme) {
+        currentThemeRef.current = theme;
+        applyThemeObject(theme, isDarkRef.current);
+      }
+    }).catch(() => {});
   }, []);
 
   const toggle = () => {
     setIsDark(d => {
       const next = !d;
+      isDarkRef.current = next;
       applyDarkMode(next);
-      applyColorTheme(colorTheme, next);
+      if (currentThemeRef.current) applyThemeObject(currentThemeRef.current, next);
       localStorage.setItem('lalatoto-theme', next ? 'dark' : 'light');
       return next;
     });
   };
 
-  const setColorTheme = (themeId) => {
-    setColorTheme_state(themeId);
-    localStorage.setItem('lalatoto-color-theme', themeId);
-    applyColorTheme(themeId, isDark);
+  const setColorTheme = async (id, themeObj) => {
+    setColorThemeId(id);
+    localStorage.setItem('lalatoto-color-theme-id', id);
+    let theme = themeObj || themeCache[id];
+    if (!theme) theme = await fetchThemeById(id);
+    if (theme) {
+      currentThemeRef.current = theme;
+      themeCache[id] = theme;
+      applyThemeObject(theme, isDarkRef.current);
+    }
   };
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggle, colorTheme, setColorTheme }}>
+    <ThemeContext.Provider value={{ isDark, toggle, colorTheme: colorThemeId, setColorTheme }}>
       {children}
     </ThemeContext.Provider>
   );
