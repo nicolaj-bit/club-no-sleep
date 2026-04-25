@@ -71,6 +71,7 @@ export default function AIChat() {
   const textareaRef = useRef(null);
   const urlParams = new URLSearchParams(window.location.search);
   const withLogs = urlParams.get('with_logs') === '1';
+  const withDiary = urlParams.get('with_diary') === '1';
 
   useEffect(() => {
     // Load AI icon from AppConfig
@@ -122,6 +123,36 @@ export default function AIChat() {
           }
         } catch (e) {
           console.log('Could not load sleep logs');
+        }
+      }
+
+      if (withDiary) {
+        try {
+          const user = await base44.auth.me();
+          const [profiles, diaryEntries] = await Promise.all([
+            base44.entities.UserProfile.filter({ user_email: user.email }),
+            base44.entities.PregnancyDiary.filter({ user_email: user.email }, '-week', 20),
+          ]);
+          const profile = profiles[0];
+          if (diaryEntries?.length > 0 || profile) {
+            setIsLoading(true);
+            const MOOD_LABELS = { strålende: 'Strålende 🌟', god: 'God 😊', okay: 'Okay 😐', træt: 'Træt 😴', hård: 'Hård dag 😢' };
+            const diaryText = diaryEntries.map(e =>
+              `Uge ${e.week}: Humør: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptomer: ${e.symptoms || '–'} | Spark: ${e.baby_kicks_count ?? '–'}`
+            ).join('\n');
+            const contextParts = [];
+            if (profile?.child_due_date) {
+              const daysLeft = Math.round((new Date(profile.child_due_date) - new Date()) / 86400000);
+              const weeksLeft = Math.round(daysLeft / 7);
+              const currentWeek = Math.max(1, Math.min(42, 40 - weeksLeft));
+              contextParts.push(`Jeg er i graviditetsuge ${currentWeek} (termin om ca. ${weeksLeft} uger).`);
+            }
+            if (diaryText) contextParts.push(`Her er mine dagbogsnotater fra graviditeten:\n${diaryText}`);
+            const prompt = `${contextParts.join('\n\n')}\n\nBrug denne kontekst til at give mig personlige og relevante svar fremover. Du behøver ikke at kommentere det nu — bare svar med en kort bekræftelse på at du har set mine oplysninger og er klar til at hjælpe.`;
+            await base44.agents.addMessage(conv, { role: 'user', content: prompt });
+          }
+        } catch (e) {
+          console.log('Could not load diary data');
         }
       }
 
