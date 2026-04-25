@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { ArrowLeft } from 'lucide-react';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
@@ -7,6 +8,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 
 
 export default function Knowledge() {
+  const navigate = useNavigate();
   const headerVisible = useScrollDirection();
   const { isDark } = useTheme();
 
@@ -23,7 +25,7 @@ export default function Knowledge() {
       >
         <div className="px-4 py-3 flex items-center gap-3">
           <button
-            onClick={() => window.history.back()}
+            onClick={() => navigate('/')}
             className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
             style={{ backgroundColor: 'var(--color-bg-subtle)' }}
           >
