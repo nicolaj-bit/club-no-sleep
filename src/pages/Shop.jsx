@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { Search, SlidersHorizontal, X, LayoutGrid } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -24,7 +24,6 @@ const SORT_OPTIONS = [
 export default function Shop() {
   const { lang, t } = useLanguage();
   const { isDark } = useTheme();
-  const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -87,16 +86,10 @@ export default function Shop() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <PageHeader title="Shop" />
 
-        {/* Sticky Header */}
-        <header
-          className="sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300"
-          style={{
-            backgroundColor: isDark ? 'rgba(0,0,0,0.85)' : 'rgba(247,242,236,0.92)',
-            borderColor: 'var(--color-border)',
-            transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-          }}
-        >
+        {/* Category pills + Search */}
+        <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <div className="px-4 pt-3 pb-2">
             {showSearch ? (
               <div className="flex items-center gap-2">
@@ -117,9 +110,6 @@ export default function Shop() {
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
-                  {lang === 'en' ? 'Shop' : 'Shop'}
-                </h1>
                 <div className="flex items-center gap-1">
                   <Button variant="ghost" size="icon" onClick={() => setShowSearch(true)}>
                     <Search className="w-5 h-5" />
@@ -164,7 +154,7 @@ export default function Shop() {
               })}
             </div>
           </div>
-        </header>
+        </div>
 
         {/* Hero banner for active category */}
         {activeCategory !== 'all' && (

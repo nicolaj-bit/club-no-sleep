@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Search, X } from 'lucide-react';
@@ -8,11 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import BlogCard from '@/components/blog/BlogCard';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 
 export default function Blog() {
-  const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const { lang, t } = useLanguage();
   const [search, setSearch] = useState('');
@@ -83,15 +82,10 @@ export default function Blog() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header
-        className="sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300"
-        style={{
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
-          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-        }}
-      >
+      <PageHeader title={t.blogTitle} />
+
+      {/* Categories + Search */}
+      <div className="sticky top-16 z-30 backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="px-4 py-3">
           {showSearch ? (
             <div className="flex items-center gap-2">
@@ -117,16 +111,14 @@ export default function Blog() {
               </Button>
             </div>
           ) : (
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>{t.blogTitle}</h1>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => setShowSearch(true)}
-              >
-                <Search className="w-5 h-5" />
-              </Button>
-            </div>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setShowSearch(true)}
+              className="w-full justify-start"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
           )}
         </div>
         
@@ -147,7 +139,7 @@ export default function Blog() {
             ))}
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Content */}
       <div className="p-4 space-y-6">

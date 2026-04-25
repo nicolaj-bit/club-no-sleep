@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -33,7 +33,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 
 export default function Community() {
-  const headerVisible = useScrollDirection();
   const queryClient = useQueryClient();
   const { isMom, activeProfile } = useActiveProfile();
   const { t } = useLanguage();
@@ -249,17 +248,7 @@ export default function Community() {
       </DialogContent>
     </Dialog>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header
-        className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3 transition-transform duration-300"
-        style={{
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
-          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-        }}
-      >
-        <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>Community</h1>
-      </header>
+      <PageHeader title="Community" />
 
       <div className="p-4">
         {/* Pill tab navigation */}

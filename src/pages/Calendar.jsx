@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2 } from 'lucide-react';
+import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -73,17 +74,17 @@ export default function Calendar() {
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="px-5 pt-12 pb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.calendarTitle}</h1>
-        <button
-          onClick={prefillTime}
-          className="w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-          
-          <Plus className="w-5 h-5 text-white" />
-        </button>
-      </div>
+      <PageHeader 
+        title={t.calendarTitle}
+        rightAction={
+          <button
+            onClick={prefillTime}
+            className="w-9 h-9 rounded-full flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+            <Plus className="w-5 h-5 text-white" />
+          </button>
+        }
+      />
 
       {/* Month navigation */}
       <div className="px-5 mb-4 flex items-center justify-between">
