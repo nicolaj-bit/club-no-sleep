@@ -27,10 +27,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Abonnementet er allerede opsagt' }, { status: 400 });
     }
 
-    // Beregn opsigelsesdato: slutningen af næste faktureringsperiode
-    // (løbende måned + 1 mdr. opsigelse)
+    // Beregn opsigelsesdato: slutningen af indeværende faktureringsperiode
+    // (kun løbende måned — ingen binding)
     const currentPeriodEnd = subscription.current_period_end; // unix timestamp
-    const cancelAt = currentPeriodEnd + (30 * 24 * 60 * 60); // + 30 dage (1 mdr)
+    const cancelAt = currentPeriodEnd; // udløber ved slutningen af løbende måned
 
     // Sæt abonnementet til at annullere på den beregnede dato
     await stripe.subscriptions.update(profile.subscription_id, {

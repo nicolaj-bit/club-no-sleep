@@ -290,10 +290,10 @@ export default function Settings() {
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            Jf. vores handelsbetingelser er opsigelsesfristen <strong>løbende måned + 1 måned</strong>.
+            Du kan til enhver tid opsige dit abonnement. Opsigelse træder i kraft ved udløbet af den <strong>løbende måned</strong> — ingen binding.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Dit abonnement vil fortsat være aktivt indtil opsigelsesperiodens udløb — du betaler kun for den tid du bruger.
+            Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
           </p>
           <Button
             variant="destructive"
