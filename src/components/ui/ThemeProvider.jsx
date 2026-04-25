@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { COLOR_THEMES } from '@/components/admin/ColorThemePicker';
 
-const ThemeContext = createContext({ isDark: false, toggle: () => {} });
+const ThemeContext = createContext({ isDark: false, toggle: () => {}, colorTheme: 'sand', setColorTheme: () => {} });
 
 function applyDarkMode(dark) {
   if (dark) {
@@ -39,7 +39,7 @@ function applyColorTheme(themeId, isDark) {
 
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('lalatoto-theme') === 'dark');
-  const [colorTheme, setColorTheme] = useState(() => localStorage.getItem('lalatoto-color-theme') || 'sand');
+  const [colorTheme, setColorTheme_state] = useState(() => localStorage.getItem('lalatoto-color-theme') || 'sand');
 
   // Apply immediately on mount
   useEffect(() => {
@@ -71,8 +71,14 @@ export function ThemeProvider({ children }) {
     });
   };
 
+  const setColorTheme = (themeId) => {
+    setColorTheme_state(themeId);
+    localStorage.setItem('lalatoto-color-theme', themeId);
+    applyColorTheme(themeId, isDark);
+  };
+
   return (
-    <ThemeContext.Provider value={{ isDark, toggle, colorTheme }}>
+    <ThemeContext.Provider value={{ isDark, toggle, colorTheme, setColorTheme }}>
       {children}
     </ThemeContext.Provider>
   );

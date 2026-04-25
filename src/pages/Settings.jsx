@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
+import UserColorThemePicker from '@/components/ui/UserColorThemePicker';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -175,6 +176,7 @@ export default function Settings() {
               {t.dark}
             </button>
           </div>
+          <UserColorThemePicker />
         </div>
 
         {/* Admin push */}
