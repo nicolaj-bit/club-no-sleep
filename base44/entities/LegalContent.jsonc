@@ -1,0 +1,51 @@
+{
+  "name": "LegalContent",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "terms",
+        "privacy",
+        "faq",
+        "support"
+      ],
+      "description": "Hvilken type indhold"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titel"
+    },
+    "content": {
+      "type": "string",
+      "format": "html",
+      "description": "Indhold (rich text)"
+    },
+    "pdf_url": {
+      "type": "string",
+      "description": "URL til uploadet PDF-fil"
+    }
+  },
+  "required": [
+    "type",
+    "title"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

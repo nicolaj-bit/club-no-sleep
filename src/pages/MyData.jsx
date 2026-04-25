@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ArrowLeft, Download, Trash2, MessageSquareX, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Download, Trash2, MessageSquareX, AlertTriangle, FileText, Upload, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,6 +10,41 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 export default function MyData() {
   const [loading, setLoading] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState(null);
+  const [user, setUser] = useState(null);
+  const [legalDocs, setLegalDocs] = useState({ terms: null, privacy: null });
+  const [uploadingType, setUploadingType] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(u => setUser(u)).catch(() => {});
+    loadLegalDocs();
+  }, []);
+
+  const loadLegalDocs = async () => {
+    const results = await base44.entities.LegalContent.list();
+    const terms = results.find(r => r.type === 'terms') || null;
+    const privacy = results.find(r => r.type === 'privacy') || null;
+    setLegalDocs({ terms, privacy });
+  };
+
+  const handlePdfUpload = async (type, file) => {
+    if (!file) return;
+    setUploadingType(type);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const existing = legalDocs[type];
+    if (existing?.id) {
+      await base44.entities.LegalContent.update(existing.id, { pdf_url: file_url });
+    } else {
+      await base44.entities.LegalContent.create({
+        type,
+        title: type === 'terms' ? 'Handelsbetingelser' : 'Privatlivspolitik',
+        content: '',
+        pdf_url: file_url,
+      });
+    }
+    await loadLegalDocs();
+    toast.success(`PDF uploadet for ${type === 'terms' ? 'handelsbetingelser' : 'privatlivspolitik'}`);
+    setUploadingType(null);
+  };
 
   const handleExport = async () => {
     setLoading('export');
@@ -132,6 +167,54 @@ export default function MyData() {
         <p className="text-xs text-center pb-8" style={{ color: 'var(--color-text-muted)' }}>
           I henhold til GDPR har du ret til at tilgå, rette og slette dine personoplysninger.
         </p>
+
+        {/* Admin: PDF upload til juridiske dokumenter */}
+        {user?.role === 'admin' && (
+          <div className="rounded-2xl p-5 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <FileText className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+              </div>
+              <div>
+                <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>Juridiske dokumenter (Admin)</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Upload PDF for handelsbetingelser og privatlivspolitik</p>
+              </div>
+            </div>
+
+            {[
+              { type: 'terms', label: 'Handelsbetingelser' },
+              { type: 'privacy', label: 'Privatlivspolitik' },
+            ].map(({ type, label }) => (
+              <div key={type} className="rounded-xl p-4 space-y-2" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
+                {legalDocs[type]?.pdf_url && (
+                  <a
+                    href={legalDocs[type].pdf_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs py-2 px-3 rounded-lg w-fit"
+                    style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Se nuværende PDF
+                  </a>
+                )}
+                <label className="flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm w-fit"
+                  style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
+                  <Upload className="w-4 h-4" />
+                  {uploadingType === type ? 'Uploader...' : legalDocs[type]?.pdf_url ? 'Udskift PDF' : 'Upload PDF'}
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    disabled={uploadingType === type}
+                    onChange={(e) => handlePdfUpload(type, e.target.files?.[0])}
+                  />
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Confirm dialog */}
