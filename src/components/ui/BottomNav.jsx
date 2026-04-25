@@ -2,22 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Lightbulb, Users, User, BedDouble, X, CalendarDays, BookHeart } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
-
-const menuItemsConfig = [
-  { key: 'shop', icon: ShoppingBag, page: 'Shop' },
-  { key: 'blog', icon: BookOpen, page: 'Blog' },
-  { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
-  { key: 'knowledge', icon: Lightbulb, page: 'Knowledge' },
-  { key: 'community', icon: Users, page: 'Community' },
-  { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
-  { key: 'profile', icon: User, page: 'Profile' },
-];
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 
 export default function BottomNav() {
   const location = useLocation();
@@ -28,7 +19,29 @@ export default function BottomNav() {
   const { saveTabPath, getTabPath, clearTabPath } = useTabState();
   const { isDark } = useTheme();
   const { t } = useLanguage();
-  const menuItems = menuItemsConfig.map(item => ({ ...item, name: t[item.key] }));
+  const { activeProfile } = useActiveProfile();
+
+  // Gravid: har terminsdato i fremtiden og ingen fødselsdato
+  const isExpecting = activeProfile?.child_due_date
+    && !activeProfile?.child_birthdate
+    && new Date(activeProfile.child_due_date) > new Date();
+
+  const menuItemsConfig = [
+    { key: 'shop', icon: ShoppingBag, page: 'Shop' },
+    { key: 'blog', icon: BookOpen, page: 'Blog' },
+    isExpecting
+      ? { key: 'diary', icon: BookHeart, page: 'PregnancyDiary', name: 'Dagbog' }
+      : { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
+    { key: 'knowledge', icon: Lightbulb, page: 'Knowledge' },
+    { key: 'community', icon: Users, page: 'Community' },
+    { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
+    { key: 'profile', icon: User, page: 'Profile' },
+  ];
+
+  const menuItems = menuItemsConfig.map(item => ({
+    ...item,
+    name: item.name || t[item.key],
+  }));
 
   useEffect(() => {
     base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {
@@ -43,7 +56,7 @@ export default function BottomNav() {
 
   // Save current path to tab history whenever location changes
   useEffect(() => {
-    const allPages = ['Home', 'AIChat', ...menuItemsConfig.map(m => m.page)];
+    const allPages = ['Home', 'AIChat', 'SleepLog', 'PregnancyDiary', ...menuItemsConfig.map(m => m.page)];
     allPages.forEach(page => {
       const url = createPageUrl(page);
       if (currentPath === url || currentPath.startsWith(url + '?')) {
