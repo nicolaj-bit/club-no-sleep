@@ -70,8 +70,8 @@ export default function Home() {
 
   const profile = activeProfile;
 
-  // Kommende forældre: har terminsdato men ikke fødselsdato
-  const isExpecting = profile?.child_due_date && !profile?.child_birthdate;
+  // Kommende forældre: har terminsdato i fremtiden men ikke fødselsdato
+  const isExpecting = profile?.child_due_date && !profile?.child_birthdate && new Date(profile.child_due_date) > new Date();
 
   const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
@@ -90,6 +90,14 @@ export default function Home() {
   const displayAffirmation = lang === 'da' && translatedAffirmations[0]?.text
     ? translatedAffirmations[0].text
     : affirmation;
+
+  if (profileLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (isExpecting) {
     return <PregnancyHomeView profile={profile} user={user} posts={posts} />;
