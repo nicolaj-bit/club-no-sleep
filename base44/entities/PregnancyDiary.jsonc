@@ -1,0 +1,62 @@
+{
+  "name": "PregnancyDiary",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Reference til bruger"
+    },
+    "week": {
+      "type": "number",
+      "description": "Graviditetsuge (1-42)"
+    },
+    "note": {
+      "type": "string",
+      "description": "Personlig refleksion/note"
+    },
+    "mood": {
+      "type": "string",
+      "enum": [
+        "str\u00e5lende",
+        "god",
+        "okay",
+        "tr\u00e6t",
+        "h\u00e5rd"
+      ],
+      "description": "Hum\u00f8r denne uge"
+    },
+    "symptoms": {
+      "type": "string",
+      "description": "Symptomer og fornemmelser"
+    },
+    "belly_image": {
+      "type": "string",
+      "description": "URL til mavebillede"
+    },
+    "baby_kicks_count": {
+      "type": "number",
+      "description": "Antal sparkekicks noteret"
+    }
+  },
+  "required": [
+    "user_email",
+    "week"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}

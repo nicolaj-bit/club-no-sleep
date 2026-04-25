@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Baby, Heart, Sparkles, Apple, Activity, BookOpen, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Baby, Heart, Sparkles, Apple, Activity, BookOpen, AlertCircle, BookHeart } from 'lucide-react';
 
 const WEEK_DATA = {
   4: {
@@ -1083,6 +1083,24 @@ export default function PregnancyWeekDetail() {
             <span className="text-xs font-medium px-3 py-1.5 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Download</span>
           </a>
         )}
+
+        {/* Dagbog CTA */}
+        <Link
+          to={`/PregnancyDiary?week=${week}`}
+          className="flex items-center justify-between w-full px-4 py-4 rounded-2xl border active:opacity-70"
+          style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+              <BookHeart className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Skriv i din dagbog</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Gem minder, mavebillede og refleksioner fra uge {week}</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+        </Link>
 
         <div className="rounded-2xl p-4 flex items-start gap-3 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <BookOpen className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-text-muted)' }} />

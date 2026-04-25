@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { differenceInWeeks, differenceInDays } from 'date-fns';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { ChevronRight, Heart, BookOpen, Calendar, Baby, Sparkles, ArrowRight } from 'lucide-react';
+import { ChevronRight, Heart, BookOpen, Calendar, Baby, Sparkles, ArrowRight, BookHeart } from 'lucide-react';
 import NotificationBell from '@/components/ui/NotificationBell';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
@@ -177,6 +177,28 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
               {lang === 'da' ? `Læs alt om uge ${week}` : `Read all about week ${week}`}
             </span>
             <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      )}
+
+      {/* Dagbog CTA */}
+      {week !== null && (
+        <div className="mx-5 mb-5">
+          <Link
+            to={`/PregnancyDiary?week=${week}`}
+            className="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl border active:opacity-70"
+            style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}>
+                <BookHeart className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Min dagbog</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Gem minder & mavebilleder fra uge {week}</p>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
           </Link>
         </div>
       )}
