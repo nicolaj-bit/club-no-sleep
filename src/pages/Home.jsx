@@ -126,8 +126,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Daily Affirmation */}
-      <div className="mx-5 mb-5">
+      {/* Daily Affirmation — skjules når terminsdato er aktiv (i fremtiden) */}
+      {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && <div className="mx-5 mb-5">
         <div
           className="rounded-2xl p-6 relative overflow-hidden"
           style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
@@ -138,7 +138,7 @@ export default function Home() {
             {displayAffirmation}
           </p>
         </div>
-      </div>
+      </div>}
 
       {/* Child development age pill */}
       <ChildDevelopmentCard profile={profile} />
