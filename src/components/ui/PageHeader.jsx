@@ -14,8 +14,6 @@ export default function PageHeader({
   const navigate = useNavigate();
   const handleBack = onBack || (backUrl ? () => navigate(backUrl) : () => window.history.back());
 
-  const BackWrapper = ({ children }) => <button onClick={handleBack}>{children}</button>;
-
   return (
     <header
       className={cn('sticky top-0 z-40 backdrop-blur-xl border-b', className)}
@@ -31,14 +29,13 @@ export default function PageHeader({
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <BackWrapper>
-            <span
-              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
-              style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-            >
-              <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-            </span>
-          </BackWrapper>
+          <button
+            onClick={handleBack}
+            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
+            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+          >
+            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
+          </button>
           {title && (
             <h1
               className="text-base font-semibold truncate"
