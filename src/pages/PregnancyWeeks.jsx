@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen, ArrowLeft } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
@@ -92,6 +92,7 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyWeeks() {
+  const navigate = useNavigate();
   const headerVisible = useScrollDirection();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -130,7 +131,7 @@ export default function PregnancyWeeks() {
       >
         <div className="px-4 py-3 flex items-center gap-3">
           <button
-            onClick={() => window.history.back()}
+            onClick={() => navigate('/')}
             className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
             style={{ backgroundColor: 'var(--color-bg-subtle)' }}
           >
