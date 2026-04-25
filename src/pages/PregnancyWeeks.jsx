@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
-import { useScrollDirection } from '@/components/ui/useScrollDirection';
+import PageHeader from '@/components/ui/PageHeader';
 
 function getPregnancyWeek(dueDateStr) {
   if (!dueDateStr) return null;
@@ -92,8 +92,6 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyWeeks() {
-  const navigate = useNavigate();
-  const headerVisible = useScrollDirection();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -120,31 +118,7 @@ export default function PregnancyWeeks() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header
-        className="sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300"
-        style={{
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
-          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-        }}
-      >
-        <div className="px-4 py-3 flex items-center gap-3">
-          <button
-            onClick={() => navigate('/')}
-            className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
-            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-          >
-            <ArrowLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
-          </button>
-          <h1
-            className="text-2xl font-light"
-            style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}
-          >
-            Graviditet uge for uge
-          </h1>
-        </div>
-      </header>
+      <PageHeader title="Graviditet uge for uge" />
 
       <div className="px-4 pt-5 pb-6 space-y-5">
         {/* Week list */}

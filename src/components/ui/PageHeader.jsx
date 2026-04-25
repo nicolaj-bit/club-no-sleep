@@ -1,21 +1,20 @@
 import React from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 export default function PageHeader({
   title,
-  backUrl,
+  backUrl = '/',
   onBack,
   rightAction,
   className,
   transparent = false,
 }) {
-  const handleBack = onBack || (backUrl ? undefined : () => window.history.back());
+  const navigate = useNavigate();
+  const handleBack = onBack || (backUrl ? () => navigate(backUrl) : () => window.history.back());
 
-  const BackWrapper = backUrl
-    ? ({ children }) => <Link to={backUrl}>{children}</Link>
-    : ({ children }) => <button onClick={handleBack}>{children}</button>;
+  const BackWrapper = ({ children }) => <button onClick={handleBack}>{children}</button>;
 
   return (
     <header
