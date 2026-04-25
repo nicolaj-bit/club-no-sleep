@@ -146,37 +146,6 @@ export default function PregnancyWeeks() {
       </header>
 
       <div className="px-4 pt-5 pb-6 space-y-5">
-        {/* Info card */}
-        <div className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <p className="text-xs uppercase tracking-widest font-medium mb-0.5" style={{ color: 'var(--color-text-muted)' }}>Inspireret af</p>
-          <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Politikens Graviditetsbog</p>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>af Lene Skou Jensen</p>
-
-          {!dueDateStr && !loading && (
-            <p className="text-xs mt-3 p-2 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
-              💡 Tilføj din terminsdato i din profil for at se hvilken uge du er i nu.
-            </p>
-          )}
-
-          {isPregnant && (
-            <div className="mt-3 flex items-center gap-2">
-              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{ width: `${Math.min(100, ((currentWeek - 4) / 38) * 100)}%`, backgroundColor: 'var(--color-cappuccino)' }}
-                />
-              </div>
-              <span className="text-xs font-semibold" style={{ color: 'var(--color-cappuccino)' }}>Uge {currentWeek}</span>
-            </div>
-          )}
-
-          {isPostTerm && (
-            <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>
-              🎉 Du er forbi terminen – din baby er snart her!
-            </p>
-          )}
-        </div>
-
         {/* Week list */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
