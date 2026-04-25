@@ -91,7 +91,8 @@ export default function Home() {
     ? translatedAffirmations[0].text
     : affirmation;
 
-  if (profileLoading) {
+  // Vent til profil OG user er loaded før vi beslutter view
+  if (profileLoading || (user === null && profile !== null)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -99,9 +100,12 @@ export default function Home() {
     );
   }
 
+  // Graviditetsview: har terminsdato i fremtiden, barnet ikke født endnu
   if (isExpecting) {
     return <PregnancyHomeView profile={profile} user={user} posts={posts} />;
   }
+
+  // Normalt dashboard: barnet er født (child_birthdate sat) ELLER terminsdato er passeret
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
