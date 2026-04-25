@@ -4,19 +4,41 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Temaets navn (fx 'Sand & Chokolade')"
+      "description": "Temaets navn"
     },
     "description": {
       "type": "string",
       "description": "Kort beskrivelse"
     },
     "preview_gradient": {
-      "type": "string",
-      "description": "CSS gradient til preview (fx 'linear-gradient(135deg, #FAF6F1 0%, #C8A882 100%)')"
+      "type": "string"
     },
     "preview_dot": {
+      "type": "string"
+    },
+    "c_bg": {
       "type": "string",
-      "description": "Accent farve til preview dot (hex)"
+      "description": "Kernefarve: baggrund (lys)"
+    },
+    "c_card": {
+      "type": "string",
+      "description": "Kernefarve: kort (lys)"
+    },
+    "c_primary": {
+      "type": "string",
+      "description": "Kernefarve: prim\u00e6r"
+    },
+    "c_accent": {
+      "type": "string",
+      "description": "Kernefarve: accent"
+    },
+    "c_text": {
+      "type": "string",
+      "description": "Kernefarve: tekst (lys)"
+    },
+    "c_dark_bg": {
+      "type": "string",
+      "description": "Kernefarve: m\u00f8rk baggrund"
     },
     "light_bg": {
       "type": "string"
@@ -80,13 +102,11 @@
     },
     "is_active": {
       "type": "boolean",
-      "default": true,
-      "description": "Vises til brugerne"
+      "default": true
     },
     "order": {
       "type": "number",
-      "default": 0,
-      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+      "default": 0
     }
   },
   "required": [
