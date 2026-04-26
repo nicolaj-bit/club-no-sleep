@@ -5,7 +5,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { MapPin, MessageCircle, Users, Radio, Calendar, ChevronRight, Shield, Heart, Lock } from 'lucide-react';
+import { MapPin, MessageCircle, Users, Radio, ChevronRight, Shield, Heart, Lock } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,6 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import UserAvatar from '@/components/community/UserAvatar';
 import NearbyUserCard from '@/components/community/NearbyUserCard';
-import ExpertCard from '@/components/booking/ExpertCard';
 import DenmarkMap from '@/components/community/DenmarkMap';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -39,7 +38,6 @@ export default function Community() {
   const TABS = [
     { value: 'nearby', icon: Radio, label: t.nearMe },
     { value: 'chats', icon: MessageCircle, label: t.chats },
-    { value: 'experts', icon: Calendar, label: t.practitioners },
   ];
   const [activeTab, setActiveTab] = useState('nearby');
   const [user, setUser] = useState(null);
@@ -47,8 +45,7 @@ export default function Community() {
   const [userLocation, setUserLocation] = useState(null);
   const [isVisible, setIsVisible] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(false);
-  const [expertSearchMode, setExpertSearchMode] = useState('all'); // 'all' | 'area'
-  const [expertCategory, setExpertCategory] = useState('all');
+
 
   useEffect(() => {
     const loadUser = async () => {
@@ -104,16 +101,6 @@ export default function Community() {
       '-last_message_at'
     ),
     enabled: !!user?.email,
-  });
-
-  const { data: experts = [], isLoading: loadingExperts } = useQuery({
-    queryKey: ['experts'],
-    queryFn: () => base44.entities.Expert.filter({ is_active: true }),
-  });
-
-  const { data: expertCategories = [] } = useQuery({
-    queryKey: ['expertCategories'],
-    queryFn: () => base44.entities.ExpertCategory.filter({ is_active: true }, 'order'),
   });
 
   const [showLocationConsent, setShowLocationConsent] = useState(false);
@@ -180,34 +167,10 @@ export default function Community() {
     window.location.href = createPageUrl(`Chat?id=${conv.id}`);
   };
 
-  const handleExpertAreaSearch = () => {
-    if (expertSearchMode === 'area') {
-      setExpertSearchMode('all');
-      return;
-    }
-    if (!userLocation) {
-      // Show same consent dialog before requesting location
-      setShowLocationConsent(true);
-      // After consent is granted (doEnableLocation), user can tap the button again
-      return;
-    }
-    setExpertSearchMode('area');
-  };
-
-  const EXPERT_CATEGORIES = [
-    { value: 'all', label: t.all },
-    ...expertCategories.map(c => ({ value: c.key, label: c.label })),
-  ];
-
-  // Filter experts by area and/or category
-  const filteredExperts = experts
-    .filter(e => expertSearchMode === 'area' ? !!e.city : true)
-    .filter(e => expertCategory === 'all' ? true : e.category === expertCategory);
-
   const handleRefresh = async () => {
     await queryClient.invalidateQueries(['nearbyUsers']);
     await queryClient.invalidateQueries(['conversations', user?.email]);
-    await queryClient.invalidateQueries(['experts']);
+
   };
 
   return (
@@ -462,83 +425,7 @@ export default function Community() {
             )}
           </div>}
 
-          {/* Experts Tab */}
-          {activeTab === 'experts' && <div className="space-y-4">
-            {/* Category pills */}
-            <div className="overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-              <div className="flex gap-2 w-max pb-1">
-                {EXPERT_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.value}
-                    onClick={() => setExpertCategory(cat.value)}
-                    className="flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
-                    style={expertCategory === cat.value
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
-                      : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* Search area button */}
-            <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-              <div>
-                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.findPractitioner}</p>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                  {expertSearchMode === 'area' && userLocation
-                    ? t.showingInArea
-                    : t.showingRecommended}
-                </p>
-              </div>
-              <Button
-                size="sm"
-                variant={expertSearchMode === 'area' ? 'default' : 'outline'}
-                className="gap-2 rounded-full"
-                onClick={handleExpertAreaSearch}
-              >
-                <MapPin className="w-4 h-4" />
-                {expertSearchMode === 'area' ? t.all : t.searchInMyArea}
-              </Button>
-            </div>
-
-            {loadingExperts ? (
-              <div className="space-y-4">
-                {[1, 2].map(i => (
-                  <Skeleton key={i} className="h-48 rounded-2xl" />
-                ))}
-              </div>
-            ) : filteredExperts.length === 0 ? (
-              <div className="text-center py-12">
-                <MapPin className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>
-                {expertSearchMode === 'area'
-                  ? t.noExpertsInArea
-                  : t.noExpertsAvailable}
-                </p>
-                {expertSearchMode === 'area' && (
-                  <button
-                    className="text-sm text-blue-500 mt-2"
-                    onClick={() => setExpertSearchMode('all')}
-                  >
-                    {t.showAllExperts}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <>
-                {expertSearchMode === 'all' && (
-                  <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
-                    {t.recommendedPractitioners}
-                  </p>
-                )}
-                {filteredExperts.map(expert => (
-                  <ExpertCard key={expert.id} expert={expert} />
-                ))}
-              </>
-            )}
-          </div>}
 
 
 

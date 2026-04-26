@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -33,6 +33,7 @@ export default function BottomNav() {
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
     { key: 'community', icon: Users, page: 'Community' },
+    { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
     { key: 'profile', icon: User, page: 'Profile' },
   ];
