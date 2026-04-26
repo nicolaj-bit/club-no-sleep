@@ -32,7 +32,7 @@ export default function BottomNav() {
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
-    { key: 'community', icon: Users, page: 'Community' },
+    { key: 'community', icon: Users, page: 'Community', name: 'Natteensomhed' },
     { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
     { key: 'profile', icon: User, page: 'Profile' },
