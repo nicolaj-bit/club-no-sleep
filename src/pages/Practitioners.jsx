@@ -173,7 +173,7 @@ export default function Practitioners() {
             <>
               {expertSearchMode === 'all' && (
                 <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
-                  {t.recommendedPractitioners}
+                  Anbefalede af brugerne
                 </p>
               )}
               {filteredExperts.map(expert => (
