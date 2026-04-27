@@ -130,9 +130,9 @@ export default function Blog() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 style={activeCategory === cat
-                  ? { background: 'linear-gradient(135deg, #5C3317, #A0785A)', color: '#fff' }
-                  : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
-                className="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+                  ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', boxShadow: '0 2px 8px rgba(160,120,90,0.35)', border: 'none' }
+                  : { backgroundColor: 'transparent', color: 'var(--color-text-primary)', border: '1.5px solid #EDE4D8' }}
+                className="flex-shrink-0 px-5 py-2 rounded-2xl text-sm font-medium transition-all"
               >
                 {cat}
               </button>
