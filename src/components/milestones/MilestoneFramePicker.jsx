@@ -31,36 +31,44 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
       <div className="grid grid-cols-2 gap-3 mt-2">
         {filtered.map(frame => {
           const isSelected = selectedFrame.id === frame.id;
+          const cornerSize = 14;
+          const cornerThickness = 2;
           return (
             <button
               key={frame.id}
               onClick={() => onSelect(frame)}
               className="rounded-2xl overflow-hidden flex flex-col transition-all active:scale-95"
               style={{
-                border: isSelected ? `2.5px solid ${frame.accentColor}` : '2px solid transparent',
-                boxShadow: isSelected ? `0 0 0 1px ${frame.accentColor}40` : 'none',
+                border: isSelected ? `2px solid ${frame.accentColor}` : '2px solid transparent',
+                boxShadow: isSelected ? `0 0 0 2px ${frame.accentColor}50` : 'none',
               }}
             >
-              {/* Frame preview */}
+              {/* Top image area with corners + emoji */}
               <div
                 className="w-full relative flex items-center justify-center"
                 style={{ backgroundColor: frame.bgColor, aspectRatio: '1 / 1' }}
               >
-                <div className="text-5xl mb-1">{frame.emoji}</div>
-                {/* Decorative corner accents */}
-                <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 rounded-tl" style={{ borderColor: frame.accentColor }} />
-                <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 rounded-tr" style={{ borderColor: frame.accentColor }} />
-                <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 rounded-bl" style={{ borderColor: frame.accentColor }} />
-                <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 rounded-br" style={{ borderColor: frame.accentColor }} />
-                {/* Headline overlay */}
-                <div className="absolute bottom-0 left-0 right-0 px-2 pb-2 text-center">
-                  <p className="text-xs font-bold leading-tight" style={{ color: frame.textColor, fontFamily: 'Cormorant Garamond, serif' }}>
-                    {frame.headline}
-                  </p>
-                  <p className="text-[10px] leading-tight" style={{ color: frame.textColor + 'AA' }}>
-                    {frame.subline}
-                  </p>
-                </div>
+                {/* Camera corner marks */}
+                <div className="absolute top-3 left-3" style={{ width: cornerSize, height: cornerSize, borderLeft: `${cornerThickness}px solid ${frame.accentColor}`, borderTop: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '2px 0 0 0' }} />
+                <div className="absolute top-3 right-3" style={{ width: cornerSize, height: cornerSize, borderRight: `${cornerThickness}px solid ${frame.accentColor}`, borderTop: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '0 2px 0 0' }} />
+                <div className="absolute bottom-3 left-3" style={{ width: cornerSize, height: cornerSize, borderLeft: `${cornerThickness}px solid ${frame.accentColor}`, borderBottom: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '0 0 0 2px' }} />
+                <div className="absolute bottom-3 right-3" style={{ width: cornerSize, height: cornerSize, borderRight: `${cornerThickness}px solid ${frame.accentColor}`, borderBottom: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '0 0 2px 0' }} />
+
+                {/* Emoji */}
+                <div className="text-5xl">{frame.emoji}</div>
+              </div>
+
+              {/* Text area below image */}
+              <div
+                className="w-full px-3 py-2.5 text-left"
+                style={{ backgroundColor: frame.bgColor }}
+              >
+                <p className="text-xs font-bold leading-tight truncate" style={{ color: frame.textColor, fontFamily: 'Cormorant Garamond, serif', fontSize: 13 }}>
+                  {frame.headline}
+                </p>
+                <p className="text-[11px] leading-tight mt-0.5 truncate" style={{ color: frame.textColor + 'BB' }}>
+                  {frame.subline}
+                </p>
               </div>
             </button>
           );
