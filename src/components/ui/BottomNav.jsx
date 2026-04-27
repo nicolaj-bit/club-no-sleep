@@ -34,6 +34,7 @@ export default function BottomNav() {
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
     { key: 'community', icon: Users, page: 'Community', name: 'Natte ensomhed' },
     { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
+    { key: 'cafes', icon: ShoppingBag, page: 'BabyFriendlyCafes', name: 'Babyvenlige caféer' },
     { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
     { key: 'profile', icon: User, page: 'Profile' },
