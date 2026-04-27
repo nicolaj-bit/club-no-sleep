@@ -211,7 +211,7 @@ export default function Community() {
       </DialogContent>
     </Dialog>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Natte ensomhed" />
+      <PageHeader title="Natteensomhed" />
 
       <div className="p-4">
         {/* Pill tab navigation */}
