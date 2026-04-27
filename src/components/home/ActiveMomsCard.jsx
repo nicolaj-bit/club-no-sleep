@@ -97,10 +97,10 @@ export default function ActiveMomsCard() {
                 </div>
               ))}
               <div
-                className="w-9 h-9 rounded-full border-2 flex items-center justify-center -ml-0 text-xs font-semibold"
+                className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-semibold"
                 style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
               >
-                {extra > 0 ? `+${extra}` : '+'}
+                +{count ?? ''}
               </div>
             </div>
           </div>
