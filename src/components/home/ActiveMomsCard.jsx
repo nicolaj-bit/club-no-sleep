@@ -84,7 +84,7 @@ export default function ActiveMomsCard() {
             </p>
           </div>
 
-          {/* Avatar stack */}
+          {/* Avatar stack: 3 billeder + 1 "+" boble */}
           <div className="flex items-center flex-shrink-0">
             <div className="flex -space-x-2.5">
               {displayAvatars.slice(0, 3).map((img, i) => (
@@ -96,15 +96,13 @@ export default function ActiveMomsCard() {
                   <img src={img} alt="" className="w-full h-full object-cover" />
                 </div>
               ))}
-            </div>
-            {extra > 0 && (
               <div
-                className="w-9 h-9 rounded-full border-2 flex items-center justify-center -ml-2.5 text-xs font-semibold"
+                className="w-9 h-9 rounded-full border-2 flex items-center justify-center -ml-0 text-xs font-semibold"
                 style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
               >
-                +{extra}
+                {extra > 0 ? `+${extra}` : '+'}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
