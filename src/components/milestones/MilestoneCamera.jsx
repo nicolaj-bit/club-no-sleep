@@ -95,7 +95,7 @@ function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   const gap = S * 0.04;
   const maxTextW = innerR * 1.6;
 
-  ctx.font = `${headlineFontSize}px 'Patrick Hand', cursive`;
+  ctx.font = `400 ${headlineFontSize}px 'Caveat', cursive`;
   ctx.fillStyle = textColor;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
@@ -105,11 +105,11 @@ function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   const startY = cy - blockHeight / 2 + headlineFontSize * 0.72;
 
   lines.forEach((line, i) => {
-    ctx.font = `${headlineFontSize}px 'Patrick Hand', cursive`;
+    ctx.font = `400 ${headlineFontSize}px 'Caveat', cursive`;
     ctx.fillText(line, cx, startY + i * lineHeight);
   });
 
-  ctx.font = `${dateFontSize}px 'Patrick Hand', cursive`;
+  ctx.font = `400 ${dateFontSize}px 'Caveat', cursive`;
   ctx.fillText(dateStr + '.', cx, startY + lines.length * lineHeight + gap + dateFontSize * 0.1);
 
   ctx.restore();
@@ -131,9 +131,9 @@ export default function MilestoneCamera({ frame, onClose }) {
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
 
-  // Load Patrick Hand font into canvas context before drawing
+  // Load Caveat font into canvas context before drawing
   const loadFont = async () => {
-    const font = new FontFace('Patrick Hand', 'url(https://fonts.gstatic.com/s/patrickhand/v24/LDI1apSQOAYtSuYWp8ZweqbC.woff2)');
+    const font = new FontFace('Caveat', 'url(https://fonts.gstatic.com/s/caveat/v22/Qw3fZQtZyJ6M2scV61ZJ.woff2)');
     try {
       const loaded = await font.load();
       document.fonts.add(loaded);
