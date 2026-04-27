@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Search, X } from 'lucide-react';
@@ -17,6 +17,18 @@ export default function Blog() {
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setHidden(currentY > lastScrollY.current && currentY > 60);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
@@ -82,10 +94,14 @@ export default function Blog() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+      <div
+        className="sticky top-0 z-40 transition-transform duration-300"
+        style={{ transform: hidden ? 'translateY(-100%)' : 'translateY(0)' }}
+      >
       <PageHeader title={t.blogTitle} />
 
       {/* Categories + Search */}
-      <div className="sticky top-16 z-30 backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <div className="backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="px-4 py-3">
           {showSearch ? (
             <div className="flex items-center gap-2">
@@ -139,6 +155,7 @@ export default function Blog() {
             ))}
           </div>
         </div>
+      </div>
       </div>
 
       {/* Content */}
