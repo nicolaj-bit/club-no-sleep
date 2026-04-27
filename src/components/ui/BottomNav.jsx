@@ -108,7 +108,9 @@ export default function BottomNav() {
               className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
-                backgroundColor: isDark ? '#121212' : '#FFFFFF',
+                background: isDark
+                  ? 'linear-gradient(135deg, #1A1A1A, #0F0F0F)'
+                  : 'linear-gradient(135deg, #FFFFFF, #F7F2EC)',
                 boxShadow: isDark
                   ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
                   : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
@@ -129,7 +131,7 @@ export default function BottomNav() {
               </div>
 
               {/* Menu items grid */}
-              <div className="px-4 pb-5 grid grid-cols-3 gap-2.5">
+              <div className="px-3 pb-5 grid grid-cols-3 gap-2">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.page);
@@ -137,27 +139,29 @@ export default function BottomNav() {
                     <button
                       key={item.name}
                       onClick={() => handleMenuItemPress(item.page)}
-                      className="flex flex-col items-start gap-3 p-4 rounded-2xl text-left active:scale-95 transition-transform"
+                      className="flex flex-col items-center justify-center gap-2 p-5 rounded-2xl text-center active:scale-95 transition-all duration-200"
                       style={{
-                        backgroundColor: active
-                          ? isDark ? '#FFFFFF' : '#2C1A0E'
-                          : isDark ? '#1A1A1A' : '#F7F2EC',
+                        background: active
+                          ? 'linear-gradient(135deg, #C8A882, #A0785A)'
+                          : isDark
+                          ? 'linear-gradient(135deg, #2A2A2A, #1F1F1F)'
+                          : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
                       }}
                     >
                       <Icon
-                        className="w-5 h-5"
+                        className="w-6 h-6"
                         strokeWidth={2}
                         style={{
                           color: active
-                            ? isDark ? '#000000' : '#FFFFFF'
+                            ? '#FFFFFF'
                             : isDark ? '#888888' : '#9C7E6A',
                         }}
                       />
                       <span
-                        className="text-[14px] font-medium leading-tight"
+                        className="text-[12px] font-semibold leading-tight"
                         style={{
                           color: active
-                            ? isDark ? '#000000' : '#FFFFFF'
+                            ? '#FFFFFF'
                             : isDark ? '#CCCCCC' : '#4A2E1A',
                         }}
                       >
