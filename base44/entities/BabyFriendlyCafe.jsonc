@@ -1,0 +1,67 @@
+{
+  "name": "BabyFriendlyCafe",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Navn p\u00e5 cafeen"
+    },
+    "description": {
+      "type": "string",
+      "description": "Kort beskrivelse"
+    },
+    "city": {
+      "type": "string",
+      "description": "By"
+    },
+    "address": {
+      "type": "string",
+      "description": "Fulde adresse"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefonnummer"
+    },
+    "website": {
+      "type": "string",
+      "description": "Webside URL"
+    },
+    "image": {
+      "type": "string",
+      "description": "Billede URL"
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Faciliteter (fx 'Skiftebord', 'H\u00f8j stol', 'Wifi')"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om cafeen er aktiv"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

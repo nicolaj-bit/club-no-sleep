@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
-import { MapPin } from 'lucide-react';
+import { MapPin, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Shield } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function BabyFriendlyCafes() {
   const { t } = useLanguage();
   const [cafeSearchMode, setCafeSearchMode] = useState('all');
   const [userLocation, setUserLocation] = useState(null);
   const [showLocationConsent, setShowLocationConsent] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [formData, setFormData] = useState({ name: '', description: '', city: '', address: '', phone: '', website: '' });
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(u => {
+      setIsAdmin(u?.role === 'admin');
       base44.entities.UserProfile.filter({ user_email: u.email }).then(profiles => {
         if (profiles[0]?.latitude && profiles[0]?.longitude && profiles[0]?.location_enabled) {
           setUserLocation({ lat: profiles[0].latitude, lng: profiles[0].longitude });
@@ -29,7 +36,18 @@ export default function BabyFriendlyCafes() {
 
   const { data: cafes = [], isLoading: loadingCafes, refetch } = useQuery({
     queryKey: ['cafes'],
-    queryFn: () => base44.entities.BabyFriendlyCafe.filter({ is_active: true }),
+    queryFn: () => isAdmin ? base44.entities.BabyFriendlyCafe.list() : base44.entities.BabyFriendlyCafe.filter({ is_active: true }),
+  });
+
+  const addCafeMutation = useMutation({
+    mutationFn: (cafeData) => base44.entities.BabyFriendlyCafe.create(cafeData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cafes'] });
+      setShowAddForm(false);
+      setFormData({ name: '', description: '', city: '', address: '', phone: '', website: '' });
+      toast.success('Café tilføjet! ✓');
+    },
+    onError: () => toast.error('Kunne ikke tilføje café'),
   });
 
   const filteredCafes = cafes
@@ -64,6 +82,14 @@ export default function BabyFriendlyCafes() {
       return;
     }
     setCafeSearchMode('area');
+  };
+
+  const handleAddCafe = () => {
+    if (!formData.name.trim()) {
+      toast.error('Navn er påkrævet');
+      return;
+    }
+    addCafeMutation.mutate(formData);
   };
 
   return (
@@ -103,6 +129,72 @@ export default function BabyFriendlyCafes() {
         <PageHeader title="Babyvenlige caféer" />
 
         <div className="p-4 space-y-4">
+          {/* Admin add button */}
+          {isAdmin && (
+            <Button
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="w-full gap-2"
+              style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+            >
+              <Plus className="w-4 h-4" />
+              Tilføj café
+            </Button>
+          )}
+
+          {/* Add cafe form */}
+          {showAddForm && isAdmin && (
+            <div className="rounded-2xl p-4 border space-y-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+              <Input
+                placeholder="Caféens navn *"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+              <Textarea
+                placeholder="Beskrivelse"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="min-h-20"
+              />
+              <Input
+                placeholder="By"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              />
+              <Input
+                placeholder="Adresse"
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              />
+              <Input
+                placeholder="Telefonnummer"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+              <Input
+                placeholder="Webside"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              />
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowAddForm(false)}
+                >
+                  Annuller
+                </Button>
+                <Button
+                  className="flex-1"
+                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  onClick={handleAddCafe}
+                  disabled={addCafeMutation.isPending}
+                >
+                  {addCafeMutation.isPending ? 'Tilføjer...' : 'Tilføj'}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Search area button */}
           <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
             <div>
