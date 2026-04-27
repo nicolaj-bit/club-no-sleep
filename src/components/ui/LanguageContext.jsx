@@ -132,7 +132,7 @@ const translations = {
     catBooks: 'Bøger',
 
     // Blog
-    blogTitle: 'Blog',
+    blogTitle: 'Læs & Lær',
     searchBlog: 'Søg indlæg...',
     noPosts: 'Ingen indlæg fundet',
     allCategories: 'Alle',
