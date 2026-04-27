@@ -50,53 +50,97 @@ export default function MilestoneCamera({ frame, onClose }) {
     await startCamera(next);
   };
 
-  // Draw frame overlay on canvas
+  // Draw round sticker overlay on canvas
   const drawFrame = (ctx, w, h) => {
-    const pad = w * 0.04;
-    const cornerLen = w * 0.08;
-    const lw = w * 0.012;
+    // Sticker position: bottom-right corner
+    const stickerR = w * 0.22;
+    const cx = w - stickerR - w * 0.05;
+    const cy = h - stickerR - h * 0.05;
 
-    ctx.strokeStyle = frame.accentColor;
-    ctx.lineWidth = lw;
+    // Filled circle background — warm sand
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, stickerR, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(220, 193, 176, 0.92)'; // cappuccino/sand
+    ctx.fill();
+
+    // Rough hand-drawn circle border — draw as multiple slightly offset arcs
+    ctx.strokeStyle = '#A0785A';
+    ctx.lineWidth = w * 0.008;
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
-    // Corners
-    const corners = [
-      [[pad, pad + cornerLen], [pad, pad], [pad + cornerLen, pad]],
-      [[w - pad - cornerLen, pad], [w - pad, pad], [w - pad, pad + cornerLen]],
-      [[pad, h - pad - cornerLen], [pad, h - pad], [pad + cornerLen, h - pad]],
-      [[w - pad - cornerLen, h - pad], [w - pad, h - pad], [w - pad, h - pad - cornerLen]],
-    ];
-    corners.forEach(([a, b, c]) => {
-      ctx.beginPath();
-      ctx.moveTo(...a);
-      ctx.lineTo(...b);
-      ctx.lineTo(...c);
-      ctx.stroke();
+    // Simulate hand-drawn look with a slightly wobbly path
+    const wobble = (angle, rad) => {
+      const jitter = (Math.sin(angle * 7) * 0.018 + Math.cos(angle * 13) * 0.012) * stickerR;
+      return [
+        cx + (rad + jitter) * Math.cos(angle),
+        cy + (rad + jitter) * Math.sin(angle),
+      ];
+    };
+    const steps = 120;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const angle = (i / steps) * Math.PI * 2 - Math.PI / 2;
+      const [px, py] = wobble(angle, stickerR * 0.88);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Second slightly larger wobbly ring for texture
+    ctx.lineWidth = w * 0.004;
+    ctx.globalAlpha = 0.45;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const angle = (i / steps) * Math.PI * 2 + 0.3;
+      const [px, py] = wobble(angle, stickerR * 0.95);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Text inside sticker
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5C3D2E';
+
+    // Line 1: headline (e.g. "Første skridt" or "1 år")
+    const fontSize1 = stickerR * 0.32;
+    ctx.font = `${fontSize1}px Georgia, serif`;
+
+    // Wrap headline into max 2 lines
+    const words = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim().split(' ');
+    const maxWidth = stickerR * 1.3;
+    const lines = [];
+    let current = '';
+    for (const word of words) {
+      const test = current ? `${current} ${word}` : word;
+      if (ctx.measureText(test).width > maxWidth && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = test;
+      }
+    }
+    if (current) lines.push(current);
+
+    const lineH = fontSize1 * 1.25;
+    const totalTextH = lines.length * lineH + fontSize1 * 1.4; // + date line
+    let startY = cy - totalTextH / 2 + fontSize1;
+
+    lines.forEach((line, i) => {
+      ctx.font = `${fontSize1}px Georgia, serif`;
+      ctx.fillText(line, cx, startY + i * lineH);
     });
 
-    // Bottom text banner
-    const bannerH = h * 0.22;
-    const grad = ctx.createLinearGradient(0, h - bannerH, 0, h);
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.55)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, h - bannerH, w, bannerH);
+    // Date line
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
+    const fontSize2 = stickerR * 0.26;
+    ctx.font = `${fontSize2}px Georgia, serif`;
+    ctx.fillStyle = '#7A5C4A';
+    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize1 * 0.3);
 
-    // Emoji
-    ctx.font = `${w * 0.1}px serif`;
-    ctx.textAlign = 'center';
-    ctx.fillText(frame.emoji, w / 2, h - bannerH + w * 0.12);
-
-    // Headline
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = `bold ${w * 0.065}px 'Cormorant Garamond', Georgia, serif`;
-    ctx.fillText(frame.headline, w / 2, h - h * 0.09);
-
-    // Subline
-    ctx.fillStyle = 'rgba(255,255,255,0.75)';
-    ctx.font = `${w * 0.038}px 'Inter', sans-serif`;
-    ctx.fillText(frame.subline, w / 2, h - h * 0.045);
+    ctx.restore();
   };
 
   // Capture from camera
@@ -187,22 +231,25 @@ export default function MilestoneCamera({ frame, onClose }) {
             <div className="w-6" />
           </div>
 
-          {/* Frame preview */}
-          <div className="flex-1 flex items-center justify-center px-8">
+          {/* Sticker preview */}
+          <div className="flex-1 flex items-center justify-center">
             <div
-              className="w-full rounded-3xl flex flex-col items-center justify-center relative overflow-hidden"
-              style={{ backgroundColor: frame.bgColor, aspectRatio: '1 / 1', maxWidth: 360 }}
+              className="flex flex-col items-center justify-center rounded-full relative"
+              style={{
+                width: 220, height: 220,
+                backgroundColor: 'rgba(220,193,176,0.95)',
+                border: '3px solid #A0785A',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.22), inset 0 0 0 6px rgba(160,120,90,0.12)',
+                outline: '2px solid rgba(160,120,90,0.3)',
+                outlineOffset: '6px',
+              }}
             >
-              <div className="text-8xl mb-2">{frame.emoji}</div>
-              {/* Corner decorations */}
-              {['top-3 left-3 border-l-2 border-t-2', 'top-3 right-3 border-r-2 border-t-2',
-                'bottom-3 left-3 border-l-2 border-b-2', 'bottom-3 right-3 border-r-2 border-b-2'].map((cls, i) => (
-                <div key={i} className={`absolute w-6 h-6 rounded ${cls}`} style={{ borderColor: frame.accentColor }} />
-              ))}
-              <p className="text-xl font-bold mt-2" style={{ color: frame.textColor, fontFamily: 'Cormorant Garamond, serif' }}>
-                {frame.headline}
+              <p className="text-center font-serif text-lg leading-snug px-6" style={{ color: '#5C3D2E' }}>
+                {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
               </p>
-              <p className="text-sm" style={{ color: frame.textColor + '99' }}>{frame.subline}</p>
+              <p className="text-center text-sm mt-2 px-6" style={{ color: '#7A5C4A', fontFamily: 'Georgia, serif' }}>
+                {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
+              </p>
             </div>
           </div>
 
@@ -242,20 +289,23 @@ export default function MilestoneCamera({ frame, onClose }) {
             style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
           />
 
-          {/* Frame overlay — corner decorations */}
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div className="relative" style={{ width: '90vw', height: '90vw', maxWidth: 420, maxHeight: 420 }}>
-              {['top-0 left-0 border-l-4 border-t-4', 'top-0 right-0 border-r-4 border-t-4',
-                'bottom-0 left-0 border-l-4 border-b-4', 'bottom-0 right-0 border-r-4 border-b-4'].map((cls, i) => (
-                <div key={i} className={`absolute w-8 h-8 rounded ${cls}`} style={{ borderColor: frame.accentColor }} />
-              ))}
-              {/* Bottom overlay */}
-              <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-3 pt-6"
-                style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.5))' }}>
-                <div className="text-3xl">{frame.emoji}</div>
-                <p className="text-white font-bold text-base" style={{ fontFamily: 'Cormorant Garamond, serif' }}>{frame.headline}</p>
-                <p className="text-white/70 text-xs">{frame.subline}</p>
-              </div>
+          {/* Sticker preview overlay — bottom right */}
+          <div className="absolute bottom-28 right-5 pointer-events-none">
+            <div
+              className="flex flex-col items-center justify-center rounded-full relative"
+              style={{
+                width: 100, height: 100,
+                backgroundColor: 'rgba(220,193,176,0.92)',
+                border: '2px solid #A0785A',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
+              }}
+            >
+              <p className="text-center font-serif text-[11px] leading-tight px-2" style={{ color: '#5C3D2E' }}>
+                {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
+              </p>
+              <p className="text-center text-[9px] mt-0.5 px-2" style={{ color: '#7A5C4A' }}>
+                {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
+              </p>
             </div>
           </div>
 
