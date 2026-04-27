@@ -83,11 +83,6 @@ export default function Settings() {
     try {
       const results = await base44.entities.LegalContent.filter({ type: 'privacy' });
       const doc = results[0] || null;
-      if (doc?.pdf_url) {
-        window.open(doc.pdf_url, '_blank');
-        setPrivacyLoading(false);
-        return;
-      }
       setPrivacyContent(doc);
       setPrivacyOpen(true);
     } finally {
@@ -100,11 +95,6 @@ export default function Settings() {
     try {
       const results = await base44.entities.LegalContent.filter({ type: 'terms' });
       const doc = results[0] || null;
-      if (doc?.pdf_url) {
-        window.open(doc.pdf_url, '_blank');
-        setTermsLoading(false);
-        return;
-      }
       setTermsContent(doc);
       setTermsOpen(true);
     } finally {
