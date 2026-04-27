@@ -1,59 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CATEGORIES } from './milestonesData';
 import { Camera } from 'lucide-react';
 
+// Load handwriting font
+const fontLink = document.createElement('link');
+fontLink.rel = 'stylesheet';
+fontLink.href = 'https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap';
+document.head.appendChild(fontLink);
+
 const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
-function StickerPreview({ frame, size = 120 }) {
-  const innerSize = size * 0.78;
-  const gap = (size - innerSize) / 2;
+// SVG wobbly circle sticker — matches the reference image
+function StickerPreview({ frame, size = 130 }) {
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerR = size * 0.46;
+  const innerR = size * 0.38;
+
+  // Generate a wobbly path from control points
+  const wobblePath = (r, seed, points = 32) => {
+    const pts = [];
+    for (let i = 0; i < points; i++) {
+      const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
+      const jitter = (Math.sin(angle * 3 + seed) * 0.06 + Math.cos(angle * 5 + seed * 2) * 0.04) * r;
+      pts.push([
+        cx + (r + jitter) * Math.cos(angle),
+        cy + (r + jitter) * Math.sin(angle),
+      ]);
+    }
+    // Build smooth SVG path using quadratic bezier
+    let d = `M ${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) {
+      const mid = [(pts[i][0] + pts[i - 1][0]) / 2, (pts[i][1] + pts[i - 1][1]) / 2];
+      d += ` Q ${pts[i - 1][0]} ${pts[i - 1][1]} ${mid[0]} ${mid[1]}`;
+    }
+    d += ' Z';
+    return d;
+  };
+
+  const cleanText = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
+  const fontSize = size * 0.115;
+  const dateFontSize = size * 0.09;
+  const color = '#6B4C3B';
 
   return (
-    <div
-      className="relative flex items-center justify-center"
-      style={{ width: size, height: size, flexShrink: 0 }}
-    >
-      {/* Outer ring */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{ border: `1.5px solid ${frame.accentColor}`, borderRadius: '50%' }}
-      />
-      {/* Inner filled circle */}
-      <div
-        className="absolute rounded-full flex flex-col items-center justify-center text-center"
-        style={{
-          width: innerSize,
-          height: innerSize,
-          backgroundColor: '#DCC1B0',
-          border: `1.5px solid ${frame.accentColor}`,
-          padding: '10px',
-        }}
-      >
-        <p
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ overflow: 'visible' }}>
+      {/* Filled inner circle */}
+      <path d={wobblePath(innerR, 1.2)} fill="#D4B49A" />
+      {/* Inner wobbly border */}
+      <path d={wobblePath(innerR, 1.2)} fill="none" stroke={color} strokeWidth="1.2" />
+      {/* Outer wobbly ring */}
+      <path d={wobblePath(outerR, 0.5)} fill="none" stroke={color} strokeWidth="1.2" />
+
+      {/* Headline text — split into lines */}
+      <foreignObject x={cx - innerR * 0.85} y={cy - innerR * 0.55} width={innerR * 1.7} height={innerR * 1.1}>
+        <div xmlns="http://www.w3.org/1999/xhtml"
           style={{
-            color: '#5C3D2E',
-            fontSize: size * 0.095,
-            lineHeight: 1.35,
-            fontFamily: 'Georgia, serif',
-            fontStyle: 'italic',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            fontFamily: "'Caveat', cursive",
+            fontSize: `${fontSize}px`,
+            color,
+            lineHeight: 1.4,
             wordBreak: 'break-word',
           }}
         >
-          {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
-        </p>
-        <p
-          style={{
-            color: '#7A5C4A',
-            fontSize: size * 0.075,
-            marginTop: size * 0.03,
-            fontFamily: 'Georgia, serif',
-            fontStyle: 'italic',
-          }}
-        >
-          {TODAY}.
-        </p>
-      </div>
-    </div>
+          {cleanText}
+        </div>
+      </foreignObject>
+
+      {/* Date text */}
+      <text
+        x={cx}
+        y={cy + innerR * 0.62}
+        textAnchor="middle"
+        fontFamily="'Caveat', cursive"
+        fontSize={dateFontSize}
+        fill={color}
+      >
+        {TODAY}.
+      </text>
+    </svg>
   );
 }
 

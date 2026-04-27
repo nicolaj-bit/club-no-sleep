@@ -4,31 +4,59 @@ import { toast } from 'sonner';
 
 const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
+// Inject Caveat font
+if (!document.getElementById('caveat-font')) {
+  const link = document.createElement('link');
+  link.id = 'caveat-font';
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap';
+  document.head.appendChild(link);
+}
+
+function wobblePath(cx, cy, r, seed, points = 32) {
+  const pts = [];
+  for (let i = 0; i < points; i++) {
+    const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
+    const jitter = (Math.sin(angle * 3 + seed) * 0.06 + Math.cos(angle * 5 + seed * 2) * 0.04) * r;
+    pts.push([cx + (r + jitter) * Math.cos(angle), cy + (r + jitter) * Math.sin(angle)]);
+  }
+  let d = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) {
+    const mid = [(pts[i][0] + pts[i-1][0])/2, (pts[i][1] + pts[i-1][1])/2];
+    d += ` Q ${pts[i-1][0]} ${pts[i-1][1]} ${mid[0]} ${mid[1]}`;
+  }
+  return d + ' Z';
+}
+
 function LiveSticker({ frame }) {
-  const size = 130;
-  const innerSize = size * 0.78;
+  const size = 140;
+  const cx = size / 2, cy = size / 2;
+  const outerR = size * 0.46;
+  const innerR = size * 0.38;
+  const color = '#6B4C3B';
+  const cleanText = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
+
   return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full" style={{ border: `2px solid ${frame.accentColor}` }} />
-      {/* Inner filled circle */}
-      <div
-        className="absolute rounded-full flex flex-col items-center justify-center text-center"
-        style={{
-          width: innerSize, height: innerSize,
-          backgroundColor: 'rgba(220,193,176,0.95)',
-          border: `1.5px solid ${frame.accentColor}`,
-          padding: '10px',
-        }}
-      >
-        <p style={{ color: '#5C3D2E', fontSize: 13, lineHeight: 1.35, fontFamily: 'Georgia, serif', fontStyle: 'italic', wordBreak: 'break-word' }}>
-          {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
-        </p>
-        <p style={{ color: '#7A5C4A', fontSize: 10, marginTop: 4, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-          {TODAY_STR}.
-        </p>
-      </div>
-    </div>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.25))' }}>
+      <path d={wobblePath(cx, cy, innerR, 1.2)} fill="#D4B49A" />
+      <path d={wobblePath(cx, cy, innerR, 1.2)} fill="none" stroke={color} strokeWidth="1.5" />
+      <path d={wobblePath(cx, cy, outerR, 0.5)} fill="none" stroke={color} strokeWidth="1.5" />
+      <foreignObject x={cx - innerR * 0.85} y={cy - innerR * 0.6} width={innerR * 1.7} height={innerR * 1.2}>
+        <div xmlns="http://www.w3.org/1999/xhtml" style={{
+          width: '100%', height: '100%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          textAlign: 'center',
+          fontFamily: "'Caveat', cursive",
+          fontSize: `${size * 0.12}px`,
+          color, lineHeight: 1.4, wordBreak: 'break-word',
+        }}>
+          {cleanText}
+        </div>
+      </foreignObject>
+      <text x={cx} y={cy + innerR * 0.65} textAnchor="middle" fontFamily="'Caveat', cursive" fontSize={size * 0.09} fill={color}>
+        {TODAY_STR}.
+      </text>
+    </svg>
   );
 }
 
@@ -80,78 +108,89 @@ export default function MilestoneCamera({ frame, onClose }) {
     await startCamera(next);
   };
 
+  // Helper: draw wobbly path on canvas
+  const drawWobblePath = (ctx, cx, cy, r, seed, points = 32) => {
+    const pts = [];
+    for (let i = 0; i < points; i++) {
+      const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
+      const jitter = (Math.sin(angle * 3 + seed) * 0.06 + Math.cos(angle * 5 + seed * 2) * 0.04) * r;
+      pts.push([cx + (r + jitter) * Math.cos(angle), cy + (r + jitter) * Math.sin(angle)]);
+    }
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) {
+      const mid = [(pts[i][0] + pts[i-1][0])/2, (pts[i][1] + pts[i-1][1])/2];
+      ctx.quadraticCurveTo(pts[i-1][0], pts[i-1][1], mid[0], mid[1]);
+    }
+    ctx.closePath();
+  };
+
   // Draw round sticker overlay on canvas
   const drawFrame = (ctx, w, h) => {
     const stickerR = w * 0.22;
-    const cx = stickerR + w * 0.05;
-    const cy = h - stickerR - h * 0.05;
+    const cx = stickerR + w * 0.06;
+    const cy = h - stickerR - h * 0.06;
+    const innerR = stickerR * 0.82;
+    const color = '#6B4C3B';
 
     ctx.save();
 
-    const accent = frame.accentColor || '#A0785A';
-
-    // Outer ring
-    ctx.beginPath();
-    ctx.arc(cx, cy, stickerR, 0, Math.PI * 2);
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = w * 0.005;
-    ctx.stroke();
-
-    // Inner filled circle
-    const innerR = stickerR * 0.82;
-    ctx.beginPath();
-    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(220, 193, 176, 0.95)';
+    // Filled inner circle
+    drawWobblePath(ctx, cx, cy, innerR, 1.2);
+    ctx.fillStyle = '#D4B49A';
     ctx.fill();
 
-    // Inner ring border
-    ctx.beginPath();
-    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-    ctx.strokeStyle = accent;
+    // Inner border
+    drawWobblePath(ctx, cx, cy, innerR, 1.2);
+    ctx.strokeStyle = color;
     ctx.lineWidth = w * 0.004;
     ctx.stroke();
 
-    // Headline text — italic Georgia
+    // Outer ring
+    drawWobblePath(ctx, cx, cy, stickerR, 0.5);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = w * 0.004;
+    ctx.stroke();
+
+    // Text
     const cleanHeadline = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
-    const fontSize1 = innerR * 0.32;
-    ctx.font = `italic ${fontSize1}px Georgia, serif`;
-    ctx.fillStyle = '#5C3D2E';
+    const fontSize1 = innerR * 0.34;
+    const fontSize2 = innerR * 0.27;
+    ctx.fillStyle = color;
     ctx.textAlign = 'center';
 
     // Word wrap
+    ctx.font = `${fontSize1}px 'Caveat', cursive`;
     const words = cleanHeadline.split(' ');
-    const maxWidth = innerR * 1.3;
+    const maxWidth = innerR * 1.4;
     const lines = [];
     let current = '';
     for (const word of words) {
       const test = current ? `${current} ${word}` : word;
-      if (ctx.measureText(test).width > maxWidth && current) {
-        lines.push(current);
-        current = word;
-      } else {
-        current = test;
-      }
+      if (ctx.measureText(test).width > maxWidth && current) { lines.push(current); current = word; }
+      else current = test;
     }
     if (current) lines.push(current);
 
-    const lineH = fontSize1 * 1.4;
-    const fontSize2 = innerR * 0.26;
-    const totalH = lines.length * lineH + fontSize2 * 1.6;
-    let startY = cy - totalH / 2 + fontSize1;
+    const lineH = fontSize1 * 1.35;
+    const dateStr = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
+    const totalH = lines.length * lineH + fontSize2 * 1.5;
+    let startY = cy - totalH / 2 + fontSize1 * 0.85;
 
     lines.forEach((line, i) => {
-      ctx.font = `italic ${fontSize1}px Georgia, serif`;
-      ctx.fillStyle = '#5C3D2E';
+      ctx.font = `${fontSize1}px 'Caveat', cursive`;
       ctx.fillText(line, cx, startY + i * lineH);
     });
 
-    // Date
-    const dateStr = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
-    ctx.font = `italic ${fontSize2}px Georgia, serif`;
-    ctx.fillStyle = '#7A5C4A';
-    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize2 * 0.5);
+    ctx.font = `${fontSize2}px 'Caveat', cursive`;
+    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize2 * 0.4);
 
     ctx.restore();
+  };
+
+  const renderToCanvas = async (drawFn) => {
+    await document.fonts.load("400 20px 'Caveat'");
+    drawFn();
   };
 
   // Capture from camera
@@ -159,20 +198,18 @@ export default function MilestoneCamera({ frame, onClose }) {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-
-    const size = Math.min(video.videoWidth, video.videoHeight);
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-
-    // Crop to square
-    const sx = (video.videoWidth - size) / 2;
-    const sy = (video.videoHeight - size) / 2;
-    ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
-
-    drawFrame(ctx, size, size);
-    setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
-    setMode('preview');
+    renderToCanvas(() => {
+      const size = Math.min(video.videoWidth, video.videoHeight);
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const sx = (video.videoWidth - size) / 2;
+      const sy = (video.videoHeight - size) / 2;
+      ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
+      drawFrame(ctx, size, size);
+      setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
+      setMode('preview');
+    });
   };
 
   // Upload from gallery
@@ -183,17 +220,19 @@ export default function MilestoneCamera({ frame, onClose }) {
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = canvasRef.current;
-        const size = Math.min(img.width, img.height);
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext('2d');
-        const sx = (img.width - size) / 2;
-        const sy = (img.height - size) / 2;
-        ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
-        drawFrame(ctx, size, size);
-        setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
-        setMode('preview');
+        renderToCanvas(() => {
+          const canvas = canvasRef.current;
+          const size = Math.min(img.width, img.height);
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const sx = (img.width - size) / 2;
+          const sy = (img.height - size) / 2;
+          ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
+          drawFrame(ctx, size, size);
+          setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
+          setMode('preview');
+        });
       };
       img.src = ev.target.result;
     };
