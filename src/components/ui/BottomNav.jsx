@@ -129,7 +129,7 @@ export default function BottomNav() {
               </div>
 
               {/* Menu items grid */}
-              <div className="px-4 pb-5 grid grid-cols-2 gap-2.5">
+              <div className="px-4 pb-5 grid grid-cols-3 gap-2.5">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.page);
