@@ -108,7 +108,7 @@ export default function ChildDevelopmentCard({ profile }) {
           {/* Right: photo */}
           <div className="relative flex-shrink-0 overflow-hidden rounded-r-3xl" style={{ width: '48%' }}>
             <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/b0c96886b_generated_image.png"
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/112ea1336_1.jpg"
               alt="gravid"
               className="w-full h-full object-cover"
               style={{ objectPosition: 'center top' }}
