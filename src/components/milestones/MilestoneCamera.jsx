@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { Upload, Download, Share2, RotateCcw, X, SwitchCamera } from 'lucide-react';
+import { Upload, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Github } from 'lucide-react';
 import { toast } from 'sonner';
 import WobblySticker from './WobblySticker';
 
@@ -127,6 +127,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
@@ -237,6 +238,28 @@ export default function MilestoneCamera({ frame, onClose }) {
     await navigator.share({ files: [file], title: frame.headline, text: frame.subline });
   };
 
+  // Social media share intents
+  const shareOnFacebook = () => {
+    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍`);
+    window.open(`https://www.facebook.com/sharer/sharer.php?quote=${text}&app_id=123456`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍 #lalatoto`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+  };
+
+  const shareOnWhatsApp = () => {
+    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍`);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
+
+  const shareOnEmail = () => {
+    const subject = encodeURIComponent(`Min milepæl: ${frame.headline}`);
+    const body = encodeURIComponent(`Se hvad jeg har delt på LALATOTO! 🤍\n\n${frame.subline}`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
   const retake = () => { setCapturedImage(null); setMode('camera'); };
 
   return (
@@ -302,28 +325,64 @@ export default function MilestoneCamera({ frame, onClose }) {
             <img src={capturedImage} alt="Milepæl" className="w-full rounded-3xl object-cover" style={{ maxHeight: '65vh', maxWidth: 480 }} />
           </div>
 
-          <div className="px-6 pb-12 pt-6 flex gap-3">
-            <button
-              onClick={retake}
-              className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-              style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
-            >
-              <RotateCcw className="w-4 h-4" /> Prøv igen
-            </button>
-            <button
-              onClick={downloadImage}
-              className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-              style={{ backgroundColor: '#FFFFFF', color: '#2B1F16' }}
-            >
-              <Download className="w-4 h-4" /> Gem
-            </button>
-            <button
-              onClick={shareImage}
-              className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
-            >
-              <Share2 className="w-4 h-4" /> Del
-            </button>
+          <div className="px-6 pb-12 pt-6 space-y-3">
+            <div className="flex gap-3">
+              <button
+                onClick={retake}
+                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
+              >
+                <RotateCcw className="w-4 h-4" /> Prøv igen
+              </button>
+              <button
+                onClick={downloadImage}
+                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
+                style={{ backgroundColor: '#FFFFFF', color: '#2B1F16' }}
+              >
+                <Download className="w-4 h-4" /> Gem
+              </button>
+              <button
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
+                style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
+              >
+                <Share2 className="w-4 h-4" /> Del
+              </button>
+            </div>
+
+            {/* Social media share buttons */}
+            {showShareMenu && (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={shareOnFacebook}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                  style={{ backgroundColor: '#1877F2', color: '#fff', borderColor: '#1877F2' }}
+                >
+                  <Facebook className="w-4 h-4" /> Facebook
+                </button>
+                <button
+                  onClick={shareOnTwitter}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                  style={{ backgroundColor: '#000000', color: '#fff', borderColor: '#000000' }}
+                >
+                  𝕏 Twitter
+                </button>
+                <button
+                  onClick={shareOnWhatsApp}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                  style={{ backgroundColor: '#25D366', color: '#fff', borderColor: '#25D366' }}
+                >
+                  💬 WhatsApp
+                </button>
+                <button
+                  onClick={shareOnEmail}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                  style={{ backgroundColor: '#EA4335', color: '#fff', borderColor: '#EA4335' }}
+                >
+                  ✉️ Email
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
