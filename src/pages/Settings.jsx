@@ -312,7 +312,7 @@ export default function Settings() {
       <BottomSheet open={termsOpen} onOpenChange={setTermsOpen} title="Handelsbetingelser">
         <div className="px-5 py-4">
           {termsContent ? (
-            <div className="text-sm leading-relaxed prose prose-sm max-w-none pb-4" style={{ color: 'var(--color-text-primary)' }}
+            <div className="pb-4" style={{ color: 'var(--color-text-primary)' }}
               dangerouslySetInnerHTML={{ __html: termsContent.content }}
             />
           ) : (
@@ -328,7 +328,7 @@ export default function Settings() {
           {privacyLoading ? (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.loading}</p>
           ) : privacyContent ? (
-            <div className="text-sm leading-relaxed prose prose-sm max-w-none pb-4" style={{ color: 'var(--color-text-primary)' }}
+            <div className="pb-4" style={{ color: 'var(--color-text-primary)' }}
               dangerouslySetInnerHTML={{ __html: privacyContent.content }}
             />
           ) : (
