@@ -6,7 +6,7 @@ const translations = {
     home: 'Hjem',
     menu: 'Menu',
     shop: 'Shop',
-    blog: 'Blog',
+    blog: 'Læs & Lær',
     sleepLog: 'Søvnlog',
     knowledge: 'Viden',
     community: 'Community',
