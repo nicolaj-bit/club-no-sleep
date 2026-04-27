@@ -105,9 +105,10 @@ export default function BottomNav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.96 }}
               transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
+              className="fixed inset-x-0 z-50 rounded-t-3xl overflow-hidden"
               style={{
-                bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
+                bottom: 0,
+                top: 'auto',
                 background: isDark
                   ? 'linear-gradient(135deg, #1A1A1A, #0F0F0F)'
                   : 'linear-gradient(135deg, #FFFFFF, #F7F2EC)',
