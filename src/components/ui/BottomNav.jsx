@@ -131,7 +131,7 @@ export default function BottomNav() {
               </div>
 
               {/* Menu items grid */}
-              <div className="px-3 pb-5 grid grid-cols-3 gap-2">
+              <div className="px-4 pb-5 grid grid-cols-3 gap-2.5">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.page);
@@ -139,7 +139,7 @@ export default function BottomNav() {
                     <button
                       key={item.name}
                       onClick={() => handleMenuItemPress(item.page)}
-                      className="flex flex-col items-center justify-center gap-2 p-5 rounded-2xl text-center active:scale-95 transition-all duration-200"
+                      className="flex flex-col items-start gap-3 p-4 rounded-2xl text-left active:scale-95 transition-all duration-200"
                       style={{
                         background: active
                           ? 'linear-gradient(135deg, #C8A882, #A0785A)'
@@ -149,7 +149,7 @@ export default function BottomNav() {
                       }}
                     >
                       <Icon
-                        className="w-6 h-6"
+                        className="w-5 h-5"
                         strokeWidth={2}
                         style={{
                           color: active
@@ -158,7 +158,7 @@ export default function BottomNav() {
                         }}
                       />
                       <span
-                        className="text-[12px] font-semibold leading-tight"
+                        className="text-[13px] font-medium leading-tight"
                         style={{
                           color: active
                             ? '#FFFFFF'
