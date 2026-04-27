@@ -86,23 +86,28 @@ export default function ChildDevelopmentCard({ profile }) {
           <div className="absolute inset-0 p-5 flex flex-col justify-between">
             {/* Top label */}
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-              {lang === 'da' ? 'DIN GRAVIDITET' : 'YOUR PREGNANCY'}
+              {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
             </p>
 
-            {/* Bottom */}
+            {/* Bottom: big number + week pill */}
             <div>
-              {/* "Du er i uge X (X-1+Y)" */}
               <div className="flex items-baseline gap-2 mb-1">
                 <span
                   className="font-light leading-none"
-                  style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#fff', fontSize: 68, lineHeight: 1 }}
+                  style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#fff', fontSize: 76, lineHeight: 1 }}
                 >
-                  {lang === 'da' ? `Uge ${age.currentWeek}` : `Week ${age.currentWeek}`}
+                  {age.big}
+                </span>
+                <span
+                  className="text-2xl font-light"
+                  style={{ color: 'rgba(255,255,255,0.85)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}
+                >
+                  {age.unit}
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <p className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                  {`(${age.currentWeek - 1}+${age.currentDayInWeek})`}
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  {lang === 'da' ? 'til termin' : 'until due date'}
                 </p>
                 <div
                   className="inline-flex items-center gap-1.5 rounded-full px-3 py-1"
@@ -110,7 +115,9 @@ export default function ChildDevelopmentCard({ profile }) {
                 >
                   <Baby className="w-3 h-3 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.8)' }} />
                   <span className="text-[11px] font-medium whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    {lang === 'da' ? `${age.big} ${age.unit} til termin` : `${age.big} ${age.unit} until due`}
+                    {lang === 'da'
+                      ? `Du er i uge ${age.currentWeek} (${age.currentWeek - 1}+${age.currentDayInWeek})`
+                      : `Week ${age.currentWeek} (${age.currentWeek - 1}+${age.currentDayInWeek})`}
                   </span>
                 </div>
               </div>
