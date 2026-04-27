@@ -67,53 +67,55 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
       {pregnancy && (
         <Link to={`/PregnancyWeekDetail?week=${pregnancy.currentWeek}`} className="block mx-5 mb-4">
           <div
-            className="rounded-3xl overflow-hidden relative"
-            style={{ backgroundColor: '#F3E9E1', minHeight: 180 }}
+            className="rounded-3xl overflow-hidden relative flex"
+            style={{ backgroundColor: '#F3E9E1', minHeight: 190 }}
           >
-            {/* Photo area */}
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 overflow-hidden rounded-r-3xl">
+            {/* Left: text */}
+            <div className="flex-1 p-5 flex flex-col justify-between z-10">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
+                  {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+                </p>
+                <div className="flex items-baseline gap-1.5 mb-0.5">
+                  <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', lineHeight: 1 }}>
+                    {pregnancy.weeksLeft}
+                  </span>
+                  <span className="text-2xl font-light" style={{ color: '#2B1F16', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                    {lang === 'da' ? 'uger' : 'weeks'}
+                  </span>
+                </div>
+                <p className="text-sm" style={{ color: '#7A665A' }}>
+                  {lang === 'da' ? 'til termin' : 'until due date'}
+                </p>
+              </div>
+
+              {/* Week pill — bottom */}
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mt-4 self-start"
+                style={{ backgroundColor: 'rgba(255,255,255,0.75)' }}
+              >
+                <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#808072' }} />
+                <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#2B1F16' }}>
+                  {lang === 'da'
+                    ? `Du er i uge ${pregnancy.currentWeek} (${pregnancy.currentWeek - 1}+${pregnancy.daysRem || 0})`
+                    : `Week ${pregnancy.currentWeek}`}
+                </span>
+              </div>
+            </div>
+
+            {/* Right: photo */}
+            <div className="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-3xl">
               <img
                 src="https://images.unsplash.com/photo-1584048357520-c4b7a3e36e94?w=400&q=80"
                 alt="gravid"
                 className="w-full h-full object-cover"
                 style={{ objectPosition: 'center top' }}
               />
-              {/* Fade overlay left side of image */}
+              {/* Fade to left */}
               <div
                 className="absolute inset-0"
-                style={{ background: 'linear-gradient(to right, #F3E9E1 0%, transparent 60%)' }}
+                style={{ background: 'linear-gradient(to right, #F3E9E1 0%, transparent 40%)' }}
               />
-            </div>
-
-            {/* Text content */}
-            <div className="relative z-10 p-5" style={{ maxWidth: '58%' }}>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
-                {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
-              </p>
-              <div className="flex items-baseline gap-2 mb-0.5">
-                <span className="text-[64px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-                  {pregnancy.weeksLeft}
-                </span>
-                <span className="text-xl font-light" style={{ color: '#2B1F16', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                  {lang === 'da' ? 'uger' : 'weeks'}
-                </span>
-              </div>
-              <p className="text-sm mb-4" style={{ color: '#7A665A' }}>
-                {lang === 'da' ? 'til termin' : 'until due date'}
-              </p>
-
-              {/* Week pill */}
-              <div
-                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-                style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}
-              >
-                <Baby className="w-3.5 h-3.5" style={{ color: '#808072' }} />
-                <span className="text-xs font-medium" style={{ color: '#2B1F16' }}>
-                  {lang === 'da'
-                    ? `Du er i uge ${pregnancy.currentWeek} (${pregnancy.currentWeek - 1}+${pregnancy.daysRem || 0})`
-                    : `You are in week ${pregnancy.currentWeek}`}
-                </span>
-              </div>
             </div>
           </div>
         </Link>
