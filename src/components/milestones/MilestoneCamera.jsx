@@ -1,6 +1,36 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Camera, Upload, Download, Share2, RotateCcw, X, SwitchCamera } from 'lucide-react';
+import { Upload, Download, Share2, RotateCcw, X, SwitchCamera } from 'lucide-react';
 import { toast } from 'sonner';
+
+const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function LiveSticker({ frame }) {
+  const size = 130;
+  const innerSize = size * 0.78;
+  return (
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      {/* Outer ring */}
+      <div className="absolute inset-0 rounded-full" style={{ border: `2px solid ${frame.accentColor}` }} />
+      {/* Inner filled circle */}
+      <div
+        className="absolute rounded-full flex flex-col items-center justify-center text-center"
+        style={{
+          width: innerSize, height: innerSize,
+          backgroundColor: 'rgba(220,193,176,0.95)',
+          border: `1.5px solid ${frame.accentColor}`,
+          padding: '10px',
+        }}
+      >
+        <p style={{ color: '#5C3D2E', fontSize: 13, lineHeight: 1.35, fontFamily: 'Georgia, serif', fontStyle: 'italic', wordBreak: 'break-word' }}>
+          {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
+        </p>
+        <p style={{ color: '#7A5C4A', fontSize: 10, marginTop: 4, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+          {TODAY_STR}.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function MilestoneCamera({ frame, onClose }) {
   const videoRef = useRef(null);
@@ -58,10 +88,12 @@ export default function MilestoneCamera({ frame, onClose }) {
 
     ctx.save();
 
+    const accent = frame.accentColor || '#A0785A';
+
     // Outer ring
     ctx.beginPath();
     ctx.arc(cx, cy, stickerR, 0, Math.PI * 2);
-    ctx.strokeStyle = '#A0785A';
+    ctx.strokeStyle = accent;
     ctx.lineWidth = w * 0.005;
     ctx.stroke();
 
@@ -75,7 +107,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     // Inner ring border
     ctx.beginPath();
     ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-    ctx.strokeStyle = '#A0785A';
+    ctx.strokeStyle = accent;
     ctx.lineWidth = w * 0.004;
     ctx.stroke();
 
@@ -212,23 +244,8 @@ export default function MilestoneCamera({ frame, onClose }) {
           />
 
           {/* Sticker preview overlay — bottom left */}
-          <div className="absolute bottom-28 left-5 pointer-events-none">
-            <div className="relative flex items-center justify-center" style={{ width: 110, height: 110 }}>
-              {/* Outer ring */}
-              <div className="absolute inset-0 rounded-full" style={{ border: '1.5px solid #A0785A', borderRadius: '50%' }} />
-              {/* Inner filled circle */}
-              <div
-                className="absolute rounded-full flex flex-col items-center justify-center text-center"
-                style={{ inset: 8, backgroundColor: '#DCC1B0', border: '1.5px solid #A0785A' }}
-              >
-                <p style={{ color: '#5C3D2E', fontSize: 10, lineHeight: 1.4, fontFamily: 'Georgia, serif', fontStyle: 'italic', padding: '0 8px' }}>
-                  {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
-                </p>
-                <p style={{ color: '#7A5C4A', fontSize: 9, marginTop: 3, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                  {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
-                </p>
-              </div>
-            </div>
+          <div className="absolute bottom-28 left-5 pointer-events-none drop-shadow-lg">
+            <LiveSticker frame={frame} />
           </div>
 
           {/* Top bar */}
