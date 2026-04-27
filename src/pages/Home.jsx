@@ -124,7 +124,7 @@ export default function Home() {
           </div>
           {user && <NotificationBell userEmail={user.email} />}
         </div>
-        <div className="mt-2" style={{ color: '#C8A882' }}>♥</div>
+
       </div>
 
       {/* Daily Affirmation */}
