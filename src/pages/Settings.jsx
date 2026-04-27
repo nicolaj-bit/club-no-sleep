@@ -312,9 +312,11 @@ export default function Settings() {
       <BottomSheet open={termsOpen} onOpenChange={setTermsOpen} title="Handelsbetingelser">
         <div className="px-5 py-4">
           {termsContent ? (
-            <div className="pb-4" style={{ color: 'var(--color-text-primary)' }}
-              dangerouslySetInnerHTML={{ __html: termsContent.content }}
-            />
+            <div className="rounded-3xl p-6 mb-4" style={{ backgroundColor: '#F3E9E1', color: 'var(--color-text-primary)' }}>
+              <div className="text-sm leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}
+                dangerouslySetInnerHTML={{ __html: termsContent.content }}
+              />
+            </div>
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen handelsbetingelser tilgængelige</p>
           )}
@@ -328,9 +330,11 @@ export default function Settings() {
           {privacyLoading ? (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.loading}</p>
           ) : privacyContent ? (
-            <div className="pb-4" style={{ color: 'var(--color-text-primary)' }}
-              dangerouslySetInnerHTML={{ __html: privacyContent.content }}
-            />
+            <div className="rounded-3xl p-6 mb-4" style={{ backgroundColor: '#F3E9E1', color: 'var(--color-text-primary)' }}>
+              <div className="text-sm leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}
+                dangerouslySetInnerHTML={{ __html: privacyContent.content }}
+              />
+            </div>
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.noPrivacyPolicy}</p>
           )}
