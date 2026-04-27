@@ -24,6 +24,30 @@
       "type": "string",
       "description": "Ejers email"
     },
+    "category": {
+      "type": "string",
+      "enum": [
+        "jordemoder",
+        "scanning",
+        "l\u00e6ge",
+        "legeaftale",
+        "m\u00f8dregruppe",
+        "vaccination",
+        "andet"
+      ],
+      "default": "andet",
+      "description": "Aftalekategori"
+    },
+    "notify_day_before": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notifikation dagen f\u00f8r"
+    },
+    "notify_30min_before": {
+      "type": "boolean",
+      "default": false,
+      "description": "Send notifikation 30 min f\u00f8r"
+    },
     "notify_day_before_sent": {
       "type": "boolean",
       "default": false,
@@ -39,5 +63,17 @@
     "title",
     "start_datetime",
     "user_email"
-  ]
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
 }

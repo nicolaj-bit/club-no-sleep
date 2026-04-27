@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2, Bell, BellOff } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,19 @@ export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: '', description: '', start_datetime: '', end_datetime: '' });
+  const [form, setForm] = useState({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
+
+  const CATEGORIES = [
+    { key: 'jordemoder', label: lang === 'en' ? 'Midwife' : 'Jordemoder', emoji: '🤱' },
+    { key: 'scanning', label: lang === 'en' ? 'Scan' : 'Scanning', emoji: '🔬' },
+    { key: 'læge', label: lang === 'en' ? 'Doctor' : 'Læge', emoji: '🩺' },
+    { key: 'legeaftale', label: lang === 'en' ? 'Playdate' : 'Legeaftale', emoji: '🧸' },
+    { key: 'mødregruppe', label: lang === 'en' ? 'Mom group' : 'Mødregruppe', emoji: '👩‍👧' },
+    { key: 'vaccination', label: lang === 'en' ? 'Vaccination' : 'Vaccination', emoji: '💉' },
+    { key: 'andet', label: lang === 'en' ? 'Other' : 'Andet', emoji: '📅' },
+  ];
+
+  const getCategoryEmoji = (cat) => CATEGORIES.find(c => c.key === cat)?.emoji ?? '📅';
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -37,7 +50,7 @@ export default function Calendar() {
     onSuccess: () => {
       queryClient.invalidateQueries(['calendarEvents', user?.email]);
       setShowForm(false);
-      setForm({ title: '', description: '', start_datetime: '', end_datetime: '' });
+      setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
       toast.success(t.eventCreated);
     }
   });
@@ -68,7 +81,7 @@ export default function Calendar() {
 
   const prefillTime = () => {
     const d = format(selectedDay, 'yyyy-MM-dd');
-    setForm((f) => ({ ...f, start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00` }));
+    setForm((f) => ({ ...f, start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00`, category: 'andet', notify_day_before: true, notify_30min_before: false }));
     setShowForm(true);
   };
 
@@ -157,12 +170,15 @@ export default function Calendar() {
         <div className="space-y-2">
             {selectedDayEvents.map((event) =>
           <div
-            key={event.id}
-            className="flex items-start gap-3 rounded-2xl p-4 border"
-            style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-            
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>{event.title}</p>
+          key={event.id}
+          className="flex items-start gap-3 rounded-2xl p-4 border"
+          style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                {getCategoryEmoji(event.category)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>{event.title}</p>
                   <div className="flex items-center gap-1 mt-0.5">
                     <Clock className="w-3 h-3" style={{ color: 'var(--color-text-muted)' }} />
                     <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
@@ -214,6 +230,26 @@ export default function Calendar() {
                 </button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Category picker */}
+                <div className="space-y-1.5">
+                  <Label style={{ color: 'var(--color-text-primary)' }}>{lang === 'da' ? 'Kategori' : 'Category'}</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {CATEGORIES.map(cat => (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => setForm(f => ({ ...f, category: cat.key }))}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                        style={form.category === cat.key
+                          ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                          : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+                      >
+                        {cat.emoji} {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="space-y-1.5">
                   <Label>{t.eventTitle}</Label>
                   <Input
@@ -250,6 +286,31 @@ export default function Calendar() {
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
                 
                 </div>
+                {/* Notification toggles */}
+                <div className="rounded-2xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <p className="text-xs font-semibold uppercase tracking-wide flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
+                    <Bell className="w-3.5 h-3.5" /> {lang === 'da' ? 'Notifikationer' : 'Notifications'}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      {lang === 'da' ? '📲 Dagen før' : '📲 Day before'}
+                    </span>
+                    <Switch
+                      checked={form.notify_day_before}
+                      onCheckedChange={(v) => setForm(f => ({ ...f, notify_day_before: v }))}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      {lang === 'da' ? '⏰ 30 min før' : '⏰ 30 min before'}
+                    </span>
+                    <Switch
+                      checked={form.notify_30min_before}
+                      onCheckedChange={(v) => setForm(f => ({ ...f, notify_30min_before: v }))}
+                    />
+                  </div>
+                </div>
+
                 <Button
                 type="submit"
                 className="w-full h-12 rounded-xl font-semibold"
@@ -259,9 +320,6 @@ export default function Calendar() {
                   {createEvent.isPending ? t.saving : t.saveEvent}
                 </Button>
               </form>
-              <p className="text-xs text-center mt-3" style={{ color: 'var(--color-text-muted)' }}>
-                {t.calendarReminderNote}
-              </p>
             </motion.div>
           </>
         }
