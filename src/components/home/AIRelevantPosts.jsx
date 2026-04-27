@@ -77,12 +77,7 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
   return (
     <div className="px-5">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-            <Sparkles className="w-3.5 h-3.5 text-white" />
-          </div>
-          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.relevantForYou}</h2>
-        </div>
+        <h2 className="text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--color-text-muted)' }}>{t.relevantForYou}</h2>
         <Link to={createPageUrl('Blog')} className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
           {t.seeAll}
         </Link>

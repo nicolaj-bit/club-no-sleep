@@ -41,17 +41,17 @@
 
     /* Light mode CSS vars */
     --color-bg: #FAF6F1;
-    --color-bg-card: #FFFFFF;
+    --color-bg-card: #FFEFF9;
     --color-bg-subtle: #F3EDE4;
     --color-border: #EDE4D8;
-    --color-text-primary: #2C1A0E;
-    --color-text-secondary: #6B4A2F;
-    --color-text-muted: #9C816A;
-    --color-primary: #5C3317;
-    --color-primary-light: #7A4F2E;
-    --color-accent: #A0785A;
+    --color-text-primary: #2B1F16;
+    --color-text-secondary: #7A665A;
+    --color-text-muted: #7A665A;
+    --color-primary: #808072;
+    --color-primary-light: #DCC1B0;
+    --color-accent: #808072;
     --color-sand: #FAF6F1;
-    --color-cappuccino: #C8A882;
+    --color-cappuccino: #DCC1B0;
   }
 
   /* Dark mode */

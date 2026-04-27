@@ -36,24 +36,30 @@ export default function UpcomingEventCard({ userEmail }) {
     <Link to={createPageUrl('Calendar')} className="block flex-1 cursor-pointer">
       <div
         className="rounded-3xl p-4 h-full relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #7C2D12 0%, #C2410C 100%)' }}
+        style={{ backgroundColor: '#E8D8C6' }}
       >
+        {/* Decorative leaf */}
+        <div className="absolute right-2 bottom-2 opacity-20 text-4xl select-none pointer-events-none">🌿</div>
 
         <div className="mb-3">
-          <CalendarDays className="w-5 h-5 text-white/80" />
+          <CalendarDays className="w-5 h-5" style={{ color: '#5C3D2E' }} />
         </div>
-        <p className="text-white/60 text-xs font-medium mb-1">{t.nextAppointment}</p>
+        <p className="text-xs font-medium mb-1" style={{ color: '#7A665A' }}>
+          {lang === 'da' ? 'Næste aftale' : 'Next appointment'}
+        </p>
         {loading ? (
-          <div className="h-7 w-20 rounded-lg animate-pulse bg-white/20" />
+          <div className="h-7 w-20 rounded-lg animate-pulse bg-black/10" />
         ) : event ? (
           <>
-            <p className="text-sm font-bold text-white leading-snug line-clamp-2">{event.title}</p>
-            <p className="text-white/50 text-xs mt-1">
+            <p className="text-sm font-bold leading-snug line-clamp-2" style={{ color: '#2B1F16' }}>{event.title}</p>
+            <p className="text-xs mt-1" style={{ color: '#7A665A' }}>
               {getDateLabel(event.start_datetime)} · {format(parseISO(event.start_datetime), 'HH:mm')}
             </p>
           </>
         ) : (
-          <p className="text-white/60 text-sm mt-1">{t.addAppointmentCta}</p>
+          <p className="text-sm mt-1" style={{ color: '#7A665A' }}>
+            {lang === 'da' ? 'Tilføj aftale →' : 'Add appointment →'}
+          </p>
         )}
       </div>
     </Link>

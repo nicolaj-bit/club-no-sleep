@@ -55,7 +55,7 @@ export default function ChildDevelopmentCard({ profile }) {
     <Link to={createPageUrl('Knowledge')} className="block mx-5 mb-4 cursor-pointer">
       <div
         className="rounded-3xl overflow-hidden relative"
-        style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
+        style={{ background: 'linear-gradient(145deg, #808072 0%, #DCC1B0 100%)' }}
       >
 
 

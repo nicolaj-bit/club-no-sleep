@@ -46,16 +46,18 @@
 
     /* LALATOTO custom CSS vars */
     --color-bg: #FAF6F1;
-    --color-bg-card: #FFFFFF;
+    --color-bg-card: #FFEFF9;
     --color-bg-subtle: #F3EDE4;
     --color-border: #EDE4D8;
-    --color-text-primary: #2C1A0E;
-    --color-text-secondary: #6B4A2F;
-    --color-text-muted: #9C816A;
-    --color-primary: #5C3317;
-    --color-primary-light: #7A4F2E;
-    --color-accent: #A0785A;
-    --color-cappuccino: #C8A882;
+    --color-text-primary: #2B1F16;
+    --color-text-secondary: #7A665A;
+    --color-text-muted: #7A665A;
+    --color-primary: #808072;
+    --color-primary-light: #DCC1B0;
+    --color-accent: #808072;
+    --color-cappuccino: #DCC1B0;
+    --color-card-warm: #F3E9E1;
+    --color-card-mid: #E8D8C6;
   }
 
   /* ── Dark mode – deep black with warm text ── */
@@ -95,10 +97,12 @@
     --color-text-primary: #F5F0EB;
     --color-text-secondary: #C8B8A8;
     --color-text-muted: #8A7060;
-    --color-primary: #F5F0EB;
+    --color-primary: #DCC1B0;
     --color-primary-light: #C8B8A8;
-    --color-accent: #C8A882;
+    --color-accent: #DCC1B0;
     --color-cappuccino: #A0785A;
+    --color-card-warm: #1A1A1A;
+    --color-card-mid: #1F1F1F;
   }
 }
 

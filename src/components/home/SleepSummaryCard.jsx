@@ -17,7 +17,7 @@ function formatDuration(bedtime, wakeTime) {
 }
 
 export default function SleepSummaryCard({ userEmail }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [log, setLog] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -41,35 +41,41 @@ export default function SleepSummaryCard({ userEmail }) {
     <Link to={createPageUrl('SleepLog')} className="block flex-1 cursor-pointer">
       <div
         className="rounded-3xl p-4 h-full relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #2D1B69 0%, #5B3FA6 100%)' }}
+        style={{ backgroundColor: '#5C3D2E' }}
       >
+        {/* Decorative leaf */}
+        <div className="absolute right-2 bottom-2 opacity-10 text-4xl select-none pointer-events-none">🌿</div>
 
         <div className="mb-3">
-          <Moon className="w-5 h-5 text-white/80" />
+          <Moon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.8)' }} />
         </div>
-        <p className="text-white/60 text-xs font-medium mb-1">{t.sleepLastNight}</p>
+        <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          {lang === 'da' ? 'Søvn i nat' : 'Sleep last night'}
+        </p>
         {loading ? (
           <div className="h-7 w-14 rounded-lg animate-pulse bg-white/20" />
         ) : dur ? (
           <>
             <div className="flex items-baseline gap-0.5">
               <span className="text-2xl font-bold text-white">{dur.hours}</span>
-              <span className="text-white/70 text-sm">{t.hoursShort}</span>
+              <span className="text-sm text-white/70">{t.hoursShort}</span>
               {dur.rem > 0 && (
                 <>
                   <span className="text-2xl font-bold text-white ml-1">{dur.rem}</span>
-                  <span className="text-white/70 text-sm">{t.minutesShort}</span>
+                  <span className="text-sm text-white/70">{t.minutesShort}</span>
                 </>
               )}
             </div>
             {wakings !== null && (
-              <p className="text-white/50 text-xs mt-1">
+              <p className="text-xs mt-1 text-white/50">
                 {wakings} {wakings === 1 ? t.wakingSingular : t.wakingPlural}
               </p>
             )}
           </>
         ) : (
-          <p className="text-white/60 text-sm mt-1">{t.logSleepCta}</p>
+          <p className="text-sm mt-1 text-white/60">
+            {lang === 'da' ? 'Log søvn →' : 'Log sleep →'}
+          </p>
         )}
       </div>
     </Link>

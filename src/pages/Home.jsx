@@ -115,29 +115,31 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-6">
+      <div className="px-5 pt-12 pb-4">
         <div className="flex items-start justify-between">
-        <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] capitalize mb-1.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-        <h1 className="text-4xl font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
+          <div>
+            <p className="text-sm mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+            <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
+          </div>
+          {user && <NotificationBell userEmail={user.email} />}
         </div>
-        {user && <NotificationBell userEmail={user.email} />}
-        </div>
+        <div className="mt-2" style={{ color: '#C8A882' }}>♥</div>
       </div>
 
-      {/* Daily Affirmation — skjules når terminsdato er aktiv (i fremtiden) */}
-      {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && <div className="mx-5 mb-5">
-        <div
-          className="rounded-2xl p-6 relative overflow-hidden"
-          style={{ background: 'linear-gradient(145deg, #5C3317 0%, #A0785A 100%)' }}
-        >
-
-          <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-white/50 mb-3">{t.dailyWord}</p>
-          <p className="text-white text-[15px] font-light leading-relaxed relative z-10" style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '17px', lineHeight: '1.55' }}>
-            {displayAffirmation}
-          </p>
+      {/* Daily Affirmation */}
+      {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && (
+        <div className="mx-5 mb-5">
+          <div
+            className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ backgroundColor: '#F3E9E1', border: '1px solid #EDE4D8' }}
+          >
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: '#808072' }}>{t.dailyWord}</p>
+            <p className="text-[16px] font-light leading-relaxed relative z-10" style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.55', color: '#2B1F16' }}>
+              {displayAffirmation}
+            </p>
+          </div>
         </div>
-      </div>}
+      )}
 
       {/* Child development age pill */}
       <ChildDevelopmentCard profile={profile} />
