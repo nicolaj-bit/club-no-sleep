@@ -52,9 +52,9 @@ export default function MilestoneCamera({ frame, onClose }) {
 
   // Draw round sticker overlay on canvas
   const drawFrame = (ctx, w, h) => {
-    // Sticker position: bottom-right corner
+    // Sticker position: bottom-left corner
     const stickerR = w * 0.22;
-    const cx = w - stickerR - w * 0.05;
+    const cx = stickerR + w * 0.05;
     const cy = h - stickerR - h * 0.05;
 
     // Filled circle background — warm sand
@@ -289,8 +289,8 @@ export default function MilestoneCamera({ frame, onClose }) {
             style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
           />
 
-          {/* Sticker preview overlay — bottom right */}
-          <div className="absolute bottom-28 right-5 pointer-events-none">
+          {/* Sticker preview overlay — bottom left */}
+          <div className="absolute bottom-28 left-5 pointer-events-none">
             <div
               className="flex flex-col items-center justify-center rounded-full relative"
               style={{
