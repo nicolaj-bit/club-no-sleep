@@ -52,64 +52,43 @@ export default function MilestoneCamera({ frame, onClose }) {
 
   // Draw round sticker overlay on canvas
   const drawFrame = (ctx, w, h) => {
-    // Sticker position: bottom-left corner
     const stickerR = w * 0.22;
     const cx = stickerR + w * 0.05;
     const cy = h - stickerR - h * 0.05;
 
-    // Filled circle background — warm sand
     ctx.save();
+
+    // Outer ring
     ctx.beginPath();
     ctx.arc(cx, cy, stickerR, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(220, 193, 176, 0.92)'; // cappuccino/sand
+    ctx.strokeStyle = '#A0785A';
+    ctx.lineWidth = w * 0.005;
+    ctx.stroke();
+
+    // Inner filled circle
+    const innerR = stickerR * 0.82;
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(220, 193, 176, 0.95)';
     ctx.fill();
 
-    // Rough hand-drawn circle border — draw as multiple slightly offset arcs
+    // Inner ring border
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
     ctx.strokeStyle = '#A0785A';
-    ctx.lineWidth = w * 0.008;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    // Simulate hand-drawn look with a slightly wobbly path
-    const wobble = (angle, rad) => {
-      const jitter = (Math.sin(angle * 7) * 0.018 + Math.cos(angle * 13) * 0.012) * stickerR;
-      return [
-        cx + (rad + jitter) * Math.cos(angle),
-        cy + (rad + jitter) * Math.sin(angle),
-      ];
-    };
-    const steps = 120;
-    ctx.beginPath();
-    for (let i = 0; i <= steps; i++) {
-      const angle = (i / steps) * Math.PI * 2 - Math.PI / 2;
-      const [px, py] = wobble(angle, stickerR * 0.88);
-      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-    }
-    ctx.stroke();
-
-    // Second slightly larger wobbly ring for texture
     ctx.lineWidth = w * 0.004;
-    ctx.globalAlpha = 0.45;
-    ctx.beginPath();
-    for (let i = 0; i <= steps; i++) {
-      const angle = (i / steps) * Math.PI * 2 + 0.3;
-      const [px, py] = wobble(angle, stickerR * 0.95);
-      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-    }
     ctx.stroke();
-    ctx.globalAlpha = 1;
 
-    // Text inside sticker
-    ctx.textAlign = 'center';
+    // Headline text — italic Georgia
+    const cleanHeadline = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
+    const fontSize1 = innerR * 0.32;
+    ctx.font = `italic ${fontSize1}px Georgia, serif`;
     ctx.fillStyle = '#5C3D2E';
+    ctx.textAlign = 'center';
 
-    // Line 1: headline (e.g. "Første skridt" or "1 år")
-    const fontSize1 = stickerR * 0.32;
-    ctx.font = `${fontSize1}px Georgia, serif`;
-
-    // Wrap headline into max 2 lines
-    const words = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim().split(' ');
-    const maxWidth = stickerR * 1.3;
+    // Word wrap
+    const words = cleanHeadline.split(' ');
+    const maxWidth = innerR * 1.3;
     const lines = [];
     let current = '';
     for (const word of words) {
@@ -123,22 +102,22 @@ export default function MilestoneCamera({ frame, onClose }) {
     }
     if (current) lines.push(current);
 
-    const lineH = fontSize1 * 1.25;
-    const totalTextH = lines.length * lineH + fontSize1 * 1.4; // + date line
-    let startY = cy - totalTextH / 2 + fontSize1;
+    const lineH = fontSize1 * 1.4;
+    const fontSize2 = innerR * 0.26;
+    const totalH = lines.length * lineH + fontSize2 * 1.6;
+    let startY = cy - totalH / 2 + fontSize1;
 
     lines.forEach((line, i) => {
-      ctx.font = `${fontSize1}px Georgia, serif`;
+      ctx.font = `italic ${fontSize1}px Georgia, serif`;
+      ctx.fillStyle = '#5C3D2E';
       ctx.fillText(line, cx, startY + i * lineH);
     });
 
-    // Date line
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
-    const fontSize2 = stickerR * 0.26;
-    ctx.font = `${fontSize2}px Georgia, serif`;
+    // Date
+    const dateStr = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
+    ctx.font = `italic ${fontSize2}px Georgia, serif`;
     ctx.fillStyle = '#7A5C4A';
-    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize1 * 0.3);
+    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize2 * 0.5);
 
     ctx.restore();
   };
@@ -234,21 +213,21 @@ export default function MilestoneCamera({ frame, onClose }) {
 
           {/* Sticker preview overlay — bottom left */}
           <div className="absolute bottom-28 left-5 pointer-events-none">
-            <div
-              className="flex flex-col items-center justify-center rounded-full relative"
-              style={{
-                width: 100, height: 100,
-                backgroundColor: 'rgba(220,193,176,0.92)',
-                border: '2px solid #A0785A',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-              }}
-            >
-              <p className="text-center font-serif text-[11px] leading-tight px-2" style={{ color: '#5C3D2E' }}>
-                {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
-              </p>
-              <p className="text-center text-[9px] mt-0.5 px-2" style={{ color: '#7A5C4A' }}>
-                {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
-              </p>
+            <div className="relative flex items-center justify-center" style={{ width: 110, height: 110 }}>
+              {/* Outer ring */}
+              <div className="absolute inset-0 rounded-full" style={{ border: '1.5px solid #A0785A', borderRadius: '50%' }} />
+              {/* Inner filled circle */}
+              <div
+                className="absolute rounded-full flex flex-col items-center justify-center text-center"
+                style={{ inset: 8, backgroundColor: '#DCC1B0', border: '1.5px solid #A0785A' }}
+              >
+                <p style={{ color: '#5C3D2E', fontSize: 10, lineHeight: 1.4, fontFamily: 'Georgia, serif', fontStyle: 'italic', padding: '0 8px' }}>
+                  {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
+                </p>
+                <p style={{ color: '#7A5C4A', fontSize: 9, marginTop: 3, fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                  {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
+                </p>
+              </div>
             </div>
           </div>
 
