@@ -220,16 +220,20 @@ export default function Calendar() {
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="p-6 rounded-t-3xl fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#111111]"
-            style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
+            className="rounded-t-3xl fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#111111] flex flex-col"
+            style={{ maxHeight: '92dvh', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             
-              <div className="flex items-center justify-between mb-5">
+              {/* Fixed header */}
+              <div className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0">
                 <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.newEvent}</h3>
                 <button onClick={() => setShowForm(false)}>
                   <X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                 </button>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-4">
+
+              {/* Scrollable content */}
+              <div className="overflow-y-auto flex-1 px-6">
+              <form onSubmit={handleSubmit} className="space-y-4 pb-4">
                 {/* Category picker */}
                 <div className="space-y-1.5">
                   <Label style={{ color: 'var(--color-text-primary)' }}>{lang === 'da' ? 'Kategori' : 'Category'}</Label>
@@ -320,6 +324,7 @@ export default function Calendar() {
                   {createEvent.isPending ? t.saving : t.saveEvent}
                 </Button>
               </form>
+              </div>
             </motion.div>
           </>
         }
