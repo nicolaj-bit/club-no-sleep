@@ -1,64 +1,121 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Upload, Download, Share2, RotateCcw, X, SwitchCamera } from 'lucide-react';
 import { toast } from 'sonner';
+import WobblySticker from './WobblySticker';
 
 const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
-// Inject Caveat font
-if (!document.getElementById('caveat-font')) {
-  const link = document.createElement('link');
-  link.id = 'caveat-font';
-  link.rel = 'stylesheet';
-  link.href = 'https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap';
-  document.head.appendChild(link);
-}
+// ── Canvas helpers ────────────────────────────────────────────────────────────
 
-function wobblePath(cx, cy, r, seed, points = 32) {
+function buildWobblePoints(cx, cy, r, seed, points = 40) {
   const pts = [];
   for (let i = 0; i < points; i++) {
     const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
-    const jitter = (Math.sin(angle * 3 + seed) * 0.06 + Math.cos(angle * 5 + seed * 2) * 0.04) * r;
+    const jitter =
+      (Math.sin(angle * 3 + seed) * 0.055 +
+        Math.cos(angle * 5 + seed * 1.7) * 0.035 +
+        Math.sin(angle * 7 + seed * 0.9) * 0.02) * r;
     pts.push([cx + (r + jitter) * Math.cos(angle), cy + (r + jitter) * Math.sin(angle)]);
   }
-  let d = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const mid = [(pts[i][0] + pts[i-1][0])/2, (pts[i][1] + pts[i-1][1])/2];
-    d += ` Q ${pts[i-1][0]} ${pts[i-1][1]} ${mid[0]} ${mid[1]}`;
+  return pts;
+}
+
+function canvasWobblePath(ctx, cx, cy, r, seed) {
+  const pts = buildWobblePoints(cx, cy, r, seed);
+  ctx.beginPath();
+  for (let i = 0; i < pts.length; i++) {
+    const curr = pts[i];
+    const next = pts[(i + 1) % pts.length];
+    const mid = [(curr[0] + next[0]) / 2, (curr[1] + next[1]) / 2];
+    if (i === 0) ctx.moveTo(mid[0], mid[1]);
+    else ctx.quadraticCurveTo(curr[0], curr[1], mid[0], mid[1]);
   }
-  return d + ' Z';
+  const first = pts[0];
+  const last = pts[pts.length - 1];
+  ctx.quadraticCurveTo(first[0], first[1], (first[0] + last[0]) / 2, (first[1] + last[1]) / 2);
+  ctx.closePath();
 }
 
-function LiveSticker({ frame }) {
-  const size = 140;
-  const cx = size / 2, cy = size / 2;
-  const outerR = size * 0.46;
-  const innerR = size * 0.38;
-  const color = '#6B4C3B';
-  const cleanText = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
-
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.25))' }}>
-      <path d={wobblePath(cx, cy, innerR, 1.2)} fill="#D4B49A" />
-      <path d={wobblePath(cx, cy, innerR, 1.2)} fill="none" stroke={color} strokeWidth="1.5" />
-      <path d={wobblePath(cx, cy, outerR, 0.5)} fill="none" stroke={color} strokeWidth="1.5" />
-      <foreignObject x={cx - innerR * 0.85} y={cy - innerR * 0.6} width={innerR * 1.7} height={innerR * 1.2}>
-        <div xmlns="http://www.w3.org/1999/xhtml" style={{
-          width: '100%', height: '100%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center',
-          fontFamily: "'Caveat', cursive",
-          fontSize: `${size * 0.12}px`,
-          color, lineHeight: 1.4, wordBreak: 'break-word',
-        }}>
-          {cleanText}
-        </div>
-      </foreignObject>
-      <text x={cx} y={cy + innerR * 0.65} textAnchor="middle" fontFamily="'Caveat', cursive" fontSize={size * 0.09} fill={color}>
-        {TODAY_STR}.
-      </text>
-    </svg>
-  );
+function wrapTextCanvas(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
 }
+
+function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
+  // Position: bottom-left corner, 6% margin
+  const S = canvasW * 0.44; // sticker diameter
+  const cx = S / 2 + canvasW * 0.05;
+  const cy = canvasH - S / 2 - canvasH * 0.05;
+
+  const outerR = S * 0.44;
+  const innerR = S * 0.365;
+
+  const strokeColor = '#8B6650';
+  const fillColor = '#D4B49A';
+  const textColor = '#6B4430';
+  const strokeW = S * 0.013;
+
+  ctx.save();
+
+  // Filled inner circle
+  canvasWobblePath(ctx, cx, cy, innerR, 2.1);
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+
+  // Inner ring
+  canvasWobblePath(ctx, cx, cy, innerR, 2.1);
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = strokeW;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Outer ring
+  canvasWobblePath(ctx, cx, cy, outerR, 0.7);
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = strokeW * 0.85;
+  ctx.stroke();
+
+  // Text
+  const headlineFontSize = S * 0.118;
+  const dateFontSize = S * 0.093;
+  const lineHeight = headlineFontSize * 1.28;
+  const gap = S * 0.04;
+  const maxTextW = innerR * 1.6;
+
+  ctx.font = `${headlineFontSize}px 'Patrick Hand', cursive`;
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  const lines = wrapTextCanvas(ctx, headline, maxTextW);
+  const blockHeight = lines.length * lineHeight + gap + dateFontSize;
+  const startY = cy - blockHeight / 2 + headlineFontSize * 0.72;
+
+  lines.forEach((line, i) => {
+    ctx.font = `${headlineFontSize}px 'Patrick Hand', cursive`;
+    ctx.fillText(line, cx, startY + i * lineHeight);
+  });
+
+  ctx.font = `${dateFontSize}px 'Patrick Hand', cursive`;
+  ctx.fillText(dateStr + '.', cx, startY + lines.length * lineHeight + gap + dateFontSize * 0.1);
+
+  ctx.restore();
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function MilestoneCamera({ frame, onClose }) {
   const videoRef = useRef(null);
@@ -66,16 +123,27 @@ export default function MilestoneCamera({ frame, onClose }) {
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
 
-  const [mode, setMode] = useState('camera'); // 'camera' | 'preview'
+  const [mode, setMode] = useState('camera');
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
 
-  // Start camera
-  const startCamera = useCallback(async (facing = facingMode) => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop());
+  const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
+  const dateStr = TODAY_STR;
+
+  // Load Patrick Hand font into canvas context before drawing
+  const loadFont = async () => {
+    const font = new FontFace('Patrick Hand', 'url(https://fonts.gstatic.com/s/patrickhand/v24/LDI1apSQOAYtSuYWp8ZweqbC.woff2)');
+    try {
+      const loaded = await font.load();
+      document.fonts.add(loaded);
+    } catch (e) {
+      // fallback: use system cursive
     }
+  };
+
+  const startCamera = useCallback(async (facing = facingMode) => {
+    if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
     setCameraReady(false);
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1920 } },
@@ -97,6 +165,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   }, []);
 
   useEffect(() => {
+    loadFont();
     if (mode === 'camera') startCamera();
     else stopCamera();
     return () => stopCamera();
@@ -108,111 +177,28 @@ export default function MilestoneCamera({ frame, onClose }) {
     await startCamera(next);
   };
 
-  // Helper: draw wobbly path on canvas
-  const drawWobblePath = (ctx, cx, cy, r, seed, points = 32) => {
-    const pts = [];
-    for (let i = 0; i < points; i++) {
-      const angle = (i / points) * Math.PI * 2 - Math.PI / 2;
-      const jitter = (Math.sin(angle * 3 + seed) * 0.06 + Math.cos(angle * 5 + seed * 2) * 0.04) * r;
-      pts.push([cx + (r + jitter) * Math.cos(angle), cy + (r + jitter) * Math.sin(angle)]);
-    }
-    ctx.beginPath();
-    ctx.moveTo(pts[0][0], pts[0][1]);
-    for (let i = 1; i < pts.length; i++) {
-      const mid = [(pts[i][0] + pts[i-1][0])/2, (pts[i][1] + pts[i-1][1])/2];
-      ctx.quadraticCurveTo(pts[i-1][0], pts[i-1][1], mid[0], mid[1]);
-    }
-    ctx.closePath();
+  const renderPhoto = async (drawSource) => {
+    await loadFont();
+    const canvas = canvasRef.current;
+    drawSource(canvas);
+    drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
+    setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
+    setMode('preview');
   };
 
-  // Draw round sticker overlay on canvas
-  const drawFrame = (ctx, w, h) => {
-    const stickerR = w * 0.22;
-    const cx = stickerR + w * 0.06;
-    const cy = h - stickerR - h * 0.06;
-    const innerR = stickerR * 0.82;
-    const color = '#6B4C3B';
-
-    ctx.save();
-
-    // Filled inner circle
-    drawWobblePath(ctx, cx, cy, innerR, 1.2);
-    ctx.fillStyle = '#D4B49A';
-    ctx.fill();
-
-    // Inner border
-    drawWobblePath(ctx, cx, cy, innerR, 1.2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = w * 0.004;
-    ctx.stroke();
-
-    // Outer ring
-    drawWobblePath(ctx, cx, cy, stickerR, 0.5);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = w * 0.004;
-    ctx.stroke();
-
-    // Text
-    const cleanHeadline = frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim();
-    const fontSize1 = innerR * 0.34;
-    const fontSize2 = innerR * 0.27;
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-
-    // Word wrap
-    ctx.font = `${fontSize1}px 'Caveat', cursive`;
-    const words = cleanHeadline.split(' ');
-    const maxWidth = innerR * 1.4;
-    const lines = [];
-    let current = '';
-    for (const word of words) {
-      const test = current ? `${current} ${word}` : word;
-      if (ctx.measureText(test).width > maxWidth && current) { lines.push(current); current = word; }
-      else current = test;
-    }
-    if (current) lines.push(current);
-
-    const lineH = fontSize1 * 1.35;
-    const dateStr = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' }) + '.';
-    const totalH = lines.length * lineH + fontSize2 * 1.5;
-    let startY = cy - totalH / 2 + fontSize1 * 0.85;
-
-    lines.forEach((line, i) => {
-      ctx.font = `${fontSize1}px 'Caveat', cursive`;
-      ctx.fillText(line, cx, startY + i * lineH);
-    });
-
-    ctx.font = `${fontSize2}px 'Caveat', cursive`;
-    ctx.fillText(dateStr, cx, startY + lines.length * lineH + fontSize2 * 0.4);
-
-    ctx.restore();
-  };
-
-  const renderToCanvas = async (drawFn) => {
-    await document.fonts.load("400 20px 'Caveat'");
-    drawFn();
-  };
-
-  // Capture from camera
   const capturePhoto = () => {
     const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-    renderToCanvas(() => {
-      const size = Math.min(video.videoWidth, video.videoHeight);
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      const sx = (video.videoWidth - size) / 2;
-      const sy = (video.videoHeight - size) / 2;
-      ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
-      drawFrame(ctx, size, size);
-      setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
-      setMode('preview');
-    });
+    if (!video || !canvasRef.current) return;
+    const size = Math.min(video.videoWidth, video.videoHeight);
+    canvasRef.current.width = size;
+    canvasRef.current.height = size;
+    const ctx = canvasRef.current.getContext('2d');
+    const sx = (video.videoWidth - size) / 2;
+    const sy = (video.videoHeight - size) / 2;
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
+    renderPhoto(() => {}); // canvas already drawn
   };
 
-  // Upload from gallery
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -220,26 +206,21 @@ export default function MilestoneCamera({ frame, onClose }) {
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = () => {
-        renderToCanvas(() => {
-          const canvas = canvasRef.current;
-          const size = Math.min(img.width, img.height);
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext('2d');
-          const sx = (img.width - size) / 2;
-          const sy = (img.height - size) / 2;
-          ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
-          drawFrame(ctx, size, size);
-          setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
-          setMode('preview');
-        });
+        const canvas = canvasRef.current;
+        const size = Math.min(img.width, img.height);
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const sx = (img.width - size) / 2;
+        const sy = (img.height - size) / 2;
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
+        renderPhoto(() => {});
       };
       img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
   };
 
-  // Download
   const downloadImage = () => {
     const a = document.createElement('a');
     a.href = capturedImage;
@@ -248,22 +229,15 @@ export default function MilestoneCamera({ frame, onClose }) {
     toast.success('Billede gemt! 🎉');
   };
 
-  // Share
   const shareImage = async () => {
-    if (!navigator.share) {
-      downloadImage();
-      return;
-    }
+    if (!navigator.share) { downloadImage(); return; }
     const res = await fetch(capturedImage);
     const blob = await res.blob();
     const file = new File([blob], `lalatoto-${frame.id}.jpg`, { type: 'image/jpeg' });
     await navigator.share({ files: [file], title: frame.headline, text: frame.subline });
   };
 
-  const retake = () => {
-    setCapturedImage(null);
-    setMode('camera');
-  };
+  const retake = () => { setCapturedImage(null); setMode('camera'); };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: '#000' }}>
@@ -272,35 +246,27 @@ export default function MilestoneCamera({ frame, onClose }) {
       {/* ── CAMERA MODE ── */}
       {mode === 'camera' && (
         <div className="relative h-full flex flex-col">
-          {/* Video */}
           <video
             ref={videoRef}
-            autoPlay
-            playsInline
-            muted
+            autoPlay playsInline muted
             className="absolute inset-0 w-full h-full object-cover"
             style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
           />
 
-          {/* Sticker preview overlay — bottom left */}
-          <div className="absolute bottom-28 left-5 pointer-events-none drop-shadow-lg">
-            <LiveSticker frame={frame} />
+          {/* Live sticker overlay */}
+          <div className="absolute bottom-28 left-5 pointer-events-none" style={{ filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.35))' }}>
+            <WobblySticker headline={cleanHeadline} date={dateStr} size={150} />
           </div>
 
           {/* Top bar */}
           <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={onClose}>
-              <X className="w-6 h-6 text-white drop-shadow" />
-            </button>
+            <button onClick={onClose}><X className="w-6 h-6 text-white drop-shadow" /></button>
             <p className="text-white font-semibold text-sm drop-shadow">{frame.label}</p>
-            <button onClick={flipCamera}>
-              <SwitchCamera className="w-6 h-6 text-white drop-shadow" />
-            </button>
+            <button onClick={flipCamera}><SwitchCamera className="w-6 h-6 text-white drop-shadow" /></button>
           </div>
 
-          {/* Shutter + gallery */}
+          {/* Shutter row */}
           <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-10 pb-16">
-            {/* Gallery */}
             <button
               onClick={() => fileInputRef.current?.click()}
               className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
@@ -310,7 +276,6 @@ export default function MilestoneCamera({ frame, onClose }) {
             </button>
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
 
-            {/* Shutter */}
             <button
               onClick={capturePhoto}
               disabled={!cameraReady}
@@ -319,8 +284,6 @@ export default function MilestoneCamera({ frame, onClose }) {
             >
               <div className="w-14 h-14 rounded-full bg-white" />
             </button>
-
-            {/* Spacer to balance layout */}
             <div className="w-12 h-12" />
           </div>
         </div>
@@ -330,20 +293,13 @@ export default function MilestoneCamera({ frame, onClose }) {
       {mode === 'preview' && capturedImage && (
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={retake}>
-              <X className="w-6 h-6 text-white" />
-            </button>
+            <button onClick={retake}><X className="w-6 h-6 text-white" /></button>
             <p className="text-white font-semibold text-sm">{frame.label}</p>
             <div className="w-6" />
           </div>
 
           <div className="flex-1 flex items-center justify-center px-4">
-            <img
-              src={capturedImage}
-              alt="Milepæl"
-              className="w-full rounded-3xl object-cover"
-              style={{ maxHeight: '65vh', maxWidth: 480 }}
-            />
+            <img src={capturedImage} alt="Milepæl" className="w-full rounded-3xl object-cover" style={{ maxHeight: '65vh', maxWidth: 480 }} />
           </div>
 
           <div className="px-6 pb-12 pt-6 flex gap-3">
@@ -352,24 +308,21 @@ export default function MilestoneCamera({ frame, onClose }) {
               className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
               style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
             >
-              <RotateCcw className="w-4 h-4" />
-              Prøv igen
+              <RotateCcw className="w-4 h-4" /> Prøv igen
             </button>
             <button
               onClick={downloadImage}
               className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
               style={{ backgroundColor: '#FFFFFF', color: '#2B1F16' }}
             >
-              <Download className="w-4 h-4" />
-              Gem
+              <Download className="w-4 h-4" /> Gem
             </button>
             <button
               onClick={shareImage}
               className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
               style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
             >
-              <Share2 className="w-4 h-4" />
-              Del
+              <Share2 className="w-4 h-4" /> Del
             </button>
           </div>
         </div>
