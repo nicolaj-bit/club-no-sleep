@@ -116,7 +116,7 @@ export default function Home() {
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-4">
+      <div className="px-5 pt-6 pb-4">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
