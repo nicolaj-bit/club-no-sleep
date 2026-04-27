@@ -8,7 +8,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
 
-  const [mode, setMode] = useState('choose'); // 'choose' | 'camera' | 'preview'
+  const [mode, setMode] = useState('camera'); // 'camera' | 'preview'
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
@@ -212,69 +212,12 @@ export default function MilestoneCamera({ frame, onClose }) {
 
   const retake = () => {
     setCapturedImage(null);
-    setMode('choose');
+    setMode('camera');
   };
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: '#000' }}>
       <canvas ref={canvasRef} className="hidden" />
-
-      {/* ── CHOOSE MODE ── */}
-      {mode === 'choose' && (
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={onClose}>
-              <X className="w-6 h-6 text-white" />
-            </button>
-            <p className="text-white font-semibold text-sm">{frame.label}</p>
-            <div className="w-6" />
-          </div>
-
-          {/* Sticker preview */}
-          <div className="flex-1 flex items-center justify-center">
-            <div
-              className="flex flex-col items-center justify-center rounded-full relative"
-              style={{
-                width: 220, height: 220,
-                backgroundColor: 'rgba(220,193,176,0.95)',
-                border: '3px solid #A0785A',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.22), inset 0 0 0 6px rgba(160,120,90,0.12)',
-                outline: '2px solid rgba(160,120,90,0.3)',
-                outlineOffset: '6px',
-              }}
-            >
-              <p className="text-center font-serif text-lg leading-snug px-6" style={{ color: '#5C3D2E' }}>
-                {frame.headline.replace(/[🎉🎂🎈😄🦷👣💬🍼🌙😊🥄🐣🌱🫶💛🤱🧸]/gu, '').trim()}
-              </p>
-              <p className="text-center text-sm mt-2 px-6" style={{ color: '#7A5C4A', fontFamily: 'Georgia, serif' }}>
-                {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
-              </p>
-            </div>
-          </div>
-
-          {/* Action buttons */}
-          <div className="px-6 pb-12 pt-6 flex flex-col gap-3">
-            <button
-              onClick={() => setMode('camera')}
-              className="w-full h-14 rounded-2xl flex items-center justify-center gap-2 font-semibold text-sm"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
-            >
-              <Camera className="w-5 h-5" />
-              Åbn kamera
-            </button>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full h-14 rounded-2xl flex items-center justify-center gap-2 font-semibold text-sm border"
-              style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
-            >
-              <Upload className="w-5 h-5" />
-              Vælg fra galleri
-            </button>
-            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-          </div>
-        </div>
-      )}
 
       {/* ── CAMERA MODE ── */}
       {mode === 'camera' && (
@@ -311,16 +254,28 @@ export default function MilestoneCamera({ frame, onClose }) {
 
           {/* Top bar */}
           <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={() => setMode('choose')}>
+            <button onClick={onClose}>
               <X className="w-6 h-6 text-white drop-shadow" />
             </button>
+            <p className="text-white font-semibold text-sm drop-shadow">{frame.label}</p>
             <button onClick={flipCamera}>
               <SwitchCamera className="w-6 h-6 text-white drop-shadow" />
             </button>
           </div>
 
-          {/* Shutter */}
-          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center pb-16">
+          {/* Shutter + gallery */}
+          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-10 pb-16">
+            {/* Gallery */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
+            >
+              <Upload className="w-5 h-5 text-white" />
+            </button>
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+
+            {/* Shutter */}
             <button
               onClick={capturePhoto}
               disabled={!cameraReady}
@@ -329,6 +284,9 @@ export default function MilestoneCamera({ frame, onClose }) {
             >
               <div className="w-14 h-14 rounded-full bg-white" />
             </button>
+
+            {/* Spacer to balance layout */}
+            <div className="w-12 h-12" />
           </div>
         </div>
       )}
