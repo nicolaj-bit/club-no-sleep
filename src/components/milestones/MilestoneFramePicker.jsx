@@ -43,10 +43,10 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
                 boxShadow: isSelected ? `0 0 0 2px ${frame.accentColor}50` : 'none',
               }}
             >
-              {/* Top image area with corners + emoji */}
+              {/* Card area */}
               <div
                 className="w-full relative flex items-center justify-center"
-                style={{ backgroundColor: frame.bgColor, aspectRatio: '1 / 1' }}
+                style={{ backgroundColor: '#F5EFE8', aspectRatio: '1 / 1' }}
               >
                 {/* Camera corner marks */}
                 <div className="absolute top-3 left-3" style={{ width: cornerSize, height: cornerSize, borderLeft: `${cornerThickness}px solid ${frame.accentColor}`, borderTop: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '2px 0 0 0' }} />
@@ -54,21 +54,37 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
                 <div className="absolute bottom-3 left-3" style={{ width: cornerSize, height: cornerSize, borderLeft: `${cornerThickness}px solid ${frame.accentColor}`, borderBottom: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '0 0 0 2px' }} />
                 <div className="absolute bottom-3 right-3" style={{ width: cornerSize, height: cornerSize, borderRight: `${cornerThickness}px solid ${frame.accentColor}`, borderBottom: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '0 0 2px 0' }} />
 
-                {/* Emoji */}
-                <div className="text-5xl">{frame.emoji}</div>
-              </div>
-
-              {/* Text area below image */}
-              <div
-                className="w-full px-3 py-2.5 text-left"
-                style={{ backgroundColor: frame.bgColor }}
-              >
-                <p className="text-xs font-bold leading-tight truncate" style={{ color: frame.textColor, fontFamily: 'Cormorant Garamond, serif', fontSize: 13 }}>
-                  {frame.headline}
-                </p>
-                <p className="text-[11px] leading-tight mt-0.5 truncate" style={{ color: frame.textColor + 'BB' }}>
-                  {frame.subline}
-                </p>
+                {/* Sticker */}
+                <div
+                  className="flex flex-col items-center justify-center text-center"
+                  style={{
+                    width: 110, height: 110,
+                    borderRadius: '50%',
+                    backgroundColor: '#DCC1B0',
+                    border: '2px solid #A0785A',
+                    boxShadow: '0 0 0 4px #F5EFE8, 0 0 0 6px #A0785A66',
+                    padding: '12px',
+                  }}
+                >
+                  <p style={{
+                    color: '#5C3D2E',
+                    fontSize: 10,
+                    lineHeight: 1.4,
+                    fontFamily: 'Georgia, serif',
+                    fontStyle: 'italic',
+                  }}>
+                    {frame.headline}
+                  </p>
+                  <p style={{
+                    color: '#7A5C4A',
+                    fontSize: 9,
+                    marginTop: 4,
+                    fontFamily: 'Georgia, serif',
+                    fontStyle: 'italic',
+                  }}>
+                    {new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' })}.
+                  </p>
+                </div>
               </div>
             </button>
           );
