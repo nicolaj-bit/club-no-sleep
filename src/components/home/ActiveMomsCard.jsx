@@ -84,24 +84,37 @@ export default function ActiveMomsCard() {
             </p>
           </div>
 
-          {/* Avatar stack: 3 billeder + 1 "+" boble */}
+          {/* Avatar stack */}
           <div className="flex items-center flex-shrink-0">
             <div className="flex -space-x-2.5">
-              {displayAvatars.slice(0, 3).map((img, i) => (
+              {(count ?? 0) > 4
+                ? displayAvatars.slice(0, 3).map((img, i) => (
+                    <div
+                      key={i}
+                      className="w-9 h-9 rounded-full border-2 overflow-hidden"
+                      style={{ borderColor: 'var(--color-bg-card)' }}
+                    >
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))
+                : displayAvatars.slice(0, 4).map((img, i) => (
+                    <div
+                      key={i}
+                      className="w-9 h-9 rounded-full border-2 overflow-hidden"
+                      style={{ borderColor: 'var(--color-bg-card)' }}
+                    >
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))
+              }
+              {(count ?? 0) > 4 && (
                 <div
-                  key={i}
-                  className="w-9 h-9 rounded-full border-2 overflow-hidden"
-                  style={{ borderColor: 'var(--color-bg-card)' }}
+                  className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-semibold"
+                  style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  +{count}
                 </div>
-              ))}
-              <div
-                className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-semibold"
-                style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
-              >
-                +{count ?? ''}
-              </div>
+              )}
             </div>
           </div>
         </div>
