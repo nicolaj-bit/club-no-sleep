@@ -58,66 +58,64 @@ export default function ChildDevelopmentCard({ profile }) {
   const age = getAgeDisplay(profile, t);
   if (!age) return null;
 
-  // Pregnancy card — præcis som billedet: beige baggrund, foto til højre, tekst til venstre
+  // Pregnancy card — elegant full-bleed design
   if (age.isPregnant) {
     return (
-      <Link to={`/PregnancyWeekDetail?week=${age.currentWeek}`} className="block mx-5 mb-4 active:opacity-80">
-        <div
-          className="rounded-3xl overflow-hidden relative flex"
-          style={{ backgroundColor: '#F3E9E1', height: 190 }}
-        >
-          {/* Left: text */}
-          <div className="flex-1 p-5 flex flex-col justify-between z-10">
+      <Link to={`/PregnancyWeekDetail?week=${age.currentWeek}`} className="block mx-5 mb-4 active:opacity-90">
+        <div className="rounded-3xl overflow-hidden relative" style={{ height: 220 }}>
+          {/* Full background photo */}
+          <img
+            src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/112ea1336_1.jpg"
+            alt="gravid"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: 'center 30%' }}
+          />
+          {/* Dark gradient overlay — left to right + bottom */}
+          <div
+            className="absolute inset-0"
+            style={{ background: 'linear-gradient(105deg, rgba(30,18,10,0.72) 0%, rgba(30,18,10,0.38) 55%, transparent 100%)' }}
+          />
+
+          {/* Content */}
+          <div className="absolute inset-0 p-5 flex flex-col justify-between">
+            {/* Top label */}
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.65)' }}>
+              {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+            </p>
+
+            {/* Bottom: big number + week pill */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
-                {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
-              </p>
-              <div className="flex items-baseline gap-1.5 mb-0.5">
+              <div className="flex items-baseline gap-2 mb-1">
                 <span
                   className="font-light leading-none"
-                  style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', fontSize: 72, lineHeight: 1 }}
+                  style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#fff', fontSize: 76, lineHeight: 1 }}
                 >
                   {age.big}
                 </span>
                 <span
                   className="text-2xl font-light"
-                  style={{ color: '#2B1F16', fontFamily: 'Cormorant Garamond, Georgia, serif' }}
+                  style={{ color: 'rgba(255,255,255,0.85)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}
                 >
                   {age.unit}
                 </span>
               </div>
-              <p className="text-sm" style={{ color: '#7A665A' }}>
-                {lang === 'da' ? 'til termin' : 'until due date'}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  {lang === 'da' ? 'til termin' : 'until due date'}
+                </p>
+                <div
+                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(6px)' }}
+                >
+                  <Baby className="w-3 h-3 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.8)' }} />
+                  <span className="text-[11px] font-medium whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                    {lang === 'da'
+                      ? `Uge ${age.currentWeek}`
+                      : `Week ${age.currentWeek}`}
+                  </span>
+                </div>
+              </div>
             </div>
-
-            {/* Week pill — bottom left */}
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mt-4 self-start"
-              style={{ backgroundColor: 'rgba(255,255,255,0.75)' }}
-            >
-              <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#808072' }} />
-              <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#2B1F16' }}>
-                {lang === 'da'
-                  ? `Du er i uge ${age.currentWeek} (${age.currentWeek - 1}+${age.daysRem || 0})`
-                  : `Week ${age.currentWeek}`}
-              </span>
-            </div>
-          </div>
-
-          {/* Right: photo */}
-          <div className="relative flex-shrink-0 overflow-hidden rounded-r-3xl" style={{ width: '48%' }}>
-            <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/112ea1336_1.jpg"
-              alt="gravid"
-              className="w-full h-full object-cover"
-              style={{ objectPosition: 'center top' }}
-            />
-            {/* Fade left */}
-            <div
-              className="absolute inset-0"
-              style={{ background: 'linear-gradient(to right, #F3E9E1 0%, transparent 45%)' }}
-            />
           </div>
         </div>
       </Link>
