@@ -36,10 +36,8 @@ export default function UpcomingEventCard({ userEmail }) {
     <Link to={createPageUrl('Calendar')} className="block flex-1 cursor-pointer">
       <div
         className="rounded-3xl p-4 h-full relative overflow-hidden"
-        style={{ backgroundColor: '#E8D8C6' }}
+        style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/8454f2620_3.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
-        {/* Decorative leaf */}
-        <div className="absolute right-2 bottom-2 opacity-20 text-4xl select-none pointer-events-none">🌿</div>
 
         <div className="mb-3">
           <CalendarDays className="w-5 h-5" style={{ color: '#5C3D2E' }} />
