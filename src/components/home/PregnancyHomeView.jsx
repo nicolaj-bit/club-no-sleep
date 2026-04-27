@@ -106,7 +106,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
             {/* Right: photo */}
             <div className="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-3xl">
               <img
-                src="https://images.unsplash.com/photo-1584048357520-c4b7a3e36e94?w=400&q=80"
+                src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/b0c96886b_generated_image.png"
                 alt="gravid"
                 className="w-full h-full object-cover"
                 style={{ objectPosition: 'center top' }}

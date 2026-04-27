@@ -17,6 +17,7 @@ import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
 import NotificationBell from '@/components/ui/NotificationBell';
 import PregnancyHomeView from '@/components/home/PregnancyHomeView';
+import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -149,6 +150,13 @@ export default function Home() {
         <div className="mx-5 mb-5 flex gap-3">
           <SleepSummaryCard userEmail={user.email} />
           <UpcomingEventCard userEmail={user.email} />
+        </div>
+      )}
+
+      {/* Active Moms Card — kun for mor-profiler */}
+      {profile?.profile_label === 'mor' && (
+        <div className="mx-5 mb-5">
+          <ActiveMomsCard />
         </div>
       )}
 
