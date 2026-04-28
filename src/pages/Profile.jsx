@@ -118,7 +118,7 @@ export default function Profile() {
             <div className="flex items-center gap-4 p-5 pr-4">
               {/* Avatar – rund, lidt større */}
               <div className="relative flex-shrink-0">
-                <div className="w-20 h-20 rounded-full overflow-hidden border-2" style={{ borderColor: cardBorder }}>
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2" style={{ borderColor: cardBorder }}>
                   {profile?.profile_image
                     ? <img src={profile.profile_image} alt={displayName} className="w-full h-full object-cover" />
                     : (
