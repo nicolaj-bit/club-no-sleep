@@ -35,27 +35,27 @@ export default function UpcomingEventCard({ userEmail }) {
   return (
     <Link to={createPageUrl('Calendar')} className="block flex-1 cursor-pointer">
       <div
-        className="rounded-3xl p-4 h-full relative overflow-hidden border"
-        style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', borderColor: 'var(--color-border)' }}
+        className="rounded-3xl p-4 h-full relative overflow-hidden"
+        style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/8454f2620_3.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
 
         <div className="mb-3">
-          <CalendarDays className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+          <CalendarDays className="w-5 h-5" style={{ color: '#5C3D2E' }} />
         </div>
-        <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="text-xs font-medium mb-1" style={{ color: '#7A665A' }}>
           {lang === 'da' ? 'Næste aftale' : 'Next appointment'}
         </p>
         {loading ? (
-          <div className="h-7 w-20 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }} />
+          <div className="h-7 w-20 rounded-lg animate-pulse bg-black/10" />
         ) : event ? (
           <>
-            <p className="text-sm font-bold leading-snug line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{event.title}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="text-sm font-bold leading-snug line-clamp-2" style={{ color: '#2B1F16' }}>{event.title}</p>
+            <p className="text-xs mt-1" style={{ color: '#7A665A' }}>
               {getDateLabel(event.start_datetime)} · {format(parseISO(event.start_datetime), 'HH:mm')}
             </p>
           </>
         ) : (
-          <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-sm mt-1" style={{ color: '#7A665A' }}>
             {lang === 'da' ? 'Tilføj aftale →' : 'Add appointment →'}
           </p>
         )}
