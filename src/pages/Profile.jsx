@@ -107,10 +107,10 @@ export default function Profile() {
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
             className="rounded-3xl overflow-hidden relative flex"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '120px' }}
+            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '160px' }}
           >
             {/* Left: avatar + text + edit button */}
-            <div className="flex items-center gap-3 p-5 flex-1 min-w-0">
+            <div className="flex items-center gap-4 p-6 flex-1 min-w-0">
               {/* Avatar */}
               <div className="relative flex-shrink-0">
                 <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
@@ -125,13 +125,13 @@ export default function Profile() {
 
               {/* Text + edit */}
               <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                <p className="text-2xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                <p className="text-3xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                   {displayName}
                 </p>
-                <p className="text-xs flex items-center gap-1" style={{ color: '#B08D72' }}>
+                <p className="text-sm flex items-center gap-1 mt-0.5" style={{ color: '#B08D72' }}>
                   🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
                 </p>
-                <p className="text-xs mb-2" style={{ color: 'var(--color-text-muted)' }}>
+                <p className="text-sm mb-3" style={{ color: 'var(--color-text-muted)' }}>
                   {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
                 </p>
                 <DialogTrigger asChild>
@@ -153,8 +153,8 @@ export default function Profile() {
             </div>
 
             {/* Right: floral illustration */}
-            <div className="flex-shrink-0 w-28 flex items-center justify-center opacity-30 pointer-events-none select-none pr-2" aria-hidden>
-              <svg viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="110">
+            <div className="flex-shrink-0 w-36 flex items-center justify-center opacity-30 pointer-events-none select-none pr-3" aria-hidden>
+              <svg viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="110" height="140">
                 {/* Main stem */}
                 <path d="M45 110 Q43 85 48 65 Q50 50 44 30 Q42 18 46 8" stroke="#8B6F5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
                 {/* Branch left */}
