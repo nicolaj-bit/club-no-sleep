@@ -148,8 +148,8 @@ export default function Profile() {
                 </p>
               </div>
 
-              {/* Blomsterillustration + knap */}
-              <div className="flex flex-col items-end justify-between self-stretch py-1 flex-shrink-0 gap-2">
+              {/* Rediger-knap – absolut placeret i nederste højre hjørne */}
+              <div className="flex flex-col items-end justify-end self-stretch py-1 flex-shrink-0">
                 {/* Rediger-knap */}
                 <DialogTrigger asChild>
                   <button
