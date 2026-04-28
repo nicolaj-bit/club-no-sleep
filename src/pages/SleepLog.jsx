@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 
 
@@ -72,6 +73,7 @@ export default function SleepLog() {
   const headerVisible = useScrollDirection();
   const { activeProfile } = useActiveProfile();
   const { t, lang } = useLanguage();
+  const { isDark } = useTheme();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -225,8 +227,8 @@ export default function SleepLog() {
       <div
         className="sticky top-0 z-10 border-b px-4 pt-10 pb-2 flex items-center justify-between transition-transform duration-300"
         style={{
-          backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
+          background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
+          borderColor: isDark ? 'var(--color-border)' : '#E8DDD2',
           transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
         }}
       >

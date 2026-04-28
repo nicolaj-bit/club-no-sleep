@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useScrollDirection } from './useScrollDirection';
+import { useTheme } from './ThemeProvider';
 
 export default function PageHeader({
   title,
@@ -13,6 +14,7 @@ export default function PageHeader({
   transparent = false,
 }) {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
   const handleBack = onBack || (backUrl ? () => navigate(backUrl) : () => window.history.back());
   const visible = useScrollDirection(8);
 
@@ -24,8 +26,8 @@ export default function PageHeader({
         ...(transparent
           ? {}
           : {
-              backgroundColor: 'var(--color-bg-card)',
-              borderColor: 'var(--color-border)',
+              background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
+              borderColor: isDark ? 'var(--color-border)' : '#E8DDD2',
               paddingTop: 'env(safe-area-inset-top, 0px)',
             }),
       }}

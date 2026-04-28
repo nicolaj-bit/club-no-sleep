@@ -10,10 +10,12 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 export default function Blog() {
   const queryClient = useQueryClient();
   const { lang, t } = useLanguage();
+  const { isDark } = useTheme();
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
@@ -101,7 +103,7 @@ export default function Blog() {
       <PageHeader title={t.blogTitle} />
 
       {/* Categories + Search */}
-      <div className="backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+      <div className="backdrop-blur-xl border-b" style={{ background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', borderColor: isDark ? 'var(--color-border)' : '#E8DDD2' }}>
         <div className="px-4 py-3">
           {showSearch ? (
             <div className="flex items-center gap-2">

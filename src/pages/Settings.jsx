@@ -125,7 +125,7 @@ export default function Settings() {
         <Link to={createPageUrl('Profile')} className="absolute left-4">
           <button
             className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}`, backgroundImage: isDark ? 'none' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)' }}
+            style={{ background: isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: `1px solid ${cardBorder}` }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </button>

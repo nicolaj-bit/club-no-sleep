@@ -91,7 +91,7 @@ export default function Shop() {
         <PageHeader title="Shop" />
 
         {/* Category pills + Search */}
-        <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', transform: visible ? 'translateY(0)' : 'translateY(-220%)' }}>
+        <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', borderColor: isDark ? 'var(--color-border)' : '#E8DDD2', transform: visible ? 'translateY(0)' : 'translateY(-220%)' }}>
           <div className="px-4 pt-3 pb-2">
             {showSearch ? (
               <div className="flex items-center gap-2">
