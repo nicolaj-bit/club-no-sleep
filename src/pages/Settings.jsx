@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard, ExternalLink } from 'lucide-react';
+import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import UserColorThemePicker from '@/components/ui/UserColorThemePicker';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -14,6 +14,13 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BottomSheet } from '@/components/ui/BottomSheet';
+
+// Brand-farver fra style guide
+const CARD_BG_LIGHT   = '#F3E9E1';
+const CARD_BG_DARK    = '#2A231F';
+const BORDER_LIGHT    = '#EDE4DB';
+const BORDER_DARK     = '#3A312B';
+const ICON_COLOR      = '#C29A73';
 
 export default function Settings() {
   const { isDark, toggle } = useTheme();
@@ -36,6 +43,9 @@ export default function Settings() {
   const [termsContent, setTermsContent] = useState(null);
   const [termsLoading, setTermsLoading] = useState(false);
 
+  const cardBg     = isDark ? CARD_BG_DARK : CARD_BG_LIGHT;
+  const cardBorder = isDark ? BORDER_DARK  : BORDER_LIGHT;
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -57,7 +67,6 @@ export default function Settings() {
       const cancelDate = new Date(res.data.cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
       toast.success(`Abonnement opsagt. Du har adgang til ${cancelDate}.`);
       setCancelOpen(false);
-      // Opdater lokal profil
       setProfile(p => ({ ...p, subscription_cancel_at: res.data.cancel_at }));
     } catch (e) {
       toast.error(e.message || 'Noget gik galt. Prøv igen.');
@@ -82,8 +91,7 @@ export default function Settings() {
     setPrivacyLoading(true);
     try {
       const results = await base44.entities.LegalContent.filter({ type: 'privacy' });
-      const doc = results[0] || null;
-      setPrivacyContent(doc);
+      setPrivacyContent(results[0] || null);
       setPrivacyOpen(true);
     } finally {
       setPrivacyLoading(false);
@@ -94,8 +102,7 @@ export default function Settings() {
     setTermsLoading(true);
     try {
       const results = await base44.entities.LegalContent.filter({ type: 'terms' });
-      const doc = results[0] || null;
-      setTermsContent(doc);
+      setTermsContent(results[0] || null);
       setTermsOpen(true);
     } finally {
       setTermsLoading(false);
@@ -104,10 +111,10 @@ export default function Settings() {
 
   const gridItems = [
     ...(isAdmin ? [{ icon: FileText, label: t.blogAndArticles, link: 'AdminEditor' }] : []),
-    { icon: Lock, label: t.password, action: () => setPasswordOpen(true) },
-    { icon: Bell, label: t.notifications, toggle: true, defaultChecked: true },
-    { icon: Shield, label: t.privacy, action: openPrivacy },
-    { icon: HelpCircle, label: t.help, accordion: true },
+    { icon: Lock,        label: t.password,      action: () => setPasswordOpen(true) },
+    { icon: Bell,        label: t.notifications, toggle: true, defaultChecked: true },
+    { icon: Shield,      label: t.privacy,       action: openPrivacy },
+    { icon: HelpCircle,  label: t.help,          accordion: true },
   ];
 
   return (
@@ -115,11 +122,17 @@ export default function Settings() {
       {/* Header */}
       <div className="pt-8 pb-4 px-5 flex items-center justify-center relative">
         <Link to={createPageUrl('Profile')} className="absolute left-4">
-          <button className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer" style={{ background: 'var(--color-bg-card)' }}>
+          <button
+            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
+            style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
+          >
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </button>
         </Link>
-        <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
+        <h1
+          className="text-3xl font-light"
+          style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}
+        >
           {t.settingsTitle}
         </h1>
       </div>
@@ -133,8 +146,12 @@ export default function Settings() {
 
             if (item.toggle) {
               return (
-                <div key={i} className="rounded-2xl p-5 flex flex-col gap-3 border" style={{ background: isDark ? '#2A231F' : '#F3E9E1', borderColor: isDark ? '#3A312B' : '#EDE4DB' }}>
-                  <Icon className="w-6 h-6" style={{ color: '#B08D72' }} />
+                <div
+                  key={i}
+                  className="rounded-2xl p-5 flex flex-col gap-3 border"
+                  style={{ background: cardBg, borderColor: cardBorder }}
+                >
+                  <Icon className="w-6 h-6" style={{ color: ICON_COLOR }} />
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
                     <Switch defaultChecked={item.defaultChecked} />
@@ -151,9 +168,9 @@ export default function Settings() {
                 key={i}
                 {...wrapperProps}
                 className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: isDark ? '#2A231F' : '#F3E9E1', borderColor: isDark ? '#3A312B' : '#EDE4DB' }}
+                style={{ background: cardBg, borderColor: cardBorder }}
               >
-                <Icon className="w-6 h-6" style={{ color: '#B08D72' }} />
+                <Icon className="w-6 h-6" style={{ color: ICON_COLOR }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
               </Wrapper>
             );
@@ -161,7 +178,10 @@ export default function Settings() {
         </div>
 
         {/* Tema – Lys / Mørk */}
-        <div className="rounded-2xl p-5 space-y-3 border" style={{ background: isDark ? '#2A231F' : '#F3E9E1', borderColor: isDark ? '#3A312B' : '#EDE4DB' }}>
+        <div
+          className="rounded-2xl p-5 space-y-3 border"
+          style={{ background: cardBg, borderColor: cardBorder }}
+        >
           <div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.theme}</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.chooseTheme}</p>
@@ -171,24 +191,24 @@ export default function Settings() {
               onClick={() => isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: !isDark ? 'var(--color-cappuccino)' : 'transparent',
-                borderColor: !isDark ? 'var(--color-cappuccino)' : 'var(--color-border)',
-                color: !isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                background: !isDark ? 'var(--color-accent)' : 'transparent',
+                borderColor: !isDark ? 'var(--color-accent)' : cardBorder,
+                color: !isDark ? '#fff' : 'var(--color-text-muted)',
               }}
             >
-              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }} />
+              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? '#fff' : 'var(--color-text-muted)' }} />
               {t.light}
             </button>
             <button
               onClick={() => !isDark && toggle()}
               className="py-3 rounded-xl text-sm font-medium border transition-all cursor-pointer"
               style={{
-                background: isDark ? 'var(--color-cappuccino)' : 'transparent',
-                borderColor: isDark ? 'var(--color-cappuccino)' : 'var(--color-border)',
-                color: isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                background: isDark ? 'var(--color-accent)' : 'transparent',
+                borderColor: isDark ? 'var(--color-accent)' : cardBorder,
+                color: isDark ? '#fff' : 'var(--color-text-muted)',
               }}
             >
-              <Moon className="w-4 h-4 mx-auto mb-1" style={{ color: isDark ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }} />
+              <Moon className="w-4 h-4 mx-auto mb-1" style={{ color: isDark ? '#fff' : 'var(--color-text-muted)' }} />
               {t.dark}
             </button>
           </div>
@@ -199,55 +219,58 @@ export default function Settings() {
         {isAdmin && <PushNotificationSender />}
 
         {/* FAQ + Support */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: isDark ? '#2A231F' : '#F3E9E1', borderColor: isDark ? '#3A312B' : '#EDE4DB' }}>
+        <div
+          className="rounded-2xl overflow-hidden border"
+          style={{ background: cardBg, borderColor: cardBorder }}
+        >
           <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: 'var(--color-border)' }}>
+            <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: cardBorder }}>
               <AccordionTrigger className="px-5 hover:no-underline py-4">
                 <div className="flex items-center gap-3">
-                  <HelpCircle className="w-5 h-5" style={{ color: '#B08D72' }} />
+                  <HelpCircle className="w-5 h-5" style={{ color: ICON_COLOR }} />
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.faq}</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {faqContent
                   ? <div dangerouslySetInnerHTML={{ __html: faqContent.content }} />
-                   : (!helpLoaded ? t.loading : t.noFaqAvailable)}
+                  : (!helpLoaded ? t.loading : t.noFaqAvailable)}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support" className="border-0">
               <AccordionTrigger className="px-5 hover:no-underline py-4">
                 <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5" style={{ color: '#B08D72' }} />
+                  <Mail className="w-5 h-5" style={{ color: ICON_COLOR }} />
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.contactSupport}</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {supportContent
                   ? <div dangerouslySetInnerHTML={{ __html: supportContent.content }} />
-                    : (!helpLoaded ? t.loading : t.noSupportInfo)}
+                  : (!helpLoaded ? t.loading : t.noSupportInfo)}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
 
-        {/* Handelsbetingelser + Privatlivspolitik */}
+        {/* Betingelser + Privatliv */}
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={openTerms}
             disabled={termsLoading}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
-            style={{ background: isDark ? '#1E1E1E' : '#F3E9E1', borderColor: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
           >
-            <FileText className="w-4 h-4" style={{ color: '#B08D72' }} />
+            <FileText className="w-4 h-4" style={{ color: ICON_COLOR }} />
             {termsLoading ? '…' : 'Betingelser'}
           </button>
           <button
             onClick={openPrivacy}
             disabled={privacyLoading}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
-            style={{ background: isDark ? '#1E1E1E' : '#F3E9E1', borderColor: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
           >
-            <Shield className="w-4 h-4" style={{ color: '#B08D72' }} />
+            <Shield className="w-4 h-4" style={{ color: ICON_COLOR }} />
             {privacyLoading ? '…' : 'Privatliv'}
           </button>
         </div>
@@ -256,24 +279,24 @@ export default function Settings() {
         <button
           onClick={() => setCancelOpen(true)}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: isDark ? '#1E1E1E' : '#F3E9E1', borderColor: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
         >
           <span className="flex items-center justify-center gap-2">
-            <CreditCard className="w-4 h-4" style={{ color: '#B08D72' }} />
+            <CreditCard className="w-4 h-4" style={{ color: ICON_COLOR }} />
             {profile?.subscription_cancel_at
               ? `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}`
               : 'Opsig abonnement'}
           </span>
         </button>
 
-        {/* Delete account */}
+        {/* Slet konto */}
         <button
           onClick={() => setDeleteOpen(true)}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: isDark ? '#1E1E1E' : '#F3E9E1', borderColor: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
         >
           <span className="flex items-center justify-center gap-2">
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-4 h-4" style={{ color: '#e57373' }} />
             {t.deleteAccount}
           </span>
         </button>
@@ -281,22 +304,22 @@ export default function Settings() {
         <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>{t.version}</p>
       </div>
 
-      {/* Change Password Bottom Sheet */}
+      {/* Change Password */}
       <BottomSheet open={passwordOpen} onOpenChange={setPasswordOpen} title={t.changePassword}>
         <div className="px-5 py-4 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="current-pw">{t.currentPassword}</Label>
-            <Input id="current-pw" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
+            <Input id="current-pw" type="password" value={passwordForm.current} onChange={e => setPasswordForm({ ...passwordForm, current: e.target.value })} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="new-pw">{t.newPassword}</Label>
-            <Input id="new-pw" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
+            <Input id="new-pw" type="password" value={passwordForm.new} onChange={e => setPasswordForm({ ...passwordForm, new: e.target.value })} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-pw">{t.confirmPassword}</Label>
-            <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
+            <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={e => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
           </div>
-          <Button className="w-full" onClick={() => {
+          <Button className="w-full" style={{ background: 'var(--color-accent)', color: '#fff' }} onClick={() => {
             if (passwordForm.new !== passwordForm.confirm) { toast.error(t.passwordMismatch); return; }
             toast.success(t.passwordUpdated);
             setPasswordOpen(false);
@@ -308,14 +331,12 @@ export default function Settings() {
         </div>
       </BottomSheet>
 
-      {/* Terms Bottom Sheet (fallback hvis ingen PDF) */}
+      {/* Terms */}
       <BottomSheet open={termsOpen} onOpenChange={setTermsOpen} title="Handelsbetingelser">
         <div className="px-5 py-4">
           {termsContent ? (
-            <div className="rounded-3xl p-6 mb-4" style={{ backgroundColor: '#F3E9E1', color: 'var(--color-text-primary)' }}>
-              <div className="text-sm leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}
-                dangerouslySetInnerHTML={{ __html: termsContent.content }}
-              />
+            <div className="rounded-2xl p-5 mb-4 border" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
+              <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: termsContent.content }} />
             </div>
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen handelsbetingelser tilgængelige</p>
@@ -324,16 +345,14 @@ export default function Settings() {
         </div>
       </BottomSheet>
 
-      {/* Privacy Bottom Sheet */}
+      {/* Privacy */}
       <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title={t.privacy}>
         <div className="px-5 py-4">
           {privacyLoading ? (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.loading}</p>
           ) : privacyContent ? (
-            <div className="rounded-3xl p-6 mb-4" style={{ backgroundColor: '#F3E9E1', color: 'var(--color-text-primary)' }}>
-              <div className="text-sm leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}
-                dangerouslySetInnerHTML={{ __html: privacyContent.content }}
-              />
+            <div className="rounded-2xl p-5 mb-4 border" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
+              <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: privacyContent.content }} />
             </div>
           ) : (
             <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.noPrivacyPolicy}</p>
@@ -342,7 +361,7 @@ export default function Settings() {
         </div>
       </BottomSheet>
 
-      {/* Cancel Subscription Bottom Sheet */}
+      {/* Cancel subscription */}
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
@@ -368,26 +387,20 @@ export default function Settings() {
             <CreditCard className="w-4 h-4 mr-2" />
             {cancelLoading ? 'Opsiger…' : 'Bekræft opsigelse'}
           </Button>
-          <button
-            onClick={() => setCancelOpen(false)}
-            className="w-full py-3 text-sm"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
+          <button onClick={() => setCancelOpen(false)} className="w-full py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
             Fortryd
           </button>
           <div className="h-2" />
         </div>
       </BottomSheet>
 
-      {/* Delete Account Bottom Sheet */}
+      {/* Delete account */}
       <BottomSheet open={deleteOpen} onOpenChange={setDeleteOpen} title={t.deleteAccount}>
         <div className="px-5 py-4 space-y-4">
-          <p className="text-sm leading-relaxed text-rose-500">
-            {t.deleteWarning}
-          </p>
+          <p className="text-sm leading-relaxed text-rose-500">{t.deleteWarning}</p>
           <div className="space-y-2">
             <Label htmlFor="delete-confirm">{t.typeToConfirmDelete}</Label>
-            <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
+            <Input id="delete-confirm" value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
           </div>
           <Button variant="destructive" className="w-full" disabled={deleteConfirm !== t.deleteConfirmWord} onClick={() => base44.auth.logout('/')}>
             <Trash2 className="w-4 h-4 mr-2" />

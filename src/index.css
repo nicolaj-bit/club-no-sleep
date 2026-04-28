@@ -4,12 +4,12 @@
 
 /* =====================================================
    LALATOTO Design System
-   Warm sand & chocolate — reflecting lalatoto.dk
+   Eksakte farver fra brand style guide
    ===================================================== */
 
 @layer base {
   :root {
-    /* Tailwind shadcn tokens */
+    /* Tailwind shadcn tokens – lys mode */
     --background: 36 47% 97%;
     --foreground: 22 62% 12%;
     --card: 0 0% 100%;
@@ -44,67 +44,79 @@
     --sidebar-border: 33 30% 88%;
     --sidebar-ring: 22 62% 22%;
 
-    /* LALATOTO custom CSS vars */
+    /* LALATOTO lys mode */
     --color-bg: #FAF6F1;
     --color-bg-card: #FFFDF9;
     --color-bg-subtle: #F3E9E1;
     --color-border: #EDE4DB;
     --color-text-primary: #2B1F16;
     --color-text-secondary: #7A665A;
-    --color-text-muted: #7A665A;
+    --color-text-muted: #9A8478;
     --color-primary: #5B3F2B;
     --color-primary-light: #C9AA8F;
-    --color-accent: #B08D72;
+    --color-accent: #C29A73;
+    --color-accent-soft: #D8B89A;
+    --color-accent-warm: #EADCCC;
+    --color-brown-dark: #3A2B22;
+    --color-brown-light: #8A6B55;
     --color-cappuccino: #DCC1B0;
     --color-card-warm: #F3E9E1;
     --color-card-mid: #E8D8C6;
     --color-nav-bg: #FFF8F3;
+    --color-divider: #EDE4DB;
   }
 
-  /* ── Dark mode – mørk nat palette ── */
+  /* ── Dark mode – præcise brand-farver fra style guide ── */
   .dark {
-    --background: 240 8% 9%;
-    --foreground: 40 15% 96%;
-    --card: 234 9% 17%;
-    --card-foreground: 40 15% 96%;
-    --popover: 234 9% 17%;
-    --popover-foreground: 40 15% 96%;
-    --primary: 40 15% 96%;
-    --primary-foreground: 240 8% 9%;
-    --secondary: 234 9% 17%;
-    --secondary-foreground: 40 15% 96%;
-    --muted: 234 9% 17%;
-    --muted-foreground: 30 8% 60%;
-    --accent: 234 9% 17%;
-    --accent-foreground: 40 15% 96%;
+    /* Shadcn tokens mappet til mørk brun palette */
+    --background: 20 11% 11%;        /* #1F1A17 */
+    --foreground: 33 43% 95%;        /* #F5EFE9 */
+    --card: 20 13% 15%;              /* #2A231F */
+    --card-foreground: 33 43% 95%;   /* #F5EFE9 */
+    --popover: 20 13% 15%;           /* #2A231F */
+    --popover-foreground: 33 43% 95%;
+    --primary: 28 42% 60%;           /* #C29A73 accent */
+    --primary-foreground: 20 11% 11%;
+    --secondary: 20 13% 15%;         /* #2A231F */
+    --secondary-foreground: 33 43% 95%;
+    --muted: 20 13% 18%;             /* #3A2B22 */
+    --muted-foreground: 24 16% 64%;  /* #B7A79A */
+    --accent: 20 13% 18%;            /* #3A2B22 */
+    --accent-foreground: 33 43% 95%;
     --destructive: 0 62.8% 40%;
     --destructive-foreground: 0 0% 98%;
-    --border: 234 9% 20%;
-    --input: 234 9% 20%;
-    --ring: 30 40% 60%;
-    --sidebar-background: 240 8% 9%;
-    --sidebar-foreground: 40 15% 96%;
-    --sidebar-primary: 40 15% 96%;
-    --sidebar-primary-foreground: 240 8% 9%;
-    --sidebar-accent: 234 9% 17%;
-    --sidebar-accent-foreground: 40 15% 96%;
-    --sidebar-border: 234 9% 20%;
-    --sidebar-ring: 30 40% 60%;
+    --border: 20 13% 22%;            /* #3A312B */
+    --input: 20 13% 22%;             /* #3A312B */
+    --ring: 28 42% 60%;              /* #C29A73 */
+    --sidebar-background: 20 11% 11%;
+    --sidebar-foreground: 33 43% 95%;
+    --sidebar-primary: 28 42% 60%;
+    --sidebar-primary-foreground: 20 11% 11%;
+    --sidebar-accent: 20 13% 15%;
+    --sidebar-accent-foreground: 33 43% 95%;
+    --sidebar-border: 20 13% 22%;
+    --sidebar-ring: 28 42% 60%;
 
-    --color-bg: #1F1A17;
-    --color-bg-card: #2A231F;
-    --color-bg-subtle: #2A231F;
-    --color-border: #3A312B;
-    --color-text-primary: #F5EFE9;
-    --color-text-secondary: #B7A79A;
-    --color-text-muted: #B7A79A;
-    --color-primary: #F5EFE9;
-    --color-primary-light: #C29A73;
-    --color-accent: #C29A73;
-    --color-cappuccino: #8A6B55;
-    --color-card-warm: #2A231F;
-    --color-card-mid: #3A2B22;
-    --color-nav-bg: #2A231F;
+    /* LALATOTO mørk mode – brand style guide */
+    --color-bg:           #1F1A17;   /* Baggrund */
+    --color-bg-card:      #2A231F;   /* Overflade / cards */
+    --color-bg-subtle:    #2A231F;   /* Subtil overflade */
+    --color-border:       #3A312B;   /* Divider / kant */
+    --color-text-primary: #F5EFE9;   /* Primær tekst */
+    --color-text-secondary:#B7A79A;  /* Sekundær tekst */
+    --color-text-muted:   #8A7A6E;   /* Dæmpet tekst */
+    --color-primary:      #C29A73;   /* Accent / ikon (bruges som primær i mørk) */
+    --color-primary-light:#D8B89A;   /* Blød accent */
+    --color-accent:       #C29A73;   /* Accent / ikon */
+    --color-accent-soft:  #D8B89A;   /* Blød accent */
+    --color-accent-warm:  #EADCCC;   /* Lys varm */
+    --color-brown-dark:   #3A2B22;   /* Mørk brun */
+    --color-brown-light:  #8A6B55;   /* Lys brun */
+    --color-cappuccino:   #8A6B55;   /* Lys brun */
+    --color-card-warm:    #2A231F;
+    --color-card-mid:     #3A2B22;   /* Mørk brun */
+    --color-nav-bg:       #2A231F;
+    --color-divider:      #3A312B;   /* Divider / kant */
   }
 }
 
@@ -133,16 +145,25 @@
     color: #F5EFE9 !important;
   }
   html.dark * {
-    --color-bg: #1F1A17;
-    --color-bg-card: #2A231F;
-    --color-bg-subtle: #2A231F;
-    --color-border: #3A312B;
-    --color-text-primary: #F5EFE9;
-    --color-text-secondary: #B7A79A;
-    --color-text-muted: #B7A79A;
-    --color-primary: #F5EFE9;
-    --color-primary-light: #C29A73;
-    --color-accent: #C29A73;
+    --color-bg:            #1F1A17;
+    --color-bg-card:       #2A231F;
+    --color-bg-subtle:     #2A231F;
+    --color-border:        #3A312B;
+    --color-text-primary:  #F5EFE9;
+    --color-text-secondary:#B7A79A;
+    --color-text-muted:    #8A7A6E;
+    --color-primary:       #C29A73;
+    --color-primary-light: #D8B89A;
+    --color-accent:        #C29A73;
+    --color-accent-soft:   #D8B89A;
+    --color-accent-warm:   #EADCCC;
+    --color-brown-dark:    #3A2B22;
+    --color-brown-light:   #8A6B55;
+    --color-cappuccino:    #8A6B55;
+    --color-card-warm:     #2A231F;
+    --color-card-mid:      #3A2B22;
+    --color-nav-bg:        #2A231F;
+    --color-divider:       #3A312B;
   }
 
   button, a, [role="button"], nav, [data-nav] {
@@ -152,11 +173,32 @@
 }
 
 /* ── Safe area helpers ── */
-.safe-top  { padding-top: env(safe-area-inset-top, 0px); }
+.safe-top    { padding-top: env(safe-area-inset-top, 0px); }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 .header-safe { padding-top: max(12px, env(safe-area-inset-top)); }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #C8A882; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #C29A73; border-radius: 2px; }
+
+/* ── Global dark-mode card/input overrides ── */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #2A231F !important;
+  border-color: #3A312B !important;
+  color: #F5EFE9 !important;
+}
+
+.dark .bg-white,
+.dark [class*="bg-white"] {
+  background-color: #2A231F !important;
+}
+
+.dark .border-gray-200,
+.dark .border-slate-200,
+.dark [class*="border-gray"],
+.dark [class*="border-slate"] {
+  border-color: #3A312B !important;
+}

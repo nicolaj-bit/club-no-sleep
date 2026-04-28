@@ -109,11 +109,9 @@ export default function BottomNav() {
               style={{
                 bottom: 0,
                 top: 'auto',
-                background: isDark
-                  ? 'linear-gradient(135deg, #1A1A1A, #0F0F0F)'
-                  : 'linear-gradient(135deg, #FFFFFF, #F7F2EC)',
+                background: isDark ? '#1F1A17' : 'linear-gradient(135deg, #FFFFFF, #F7F2EC)',
                 boxShadow: isDark
-                  ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
+                  ? '0 -4px 40px rgba(0,0,0,0.7), 0 0 0 0.5px #3A312B'
                   : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
               }}
             >
@@ -125,7 +123,7 @@ export default function BottomNav() {
                 <button
                   onClick={() => setMenuOpen(false)}
                   className="w-7 h-7 rounded-full flex items-center justify-center transition-opacity active:opacity-50"
-                  style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}
+                  style={{ backgroundColor: isDark ? '#3A312B' : '#F0E9E0' }}
                 >
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
@@ -143,9 +141,9 @@ export default function BottomNav() {
                       className="flex flex-col items-start gap-3 p-4 rounded-2xl text-left active:scale-95 transition-all duration-200"
                       style={{
                         background: active
-                          ? 'linear-gradient(135deg, #C8A882, #A0785A)'
+                          ? 'linear-gradient(135deg, #C29A73, #8A6B55)'
                           : isDark
-                          ? 'linear-gradient(135deg, #2A2A2A, #1F1F1F)'
+                          ? '#3A2B22'
                           : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
                       }}
                     >
@@ -185,10 +183,10 @@ export default function BottomNav() {
         <div
           className="flex items-center justify-around h-16 px-6 w-full max-w-xs rounded-full border"
           style={{
-            backgroundColor: isDark ? '#141414' : '#FFF8F3',
-            borderColor: isDark ? '#2A2A2A' : '#EDE4DB',
+            backgroundColor: isDark ? '#2A231F' : '#FFF8F3',
+            borderColor: isDark ? '#3A312B' : '#EDE4DB',
             boxShadow: isDark
-              ? '0 8px 40px rgba(0,0,0,0.85)'
+              ? '0 8px 40px rgba(0,0,0,0.7)'
               : '0 8px 40px rgba(92,51,23,0.12)',
           }}
         >
@@ -212,7 +210,7 @@ export default function BottomNav() {
           <Link to={createPageUrl('AIChat')} className="flex flex-col items-center gap-0.5">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden"
-              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
+              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, #C29A73, #8A6B55)' }}
             >
               {aiIconUrl ? (
                 <img src={aiIconUrl} alt="AI" className="w-full h-full object-cover" />

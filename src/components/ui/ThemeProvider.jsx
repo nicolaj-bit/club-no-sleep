@@ -33,6 +33,7 @@ function applyThemeObject(theme, isDark) {
   set('--color-text-primary', 'text_primary');
   set('--color-text-secondary', 'text_secondary');
   set('--color-text-muted', 'text_muted');
+  set('--color-divider', 'border');
   root.style.setProperty('--color-primary-light', theme[prefix + 'accent'] || '');
   const bg = theme[prefix + 'bg'] || '';
   const textPrimary = theme[prefix + 'text_primary'] || '';
