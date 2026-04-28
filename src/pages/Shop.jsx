@@ -12,6 +12,7 @@ import ProductCard from '@/components/shop/ProductCard';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useScrollDirection } from '@/components/ui/useScrollDirection';
 
 const ALL_CATEGORY = { key: 'all', label_da: 'Alle', label_en: 'All', icon: '✨' };
 
@@ -82,6 +83,7 @@ export default function Shop() {
   };
 
   const activeCat = categories.find(c => c.key === activeCategory);
+  const visible = useScrollDirection(8);
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
@@ -89,7 +91,7 @@ export default function Shop() {
         <PageHeader title="Shop" />
 
         {/* Category pills + Search */}
-        <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+        <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', transform: visible ? 'translateY(0)' : 'translateY(-220%)' }}>
           <div className="px-4 pt-3 pb-2">
             {showSearch ? (
               <div className="flex items-center gap-2">
