@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus } from 'lucide-react';
+import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -53,14 +53,7 @@ export default function Profile() {
     loadUser();
   }, []);
 
-  // Brug aktiv profil fra context
   const profile = activeProfile;
-
-  const { data: favorites = [] } = useQuery({
-    queryKey: ['myFavorites', user?.email],
-    queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
-    enabled: !!user?.email,
-  });
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
@@ -94,87 +87,67 @@ export default function Profile() {
   }
 
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
-  const username = profile?.username || user?.email?.split('@')[0];
 
-  const gridItems = [
-    { icon: Bookmark, label: t.favorites, page: 'Favorites' },
-    { icon: Bell, label: t.notifications, page: 'Settings' },
-    { icon: Settings, label: t.settings, page: 'Settings' },
-    { icon: UserPlus, label: 'Deling & adgang', page: 'FamilyInvite' },
-  ];
+  // Card background: warm beige
+  const cardBg = isDark ? '#1E1E1E' : '#F3E9E1';
+  const cardBorder = isDark ? '#2A2A2A' : '#EDE4DB';
 
   return (
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="pt-8 pb-4 px-5 flex items-center justify-between">
-        <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
+      <div className="pt-10 pb-3 px-5 flex items-center justify-between">
+        <h1 className="text-4xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
           {t.profileTitle}
         </h1>
-
       </div>
 
-      {/* Profil-label banner */}
-      {profile && (
-        <div className="mx-4 mb-3 px-4 py-2.5 rounded-2xl flex items-center gap-2"
-          style={{
-            background: profile.profile_label === 'mor'
-              ? 'linear-gradient(135deg, rgba(200,168,130,0.15), rgba(160,120,90,0.1))'
-              : 'linear-gradient(135deg, rgba(100,140,200,0.12), rgba(60,100,180,0.08))',
-            border: `1px solid ${profile.profile_label === 'mor' ? 'rgba(200,168,130,0.3)' : 'rgba(100,140,200,0.25)'}`,
-          }}
-        >
-          <span className="text-lg">{profile.profile_label === 'mor' ? '🤍' : '💙'}</span>
-          <div>
-            <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-              {profile.display_name || profile.username}
-            </p>
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              {profile.profile_label === 'mor' ? t.momProfileLabel : t.dadProfileLabel}
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className="px-4 space-y-3">
-        {/* Profile hero card */}
+
+        {/* Hero profile card */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
-            className="rounded-3xl p-5"
-            style={{ background: isDark ? '#1E1E1E' : '#F3EDE4', borderColor: isDark ? '#2A2A2A' : '#EDE4D8' }}
+            className="rounded-3xl p-5 flex items-center gap-4"
+            style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
           >
+            {/* Avatar with camera */}
+            <div className="relative flex-shrink-0">
+              <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
+              <label
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
+                style={{ background: '#B08D72' }}
+              >
+                <Camera className="w-3 h-3 text-white" />
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </label>
+            </div>
+
+            {/* Name & subtitle */}
+            <div className="flex-1 min-w-0">
+              <p className="text-xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                {displayName}
+              </p>
+              <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: '#B08D72' }}>
+                🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
+              </p>
+            </div>
+
+            {/* Edit button */}
             <DialogTrigger asChild>
               <button
-                className="flex items-center gap-3 w-full text-left cursor-pointer active:opacity-70 transition-opacity"
+                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full flex-shrink-0 active:opacity-70 transition-opacity"
+                style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
                 onClick={() => setEditForm({
-                   username: profile?.username || '',
-                   display_name: profile?.display_name || '',
-                   gender: profile?.gender || '',
-                   city: profile?.city || '',
-                   child_birthdate: profile?.child_birthdate || '',
-                 })}
+                  username: profile?.username || '',
+                  display_name: profile?.display_name || '',
+                  gender: profile?.gender || '',
+                  city: profile?.city || '',
+                  child_birthdate: profile?.child_birthdate || '',
+                })}
               >
-                <div className="relative">
-                  <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
-                  <label
-                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
-                    style={{ background: 'var(--color-accent)' }}
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <Camera className="w-3 h-3 text-white" />
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                  </label>
-                </div>
-                <div>
-                  <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{displayName}</p>
-                  {profile?.city && (
-                    <p className="text-xs flex items-center gap-1 mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                      <MapPin className="w-3 h-3" />{profile.city}
-                    </p>
-                  )}
-                </div>
-                <span className="ml-auto text-xs px-3 py-1 rounded-full" style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
-                  {t.edit}
-                </span>
+                {t.edit} <ChevronRight className="w-3 h-3" />
               </button>
             </DialogTrigger>
           </div>
@@ -189,43 +162,35 @@ export default function Profile() {
                 <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
               </div>
               <div className="space-y-2">
-                 <Label htmlFor="display_name">{t.displayName}</Label>
-                 <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
-               </div>
-               <div className="space-y-2">
-                 <Label>{t.genderLabel}</Label>
-                 <div className="flex gap-3">
-                   {[{ value: 'female', label: t.female }, { value: 'male', label: t.male }].map(option => (
-                     <label
-                       key={option.value}
-                       className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
-                       style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                     >
-                       <input
-                         type="checkbox"
-                         checked={editForm.gender === option.value}
-                         onChange={() => {
-                           if (!profile?.gender) {
-                             setEditForm({ ...editForm, gender: option.value });
-                           }
-                         }}
-                         disabled={!!profile?.gender}
-                         className="w-4 h-4 cursor-pointer"
-                       />
-                       <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                         {option.label}
-                       </span>
-                     </label>
-                   ))}
-                 </div>
-                 {profile?.gender && (
-                   <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                     {t.genderLocked}
-                   </p>
-                 )}
-               </div>
-               <div className="space-y-2">
-                 <Label htmlFor="city">{t.city}</Label>
+                <Label htmlFor="display_name">{t.displayName}</Label>
+                <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
+              </div>
+              <div className="space-y-2">
+                <Label>{t.genderLabel}</Label>
+                <div className="flex gap-3">
+                  {[{ value: 'female', label: t.female }, { value: 'male', label: t.male }].map(option => (
+                    <label
+                      key={option.value}
+                      className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
+                      style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={editForm.gender === option.value}
+                        onChange={() => { if (!profile?.gender) setEditForm({ ...editForm, gender: option.value }); }}
+                        disabled={!!profile?.gender}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+                {profile?.gender && (
+                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.genderLocked}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="city">{t.city}</Label>
                 <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
               </div>
               <div className="space-y-2">
@@ -240,84 +205,98 @@ export default function Profile() {
           </DialogContent>
         </Dialog>
 
-        {/* Grid menu */}
+        {/* Section label */}
+        <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
+          {lang === 'da' ? 'Genveje' : 'Shortcuts'}
+        </p>
+
+        {/* 2x2 grid */}
         <div className="grid grid-cols-2 gap-3">
-          {gridItems.map((item, i) => {
+          {[
+            { icon: Bookmark, label: t.favorites, sub: lang === 'da' ? 'Dine gemte øjeblikke' : 'Your saved moments', page: 'Favorites' },
+            { icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', page: 'Settings' },
+            { icon: Settings, label: t.settings, sub: lang === 'da' ? 'Tilpas appen til dig' : 'Customise the app', page: 'Settings' },
+            { icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? 'Inviter en du stoler på' : 'Invite someone you trust', page: 'FamilyInvite' },
+          ].map((item, i) => {
             const Icon = item.icon;
             return (
               <Link
                 key={i}
                 to={createPageUrl(item.page)}
-                className="rounded-2xl p-5 flex flex-col gap-3 cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+                className="rounded-2xl p-4 flex flex-col gap-2 cursor-pointer active:opacity-70 transition-opacity"
+                style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
               >
-                <Icon className="w-6 h-6" style={{ color: 'var(--color-text-secondary)' }} />
-                <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                  {item.label}
-                </span>
+                <div className="flex items-center justify-between">
+                  <Icon className="w-5 h-5" style={{ color: '#B08D72' }} />
+                  <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>{item.label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.sub}</p>
+                </div>
               </Link>
             );
           })}
         </div>
 
-        {/* Help button */}
-        <button
-          onClick={() => setHelpOpen(true)}
-          className="w-full rounded-2xl p-5 flex items-center gap-3 cursor-pointer active:opacity-70 transition-opacity border text-left"
-          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-        >
-          <HelpCircle className="w-6 h-6 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</span>
-        </button>
+        {/* Section label */}
+        <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
+          {lang === 'da' ? 'Andre' : 'Other'}
+        </p>
 
-        {/* Privacy toggles */}
-        <div className="rounded-2xl overflow-hidden border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-            <div className="flex items-center gap-3">
-              <MapPin className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.shareLocation}</span>
+        {/* List rows */}
+        <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${cardBorder}` }}>
+          {/* Help */}
+          <button
+            onClick={() => setHelpOpen(true)}
+            className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity border-b text-left"
+            style={{ background: cardBg, borderColor: cardBorder }}
+          >
+            <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>FAQ, {lang === 'da' ? 'kontakt & support' : 'contact & support'}</p>
+            </div>
+            <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+          </button>
+
+          {/* Share location toggle */}
+          <div
+            className="flex items-center gap-3 px-5 py-4 border-b"
+            style={{ background: cardBg, borderColor: cardBorder }}
+          >
+            <MapPin className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.shareLocation}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                {lang === 'da' ? 'Se relevante mødre i nærheden' : 'See nearby moms'}
+              </p>
             </div>
             <Switch checked={profile?.location_enabled || false} onCheckedChange={(checked) => updateProfileMutation.mutate({ location_enabled: checked })} />
           </div>
-          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
-            <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.showAsVisible}</span>
-            </div>
-            <Switch checked={profile?.is_visible !== false} onCheckedChange={(checked) => updateProfileMutation.mutate({ is_visible: checked })} />
-          </div>
+
+          {/* Language */}
           <button
             onClick={() => setLangSheetOpen(true)}
-            className="w-full flex items-center justify-between px-5 py-4 active:opacity-70 transition-opacity"
+            className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity"
+            style={{ background: cardBg }}
           >
-            <div className="flex items-center gap-3">
-              <Globe className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.language}</span>
+            <Globe className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <div className="flex-1 text-left">
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.language}</p>
             </div>
-            <span className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
+            <span className="text-xs px-2.5 py-1 rounded-full mr-1" style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-muted)' }}>
               {lang === 'en' ? '🇬🇧 English' : '🇩🇰 Dansk'}
             </span>
+            <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
           </button>
         </div>
-
-        {/* Mine data & GDPR */}
-        <Link
-          to={createPageUrl('MyData')}
-          className="w-full py-4 px-5 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-between"
-          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
-        >
-          <span className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            {t.myDataPrivacy}
-          </span>
-          <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>GDPR</span>
-        </Link>
 
         {/* Log out */}
         <button
           onClick={() => base44.auth.logout('/')}
-          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
+          style={{ background: cardBg, border: `1px solid ${cardBorder}`, color: 'var(--color-text-muted)' }}
         >
           <span className="flex items-center justify-center gap-2">
             <LogOut className="w-4 h-4" />
@@ -333,9 +312,7 @@ export default function Profile() {
         {helpOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50"
               style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
@@ -350,63 +327,35 @@ export default function Profile() {
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
                 backgroundColor: isDark ? '#121212' : '#FFFFFF',
-                boxShadow: isDark
-                  ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
-                  : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
+                boxShadow: '0 -4px 40px rgba(44,26,14,0.12)',
               }}
             >
               <div className="flex items-center justify-between px-6 pt-5 pb-4">
                 <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
-                 {t.helpAndContact}
+                  {t.helpAndContact}
                 </span>
-                <button
-                  onClick={() => setHelpOpen(false)}
-                  className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50 transition-opacity"
-                  style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}
-                >
+                <button onClick={() => setHelpOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}>
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
               </div>
-
               <div className="px-4 pb-5 flex flex-col gap-2.5">
-                {/* App info */}
-                <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}>
-                  <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>
-                    {t.aboutApp}
-                  </p>
+                <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
+                  <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>{t.aboutApp}</p>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                    {lang === 'da'
-                      ? (helpConfig?.help_about_text_da || 'LALATOTO er din digitale følgesvend som forælder — med community, søvnlogning, viden og AI-støtte.')
-                      : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent — with community, sleep tracking, knowledge and AI support.')}
+                    {lang === 'da' ? (helpConfig?.help_about_text_da || 'LALATOTO er din digitale følgesvend som forælder.') : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent.')}
                   </p>
                 </div>
-
-                {/* Contact */}
-                <a
-                  href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`}
-                  className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
-                  style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
-                >
-                  <Mail className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+                <a href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
+                  <Mail className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
                   <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      {t.writeToUs}
-                    </p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.writeToUs}</p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_contact_email || 'hej@lalatoto.dk'}</p>
-                    </div>
-                    </a>
-
-                    {/* Phone link */}
-                    <a
-                    href={`tel:${helpConfig?.help_phone || ''}`}
-                  className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
-                  style={{ backgroundColor: isDark ? '#1A1A1A' : '#F7F2EC' }}
-                >
-                  <Phone className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-secondary)' }} />
+                  </div>
+                </a>
+                <a href={`tel:${helpConfig?.help_phone || ''}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
+                  <Phone className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
                   <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      {t.callUs}
-                    </p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.callUs}</p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_phone || ''}</p>
                   </div>
                 </a>
@@ -421,9 +370,7 @@ export default function Profile() {
         {langSheetOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50"
               style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
@@ -438,26 +385,15 @@ export default function Profile() {
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
                 backgroundColor: isDark ? '#121212' : '#FFFFFF',
-                boxShadow: isDark
-                  ? '0 -4px 40px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.08)'
-                  : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
+                boxShadow: '0 -4px 40px rgba(44,26,14,0.12)',
               }}
             >
-              {/* Header */}
               <div className="flex items-center justify-between px-6 pt-5 pb-4">
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
-                  {t.chooseLanguage}
-                </span>
-                <button
-                  onClick={() => setLangSheetOpen(false)}
-                  className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50 transition-opacity"
-                  style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}
-                >
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>{t.chooseLanguage}</span>
+                <button onClick={() => setLangSheetOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}>
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
               </div>
-
-              {/* Options */}
               <div className="px-4 pb-5 flex flex-col gap-2.5">
                 {[{ code: 'da', flag: '🇩🇰', label: 'Dansk' }, { code: 'en', flag: '🇬🇧', label: 'English' }].map((option) => {
                   const active = lang === option.code;
@@ -466,26 +402,13 @@ export default function Profile() {
                       key={option.code}
                       onClick={() => { setLang(option.code); setLangSheetOpen(false); }}
                       className="flex items-center gap-4 px-5 py-4 rounded-2xl text-left active:scale-95 transition-transform"
-                      style={{
-                        backgroundColor: active
-                          ? isDark ? '#FFFFFF' : '#2C1A0E'
-                          : isDark ? '#1A1A1A' : '#F7F2EC',
-                      }}
+                      style={{ backgroundColor: active ? (isDark ? '#FFFFFF' : '#5B3F2B') : (isDark ? '#1A1A1A' : '#F3E9E1') }}
                     >
                       <span className="text-2xl">{option.flag}</span>
-                      <span
-                        className="text-[15px] font-medium flex-1"
-                        style={{
-                          color: active
-                            ? isDark ? '#000000' : '#FFFFFF'
-                            : isDark ? '#CCCCCC' : '#4A2E1A',
-                        }}
-                      >
+                      <span className="text-[15px] font-medium flex-1" style={{ color: active ? '#FFFFFF' : (isDark ? '#CCCCCC' : '#4A2E1A') }}>
                         {option.label}
                       </span>
-                      {active && (
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: isDark ? '#000000' : '#FFFFFF' }} />
-                      )}
+                      {active && <div className="w-2 h-2 rounded-full bg-white" />}
                     </button>
                   );
                 })}
