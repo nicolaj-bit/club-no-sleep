@@ -5,7 +5,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { MapPin, MessageCircle, Users, Radio, ChevronRight, Shield, Heart, Lock } from 'lucide-react';
+import { MapPin, MessageCircle, Users, Radio, ChevronRight, Shield, Lock } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -234,15 +234,7 @@ export default function Community() {
               </button>
             );
           })}
-          {/* Om os – direkte link */}
-          <Link
-            to={createPageUrl('AboutUs')}
-            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
-            style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
-          >
-            <Heart className="w-4 h-4" />
-            {t.aboutUs}
-          </Link>
+
         </div>
         </div>
         <div>

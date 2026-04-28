@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -38,6 +38,7 @@ export default function BottomNav() {
     { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
     { key: 'profile', icon: User, page: 'Profile' },
+    { key: 'aboutUs', icon: Heart, page: 'AboutUs', name: 'Om os' },
   ];
 
   const menuItems = menuItemsConfig.map(item => ({
