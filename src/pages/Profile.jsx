@@ -106,50 +106,73 @@ export default function Profile() {
         {/* Hero profile card */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
-            className="rounded-3xl p-5 flex items-center gap-4"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
+            className="rounded-3xl overflow-hidden relative"
+            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: 110 }}
           >
-            {/* Avatar with camera */}
-            <div className="relative flex-shrink-0">
-              <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
-              <label
-                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
-                style={{ background: '#B08D72' }}
-              >
-                <Camera className="w-3 h-3 text-white" />
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-              </label>
-            </div>
+            <div className="flex items-center gap-4 p-5 pr-4">
+              {/* Avatar – rund, lidt større */}
+              <div className="relative flex-shrink-0">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2" style={{ borderColor: cardBorder }}>
+                  {profile?.profile_image
+                    ? <img src={profile.profile_image} alt={displayName} className="w-full h-full object-cover" />
+                    : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-semibold" style={{ background: isDark ? '#3A2B22' : '#DCC1B0', color: isDark ? '#F5EFE9' : '#5B3F2B' }}>
+                        {displayName?.[0]?.toUpperCase()}
+                      </div>
+                    )
+                  }
+                </div>
+                {/* Kamera-ikon */}
+                <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: isDark ? '#3A312B' : '#EDE4DB' }}>
+                  <Camera className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                </label>
+              </div>
 
-            {/* Name & subtitle */}
-            <div className="flex-1 min-w-0">
-              <p className="text-xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                {displayName}
-              </p>
-              <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: '#B08D72' }}>
-                🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
-              </p>
-            </div>
+              {/* Tekst */}
+              <div className="flex-1 min-w-0 pl-1">
+                <p className="text-2xl leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 500 }}>
+                  {displayName}
+                </p>
+                <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>
+                  <span>🤍</span> {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                  {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
+                </p>
+              </div>
 
-            {/* Edit button */}
-            <DialogTrigger asChild>
-              <button
-                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full flex-shrink-0 active:opacity-70 transition-opacity"
-                style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
-                onClick={() => setEditForm({
-                  username: profile?.username || '',
-                  display_name: profile?.display_name || '',
-                  gender: profile?.gender || '',
-                  city: profile?.city || '',
-                  child_birthdate: profile?.child_birthdate || '',
-                })}
-              >
-                {t.edit} <ChevronRight className="w-3 h-3" />
-              </button>
-            </DialogTrigger>
+              {/* Blomsterillustration + knap */}
+              <div className="flex flex-col items-end justify-between self-stretch py-1 flex-shrink-0 gap-2">
+                {/* SVG blomst */}
+                <svg width="52" height="52" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: isDark ? 0.35 : 0.55 }}>
+                  <path d="M40 70 C40 70 40 40 40 30" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M40 50 C30 44 22 34 28 24 C34 14 40 30 40 30" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                  <path d="M40 44 C50 38 58 28 52 18 C46 8 40 26 40 26" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                  <path d="M40 58 C33 52 26 48 30 40" stroke="#9A7A5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+                  <circle cx="28" cy="22" r="3" fill="#C29A73" opacity="0.7"/>
+                  <circle cx="52" cy="17" r="3" fill="#C29A73" opacity="0.7"/>
+                  <circle cx="30" cy="38" r="2" fill="#C29A73" opacity="0.5"/>
+                </svg>
+
+                {/* Rediger-knap */}
+                <DialogTrigger asChild>
+                  <button
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity whitespace-nowrap"
+                    style={{ background: isDark ? '#3A312B' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+                    onClick={() => setEditForm({
+                      username: profile?.username || '',
+                      display_name: profile?.display_name || '',
+                      gender: profile?.gender || '',
+                      city: profile?.city || '',
+                      child_birthdate: profile?.child_birthdate || '',
+                    })}
+                  >
+                    {t.edit} <ChevronRight className="w-3 h-3" />
+                  </button>
+                </DialogTrigger>
+              </div>
+            </div>
           </div>
 
           <DialogContent>
