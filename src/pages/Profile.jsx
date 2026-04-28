@@ -106,85 +106,50 @@ export default function Profile() {
         {/* Hero profile card */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
-            className="rounded-3xl overflow-hidden relative flex"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '160px' }}
+            className="rounded-3xl p-5 flex items-center gap-4"
+            style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
           >
-            {/* Left: avatar + text + edit button */}
-            <div className="flex items-center gap-4 p-6 flex-1 min-w-0">
-              {/* Avatar */}
-              <div className="relative flex-shrink-0">
-                <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
-                <label
-                  className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer shadow-sm"
-                  style={{ background: isDark ? '#2A2A2A' : '#EDE4DB' }}
-                >
-                  <Camera className="w-3 h-3" style={{ color: '#B08D72' }} />
-                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                </label>
-              </div>
-
-              {/* Text + edit */}
-              <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                <p className="text-3xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                  {displayName}
-                </p>
-                <p className="text-sm flex items-center gap-1 mt-0.5" style={{ color: '#B08D72' }}>
-                  🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
-                </p>
-                <p className="text-sm mb-3" style={{ color: 'var(--color-text-muted)' }}>
-                  {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
-                </p>
-                <DialogTrigger asChild>
-                  <button
-                    className="self-start flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity"
-                    style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
-                    onClick={() => setEditForm({
-                      username: profile?.username || '',
-                      display_name: profile?.display_name || '',
-                      gender: profile?.gender || '',
-                      city: profile?.city || '',
-                      child_birthdate: profile?.child_birthdate || '',
-                    })}
-                  >
-                    {lang === 'da' ? 'Rediger profil' : 'Edit profile'} <ChevronRight className="w-3 h-3" />
-                  </button>
-                </DialogTrigger>
-              </div>
+            {/* Avatar with camera */}
+            <div className="relative flex-shrink-0">
+              <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
+              <label
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
+                style={{ background: '#B08D72' }}
+              >
+                <Camera className="w-3 h-3 text-white" />
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+              </label>
             </div>
 
-            {/* Right: floral illustration */}
-            <div className="flex-shrink-0 w-36 flex items-center justify-center opacity-30 pointer-events-none select-none pr-3" aria-hidden>
-              <svg viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="110" height="140">
-                {/* Main stem */}
-                <path d="M45 110 Q43 85 48 65 Q50 50 44 30 Q42 18 46 8" stroke="#8B6F5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                {/* Branch left */}
-                <path d="M44 55 Q30 48 22 35" stroke="#8B6F5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                {/* Branch right */}
-                <path d="M46 45 Q60 38 68 28" stroke="#8B6F5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                {/* Small branch left mid */}
-                <path d="M45 70 Q34 65 28 55" stroke="#8B6F5A" strokeWidth="1" strokeLinecap="round" fill="none"/>
-                {/* Small branch right mid */}
-                <path d="M47 60 Q58 55 63 46" stroke="#8B6F5A" strokeWidth="1" strokeLinecap="round" fill="none"/>
-                {/* Flowers left */}
-                <circle cx="22" cy="35" r="4" fill="#C4A882" opacity="0.7"/>
-                <circle cx="22" cy="35" r="2" fill="#8B6F5A" opacity="0.5"/>
-                {/* Flower left mid */}
-                <circle cx="28" cy="55" r="3" fill="#C4A882" opacity="0.6"/>
-                <circle cx="28" cy="55" r="1.5" fill="#8B6F5A" opacity="0.4"/>
-                {/* Flowers right */}
-                <circle cx="68" cy="28" r="4" fill="#C4A882" opacity="0.7"/>
-                <circle cx="68" cy="28" r="2" fill="#8B6F5A" opacity="0.5"/>
-                {/* Flower right mid */}
-                <circle cx="63" cy="46" r="3" fill="#C4A882" opacity="0.6"/>
-                <circle cx="63" cy="46" r="1.5" fill="#8B6F5A" opacity="0.4"/>
-                {/* Top flower */}
-                <circle cx="46" cy="8" r="5" fill="#C4A882" opacity="0.7"/>
-                <circle cx="46" cy="8" r="2.5" fill="#8B6F5A" opacity="0.5"/>
-                {/* Small leaves */}
-                <path d="M44 30 Q38 25 36 18 Q42 20 44 30Z" fill="#C4A882" opacity="0.3"/>
-                <path d="M44 30 Q50 24 53 17 Q47 20 44 30Z" fill="#C4A882" opacity="0.3"/>
-              </svg>
+            {/* Name & subtitle */}
+            <div className="flex-1 min-w-0">
+              <p className="text-xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                {displayName}
+              </p>
+              <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: '#B08D72' }}>
+                🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
+              </p>
             </div>
+
+            {/* Edit button */}
+            <DialogTrigger asChild>
+              <button
+                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full flex-shrink-0 active:opacity-70 transition-opacity"
+                style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+                onClick={() => setEditForm({
+                  username: profile?.username || '',
+                  display_name: profile?.display_name || '',
+                  gender: profile?.gender || '',
+                  city: profile?.city || '',
+                  child_birthdate: profile?.child_birthdate || '',
+                })}
+              >
+                {t.edit} <ChevronRight className="w-3 h-3" />
+              </button>
+            </DialogTrigger>
           </div>
 
           <DialogContent>
