@@ -88,9 +88,10 @@ export default function Profile() {
 
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
 
-  // Card background: warm beige
-  const cardBg = isDark ? '#2A231F' : '#F3E9E1';
-  const cardBorder = isDark ? '#3A312B' : '#EDE4DB';
+  // Card background: matcher menu-knapper præcist
+  const cardBg = isDark ? '#3A2B22' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
+  const cardBgSolid = isDark ? '#3A2B22' : '#F0EBE3'; // fallback for border-b rows
+  const cardBorder = isDark ? '#3A312B' : '#E8DDD2';
 
   return (
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
@@ -269,7 +270,7 @@ export default function Profile() {
           <button
             onClick={() => setHelpOpen(true)}
             className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity border-b text-left"
-            style={{ background: cardBg, borderColor: cardBorder }}
+            style={{ background: cardBgSolid, borderColor: cardBorder }}
           >
             <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
             <div className="flex-1">
@@ -282,7 +283,7 @@ export default function Profile() {
           {/* Share location toggle */}
           <div
             className="flex items-center gap-3 px-5 py-4 border-b"
-            style={{ background: cardBg, borderColor: cardBorder }}
+            style={{ background: cardBgSolid, borderColor: cardBorder }}
           >
             <MapPin className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
             <div className="flex-1">
@@ -298,7 +299,7 @@ export default function Profile() {
           <button
             onClick={() => setLangSheetOpen(true)}
             className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity"
-            style={{ background: cardBg }}
+            style={{ background: cardBgSolid }}
           >
             <Globe className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
             <div className="flex-1 text-left">
