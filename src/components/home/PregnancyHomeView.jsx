@@ -68,7 +68,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
         <Link to={`/PregnancyWeekDetail?week=${pregnancy.currentWeek}`} className="block mx-5 mb-4">
           <div
             className="rounded-3xl overflow-hidden relative flex"
-            style={{ backgroundColor: '#F3E9E1', minHeight: 190 }}
+            style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', minHeight: 190 }}
           >
             {/* Left: text */}
             <div className="flex-1 p-5 flex flex-col justify-between z-10">
@@ -114,7 +114,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
               {/* Fade to left */}
               <div
                 className="absolute inset-0"
-                style={{ background: 'linear-gradient(to right, #F3E9E1 0%, transparent 40%)' }}
+                style={{ background: 'linear-gradient(to right, #F0EBE3 0%, transparent 40%)' }}
               />
             </div>
           </div>

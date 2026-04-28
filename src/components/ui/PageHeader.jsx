@@ -32,7 +32,7 @@ export default function PageHeader({
           <button
             onClick={handleBack}
             className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
-            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+            style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </button>

@@ -239,7 +239,7 @@ export default function SleepLog() {
         <button
           onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
-          style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+          style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2', color: 'var(--color-text-secondary)' }}
         >
           <BookOpen className="w-3.5 h-3.5" />
           {view === 'log' ? t.historyBtn : t.logTodayBtn}

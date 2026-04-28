@@ -101,13 +101,13 @@ export default function Calendar() {
 
       {/* Month navigation */}
       <div className="px-5 mb-4 flex items-center justify-between">
-        <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+        <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}>
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
         <h2 className="text-base font-semibold capitalize" style={{ color: 'var(--color-text-primary)' }}>
           {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
         </h2>
-        <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+        <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}>
           <ChevronRight className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
       </div>
