@@ -40,38 +40,38 @@ export default function SleepSummaryCard({ userEmail }) {
   return (
     <Link to={createPageUrl('SleepLog')} className="block flex-1 cursor-pointer">
       <div
-        className="rounded-3xl p-4 h-full relative overflow-hidden"
-        style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/8ed0e276b_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        className="rounded-3xl p-4 h-full relative overflow-hidden border"
+        style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', borderColor: 'var(--color-border)' }}
       >
 
         <div className="mb-3">
-          <Moon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.8)' }} />
+          <Moon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
         </div>
-        <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>
           {lang === 'da' ? 'Søvn i nat' : 'Sleep last night'}
         </p>
         {loading ? (
-          <div className="h-7 w-14 rounded-lg animate-pulse bg-white/20" />
+          <div className="h-7 w-14 rounded-lg animate-pulse" style={{ backgroundColor: 'var(--color-border)' }} />
         ) : dur ? (
           <>
             <div className="flex items-baseline gap-0.5">
-              <span className="text-2xl font-bold text-white">{dur.hours}</span>
-              <span className="text-sm text-white/70">{t.hoursShort}</span>
+              <span className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>{dur.hours}</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.hoursShort}</span>
               {dur.rem > 0 && (
                 <>
-                  <span className="text-2xl font-bold text-white ml-1">{dur.rem}</span>
-                  <span className="text-sm text-white/70">{t.minutesShort}</span>
+                  <span className="text-2xl font-bold ml-1" style={{ color: 'var(--color-text-primary)' }}>{dur.rem}</span>
+                  <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.minutesShort}</span>
                 </>
               )}
             </div>
             {wakings !== null && (
-              <p className="text-xs mt-1 text-white/50">
+              <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
                 {wakings} {wakings === 1 ? t.wakingSingular : t.wakingPlural}
               </p>
             )}
           </>
         ) : (
-          <p className="text-sm mt-1 text-white/60">
+          <p className="text-sm mt-1" style={{ color: 'var(--color-text-secondary)' }}>
             {lang === 'da' ? 'Log søvn →' : 'Log sleep →'}
           </p>
         )}
