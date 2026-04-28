@@ -56,7 +56,7 @@ export default function BlogCard({ post, variant = 'default', translatedTitle, t
     <Link
       to={createPageUrl(`BlogPost?id=${post.id}`)}
       className="flex items-center gap-4 p-4 rounded-2xl border transition-all active:scale-[0.99]"
-      style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+      style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', borderColor: '#E8DDD2' }}
     >
       {/* Thumbnail */}
       <div
