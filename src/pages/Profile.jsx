@@ -106,70 +106,84 @@ export default function Profile() {
         {/* Hero profile card */}
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
-            className="rounded-3xl overflow-hidden relative"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '110px' }}
+            className="rounded-3xl overflow-hidden relative flex"
+            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: '120px' }}
           >
-            {/* Floral illustration top-right */}
-            <div className="absolute top-0 right-0 w-28 h-28 opacity-20 pointer-events-none select-none" aria-hidden>
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <path d="M80 10 Q85 30 75 50 Q70 65 80 80" stroke="#B08D72" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                <path d="M80 10 Q95 20 90 40" stroke="#B08D72" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                <path d="M80 10 Q65 18 68 35" stroke="#B08D72" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                <circle cx="90" cy="40" r="3" fill="#B08D72" opacity="0.6"/>
-                <circle cx="68" cy="35" r="2.5" fill="#B08D72" opacity="0.5"/>
-                <circle cx="75" cy="50" r="3.5" fill="#B08D72" opacity="0.6"/>
-                <path d="M95 55 Q105 45 110 60 Q105 70 95 65 Q90 58 95 55Z" stroke="#B08D72" strokeWidth="1" fill="#B08D72" fillOpacity="0.12"/>
-                <path d="M85 70 Q92 62 98 72 Q93 80 85 75 Q82 72 85 70Z" stroke="#B08D72" strokeWidth="1" fill="#B08D72" fillOpacity="0.1"/>
-                <path d="M75 80 Q80 78 82 85 Q78 90 73 86 Q72 82 75 80Z" stroke="#B08D72" strokeWidth="1" fill="#B08D72" fillOpacity="0.1"/>
-                <circle cx="108" cy="30" r="2" fill="#B08D72" opacity="0.4"/>
-                <circle cx="100" cy="20" r="1.5" fill="#B08D72" opacity="0.3"/>
-              </svg>
-            </div>
-
-            <div className="flex items-stretch p-4 gap-4 relative z-10">
-              {/* Avatar with camera button below */}
-              <div className="flex flex-col items-center gap-2 flex-shrink-0">
+            {/* Left: avatar + text + edit button */}
+            <div className="flex items-center gap-3 p-5 flex-1 min-w-0">
+              {/* Avatar */}
+              <div className="relative flex-shrink-0">
                 <UserAvatar src={profile?.profile_image} name={displayName} size="lg" />
                 <label
-                  className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full cursor-pointer active:opacity-70 transition-opacity"
-                  style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+                  className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer shadow-sm"
+                  style={{ background: isDark ? '#2A2A2A' : '#EDE4DB' }}
                 >
                   <Camera className="w-3 h-3" style={{ color: '#B08D72' }} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
               </div>
 
-              {/* Name & subtitle */}
-              <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5 pt-1">
+              {/* Text + edit */}
+              <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                 <p className="text-2xl font-semibold leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                   {displayName}
                 </p>
                 <p className="text-xs flex items-center gap-1" style={{ color: '#B08D72' }}>
                   🤍 {lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}
                 </p>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                <p className="text-xs mb-2" style={{ color: 'var(--color-text-muted)' }}>
                   {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
                 </p>
+                <DialogTrigger asChild>
+                  <button
+                    className="self-start flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity"
+                    style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+                    onClick={() => setEditForm({
+                      username: profile?.username || '',
+                      display_name: profile?.display_name || '',
+                      gender: profile?.gender || '',
+                      city: profile?.city || '',
+                      child_birthdate: profile?.child_birthdate || '',
+                    })}
+                  >
+                    {lang === 'da' ? 'Rediger profil' : 'Edit profile'} <ChevronRight className="w-3 h-3" />
+                  </button>
+                </DialogTrigger>
               </div>
             </div>
 
-            {/* Edit button bottom-right */}
-            <div className="px-4 pb-4 flex justify-end relative z-10">
-              <DialogTrigger asChild>
-                <button
-                  className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity"
-                  style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
-                  onClick={() => setEditForm({
-                    username: profile?.username || '',
-                    display_name: profile?.display_name || '',
-                    gender: profile?.gender || '',
-                    city: profile?.city || '',
-                    child_birthdate: profile?.child_birthdate || '',
-                  })}
-                >
-                  {lang === 'da' ? 'Rediger profil' : 'Edit profile'} <ChevronRight className="w-3 h-3" />
-                </button>
-              </DialogTrigger>
+            {/* Right: floral illustration */}
+            <div className="flex-shrink-0 w-28 flex items-center justify-center opacity-30 pointer-events-none select-none pr-2" aria-hidden>
+              <svg viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="110">
+                {/* Main stem */}
+                <path d="M45 110 Q43 85 48 65 Q50 50 44 30 Q42 18 46 8" stroke="#8B6F5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                {/* Branch left */}
+                <path d="M44 55 Q30 48 22 35" stroke="#8B6F5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+                {/* Branch right */}
+                <path d="M46 45 Q60 38 68 28" stroke="#8B6F5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+                {/* Small branch left mid */}
+                <path d="M45 70 Q34 65 28 55" stroke="#8B6F5A" strokeWidth="1" strokeLinecap="round" fill="none"/>
+                {/* Small branch right mid */}
+                <path d="M47 60 Q58 55 63 46" stroke="#8B6F5A" strokeWidth="1" strokeLinecap="round" fill="none"/>
+                {/* Flowers left */}
+                <circle cx="22" cy="35" r="4" fill="#C4A882" opacity="0.7"/>
+                <circle cx="22" cy="35" r="2" fill="#8B6F5A" opacity="0.5"/>
+                {/* Flower left mid */}
+                <circle cx="28" cy="55" r="3" fill="#C4A882" opacity="0.6"/>
+                <circle cx="28" cy="55" r="1.5" fill="#8B6F5A" opacity="0.4"/>
+                {/* Flowers right */}
+                <circle cx="68" cy="28" r="4" fill="#C4A882" opacity="0.7"/>
+                <circle cx="68" cy="28" r="2" fill="#8B6F5A" opacity="0.5"/>
+                {/* Flower right mid */}
+                <circle cx="63" cy="46" r="3" fill="#C4A882" opacity="0.6"/>
+                <circle cx="63" cy="46" r="1.5" fill="#8B6F5A" opacity="0.4"/>
+                {/* Top flower */}
+                <circle cx="46" cy="8" r="5" fill="#C4A882" opacity="0.7"/>
+                <circle cx="46" cy="8" r="2.5" fill="#8B6F5A" opacity="0.5"/>
+                {/* Small leaves */}
+                <path d="M44 30 Q38 25 36 18 Q42 20 44 30Z" fill="#C4A882" opacity="0.3"/>
+                <path d="M44 30 Q50 24 53 17 Q47 20 44 30Z" fill="#C4A882" opacity="0.3"/>
+              </svg>
             </div>
           </div>
 
