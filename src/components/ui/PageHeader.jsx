@@ -1,7 +1,8 @@
 import React from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useScrollDirection } from './useScrollDirection';
 
 export default function PageHeader({
   title,
@@ -13,19 +14,21 @@ export default function PageHeader({
 }) {
   const navigate = useNavigate();
   const handleBack = onBack || (backUrl ? () => navigate(backUrl) : () => window.history.back());
+  const visible = useScrollDirection(8);
 
   return (
     <header
-      className={cn('sticky top-0 z-40 backdrop-blur-xl border-b', className)}
-      style={
-        transparent
+      className={cn('sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300', className)}
+      style={{
+        transform: visible ? 'translateY(0)' : 'translateY(-110%)',
+        ...(transparent
           ? {}
           : {
               backgroundColor: 'var(--color-bg-card)',
               borderColor: 'var(--color-border)',
               paddingTop: 'env(safe-area-inset-top, 0px)',
-            }
-      }
+            }),
+      }}
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-2 min-w-0 flex-1">
