@@ -89,8 +89,8 @@ export default function Profile() {
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
 
   // Card background: warm beige
-  const cardBg = isDark ? '#1E1E1E' : '#F3E9E1';
-  const cardBorder = isDark ? '#2A2A2A' : '#EDE4DB';
+  const cardBg = isDark ? '#2A231F' : '#F3E9E1';
+  const cardBorder = isDark ? '#3A312B' : '#EDE4DB';
 
   return (
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
