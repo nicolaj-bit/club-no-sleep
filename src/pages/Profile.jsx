@@ -107,7 +107,13 @@ export default function Profile() {
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
             className="rounded-3xl overflow-hidden relative"
-            style={{ background: cardBg, border: `1px solid ${cardBorder}`, minHeight: 110 }}
+            style={{
+              backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bdc519741_4.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: `1px solid ${cardBorder}`,
+              minHeight: 110
+            }}
           >
             <div className="flex items-center gap-4 p-5 pr-4">
               {/* Avatar – rund, lidt større */}
