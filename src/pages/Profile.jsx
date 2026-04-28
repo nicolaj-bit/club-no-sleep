@@ -150,17 +150,6 @@ export default function Profile() {
 
               {/* Blomsterillustration + knap */}
               <div className="flex flex-col items-end justify-between self-stretch py-1 flex-shrink-0 gap-2">
-                {/* SVG blomst */}
-                <svg width="52" height="52" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: isDark ? 0.35 : 0.55 }}>
-                  <path d="M40 70 C40 70 40 40 40 30" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M40 50 C30 44 22 34 28 24 C34 14 40 30 40 30" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                  <path d="M40 44 C50 38 58 28 52 18 C46 8 40 26 40 26" stroke="#9A7A5A" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-                  <path d="M40 58 C33 52 26 48 30 40" stroke="#9A7A5A" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-                  <circle cx="28" cy="22" r="3" fill="#C29A73" opacity="0.7"/>
-                  <circle cx="52" cy="17" r="3" fill="#C29A73" opacity="0.7"/>
-                  <circle cx="30" cy="38" r="2" fill="#C29A73" opacity="0.5"/>
-                </svg>
-
                 {/* Rediger-knap */}
                 <DialogTrigger asChild>
                   <button
