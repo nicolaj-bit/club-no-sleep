@@ -15,10 +15,10 @@ import { toast } from 'sonner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BottomSheet } from '@/components/ui/BottomSheet';
 
-// Brand-farver fra style guide
-const CARD_BG_LIGHT   = '#F3E9E1';
-const CARD_BG_DARK    = '#2A231F';
-const BORDER_LIGHT    = '#EDE4DB';
+// Brand-farver fra style guide – matcher menu-knapper præcist
+const CARD_BG_LIGHT_SOLID = '#F0EBE3';
+const CARD_BG_DARK    = '#3A2B22';
+const BORDER_LIGHT    = '#E8DDD2';
 const BORDER_DARK     = '#3A312B';
 const ICON_COLOR      = '#C29A73';
 
@@ -43,7 +43,8 @@ export default function Settings() {
   const [termsContent, setTermsContent] = useState(null);
   const [termsLoading, setTermsLoading] = useState(false);
 
-  const cardBg     = isDark ? CARD_BG_DARK : CARD_BG_LIGHT;
+  const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
+  const cardBgSolid = isDark ? CARD_BG_DARK : CARD_BG_LIGHT_SOLID;
   const cardBorder = isDark ? BORDER_DARK  : BORDER_LIGHT;
 
   useEffect(() => {
@@ -221,7 +222,7 @@ export default function Settings() {
         {/* FAQ + Support */}
         <div
           className="rounded-2xl overflow-hidden border"
-          style={{ background: cardBg, borderColor: cardBorder }}
+          style={{ background: cardBgSolid, borderColor: cardBorder }}
         >
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: cardBorder }}>

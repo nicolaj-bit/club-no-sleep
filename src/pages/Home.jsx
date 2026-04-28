@@ -132,7 +132,7 @@ export default function Home() {
         <div className="mx-5 mb-5">
           <div
             className="rounded-2xl p-5 relative overflow-hidden"
-            style={{ backgroundColor: '#F3E9E1', border: '1px solid #EDE4D8' }}
+            style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
           >
             <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: '#808072' }}>{t.dailyWord}</p>
             <p className="text-[16px] font-light leading-relaxed relative z-10" style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.55', color: '#2B1F16' }}>
