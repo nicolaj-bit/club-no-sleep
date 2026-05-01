@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Camera, ArrowRight, ArrowLeft, Baby, MapPin, Shield, Sparkles, Check } from 'lucide-react';
+import { Camera, ArrowRight, ArrowLeft, Baby, MapPin, Shield, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -104,7 +104,23 @@ export default function Onboarding() {
       privacy_version: '1.0',
       accepted_at: new Date().toISOString(),
     });
-    window.location.href = createPageUrl('Subscription');
+
+    // Start Stripe checkout direkte
+    if (window.self !== window.top) {
+      // I iframe/preview – gå bare til forsiden
+      window.location.href = '/';
+      return;
+    }
+    try {
+      const response = await base44.functions.invoke('createCheckoutSession', {});
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        window.location.href = '/';
+      }
+    } catch {
+      window.location.href = '/';
+    }
   };
 
   const STEPS = [
@@ -112,7 +128,6 @@ export default function Onboarding() {
     { icon: Shield, title: t.welcomeTitle, subtitle: t.welcomeSubtitle },
     { icon: MapPin, title: t.whereDoYouLive, subtitle: t.findNearbyMoms },
     { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
-    { icon: Sparkles, title: 'LALATOTO Premium', subtitle: '30 dages gratis prøveperiode' },
   ];
 
   const current = STEPS[step];
@@ -372,33 +387,6 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {/* STEP 4 – Abonnement */}
-            {step === 4 && (
-              <motion.div key="s4" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
-                <div className="w-16 h-16 rounded-3xl flex items-center justify-center mx-auto"
-                  style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))' }}>
-                  <Sparkles className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-sm text-center leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                  Få fuld adgang til alt LALATOTO har at tilbyde — prøv gratis i 30 dage.
-                </p>
-                <div className="rounded-2xl p-5 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
-                  {['Adgang til alle eksperter', 'Ubegrænsede spørgsmål & svar', 'Personlige søvnråd fra AI', 'Community for mødre', 'Tigerspring notifikationer'].map((f, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: 'var(--color-primary)' }}>
-                        <Check className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{f}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-center" style={{ color: 'var(--color-text-muted)' }}>
-                  30 dages gratis prøveperiode, derefter 59 kr./md. Annuller når som helst.
-                </p>
-              </motion.div>
-            )}
-
           </AnimatePresence>
         </div>
 
@@ -416,13 +404,13 @@ export default function Onboarding() {
               } else if (step === 2) {
                 setStep(3);
               } else if (step === 3) {
-                handleFinish(); // gemmer profil → redirect til /Subscription
+                handleFinish();
               }
             }}
           >
-            {saving ? t.saving : step === 4 ? (
+            {saving ? t.saving : step === 3 ? (
               <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" /> Start gratis prøveperiode</span>
-            ) : step === 3 ? t.getStarted : (
+            ) : (
               <span className="flex items-center gap-2">{t.next} <ArrowRight className="w-5 h-5" /></span>
             )}
           </Button>
