@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -173,62 +174,67 @@ export default function Profile() {
             </div>
           </div>
 
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{t.editProfile}</DialogTitle>
+          <DialogContent className="max-h-[90vh] flex flex-col p-0 gap-0">
+            <DialogHeader className="px-6 pt-6 pb-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+              <DialogTitle style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{t.editProfile}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">{t.username}</Label>
-                <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value })} placeholder="dit_brugernavn" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="display_name">{t.displayName}</Label>
-                <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" />
-              </div>
-              <div className="space-y-2">
-                <Label>{t.genderLabel}</Label>
-                <div className="flex gap-3">
-                  {[{ value: 'female', label: t.female }, { value: 'male', label: t.male }].map(option => (
-                    <label
-                      key={option.value}
-                      className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer"
-                      style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={editForm.gender === option.value}
-                        onChange={() => { if (!profile?.gender) setEditForm({ ...editForm, gender: option.value }); }}
-                        disabled={!!profile?.gender}
-                        className="w-4 h-4 cursor-pointer"
-                      />
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{option.label}</span>
-                    </label>
-                  ))}
+            <ScrollArea className="flex-1 overflow-y-auto">
+              <div className="space-y-5 px-6 py-5">
+
+                {/* Navn */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="display_name" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.displayName}</Label>
+                  <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
                 </div>
-                {profile?.gender && (
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.genderLocked}</p>
-                )}
+
+                {/* Brugernavn */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="username" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.username}</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--color-text-muted)' }}>@</span>
+                    <Input id="username" value={editForm.username || ''} onChange={(e) => setEditForm({ ...editForm, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })} placeholder="dit_brugernavn" className="pl-7" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  </div>
+                </div>
+
+                {/* By */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="city" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.city}</Label>
+                  <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                </div>
+
+                {/* Divider */}
+                <div className="h-px w-full" style={{ background: 'var(--color-border)' }} />
+
+                {/* Barnets fødselsdato */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="birthdate" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.childBirthdate}</Label>
+                  <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value, child_due_date: '' })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
+                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+                </div>
+
+                {/* Terminsdato */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="due_date" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.dueDateLabel}</Label>
+                  <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value, child_birthdate: '' })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
+                </div>
+
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="city">{t.city}</Label>
-                <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="birthdate">{t.childBirthdate}</Label>
-                <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value, child_due_date: '' })} />
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
-                <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="due_date">{t.dueDateLabel}</Label>
-                <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value, child_birthdate: '' })} />
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
-              </div>
-              <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
+            </ScrollArea>
+
+            {/* Gem-knap sticky i bunden */}
+            <div className="px-6 py-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+              <Button
+                className="w-full h-12 rounded-2xl text-base font-semibold"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+                onClick={() => updateProfileMutation.mutate(editForm)}
+                disabled={updateProfileMutation.isPending}
+              >
                 {updateProfileMutation.isPending ? t.saving : t.saveChanges}
               </Button>
             </div>
