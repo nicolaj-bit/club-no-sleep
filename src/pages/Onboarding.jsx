@@ -89,13 +89,16 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasPaid = urlParams.get('subscription') === 'success';
     const { accept_terms, accept_privacy, ...profileData } = form;
     await base44.entities.UserProfile.create({
       ...profileData,
       gender: form.profile_label === 'mor' ? 'female' : 'male',
       user_email: user.email,
-      subscription_status: 'trial',
-      trial_started_at: new Date().toISOString(),
+      subscription_status: hasPaid ? 'active' : 'trial',
+      subscription_started_at: hasPaid ? new Date().toISOString() : undefined,
+      trial_started_at: hasPaid ? undefined : new Date().toISOString(),
     });
     // Gem GDPR consent-log
     await base44.entities.ConsentLog.create({
@@ -105,22 +108,8 @@ export default function Onboarding() {
       accepted_at: new Date().toISOString(),
     });
 
-    // Start Stripe checkout direkte
-    if (window.self !== window.top) {
-      // I iframe/preview – gå bare til forsiden
-      window.location.href = '/';
-      return;
-    }
-    try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      if (response.data?.url) {
-        window.location.href = response.data.url;
-      } else {
-        window.location.href = '/';
-      }
-    } catch {
-      window.location.href = '/';
-    }
+    // Onboarding done — go to home
+    window.location.href = '/';
   };
 
   const STEPS = [

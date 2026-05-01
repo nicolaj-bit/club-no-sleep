@@ -62,12 +62,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Redirect to onboarding if no profile exists after loading
-  useEffect(() => {
-    if (!profileLoading && user && activeProfile === null) {
-      window.location.href = createPageUrl('Onboarding');
-    }
-  }, [profileLoading, user, activeProfile]);
+  // No onboarding redirect — users complete profile after payment
 
   const { data: posts = [] } = useQuery({
     queryKey: ['blogPosts'],
@@ -102,6 +97,28 @@ export default function Home() {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Ingen profil endnu — vis Subscription siden så de kan betale
+  if (!profileLoading && user && !activeProfile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))' }}>
+          <span className="text-3xl">🌙</span>
+        </div>
+        <h1 className="text-2xl mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>Velkommen til LALATOTO</h1>
+        <p className="text-sm mb-8 max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
+          Opret et abonnement for at komme i gang.
+        </p>
+        <a
+          href="/Subscription"
+          className="px-8 py-4 rounded-2xl text-base font-semibold"
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+        >
+          Kom i gang
+        </a>
       </div>
     );
   }
