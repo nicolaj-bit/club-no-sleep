@@ -15,6 +15,7 @@ export default function Onboarding() {
   const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(0);
+  const hasPaid = new URLSearchParams(window.location.search).get('subscription') === 'success';
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -89,8 +90,7 @@ export default function Onboarding() {
 
   const handleFinish = async () => {
     setSaving(true);
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasPaid = urlParams.get('subscription') === 'success';
+
     const { accept_terms, accept_privacy, ...profileData } = form;
     await base44.entities.UserProfile.create({
       ...profileData,
@@ -398,7 +398,7 @@ export default function Onboarding() {
             }}
           >
             {saving ? t.saving : step === 3 ? (
-              <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" /> Start gratis prøveperiode</span>
+              <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" /> {hasPaid ? t.getStarted : 'Start gratis prøveperiode'}</span>
             ) : (
               <span className="flex items-center gap-2">{t.next} <ArrowRight className="w-5 h-5" /></span>
             )}

@@ -163,6 +163,7 @@ export default function Profile() {
                       gender: profile?.gender || '',
                       city: profile?.city || '',
                       child_birthdate: profile?.child_birthdate || '',
+                      child_due_date: profile?.child_due_date || '',
                     })}
                   >
                     {t.edit} <ChevronRight className="w-3 h-3" />
@@ -215,7 +216,16 @@ export default function Profile() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="birthdate">{t.childBirthdate}</Label>
-                <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} />
+                <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value, child_due_date: '' })} />
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
+                <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="due_date">{t.dueDateLabel}</Label>
+                <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value, child_birthdate: '' })} />
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
               </div>
               <Button className="w-full" onClick={() => updateProfileMutation.mutate(editForm)} disabled={updateProfileMutation.isPending}>
