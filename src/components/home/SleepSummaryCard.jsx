@@ -41,7 +41,7 @@ export default function SleepSummaryCard({ userEmail }) {
     <Link to={createPageUrl('SleepLog')} className="block flex-1 cursor-pointer">
       <div
         className="rounded-3xl p-4 h-full relative overflow-hidden"
-        style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/8ed0e276b_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/dc4267e5f_2.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
 
         <div className="mb-3">
