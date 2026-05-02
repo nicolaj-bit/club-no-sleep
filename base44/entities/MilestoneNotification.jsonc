@@ -1,0 +1,46 @@
+{
+  "name": "MilestoneNotification",
+  "type": "object",
+  "properties": {
+    "milestone_id": {
+      "type": "string",
+      "description": "ID p\u00e5 milep\u00e6len (fx 'baby-1y')"
+    },
+    "title": {
+      "type": "string",
+      "description": "Push-notifikationens titel"
+    },
+    "message": {
+      "type": "string",
+      "description": "S\u00f8d besked til brugeren"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om notifikationen er aktiv"
+    }
+  },
+  "required": [
+    "milestone_id",
+    "title",
+    "message"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

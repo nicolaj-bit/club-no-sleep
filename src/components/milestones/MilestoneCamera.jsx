@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { Upload, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Github } from 'lucide-react';
+import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook } from 'lucide-react';
 import { toast } from 'sonner';
 import WobblySticker from './WobblySticker';
 
@@ -185,6 +185,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
     setMode('preview');
+    sendMilestoneNotification();
   };
 
   const capturePhoto = () => {
@@ -262,6 +263,15 @@ export default function MilestoneCamera({ frame, onClose }) {
 
   const retake = () => { setCapturedImage(null); setMode('camera'); };
 
+  const sendMilestoneNotification = async () => {
+    try {
+      const { base44 } = await import('@/api/base44Client');
+      await base44.functions.invoke('sendMilestoneNotification', { milestone_id: frame.id });
+    } catch (e) {
+      // Silent – notification is a bonus, not critical
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: '#000' }}>
       <canvas ref={canvasRef} className="hidden" />
@@ -289,25 +299,30 @@ export default function MilestoneCamera({ frame, onClose }) {
           </div>
 
           {/* Shutter row */}
-          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-10 pb-16">
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
-            >
-              <Upload className="w-5 h-5 text-white" />
-            </button>
-            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+          <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-10 pb-16">
+            <div className="flex flex-col items-center gap-1">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
+                style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
+              >
+                <ImageIcon className="w-5 h-5 text-white" />
+              </button>
+              <span className="text-white/60 text-xs">Galleri</span>
+            </div>
+            <input ref={fileInputRef} type="file" accept="image/*" capture={false} className="hidden" onChange={handleFileUpload} />
 
-            <button
-              onClick={capturePhoto}
-              disabled={!cameraReady}
-              className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
-              style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
-            >
-              <div className="w-14 h-14 rounded-full bg-white" />
-            </button>
-            <div className="w-12 h-12" />
+            <div className="flex flex-col items-center gap-1">
+              <button
+                onClick={capturePhoto}
+                disabled={!cameraReady}
+                className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
+                style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
+              >
+                <div className="w-14 h-14 rounded-full bg-white" />
+              </button>
+            </div>
+            <div className="w-12 h-12 mb-7" />
           </div>
         </div>
       )}
