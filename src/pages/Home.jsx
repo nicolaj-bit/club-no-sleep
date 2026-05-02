@@ -37,7 +37,7 @@ function getGreeting(lang, name) {
   } else {
     greeting = lang === 'da' ? 'Godnat' : 'Good night';
   }
-  return `${greeting}, ${name} 🤍`;
+  return `${greeting}, ${name} `;
 }
 
 export default function Home() {
