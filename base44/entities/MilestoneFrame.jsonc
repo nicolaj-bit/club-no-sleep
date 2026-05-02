@@ -1,0 +1,85 @@
+{
+  "name": "MilestoneFrame",
+  "type": "object",
+  "properties": {
+    "milestone_id": {
+      "type": "string",
+      "description": "Unik ID (fx 'preg-12', 'baby-1y')"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Graviditet",
+        "Baby",
+        "\u00d8jeblikke"
+      ],
+      "description": "Kategori"
+    },
+    "label": {
+      "type": "string",
+      "description": "Kort label (fx 'Uge 12', '1 \u00e5r')"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji til stickeren"
+    },
+    "headline": {
+      "type": "string",
+      "description": "Stor tekst p\u00e5 stickeren"
+    },
+    "subline": {
+      "type": "string",
+      "description": "Lille tekst under headline"
+    },
+    "bg_color": {
+      "type": "string",
+      "description": "Baggrundfarve (hex, fx '#F5EFE6')"
+    },
+    "accent_color": {
+      "type": "string",
+      "description": "Accentfarve til sticker-ring (hex)"
+    },
+    "text_color": {
+      "type": "string",
+      "description": "Tekstfarve (hex)"
+    },
+    "sticker_image": {
+      "type": "string",
+      "description": "Valgfrit brugerdefineret sticker-billede (URL)"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om milep\u00e6len vises"
+    }
+  },
+  "required": [
+    "milestone_id",
+    "category",
+    "label",
+    "headline"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

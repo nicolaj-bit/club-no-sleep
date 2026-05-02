@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/ui/PageHeader';
 import MilestoneCamera from '@/components/milestones/MilestoneCamera';
 import WobblySticker from '@/components/milestones/WobblySticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
-import { Camera, ImageIcon } from 'lucide-react';
+import { Camera } from 'lucide-react';
 
 const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -17,15 +19,43 @@ const CATEGORY_LABELS = {
 const cleanHeadline = (headline) =>
   headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
 
+// Convert DB frame fields to the same shape as hardcoded frames
+function normalizeDbFrame(f) {
+  return {
+    id: f.id,
+    milestone_id: f.milestone_id,
+    category: f.category,
+    label: f.label,
+    emoji: f.emoji || '🤍',
+    headline: f.headline,
+    subline: f.subline || '',
+    bgColor: f.bg_color || '#F5EFE6',
+    accentColor: f.accent_color || '#C8A882',
+    textColor: f.text_color || '#2B1F16',
+    sticker_image: f.sticker_image || null,
+    order: f.order ?? 0,
+  };
+}
+
 export default function Milestones() {
   const [cameraFrame, setCameraFrame] = useState(null);
+
+  const { data: dbFrames = [] } = useQuery({
+    queryKey: ['milestoneFrames'],
+    queryFn: () => base44.entities.MilestoneFrame.filter({ is_active: true }, 'order', 100),
+  });
 
   if (cameraFrame) {
     return <MilestoneCamera frame={cameraFrame} onClose={() => setCameraFrame(null)} />;
   }
 
+  // Use DB frames if available, otherwise fall back to hardcoded
+  const frames = dbFrames.length > 0
+    ? dbFrames.map(normalizeDbFrame)
+    : MILESTONE_FRAMES;
+
   const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
-    acc[cat] = MILESTONE_FRAMES.filter(f => f.category === cat);
+    acc[cat] = frames.filter(f => f.category === cat);
     return acc;
   }, {});
 
@@ -67,10 +97,13 @@ function MilestoneRow({ frame, onCapture }) {
     >
       {/* Mini sticker preview */}
       <div
-        className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center"
+        className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden"
         style={{ backgroundColor: frame.bgColor }}
       >
-        <WobblySticker headline={cleanHeadline(frame.headline)} date={TODAY} size={52} />
+        {frame.sticker_image
+          ? <img src={frame.sticker_image} alt={frame.label} className="w-12 h-12 object-contain" />
+          : <WobblySticker headline={cleanHeadline(frame.headline)} date={TODAY} size={52} />
+        }
       </div>
 
       {/* Info */}
