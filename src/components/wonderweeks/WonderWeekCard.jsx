@@ -160,7 +160,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
 
           {/* Læs mere knap — altid synlig */}
           <Link
-            to={createPageUrl('Knowledge')}
+            to={`${createPageUrl('ArticleDetail')}?slug=${wonderWeek.articleSlug}`}
             className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium"
             style={{ backgroundColor: `${wonderWeek.color}18`, color: wonderWeek.color }}
           >
