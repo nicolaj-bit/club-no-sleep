@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight } from 'lucide-react';
+import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight, Sparkles } from 'lucide-react';
+import CompleteProfileOnboarding from '@/components/profile/CompleteProfileOnboarding';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -30,6 +31,7 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({});
   const [langSheetOpen, setLangSheetOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [helpConfig, setHelpConfig] = useState(null);
 
   useEffect(() => {
@@ -105,8 +107,43 @@ export default function Profile() {
 
       <div className="px-4 space-y-3">
 
-        {/* Hero profile card */}
-        <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        {/* Færdiggør profil — vis kun hvis ingen profil */}
+        {!profile && (
+          <>
+            <button
+              onClick={() => setOnboardingOpen(true)}
+              className="w-full rounded-3xl overflow-hidden relative active:opacity-90 transition-opacity text-left"
+              style={{
+                background: 'linear-gradient(135deg, #C8A882, #8A5A30)',
+                minHeight: 110,
+                border: 'none',
+              }}
+            >
+              <div className="flex items-center gap-4 p-5">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                  <Sparkles className="w-7 h-7 text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xl font-light text-white leading-snug" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                    Færdiggør din profil
+                  </p>
+                  <p className="text-sm text-white/75 mt-1">Fortæl os lidt om dig og dit barn</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-white/60 flex-shrink-0" />
+              </div>
+            </button>
+
+            <CompleteProfileOnboarding
+              user={user}
+              open={onboardingOpen}
+              onClose={() => setOnboardingOpen(false)}
+              onComplete={() => { setOnboardingOpen(false); refreshProfiles(); }}
+            />
+          </>
+        )}
+
+        {/* Hero profile card — kun når profil eksisterer */}
+        {profile && <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div
             className="rounded-3xl overflow-hidden relative"
             style={{
@@ -239,7 +276,7 @@ export default function Profile() {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog>}
 
         {/* Section label */}
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>

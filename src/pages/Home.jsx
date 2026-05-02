@@ -101,28 +101,6 @@ export default function Home() {
     );
   }
 
-  // Ingen profil endnu — vis Subscription siden så de kan betale
-  if (!profileLoading && user && !activeProfile) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))' }}>
-          <span className="text-3xl">🌙</span>
-        </div>
-        <h1 className="text-2xl mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>Velkommen til LALATOTO</h1>
-        <p className="text-sm mb-8 max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
-          Opret et abonnement for at komme i gang.
-        </p>
-        <a
-          href="/Subscription"
-          className="px-8 py-4 rounded-2xl text-base font-semibold"
-          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-        >
-          Kom i gang
-        </a>
-      </div>
-    );
-  }
-
   // Graviditetsview: har terminsdato i fremtiden, barnet ikke født endnu
   if (isExpecting) {
     return <PregnancyHomeView profile={profile} user={user} posts={posts} />;
@@ -143,6 +121,23 @@ export default function Home() {
         </div>
 
       </div>
+
+      {/* Færdiggør profil banner — kun hvis ingen profil */}
+      {!profile && (
+        <div className="mx-5 mb-4">
+          <Link
+            to="/Profile"
+            className="flex items-center gap-3 rounded-2xl px-4 py-3.5 active:opacity-80 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, #C8A882, #A07850)', boxShadow: '0 2px 12px rgba(160,120,80,0.25)' }}
+          >
+            <span className="text-2xl">✨</span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-white leading-tight">Færdiggør din profil</p>
+              <p className="text-xs text-white/75 mt-0.5">Det tager kun 2 minutter →</p>
+            </div>
+          </Link>
+        </div>
+      )}
 
       {/* Daily Affirmation */}
       {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && (
