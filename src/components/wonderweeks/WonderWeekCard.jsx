@@ -158,6 +158,16 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
             </div>
           )}
 
+          {/* Læs mere knap — altid synlig */}
+          <Link
+            to={createPageUrl('Knowledge')}
+            className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium"
+            style={{ backgroundColor: `${wonderWeek.color}18`, color: wonderWeek.color }}
+          >
+            {t.readMoreWonderWeeks}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+
           {/* Upcoming teaser */}
           {isUpcoming && (
             <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>

@@ -159,9 +159,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* Child development age pill */}
-      <ChildDevelopmentCard profile={profile} />
-
       {/* Sleep/Diary + Calendar row */}
       {user && (
         <div className="mx-5 mb-5 flex gap-3">
