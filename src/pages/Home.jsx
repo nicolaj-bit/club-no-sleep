@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -60,6 +60,17 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle return from Stripe checkout — trigger subscription verification
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('subscription') === 'success') {
+      // Clean URL
+      window.history.replaceState({}, '', '/');
+      // Trigger subscription verify in background so SubscriptionGate re-checks
+      base44.functions.invoke('verifySubscription', {}).catch(() => {});
+    }
   }, []);
 
   // No onboarding redirect — users complete profile after payment

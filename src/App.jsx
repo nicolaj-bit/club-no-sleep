@@ -7,6 +7,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
+import SubscriptionGate from './components/subscription/SubscriptionGate';
 import AboutUs from './pages/AboutUs';
 import FamilyInvite from './pages/FamilyInvite';
 import Subscription from './pages/Subscription.jsx';
@@ -51,6 +52,7 @@ const AuthenticatedApp = () => {
 
   // Render the main app
   return (
+    <SubscriptionGate>
     <Routes>
       <Route path="/" element={
         <LayoutWrapper currentPageName={mainPageKey}>
@@ -82,6 +84,7 @@ const AuthenticatedApp = () => {
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    </SubscriptionGate>
   );
 };
 
