@@ -15,6 +15,7 @@ import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
+import DailyPersonalMessage from '@/components/home/DailyPersonalMessage';
 import NotificationBell from '@/components/ui/NotificationBell';
 import PregnancyHomeView from '@/components/home/PregnancyHomeView';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
@@ -186,6 +187,9 @@ export default function Home() {
           <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
         </div>
       )}
+
+      {/* Daglig personlig besked baseret på søvndata */}
+      {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
 
       {/* AI Sleep Advice — only shown when 5+ logs exist */}
       {user && <SleepAdviceCard userEmail={user.email} />}
