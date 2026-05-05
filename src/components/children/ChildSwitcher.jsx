@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import { base44 } from '@/api/base44Client';
 import { ChevronDown, Plus, Baby } from 'lucide-react';
@@ -8,6 +8,20 @@ export default function ChildSwitcher({ compact = false }) {
   const { children, activeChild, setActiveChildId, refetch } = useActiveChild();
   const [open, setOpen] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [open]);
 
   if (!activeChild && children.length === 0) {
     return (
@@ -33,7 +47,7 @@ export default function ChildSwitcher({ compact = false }) {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(!open)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"

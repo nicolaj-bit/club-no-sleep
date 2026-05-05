@@ -128,7 +128,7 @@ export default function Home() {
   // Normalt dashboard: barnet er født (child_birthdate sat) ELLER terminsdato er passeret
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div key={activeChild?.id || 'no-child'} className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
         <div className="flex items-start justify-between">
