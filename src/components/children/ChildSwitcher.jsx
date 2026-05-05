@@ -41,7 +41,7 @@ export default function ChildSwitcher({ compact = false }) {
 
   const getChildLabel = (child) => {
     if (child.birthdate) return child.name;
-    if (child.due_date) return `${child.name} 🤰`;
+    if (child.due_date) return child.name;
     return child.name;
   };
 
