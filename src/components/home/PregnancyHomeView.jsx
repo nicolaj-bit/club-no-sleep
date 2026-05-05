@@ -53,16 +53,16 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-12 pb-4">
+      <div className="px-5 pt-6 pb-4">
         <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+          <div className="flex flex-col">
+            <ChildSwitcher />
+            <p className="text-sm mt-2 mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
             <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
               {greeting}, {name}
             </h1>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <ChildSwitcher />
             {user && <NotificationBell userEmail={user.email} />}
           </div>
         </div>
