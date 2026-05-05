@@ -66,8 +66,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
             {user && <NotificationBell userEmail={user.email} />}
           </div>
         </div>
-        {/* Heart accent */}
-        <div className="mt-2" style={{ color: '#C8A882' }}>♥</div>
+
       </div>
 
       {/* Pregnancy Hero Card */}
