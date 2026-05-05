@@ -4,7 +4,7 @@
   "properties": {
     "user_email": {
       "type": "string",
-      "description": "For\u00e6ldre email"
+      "description": "For\u00e6ldrenes email"
     },
     "name": {
       "type": "string",
@@ -46,10 +46,7 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "data.user_email": "{{user.email}}"
     },
     "read": {
       "data.user_email": "{{user.email}}"

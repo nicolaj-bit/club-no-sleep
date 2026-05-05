@@ -5,12 +5,17 @@ import { differenceInWeeks, differenceInDays, isAfter } from 'date-fns';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Baby } from 'lucide-react';
 
-function getAgeDisplay(profile, t) {
-  if (!profile) return null;
+function getAgeDisplay(profile, t, child) {
+  if (!profile && !child) return null;
 
   const today = new Date();
-  const birthdate = profile.child_birthdate ? new Date(profile.child_birthdate) : null;
-  const dueDate = profile.child_due_date ? new Date(profile.child_due_date) : null;
+  // Prioriter Child entity data over profil data
+  const birthdate = child?.birthdate
+    ? new Date(child.birthdate)
+    : profile?.child_birthdate ? new Date(profile.child_birthdate) : null;
+  const dueDate = child?.due_date
+    ? new Date(child.due_date)
+    : profile?.child_due_date ? new Date(profile.child_due_date) : null;
 
   if (birthdate && isAfter(today, birthdate)) {
     const totalDays = differenceInDays(today, birthdate);
@@ -59,9 +64,10 @@ function getAgeDisplay(profile, t) {
   return null;
 }
 
-export default function ChildDevelopmentCard({ profile }) {
+export default function ChildDevelopmentCard({ profile, child }) {
   const { t, lang } = useLanguage();
-  const age = getAgeDisplay(profile, t);
+  const age = getAgeDisplay(profile, t, child);
+  const childName = child?.name;
   if (!age) return null;
 
   // Pregnancy card — elegant full-bleed design

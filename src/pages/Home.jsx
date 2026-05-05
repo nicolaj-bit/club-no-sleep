@@ -122,7 +122,7 @@ export default function Home() {
 
   // Graviditetsview: har terminsdato i fremtiden, barnet ikke født endnu
   if (isExpecting) {
-    return <PregnancyHomeView profile={profile} user={user} posts={posts} />;
+    return <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />;
   }
 
   // Normalt dashboard: barnet er født (child_birthdate sat) ELLER terminsdato er passeret
@@ -160,6 +160,9 @@ export default function Home() {
           </Link>
         </div>
       )}
+
+      {/* Child development / terminsdato kort */}
+      <ChildDevelopmentCard profile={profile} child={activeChild} />
 
       {/* Daily Affirmation */}
       {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && (

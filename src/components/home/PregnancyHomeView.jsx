@@ -10,6 +10,7 @@ import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
+import ChildSwitcher from '@/components/children/ChildSwitcher';
 
 function getPregnancyInfo(dueDate) {
   if (!dueDate) return null;
@@ -38,13 +39,16 @@ function getGreeting(lang, name) {
   return { greeting, name };
 }
 
-export default function PregnancyHomeView({ profile, user, posts = [] }) {
+export default function PregnancyHomeView({ profile, user, posts = [], activeChild }) {
   const { t, lang } = useLanguage();
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
   const displayName = profile?.display_name || user?.full_name || (lang === 'da' ? 'kommende mor' : 'mom-to-be');
   const { greeting, name } = getGreeting(lang, displayName);
 
-  const pregnancy = profile?.child_due_date ? getPregnancyInfo(profile.child_due_date) : null;
+  // Brug aktivt barn's terminsdato, ellers fald tilbage til profil
+  const dueDate = activeChild?.due_date || profile?.child_due_date;
+  const childName = activeChild?.name;
+  const pregnancy = dueDate ? getPregnancyInfo(dueDate) : null;
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -57,7 +61,10 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
               {greeting}, {name}
             </h1>
           </div>
-          {user && <NotificationBell userEmail={user.email} />}
+          <div className="flex items-center gap-2 mt-1">
+            <ChildSwitcher />
+            {user && <NotificationBell userEmail={user.email} />}
+          </div>
         </div>
         {/* Heart accent */}
         <div className="mt-2" style={{ color: '#C8A882' }}>♥</div>
@@ -74,7 +81,7 @@ export default function PregnancyHomeView({ profile, user, posts = [] }) {
             <div className="flex-1 p-5 flex flex-col justify-between z-10">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
-                  {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+                  {childName ? childName.toUpperCase() + ' · ' : ''}{lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
                 </p>
                 <div className="flex items-baseline gap-1.5 mb-0.5">
                   <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', lineHeight: 1 }}>
