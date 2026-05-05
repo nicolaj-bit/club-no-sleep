@@ -6,6 +6,10 @@
       "type": "string",
       "description": "Reference til bruger"
     },
+    "child_id": {
+      "type": "string",
+      "description": "Reference til Child entity (aktivt barn ved logning)"
+    },
     "profile_id": {
       "type": "string",
       "description": "Reference til UserProfile (aktiv profil ved logning)"
@@ -95,5 +99,17 @@
   "required": [
     "user_email",
     "date"
-  ]
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
 }

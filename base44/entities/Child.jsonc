@@ -1,0 +1,64 @@
+{
+  "name": "Child",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "For\u00e6ldre email"
+    },
+    "name": {
+      "type": "string",
+      "description": "Barnets navn"
+    },
+    "birthdate": {
+      "type": "string",
+      "format": "date",
+      "description": "F\u00f8dselsdato"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Terminsdato (hvis ikke f\u00f8dt endnu)"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "girl",
+        "boy",
+        "unknown"
+      ],
+      "default": "unknown",
+      "description": "K\u00f8n"
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "Profilbillede URL"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    }
+  },
+  "required": [
+    "user_email",
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, Refres
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { Link, useNavigate } from 'react-router-dom';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
@@ -72,6 +73,7 @@ export default function SleepLog() {
   const queryClient = useQueryClient();
   const headerVisible = useScrollDirection();
   const { activeProfile } = useActiveProfile();
+  const { activeChild } = useActiveChild();
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
   const dateLocale = lang === 'en' ? enUS : da;
@@ -111,24 +113,27 @@ export default function SleepLog() {
   });
 
   useEffect(() => {
-    base44.auth.me().then(async (u) => {
+    base44.auth.me().then(u => {
       setUser(u);
-      const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
-      const profile = profiles?.[0];
-      if (profile?.child_birthdate) {
-        const birth = new Date(profile.child_birthdate);
-        const now = new Date();
-        const months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
-        setForm(f => ({ ...f, child_age_months: Math.max(0, months) }));
-      }
     }).catch(() => base44.auth.redirectToLogin());
   }, []);
 
+  // Auto-beregn barnets alder fra aktivt barn
+  useEffect(() => {
+    if (activeChild?.birthdate) {
+      const birth = new Date(activeChild.birthdate);
+      const now = new Date();
+      const months = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
+      setForm(f => ({ ...f, child_age_months: Math.max(0, months) }));
+    }
+  }, [activeChild?.id]);
+
   const profileId = activeProfile?.id;
+  const childId = activeChild?.id || null;
 
   const { data: todayLog } = useQuery({
-    queryKey: ['sleeplog-today', user?.email, profileId, today],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, profile_id: profileId || null, date: today }),
+    queryKey: ['sleeplog-today', user?.email, childId, today],
+    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null, date: today }),
     enabled: !!user,
     onSuccess: (data) => {
       if (data?.length > 0) {
@@ -150,8 +155,8 @@ export default function SleepLog() {
   });
 
   const { data: history } = useQuery({
-    queryKey: ['sleeplog-history', user?.email, profileId],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, profile_id: profileId || null }, '-date', 30),
+    queryKey: ['sleeplog-history', user?.email, childId],
+    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null }, '-date', 30),
     enabled: !!user && view === 'history',
   });
 
@@ -164,7 +169,7 @@ export default function SleepLog() {
         mts = (sh * 60 + sm) - (bh * 60 + bm);
         if (mts < 0) mts += 24 * 60;
       }
-      const payload = { ...data, user_email: user.email, profile_id: profileId || null, minutes_to_sleep: mts };
+      const payload = { ...data, user_email: user.email, child_id: childId || null, minutes_to_sleep: mts };
       const existing = todayLog?.[0];
       if (existing) return base44.entities.SleepLog.update(existing.id, payload);
       return base44.entities.SleepLog.create(payload);

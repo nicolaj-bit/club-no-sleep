@@ -19,6 +19,8 @@ import DailyPersonalMessage from '@/components/home/DailyPersonalMessage';
 import NotificationBell from '@/components/ui/NotificationBell';
 import PregnancyHomeView from '@/components/home/PregnancyHomeView';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
+import ChildSwitcher from '@/components/children/ChildSwitcher';
+import { useActiveChild } from '@/components/ui/ActiveChildContext';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -44,6 +46,7 @@ function getGreeting(lang, name) {
 export default function Home() {
   const { t, lang } = useLanguage();
   const { activeProfile, loading: profileLoading } = useActiveProfile();
+  const { activeChild, loading: childLoading } = useActiveChild();
   const [user, setUser] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
   const [, setCurrentTime] = useState(new Date());
@@ -83,10 +86,14 @@ export default function Home() {
 
   const profile = activeProfile;
 
-  // Kommende forældre: har terminsdato i fremtiden men ikke fødselsdato
-  const isExpecting = profile?.child_due_date && !profile?.child_birthdate && new Date(profile.child_due_date) > new Date();
+  // Brug aktivt barn hvis det findes, ellers fald tilbage til profil
+  const childBirthdate = activeChild?.birthdate || profile?.child_birthdate;
+  const childDueDate = activeChild?.due_date || profile?.child_due_date;
 
-  const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
+  // Kommende forældre: har terminsdato i fremtiden men ikke fødselsdato
+  const isExpecting = childDueDate && !childBirthdate && new Date(childDueDate) > new Date();
+
+  const ageInWeeks = getAgeInWeeks(childDueDate, childBirthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
   const affirmationIndex = getDailyAffirmationIndex();
@@ -129,7 +136,10 @@ export default function Home() {
             <p className="text-sm mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
             <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
           </div>
-          {user && <NotificationBell userEmail={user.email} />}
+          <div className="flex items-center gap-2 mt-1">
+            <ChildSwitcher />
+            {user && <NotificationBell userEmail={user.email} />}
+          </div>
         </div>
 
       </div>

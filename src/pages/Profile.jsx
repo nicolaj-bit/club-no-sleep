@@ -19,6 +19,10 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import ChildSwitcher from '@/components/children/ChildSwitcher';
+import AddChildSheet from '@/components/children/AddChildSheet';
+import { Baby, Pencil } from 'lucide-react';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -33,6 +37,9 @@ export default function Profile() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [helpConfig, setHelpConfig] = useState(null);
+  const [addChildOpen, setAddChildOpen] = useState(false);
+  const [editingChild, setEditingChild] = useState(null);
+  const { children: myChildren, activeChild, setActiveChildId, refetch: refetchChildren } = useActiveChild();
 
   useEffect(() => {
     base44.entities.AppConfig.filter({ key: 'help_modal' }).then(results => {
@@ -277,6 +284,73 @@ export default function Profile() {
             </div>
           </DialogContent>
         </Dialog>}
+
+        {/* Børnesektion */}
+        <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
+          {lang === 'da' ? 'Mine børn' : 'My children'}
+        </p>
+
+        <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${cardBorder}` }}>
+          {myChildren.map((child, i) => (
+            <div
+              key={child.id}
+              className={`flex items-center gap-3 px-4 py-3.5 ${i < myChildren.length - 1 ? 'border-b' : ''}`}
+              style={{ background: cardBgSolid, borderColor: cardBorder }}
+            >
+              <button
+                onClick={() => setActiveChildId(child.id)}
+                className="flex items-center gap-3 flex-1 text-left"
+              >
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: activeChild?.id === child.id ? 'linear-gradient(135deg, #C8A882, #A0785A)' : 'var(--color-bg-subtle)' }}
+                >
+                  <Baby className="w-4 h-4" style={{ color: activeChild?.id === child.id ? '#fff' : 'var(--color-text-muted)' }} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                    {child.name}
+                    {!child.birthdate && child.due_date && ' 🤰'}
+                  </p>
+                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {child.birthdate
+                      ? (lang === 'da' ? `Født ${child.birthdate}` : `Born ${child.birthdate}`)
+                      : child.due_date
+                        ? (lang === 'da' ? `Termin ${child.due_date}` : `Due ${child.due_date}`)
+                        : ''}
+                  </p>
+                </div>
+              </button>
+              <button
+                onClick={() => { setEditingChild(child); setAddChildOpen(true); }}
+                className="p-2 rounded-full active:opacity-60"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+
+          <button
+            onClick={() => { setEditingChild(null); setAddChildOpen(true); }}
+            className="w-full flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity"
+            style={{ background: cardBgSolid, borderTop: myChildren.length > 0 ? `1px solid ${cardBorder}` : 'none' }}
+          >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-bg-subtle)' }}>
+              <Baby className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+            </div>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-accent)' }}>
+              {lang === 'da' ? '+ Tilføj barn' : '+ Add child'}
+            </p>
+          </button>
+        </div>
+
+        <AddChildSheet
+          open={addChildOpen}
+          onClose={() => { setAddChildOpen(false); setEditingChild(null); }}
+          onSaved={() => { setAddChildOpen(false); setEditingChild(null); refetchChildren(); }}
+          editChild={editingChild}
+        />
 
         {/* Section label */}
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
