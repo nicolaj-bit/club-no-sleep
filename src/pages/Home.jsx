@@ -131,15 +131,15 @@ export default function Home() {
     <div key={activeChild?.id || 'no-child'} className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col">
             <ChildSwitcher />
-            <div className="flex items-center gap-2">
-              {user && <NotificationBell userEmail={user.email} />}
-            </div>
+            <p className="text-sm mt-2 mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
+            <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
           </div>
-          <p className="text-sm mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-          <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
+          <div className="flex items-center gap-2 mt-1">
+            {user && <NotificationBell userEmail={user.email} />}
+          </div>
         </div>
       </div>
 
