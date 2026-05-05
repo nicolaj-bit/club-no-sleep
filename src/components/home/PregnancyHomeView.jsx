@@ -90,9 +90,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
                     {lang === 'da' ? 'uger' : 'weeks'}
                   </span>
                 </div>
-                <p className="text-sm" style={{ color: '#7A665A' }}>
-                  {lang === 'da' ? 'til termin' : 'until due date'}
-                </p>
+    
               </div>
 
               {/* Week pill — bottom */}
