@@ -31,6 +31,12 @@ export default function SubscriptionGate({ children }) {
         return;
       }
 
+      // Admin users always get access
+      if (user.role === 'admin') {
+        setStatus('ok');
+        return;
+      }
+
       const profile = profiles[0];
       const subStatus = profile.subscription_status;
 
