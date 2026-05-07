@@ -338,6 +338,9 @@ export default function AdminEditor() {
                     [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                     ['clean'],
                   ],
+                  clipboard: {
+                    matchVisual: false,
+                  },
                 }}
                 style={{ minHeight: '50vh', backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
               />
