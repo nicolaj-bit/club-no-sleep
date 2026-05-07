@@ -3,10 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { Share2, FileText, HelpCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import ReactMarkdown from 'react-markdown';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
@@ -140,67 +138,12 @@ Return format:
         {/* Divider */}
         <div className="w-10 h-0.5 mb-8 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
 
-        {/* Markdown content */}
+        {/* HTML content from Quill editor */}
         <div
-          className="article-content"
-          style={{ color: 'var(--color-text-primary)' }}
-        >
-          <ReactMarkdown
-            components={{
-              h1: ({ children }) => (
-                <h1 className="text-xl font-bold mt-8 mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="text-lg font-semibold mt-7 mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="text-base font-semibold mt-5 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h3>
-              ),
-              p: ({ children }) => (
-                <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-text-secondary)' }}>{children}</p>
-              ),
-              ul: ({ children }) => (
-                <ul className="mb-5 space-y-2 pl-1">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="mb-5 space-y-2 pl-1 list-decimal list-inside">{children}</ol>
-              ),
-              li: ({ children }) => (
-                <li className="flex items-start gap-3 text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--color-accent)' }} />
-                  <span>{children}</span>
-                </li>
-              ),
-              blockquote: ({ children }) => (
-                <blockquote
-                  className="pl-4 py-1 my-6 rounded-r-lg border-l-4"
-                  style={{ borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
-                >
-                  {children}
-                </blockquote>
-              ),
-              strong: ({ children }) => (
-                <strong className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{children}</strong>
-              ),
-              em: ({ children }) => (
-                <em className="italic" style={{ color: 'var(--color-text-secondary)' }}>{children}</em>
-              ),
-              code: ({ children }) => (
-                <code
-                  className="px-1.5 py-0.5 rounded text-sm font-mono"
-                  style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-accent)' }}
-                >
-                  {children}
-                </code>
-              ),
-              hr: () => (
-                <hr className="my-8" style={{ borderColor: 'var(--color-border)' }} />
-              ),
-            }}
-          >
-            {translatedArticle?.content || article.content}
-          </ReactMarkdown>
-        </div>
+          className="article-content prose-content"
+          style={{ color: 'var(--color-text-secondary)' }}
+          dangerouslySetInnerHTML={{ __html: translatedArticle?.content || article.content }}
+        />
 
         {/* Tags */}
         {article.tags?.filter(t => !t.startsWith('tigerspring')).length > 0 && (
