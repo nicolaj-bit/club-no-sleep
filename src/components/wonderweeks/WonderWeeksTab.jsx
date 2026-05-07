@@ -47,7 +47,6 @@ export default function WonderWeeksTab() {
         style={{ background: 'linear-gradient(135deg, #2C1A0E 0%, #4A2E1A 100%)' }}
       >
         <div className="relative z-10">
-          <p className="text-2xl mb-1" style={{ fontFamily: EMOJI_FONT }}>🐯</p>
           <h2 className="text-lg font-semibold text-white mb-1">Tigerspring</h2>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
             De 10 store udviklingsspring i dit barns første leveår. Tider beregnes fra terminsdatoen.
@@ -87,12 +86,15 @@ export default function WonderWeeksTab() {
                 opacity: isComplete ? 0.45 : 1,
               }}
             >
-              {/* Emoji */}
+              {/* Number badge */}
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                style={{ backgroundColor: isComplete ? 'var(--color-bg-subtle)' : `${ww.color}20`, fontFamily: EMOJI_FONT }}
+                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-semibold"
+                style={{
+                  backgroundColor: isComplete ? 'var(--color-bg-subtle)' : `${ww.color}20`,
+                  color: isComplete ? 'var(--color-text-muted)' : ww.color,
+                }}
               >
-                {isComplete ? '✓' : (emojiMap[ww.number] || ww.emoji)}
+                {ww.number}
               </div>
 
               {/* Info */}
