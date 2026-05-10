@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, Users } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import MilestoneFrameEditor from '@/components/admin/MilestoneFrameEditor';
@@ -373,11 +373,6 @@ export default function AdminEditor() {
         <Link to="/AdminNotifications">
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
             <Bell className="w-3.5 h-3.5" /> Notifikationer
-          </button>
-        </Link>
-        <Link to="/AdminAboutUs">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-            <Users className="w-3.5 h-3.5" /> Om os
           </button>
         </Link>
         {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && (

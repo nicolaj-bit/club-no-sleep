@@ -9,43 +9,47 @@ import { toast } from 'sonner';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { useQuery } from '@tanstack/react-query';
 
-// Static fallback data (used if DB has no entries yet)
-const FALLBACK_TEAM = [
+const teamMembers = [
   {
-    name: 'Sara', role: 'CEO & Co-Founder',
+    name: 'Sara',
+    role: 'CEO & Co-Founder',
     image: 'https://www.lalatoto.dk/cdn/shop/files/29_a8af474e-5e4f-4f7c-8e91-009540e9befd.png?v=1732525557&width=900',
-    facts: ['Jeg drømmer meget men husker sjældent hvad.','Jeg falder altid i søvn i det øjeblik mit hoved rammer puden.','Vi samsover med vores to drenge i en store familieseng, og jeg ved intet bedre, end at falde i søvn til lyden af deres åndedræt.','Jeg foretrækker et koldt soveværelse, altså sådan rigtig koldt!','Jeg er den der oftest får lov til at sove længe i weekenden (tak Nico).'],
+    facts: [
+      'Jeg drømmer meget men husker sjældent hvad.',
+      'Jeg falder altid i søvn i det øjeblik mit hoved rammer puden.',
+      'Vi samsover med vores to drenge i en store familieseng, og jeg ved intet bedre, end at falde i søvn til lyden af deres åndedræt.',
+      'Jeg foretrækker et koldt soveværelse, altså sådan rigtig koldt!',
+      'Jeg er den der oftest får lov til at sove længe i weekenden (tak Nico).',
+    ],
   },
   {
-    name: 'Nicolaj', role: 'COO & Co-Founder',
+    name: 'Nicolaj',
+    role: 'COO & Co-Founder',
     image: 'https://www.lalatoto.dk/cdn/shop/files/28.png?v=1732525209&width=900',
-    facts: ['Jeg vågner de fleste morgener, ved at vores ældste nusser mig på kinden.','Det er kun mig som hører vækkeuret om morgenen.','Jeg nyder at læse en god bog i sengen, inden jeg lukker øjnene.','Hver morgen lover jeg mig selv at gå tidligere i seng, men det bliver sjældent overholdt. Ups!','Jeg sover udelukkende med Kapok, da det hjælper gevaldigt på min allergi.'],
+    facts: [
+      'Jeg vågner de fleste morgener, ved at vores ældste nusser mig på kinden.',
+      'Det er kun mig som hører vækkeuret om morgenen.',
+      'Jeg nyder at læse en god bog i sengen, inden jeg lukker øjnene.',
+      'Hver morgen lover jeg mig selv at gå tidligere i seng, men det bliver sjældent overholdt. Ups!',
+      'Jeg sover udelukkende med Kapok, da det hjælper gevaldigt på min allergi.',
+    ],
   },
 ];
-const FALLBACK_PARTNERS = [
+
+const partnerMembers = [
   {
-    name: 'Julie Line Christiansen', role: 'Fotograf',
+    name: 'Julie Line Christiansen',
+    role: 'Fotograf',
     image: 'https://www.lalatoto.dk/cdn/shop/files/EDE9E568-1AB0-4D60-8BFA-1438D2B950D0.jpg?v=1773142523&width=900',
-    facts: ['Jeg har altid elsket at tage billeder.','Jeg købte mit første spejlrefleks kamera for mine konfirmationspenge.','Jeg er uddannet pædagog, med speciale i skole- og fritidspædagogik.'],
+    facts: [
+      'Jeg har altid elsket at tage billeder.',
+      'Jeg købte mit første spejlrefleks kamera for mine konfirmationspenge.',
+      'Jeg er uddannet pædagog, med speciale i skole- og fritidspædagogik.',
+    ],
     link: 'https://desmaojeblikke.dk',
   },
 ];
-const FALLBACK_HERO = {
-  title: 'Vores rejse begyndte i 2018',
-  body: 'Vores rejse med LALATOTO begyndte i 2018 med en ulykkelig baby, to meget trætte forældre og en hjemmesyet tyngdedyne. Dengang havde vi ingen idé om, at vores tyngdedyne ville blive danskernes foretrukne valg til babyer og småbørn.\n\nMen pludselig tog det fart, og vi besluttede os for at gå all in på vores mission om at forbedre trivslen hos småbørnsfamilier gennem bedre og tryggere søvn.\n\nI dag er LALATOTO et betroet brand for familier, der søger bedre løsninger til søvn. En tillid vi ikke tager for givet. Fra vores beskedne begyndelse er vi vokset til at blive en fællesskabsdrevet virksomhed, der arbejder for at hjælpe familier med øget trivsel gennem tryg søvn.',
-};
-
-function entryToMember(e) {
-  return {
-    name: e.title || e.key,
-    role: e.subtitle || '',
-    image: e.image_url || '',
-    facts: e.body ? e.body.split('\n').filter(Boolean) : [],
-    link: e.link || '',
-  };
-}
 
 function PersonCard({ person, openId, setOpenId }) {
   const isOpen = openId === person.name;
@@ -113,22 +117,6 @@ export default function AboutUs() {
   const [sending, setSending] = useState(false);
   const [openId, setOpenId] = useState(null);
 
-  const { data: dbEntries = [] } = useQuery({
-    queryKey: ['about-us-content'],
-    queryFn: () => base44.entities.AboutUsContent.filter({ is_active: true }, 'order', 50),
-  });
-
-  const heroEntry = dbEntries.find(e => e.section === 'hero');
-  const teamEntries = dbEntries.filter(e => e.section === 'team_member');
-  const partnerEntries = dbEntries.filter(e => e.section === 'partner');
-
-  const heroData = heroEntry
-    ? { title: heroEntry.title || FALLBACK_HERO.title, body: heroEntry.body || FALLBACK_HERO.body }
-    : FALLBACK_HERO;
-
-  const teamMembers = teamEntries.length > 0 ? teamEntries.map(entryToMember) : FALLBACK_TEAM;
-  const partnerMembers = partnerEntries.length > 0 ? partnerEntries.map(entryToMember) : FALLBACK_PARTNERS;
-
   const handleSend = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
@@ -176,12 +164,21 @@ export default function AboutUs() {
               🧡
             </div>
             <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-              {heroData.title}
+              Vores rejse begyndte i 2018
             </h2>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              {heroData.body.split('\n\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
+              <p>
+                Vores rejse med LALATOTO begyndte i 2018 med en ulykkelig baby, to meget trætte forældre og en hjemmesyet tyngdedyne. Dengang havde vi ingen idé om, at vores tyngdedyne ville blive danskernes foretrukne valg til babyer og småbørn.
+              </p>
+              <p>
+                Men pludselig tog det fart, og vi besluttede os for at gå all in på vores mission om at forbedre trivslen hos småbørnsfamilier gennem bedre og tryggere søvn.
+              </p>
+              <p>
+                I dag er LALATOTO et betroet brand for familier, der søger bedre løsninger til søvn. En tillid vi ikke tager for givet. Fra vores beskedne begyndelse er vi vokset til at blive en fællesskabsdrevet virksomhed, der arbejder for at hjælpe familier med øget trivsel gennem tryg søvn.
+              </p>
+              <p className="font-medium italic" style={{ color: 'var(--color-text-primary)' }}>
+                For når natten er god, er alting godt. 🌙
+              </p>
             </div>
           </div>
         </section>
