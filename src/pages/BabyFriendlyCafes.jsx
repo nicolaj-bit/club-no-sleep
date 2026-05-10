@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Plus } from 'lucide-react';
+import { MapPin, Plus, Instagram, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -20,7 +20,7 @@ export default function BabyFriendlyCafes() {
   const [showLocationConsent, setShowLocationConsent] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [formData, setFormData] = useState({ name: '', description: '', city: '', address: '', phone: '', website: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', city: '', address: '', phone: '', website: '', instagram: '', facebook: '' });
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function BabyFriendlyCafes() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cafes'] });
       setShowAddForm(false);
-      setFormData({ name: '', description: '', city: '', address: '', phone: '', website: '' });
+      setFormData({ name: '', description: '', city: '', address: '', phone: '', website: '', instagram: '', facebook: '' });
       toast.success('Café tilføjet! ✓');
     },
     onError: () => toast.error('Kunne ikke tilføje café'),
@@ -175,6 +175,16 @@ export default function BabyFriendlyCafes() {
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
               />
+              <Input
+                placeholder="Instagram (fx https://instagram.com/cafenavn)"
+                value={formData.instagram}
+                onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+              />
+              <Input
+                placeholder="Facebook (fx https://facebook.com/cafenavn)"
+                value={formData.facebook}
+                onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
+              />
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -242,6 +252,34 @@ export default function BabyFriendlyCafes() {
                   <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                   {cafe.city && <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{cafe.city}</p>}
                   {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
+                  {(cafe.instagram || cafe.facebook) && (
+                    <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      {cafe.instagram && (
+                        <a
+                          href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs font-medium"
+                          style={{ color: '#E1306C' }}
+                        >
+                          <Instagram className="w-4 h-4" />
+                          Instagram
+                        </a>
+                      )}
+                      {cafe.facebook && (
+                        <a
+                          href={cafe.facebook.startsWith('http') ? cafe.facebook : `https://facebook.com/${cafe.facebook}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs font-medium"
+                          style={{ color: '#1877F2' }}
+                        >
+                          <Facebook className="w-4 h-4" />
+                          Facebook
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </>

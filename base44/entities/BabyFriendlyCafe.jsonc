@@ -26,6 +26,14 @@
       "type": "string",
       "description": "Webside URL"
     },
+    "instagram": {
+      "type": "string",
+      "description": "Instagram URL eller brugernavn"
+    },
+    "facebook": {
+      "type": "string",
+      "description": "Facebook URL eller sidename"
+    },
     "image": {
       "type": "string",
       "description": "Billede URL"
