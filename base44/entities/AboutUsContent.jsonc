@@ -1,0 +1,70 @@
+{
+  "name": "AboutUsContent",
+  "type": "object",
+  "properties": {
+    "section": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "team_member",
+        "partner"
+      ],
+      "description": "Hvilken sektion"
+    },
+    "key": {
+      "type": "string",
+      "description": "Unik n\u00f8gle (fx 'main', 'sara', 'nicolaj')"
+    },
+    "title": {
+      "type": "string",
+      "description": "Titel / navn"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Undertitel / rolle"
+    },
+    "body": {
+      "type": "string",
+      "description": "Br\u00f8dtekst (hero) eller fun facts (team, JSON-array som tekst)"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Billede URL"
+    },
+    "link": {
+      "type": "string",
+      "description": "Eksternt link (fx til partner)"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "section",
+    "key"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
