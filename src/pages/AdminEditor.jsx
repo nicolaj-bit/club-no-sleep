@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, Info } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star } from 'lucide-react';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import MilestoneFrameEditor from '@/components/admin/MilestoneFrameEditor';
@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'AboutUs', 'ColorTheme', 'Milestones'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -33,9 +33,6 @@ export default function AdminEditor() {
   const [sharingConfig, setSharingConfig] = useState(null);
   const [sharingForm, setSharingForm] = useState({});
   const [sharingSaving, setShareSaving] = useState(false);
-  const [aboutConfig, setAboutConfig] = useState(null);
-  const [aboutForm, setAboutForm] = useState({});
-  const [aboutSaving, setAboutSaving] = useState(false);
 
 
   useEffect(() => {
@@ -120,27 +117,6 @@ export default function AdminEditor() {
     mutationFn: (id) => base44.entities.LegalContent.delete(id),
     onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
   });
-
-  useEffect(() => {
-    if (activeTab !== 'AboutUs') return;
-    base44.entities.AppConfig.filter({ key: 'about_us' }).then(results => {
-      const config = results[0] || { key: 'about_us', story_title: '', story_text: '', partners_subtitle: '' };
-      setAboutConfig(config);
-      setAboutForm({ ...config });
-    });
-  }, [activeTab]);
-
-  const handleSaveAbout = async () => {
-    setAboutSaving(true);
-    if (aboutConfig?.id) {
-      await base44.entities.AppConfig.update(aboutConfig.id, aboutForm);
-    } else {
-      const created = await base44.entities.AppConfig.create({ ...aboutForm, key: 'about_us' });
-      setAboutConfig(created);
-    }
-    setAboutSaving(false);
-    toast.success('Gemt!');
-  };
 
   useEffect(() => {
     if (activeTab !== 'SharingPage') return;
@@ -399,7 +375,7 @@ export default function AdminEditor() {
             <Bell className="w-3.5 h-3.5" /> Notifikationer
           </button>
         </Link>
-        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'AboutUs' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && (
+        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && (
           <button
             onClick={handleNew}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
@@ -420,8 +396,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'AboutUs' ? <Info className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : <Star className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'AboutUs' ? 'Om os' : tab === 'ColorTheme' ? 'Farvetema' : 'Milepæle'}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : <Star className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : 'Milepæle'}
           </button>
         ))}
       </div>
@@ -505,52 +481,11 @@ export default function AdminEditor() {
       )}
 
 
-      {activeTab === 'AboutUs' && (
-        <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
-          <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Overskrift (fx "Vores rejse begyndte i 2018")</Label>
-            <input
-              value={aboutForm.story_title || ''}
-              onChange={e => setAboutForm({ ...aboutForm, story_title: e.target.value })}
-              className="w-full rounded-md border px-3 py-2 text-sm"
-              placeholder="Vores rejse begyndte i 2018"
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Historietekst (vises under overskriften)</Label>
-            <textarea
-              value={aboutForm.story_text || ''}
-              onChange={e => setAboutForm({ ...aboutForm, story_text: e.target.value })}
-              rows={8}
-              className="w-full rounded-md border px-3 py-2 text-sm resize-y"
-              placeholder="Vores rejse med LALATOTO begyndte i 2018..."
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-            />
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Brug \\n\\n for at lave et nyt afsnit.</p>
-          </div>
-          <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Undertekst under "Samarbejdspartnere"</Label>
-            <input
-              value={aboutForm.partners_subtitle || ''}
-              onChange={e => setAboutForm({ ...aboutForm, partners_subtitle: e.target.value })}
-              className="w-full rounded-md border px-3 py-2 text-sm"
-              placeholder="Vi er stolte over de dygtige mennesker vi samarbejder med."
-              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-            />
-          </div>
-          <Button onClick={handleSaveAbout} disabled={aboutSaving} className="w-full"
-            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {aboutSaving ? 'Gemmer...' : 'Gem'}
-          </Button>
-        </div>
-      )}
-
       {activeTab === 'ColorTheme' && <ColorThemeEditor />}
       {activeTab === 'Milestones' && <MilestoneFrameEditor />}
 
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'AboutUs' || activeTab === 'ColorTheme' || activeTab === 'Milestones' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>

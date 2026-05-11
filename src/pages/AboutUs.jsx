@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, Phone, Mail, Clock, Send, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -110,23 +110,12 @@ function PersonCard({ person, openId, setOpenId }) {
   );
 }
 
-const DEFAULT_STORY_TITLE = 'Vores rejse begyndte i 2018';
-const DEFAULT_STORY_TEXT = `Vores rejse med LALATOTO begyndte i 2018 med en ulykkelig baby, to meget trætte forældre og en hjemmesyet tyngdedyne. Dengang havde vi ingen idé om, at vores tyngdedyne ville blive danskernes foretrukne valg til babyer og småbørn.\n\nMen pludselig tog det fart, og vi besluttede os for at gå all in på vores mission om at forbedre trivslen hos småbørnsfamilier gennem bedre og tryggere søvn.\n\nI dag er LALATOTO et betroet brand for familier, der søger bedre løsninger til søvn. En tillid vi ikke tager for givet. Fra vores beskedne begyndelse er vi vokset til at blive en fællesskabsdrevet virksomhed, der arbejder for at hjælpe familier med øget trivsel gennem tryg søvn.`;
-const DEFAULT_PARTNERS_SUBTITLE = 'Vi er stolte over de dygtige mennesker vi samarbejder med.';
-
 export default function AboutUs() {
   const { isDark } = useTheme();
   const { lang } = useLanguage();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
   const [openId, setOpenId] = useState(null);
-  const [aboutConfig, setAboutConfig] = useState(null);
-
-  useEffect(() => {
-    base44.entities.AppConfig.filter({ key: 'about_us' }).then(results => {
-      setAboutConfig(results[0] || {});
-    }).catch(() => {});
-  }, []);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -175,12 +164,18 @@ export default function AboutUs() {
               🧡
             </div>
             <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-              {aboutConfig?.story_title || DEFAULT_STORY_TITLE}
+              Vores rejse begyndte i 2018
             </h2>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              {(aboutConfig?.story_text || DEFAULT_STORY_TEXT).split('\n\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
+              <p>
+                Vores rejse med LALATOTO begyndte i 2018 med en ulykkelig baby, to meget trætte forældre og en hjemmesyet tyngdedyne. Dengang havde vi ingen idé om, at vores tyngdedyne ville blive danskernes foretrukne valg til babyer og småbørn.
+              </p>
+              <p>
+                Men pludselig tog det fart, og vi besluttede os for at gå all in på vores mission om at forbedre trivslen hos småbørnsfamilier gennem bedre og tryggere søvn.
+              </p>
+              <p>
+                I dag er LALATOTO et betroet brand for familier, der søger bedre løsninger til søvn. En tillid vi ikke tager for givet. Fra vores beskedne begyndelse er vi vokset til at blive en fællesskabsdrevet virksomhed, der arbejder for at hjælpe familier med øget trivsel gennem tryg søvn.
+              </p>
               <p className="font-medium italic" style={{ color: 'var(--color-text-primary)' }}>
                 For når natten er god, er alting godt. 🌙
               </p>
@@ -200,7 +195,7 @@ export default function AboutUs() {
         <section>
           <h2 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>Vores samarbejdspartnere</h2>
           <p className="text-sm mb-4" style={{ color: 'var(--color-text-muted)' }}>
-            {aboutConfig?.partners_subtitle || DEFAULT_PARTNERS_SUBTITLE}
+            Vi er stolte over de dygtige mennesker vi samarbejder med.
           </p>
           <div className="grid grid-cols-2 gap-4">
             {partnerMembers.map(person => (
