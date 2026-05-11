@@ -12,7 +12,8 @@
     },
     "body": {
       "type": "string",
-      "description": "Br\u00f8dtekst / indhold"
+      "format": "html",
+      "description": "Br\u00f8dtekst / indhold (underst\u00f8tter HTML: overskrifter, fed, kursiv)"
     },
     "image": {
       "type": "string",

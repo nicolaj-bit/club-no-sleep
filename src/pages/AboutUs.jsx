@@ -190,7 +190,6 @@ export default function AboutUs() {
 
   const storyTitle = getTitle(content, 'story', DEFAULTS.story_title);
   const storyBody = get(content, 'story', DEFAULTS.story_body);
-  const storyParagraphs = storyBody.split('\n').filter(Boolean);
 
   const contactPhone = get(content, 'contact_phone', DEFAULTS.contact_phone);
   const contactEmail = get(content, 'contact_email', DEFAULTS.contact_email);
@@ -225,13 +224,11 @@ export default function AboutUs() {
             <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
               {storyTitle}
             </h2>
-            <div className="space-y-3 text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              {storyParagraphs.map((para, i) => (
-                <p key={i} className={para.startsWith('For ') ? 'font-medium italic' : ''} style={para.startsWith('For ') ? { color: 'var(--color-text-primary)' } : {}}>
-                  {para}
-                </p>
-              ))}
-            </div>
+            <div
+              className="text-sm leading-relaxed prose prose-sm max-w-none"
+              style={{ color: 'var(--color-text-secondary)' }}
+              dangerouslySetInnerHTML={{ __html: storyBody }}
+            />
           </div>
         </section>
 
