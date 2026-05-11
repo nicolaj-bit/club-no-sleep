@@ -13,7 +13,7 @@
     "body": {
       "type": "string",
       "format": "html",
-      "description": "Br\u00f8dtekst / indhold (underst\u00f8tter HTML: overskrifter, fed, kursiv)"
+      "description": "Br\u00f8dtekst / indhold (underst\u00f8tter fed, kursiv, understreg)"
     },
     "image": {
       "type": "string",
