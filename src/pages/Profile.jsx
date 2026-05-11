@@ -252,7 +252,7 @@ export default function Profile() {
                 {/* Barnets fødselsdato */}
                 <div className="space-y-1.5">
                   <Label htmlFor="birthdate" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.childBirthdate}</Label>
-                  <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value, child_due_date: '' })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -264,7 +264,7 @@ export default function Profile() {
                 {/* Terminsdato */}
                 <div className="space-y-1.5">
                   <Label htmlFor="due_date" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.dueDateLabel}</Label>
-                  <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value, child_birthdate: '' })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
                   <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
                 </div>
 

@@ -15,7 +15,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
 
   const handleSave = async () => {
     if (!name.trim()) { setError('Indtast barnets navn'); return; }
-    if (!birthdate && !dueDate) { setError('Angiv enten fødselsdato eller terminsdato'); return; }
+    if (!birthdate && !dueDate) { setError('Angiv fødselsdato eller terminsdato'); return; }
 
     setSaving(true);
     setError('');
@@ -77,14 +77,14 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
           </div>
 
           <div>
-            <p className="text-xs text-center my-1" style={{ color: 'var(--color-text-muted)' }}>— eller —</p>
-            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>Terminsdato (hvis ikke født endnu)</label>
+            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>Terminsdato</label>
             <Input
               type="date"
               value={dueDate}
               onChange={e => setDueDate(e.target.value)}
               style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
             />
+            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>Bruges til beregning af tigerspring 🐯</p>
           </div>
 
           {error && <p className="text-xs" style={{ color: '#e55' }}>{error}</p>}
