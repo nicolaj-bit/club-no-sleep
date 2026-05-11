@@ -1,0 +1,51 @@
+{
+  "name": "AboutContent",
+  "type": "object",
+  "properties": {
+    "section": {
+      "type": "string",
+      "description": "Sektionsn\u00f8gle (fx 'story', 'team_sara', 'team_nicolaj', 'partner_julie', 'contact_phone', 'contact_email', 'contact_hours', 'contact_note')"
+    },
+    "title": {
+      "type": "string",
+      "description": "Overskrift (valgfrit)"
+    },
+    "body": {
+      "type": "string",
+      "description": "Br\u00f8dtekst / indhold"
+    },
+    "image": {
+      "type": "string",
+      "description": "Billede URL (valgfrit)"
+    },
+    "link": {
+      "type": "string",
+      "description": "Link URL (valgfrit)"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "section"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
