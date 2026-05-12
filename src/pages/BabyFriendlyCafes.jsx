@@ -150,6 +150,67 @@ export default function BabyFriendlyCafes() {
         <PageHeader title="Babyvenlige caféer" />
 
         <div className="p-4 space-y-4">
+          {/* Tip os om en café */}
+          <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
+            <button
+              className="w-full flex items-center justify-between p-4"
+              onClick={() => setShowTipForm(!showTipForm)}
+            >
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kend du en god café?</span>
+              </div>
+              {showTipForm ? (
+                <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+              ) : (
+                <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+              )}
+            </button>
+
+            {showTipForm && (
+              <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
+                  Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
+                </p>
+                <Input
+                  placeholder="Dit navn *"
+                  value={tipData.name}
+                  onChange={(e) => setTipData({ ...tipData, name: e.target.value })}
+                />
+                <Input
+                  placeholder="Din e-mail *"
+                  type="email"
+                  value={tipData.email}
+                  onChange={(e) => setTipData({ ...tipData, email: e.target.value })}
+                />
+                <Input
+                  placeholder="Caféens navn *"
+                  value={tipData.cafeName}
+                  onChange={(e) => setTipData({ ...tipData, cafeName: e.target.value })}
+                />
+                <Input
+                  placeholder="By"
+                  value={tipData.city}
+                  onChange={(e) => setTipData({ ...tipData, city: e.target.value })}
+                />
+                <Textarea
+                  placeholder="Evt. kommentar (hjemmeside, Instagram, hvorfor den er babyvenlig...)"
+                  value={tipData.message}
+                  onChange={(e) => setTipData({ ...tipData, message: e.target.value })}
+                  className="min-h-20"
+                />
+                <Button
+                  className="w-full"
+                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  onClick={handleSendTip}
+                  disabled={tipSending}
+                >
+                  {tipSending ? 'Sender...' : 'Send tip'}
+                </Button>
+              </div>
+            )}
+          </div>
+
           {/* Admin add button */}
           {isAdmin && (
             <Button
@@ -359,67 +420,6 @@ export default function BabyFriendlyCafes() {
               })()}
             </>
           )}
-          {/* Tip os om en café */}
-          <div className="rounded-2xl border overflow-hidden mt-6" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
-            <button
-              className="w-full flex items-center justify-between p-4"
-              onClick={() => setShowTipForm(!showTipForm)}
-            >
-              <div className="flex items-center gap-2">
-                <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kend du en god café?</span>
-              </div>
-              {showTipForm ? (
-                <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
-              ) : (
-                <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
-              )}
-            </button>
-
-            {showTipForm && (
-              <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
-                  Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
-                </p>
-                <Input
-                  placeholder="Dit navn *"
-                  value={tipData.name}
-                  onChange={(e) => setTipData({ ...tipData, name: e.target.value })}
-                />
-                <Input
-                  placeholder="Din e-mail *"
-                  type="email"
-                  value={tipData.email}
-                  onChange={(e) => setTipData({ ...tipData, email: e.target.value })}
-                />
-                <Input
-                  placeholder="Caféens navn *"
-                  value={tipData.cafeName}
-                  onChange={(e) => setTipData({ ...tipData, cafeName: e.target.value })}
-                />
-                <Input
-                  placeholder="By"
-                  value={tipData.city}
-                  onChange={(e) => setTipData({ ...tipData, city: e.target.value })}
-                />
-                <Textarea
-                  placeholder="Evt. kommentar (hjemmeside, Instagram, hvorfor den er babyvenlig...)"
-                  value={tipData.message}
-                  onChange={(e) => setTipData({ ...tipData, message: e.target.value })}
-                  className="min-h-20"
-                />
-                <Button
-                  className="w-full"
-                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
-                  onClick={handleSendTip}
-                  disabled={tipSending}
-                >
-                  {tipSending ? 'Sender...' : 'Send tip'}
-                </Button>
-              </div>
-            )}
-          </div>
-
         </div>
       </div>
     </PullToRefresh>
