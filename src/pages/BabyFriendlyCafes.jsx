@@ -164,7 +164,7 @@ export default function BabyFriendlyCafes() {
             >
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kend du en god café?</span>
+                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kender du en god café?</span>
               </div>
               {showTipForm ? (
                 <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
