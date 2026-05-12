@@ -9,11 +9,11 @@ import { Camera } from 'lucide-react';
 
 const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const CATEGORY_ORDER = ['Graviditet', 'Baby', 'Øjeblikke'];
+const CATEGORY_ORDER = ['Graviditet', 'Baby', 'Alder'];
 const CATEGORY_LABELS = {
   Graviditet: '🌱 Graviditet',
   Baby: '🍼 Baby',
-  Øjeblikke: '✨ Særlige øjeblikke',
+  Alder: '📅 Alder',
 };
 
 const cleanHeadline = (headline) =>
