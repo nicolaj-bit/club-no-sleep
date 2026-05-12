@@ -22,7 +22,7 @@ export default function BabyFriendlyCafes() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({ name: '', description: '', city: '', address: '', phone: '', website: '', instagram: '', facebook: '' });
   const [showTipForm, setShowTipForm] = useState(false);
-  const [tipData, setTipData] = useState({ name: '', email: '', cafeName: '', city: '', message: '' });
+  const [tipData, setTipData] = useState({ cafeInfo: '', whyGood: '' });
   const [tipSending, setTipSending] = useState(false);
   const queryClient = useQueryClient();
 
@@ -88,19 +88,25 @@ export default function BabyFriendlyCafes() {
   };
 
   const handleSendTip = async () => {
-    if (!tipData.cafeName.trim() || !tipData.name.trim() || !tipData.email.trim()) {
-      toast.error('Udfyld venligst navn, e-mail og caféens navn');
+    if (!tipData.cafeInfo.trim()) {
+      toast.error('Udfyld venligst caféens info');
       return;
     }
     setTipSending(true);
-    const message = `Café tip fra bruger:\n\nCafé: ${tipData.cafeName}\nBy: ${tipData.city || 'ikke angivet'}\n\nBesked:\n${tipData.message || '(ingen besked)'}`;
+    // Send email til admin
     await base44.functions.invoke('sendContactEmail', {
-      name: tipData.name,
-      email: tipData.email,
-      message,
+      name: 'App bruger',
+      email: 'tip@lalatoto.dk',
+      message: `Café info:\n${tipData.cafeInfo}\n\nHvorfor god:\n${tipData.whyGood || '(ikke udfyldt)'}`,
+    });
+    // Opret in-app notifikation til admins
+    await base44.entities.AppNotification.create({
+      title: '☕ Ny café-anbefaling',
+      message: `Café info: ${tipData.cafeInfo}${tipData.whyGood ? ` — ${tipData.whyGood}` : ''}`,
+      emoji: '☕',
     });
     setTipSending(false);
-    setTipData({ name: '', email: '', cafeName: '', city: '', message: '' });
+    setTipData({ cafeInfo: '', whyGood: '' });
     setShowTipForm(false);
     toast.success('Tak for dit tip! Vi kigger på det 🙏');
   };
@@ -172,31 +178,16 @@ export default function BabyFriendlyCafes() {
                 <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
                   Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
                 </p>
-                <Input
-                  placeholder="Dit navn *"
-                  value={tipData.name}
-                  onChange={(e) => setTipData({ ...tipData, name: e.target.value })}
-                />
-                <Input
-                  placeholder="Din e-mail *"
-                  type="email"
-                  value={tipData.email}
-                  onChange={(e) => setTipData({ ...tipData, email: e.target.value })}
-                />
-                <Input
-                  placeholder="Caféens navn *"
-                  value={tipData.cafeName}
-                  onChange={(e) => setTipData({ ...tipData, cafeName: e.target.value })}
-                />
-                <Input
-                  placeholder="By"
-                  value={tipData.city}
-                  onChange={(e) => setTipData({ ...tipData, city: e.target.value })}
+                <Textarea
+                  placeholder="Café info — hjemmeside, Instagram, navn og adresse *"
+                  value={tipData.cafeInfo}
+                  onChange={(e) => setTipData({ ...tipData, cafeInfo: e.target.value })}
+                  className="min-h-20"
                 />
                 <Textarea
-                  placeholder="Evt. kommentar (hjemmeside, Instagram, hvorfor den er babyvenlig...)"
-                  value={tipData.message}
-                  onChange={(e) => setTipData({ ...tipData, message: e.target.value })}
+                  placeholder="Hvorfor er den god til babyer?"
+                  value={tipData.whyGood}
+                  onChange={(e) => setTipData({ ...tipData, whyGood: e.target.value })}
                   className="min-h-20"
                 />
                 <Button
