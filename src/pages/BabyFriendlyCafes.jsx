@@ -242,58 +242,100 @@ export default function BabyFriendlyCafes() {
             </div>
           ) : (
             <>
-              {cafeSearchMode === 'all' && (
-                <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
-                  Populære caféer
-                </p>
-              )}
-              {filteredCafes.map(cafe => (
-                <div key={cafe.id} className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-                  <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
-                  {cafe.address && (
-                    <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(cafe.address)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs mt-1 w-fit"
-                      style={{ color: 'var(--color-accent)' }}
-                    >
-                      <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                      {cafe.address}
-                    </a>
-                  )}
-                  {!cafe.address && cafe.city && <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{cafe.city}</p>}
-                  {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
-                  {(cafe.instagram || cafe.facebook) && (
-                    <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                      {cafe.instagram && (
-                        <a
-                          href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-medium"
-                          style={{ color: '#E1306C' }}
-                        >
-                          <Instagram className="w-4 h-4" />
-                          Instagram
-                        </a>
-                      )}
-                      {cafe.facebook && (
-                        <a
-                          href={cafe.facebook.startsWith('http') ? cafe.facebook : `https://facebook.com/${cafe.facebook}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-medium"
-                          style={{ color: '#1877F2' }}
-                        >
-                          <Facebook className="w-4 h-4" />
-                          Facebook
-                        </a>
-                      )}
+              {['Sjælland', 'Fyn', 'Jylland', 'Bornholm'].map(region => {
+                const regionCafes = filteredCafes.filter(c => c.amenities?.includes(region));
+                if (regionCafes.length === 0) return null;
+                return (
+                  <div key={region}>
+                    <p className="text-sm font-semibold uppercase tracking-wider px-1 mb-2 mt-4" style={{ color: 'var(--color-text-muted)' }}>
+                      {region}
+                    </p>
+                    <div className="space-y-3">
+                      {regionCafes.map(cafe => (
+                        <div key={cafe.id} className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                          <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
+                          {cafe.address && (
+                            <a
+                              href={`https://maps.google.com/?q=${encodeURIComponent(cafe.address)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-xs mt-1 w-fit"
+                              style={{ color: 'var(--color-accent)' }}
+                            >
+                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                              {cafe.address}
+                            </a>
+                          )}
+                          {!cafe.address && cafe.city && <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{cafe.city}</p>}
+                          {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
+                          {(cafe.instagram || cafe.facebook || cafe.website) && (
+                            <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                              {cafe.instagram && (
+                                <a
+                                  href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1.5 text-xs font-medium"
+                                  style={{ color: '#E1306C' }}
+                                >
+                                  <Instagram className="w-4 h-4" />
+                                  Instagram
+                                </a>
+                              )}
+                              {cafe.facebook && (
+                                <a
+                                  href={cafe.facebook.startsWith('http') ? cafe.facebook : `https://facebook.com/${cafe.facebook}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1.5 text-xs font-medium"
+                                  style={{ color: '#1877F2' }}
+                                >
+                                  <Facebook className="w-4 h-4" />
+                                  Facebook
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
+
+              {/* Caféer uden landsdel */}
+              {(() => {
+                const regions = ['Sjælland', 'Fyn', 'Jylland', 'Bornholm'];
+                const unassigned = filteredCafes.filter(c => !regions.some(r => c.amenities?.includes(r)));
+                if (unassigned.length === 0) return null;
+                return (
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-wider px-1 mb-2 mt-4" style={{ color: 'var(--color-text-muted)' }}>
+                      Øvrige
+                    </p>
+                    <div className="space-y-3">
+                      {unassigned.map(cafe => (
+                        <div key={cafe.id} className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                          <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
+                          {cafe.address && (
+                            <a
+                              href={`https://maps.google.com/?q=${encodeURIComponent(cafe.address)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-xs mt-1 w-fit"
+                              style={{ color: 'var(--color-accent)' }}
+                            >
+                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                              {cafe.address}
+                            </a>
+                          )}
+                          {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </>
           )}
         </div>
