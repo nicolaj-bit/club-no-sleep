@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Plus, Instagram, Facebook } from 'lucide-react';
+import { MapPin, Plus, Instagram, Facebook, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -21,6 +21,9 @@ export default function BabyFriendlyCafes() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({ name: '', description: '', city: '', address: '', phone: '', website: '', instagram: '', facebook: '' });
+  const [showTipForm, setShowTipForm] = useState(false);
+  const [tipData, setTipData] = useState({ name: '', email: '', cafeName: '', city: '', message: '' });
+  const [tipSending, setTipSending] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -82,6 +85,24 @@ export default function BabyFriendlyCafes() {
       return;
     }
     setCafeSearchMode('area');
+  };
+
+  const handleSendTip = async () => {
+    if (!tipData.cafeName.trim() || !tipData.name.trim() || !tipData.email.trim()) {
+      toast.error('Udfyld venligst navn, e-mail og caféens navn');
+      return;
+    }
+    setTipSending(true);
+    const message = `Café tip fra bruger:\n\nCafé: ${tipData.cafeName}\nBy: ${tipData.city || 'ikke angivet'}\n\nBesked:\n${tipData.message || '(ingen besked)'}`;
+    await base44.functions.invoke('sendContactEmail', {
+      name: tipData.name,
+      email: tipData.email,
+      message,
+    });
+    setTipSending(false);
+    setTipData({ name: '', email: '', cafeName: '', city: '', message: '' });
+    setShowTipForm(false);
+    toast.success('Tak for dit tip! Vi kigger på det 🙏');
   };
 
   const handleAddCafe = () => {
@@ -338,6 +359,67 @@ export default function BabyFriendlyCafes() {
               })()}
             </>
           )}
+          {/* Tip os om en café */}
+          <div className="rounded-2xl border overflow-hidden mt-6" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
+            <button
+              className="w-full flex items-center justify-between p-4"
+              onClick={() => setShowTipForm(!showTipForm)}
+            >
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kend du en god café?</span>
+              </div>
+              {showTipForm ? (
+                <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+              ) : (
+                <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+              )}
+            </button>
+
+            {showTipForm && (
+              <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
+                  Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
+                </p>
+                <Input
+                  placeholder="Dit navn *"
+                  value={tipData.name}
+                  onChange={(e) => setTipData({ ...tipData, name: e.target.value })}
+                />
+                <Input
+                  placeholder="Din e-mail *"
+                  type="email"
+                  value={tipData.email}
+                  onChange={(e) => setTipData({ ...tipData, email: e.target.value })}
+                />
+                <Input
+                  placeholder="Caféens navn *"
+                  value={tipData.cafeName}
+                  onChange={(e) => setTipData({ ...tipData, cafeName: e.target.value })}
+                />
+                <Input
+                  placeholder="By"
+                  value={tipData.city}
+                  onChange={(e) => setTipData({ ...tipData, city: e.target.value })}
+                />
+                <Textarea
+                  placeholder="Evt. kommentar (hjemmeside, Instagram, hvorfor den er babyvenlig...)"
+                  value={tipData.message}
+                  onChange={(e) => setTipData({ ...tipData, message: e.target.value })}
+                  className="min-h-20"
+                />
+                <Button
+                  className="w-full"
+                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  onClick={handleSendTip}
+                  disabled={tipSending}
+                >
+                  {tipSending ? 'Sender...' : 'Send tip'}
+                </Button>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </PullToRefresh>
