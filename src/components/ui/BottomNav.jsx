@@ -47,8 +47,9 @@ export default function BottomNav() {
   }));
 
   useEffect(() => {
-    base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {
-      if (results?.[0]?.icon_url) setAiIconUrl(results[0].icon_url);
+    base44.entities.AppConfig.list().then(results => {
+      const match = results?.find(r => r.key === 'ai_chat_icon');
+      if (match?.icon_url) setAiIconUrl(match.icon_url);
     }).catch(() => {});
   }, []);
 
