@@ -41,19 +41,12 @@
       }
     },
     "read": {
-      "$or": [
-        {
-          "data.target_emails": []
-        },
-        {
-          "data.target_emails": "{{user.email}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "data.target_emails": {
+        "$in": [
+          "{{user.email}}",
+          "all"
+        ]
+      }
     },
     "update": {
       "user_condition": {
