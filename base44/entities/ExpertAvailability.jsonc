@@ -1,0 +1,92 @@
+{
+  "name": "ExpertAvailability",
+  "type": "object",
+  "properties": {
+    "expert_id": {
+      "type": "string",
+      "description": "Reference til Expert"
+    },
+    "day_of_week": {
+      "type": "number",
+      "description": "0=S\u00f8ndag, 1=Mandag, osv."
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start tid (HH:mm)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Slut tid (HH:mm)"
+    },
+    "is_available": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "expert_id",
+    "day_of_week",
+    "start_time",
+    "end_time"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.expert_id": {
+            "_filter": {
+              "entity": "Expert",
+              "query": {
+                "data.user_email": "{{user.email}}"
+              }
+            }
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "data.expert_id": {
+            "_filter": {
+              "entity": "Expert",
+              "query": {
+                "data.user_email": "{{user.email}}"
+              }
+            }
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.expert_id": {
+            "_filter": {
+              "entity": "Expert",
+              "query": {
+                "data.user_email": "{{user.email}}"
+              }
+            }
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
