@@ -20,18 +20,17 @@ export default function ActiveMomsCard() {
     const load = () => {
       if (isLive) {
         // Live: mødre der er online lige nu
-        base44.entities.UserProfile.list('-last_active', 200).then(profiles => {
-          const moms = profiles.filter(p => p.profile_label === 'mor' && p.is_online);
-          setCount(moms.length);
-          setAvatars(moms.filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
+        base44.entities.UserProfile.filter({ profile_label: 'mor', is_online: true }).then(profiles => {
+          setCount(profiles.length);
+          setAvatars(profiles.filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
         }).catch(() => setCount(0));
       } else {
         // Dagtid: mødre der var aktive i den seneste live-periode (har last_active indenfor de seneste 10 timer)
         const since = new Date();
         since.setHours(since.getHours() - 10);
-        base44.entities.UserProfile.list('-last_active', 200).then(profiles => {
+        base44.entities.UserProfile.filter({ profile_label: 'mor' }).then(profiles => {
           const active = profiles.filter(p => {
-            if (p.profile_label !== 'mor' || !p.last_active) return false;
+            if (!p.last_active) return false;
             return new Date(p.last_active) >= since;
           });
           setCount(active.length);

@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 
@@ -40,11 +40,11 @@ Deno.serve(async (req) => {
       const diffMs = start - now;
       const diffMins = diffMs / 60000;
 
-      // Saml alle emails der skal notificeres (ejeren + delte kontakter)
+      // Find alle profiler for denne bruger (mor + far)
+      const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: event.user_email });
+      
+      // Saml alle emails der skal notificeres (ejeren + eventuelle partner-profiler på samme konto)
       const emailsToNotify = [event.user_email];
-      if (Array.isArray(event.shared_with)) {
-        emailsToNotify.push(...event.shared_with);
-      }
 
       // Dagen før: mellem 23.5 og 25 timer til aftalen
       if (!event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {

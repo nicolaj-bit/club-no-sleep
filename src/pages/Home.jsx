@@ -81,7 +81,7 @@ export default function Home() {
 
   const { data: posts = [] } = useQuery({
     queryKey: ['blogPosts'],
-    queryFn: () => base44.entities.BlogPost.list('-published_date', 50).then(posts => posts.filter(p => p.published)),
+    queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date', 20),
   });
 
   const profile = activeProfile;

@@ -138,8 +138,7 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
       return;
     }
 
-    base44.entities.SleepLog.list('-date', 5).then(logs => {
-      logs = logs.filter(l => l.user_email === userEmail);
+    base44.entities.SleepLog.filter({ user_email: userEmail }, '-date', 5).then(logs => {
       if (!logs.length) {
         setLoading(false);
         return;
