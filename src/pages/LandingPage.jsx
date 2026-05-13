@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Footer from '@/components/Footer';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/lalatoto/id6478508842';
 const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.lalatoto.app';
@@ -287,15 +288,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ backgroundColor: '#1C150F', padding: '40px 24px', textAlign: 'center' }}>
-        <img src="https://www.lalatoto.dk/cdn/shop/files/LALATOTO_logotype_Brun_600x.png?v=1730971736" alt="LALATOTO" style={{ height: 22, filter: 'brightness(3) sepia(1) hue-rotate(10deg)', marginBottom: 16, opacity: 0.7 }} />
-        <p style={{ color: '#8A7A6E', fontSize: '0.8rem', marginBottom: 8 }}>
-          <a href="https://www.lalatoto.dk" target="_blank" rel="noopener noreferrer" style={{ color: '#8A7A6E' }}>lalatoto.dk</a>
-          {' · '}
-          <a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#8A7A6E' }}>kundeservice@lalatoto.dk</a>
-        </p>
-        <p style={{ color: '#5A4A40', fontSize: '0.75rem' }}>© {new Date().getFullYear()} LALATOTO. Alle rettigheder forbeholdes.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
