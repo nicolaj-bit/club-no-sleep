@@ -21,6 +21,7 @@ import Milestones from './pages/Milestones';
 import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import AdminFooter from './pages/AdminFooter';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -73,6 +74,7 @@ const AuthenticatedApp = () => {
         <Route path="/BabyFriendlyCafes" element={<LayoutWrapper currentPageName="BabyFriendlyCafes"><BabyFriendlyCafes /></LayoutWrapper>} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/AdminFooter" element={<AdminFooter />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>

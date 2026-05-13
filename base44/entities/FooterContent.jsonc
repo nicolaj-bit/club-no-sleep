@@ -1,0 +1,67 @@
+{
+  "name": "FooterContent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Firmanavn"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Kort beskrivelse under logo"
+    },
+    "address": {
+      "type": "string",
+      "description": "Firmaadresse"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefonnummer"
+    },
+    "email": {
+      "type": "string",
+      "description": "E-mailadresse"
+    },
+    "website": {
+      "type": "string",
+      "description": "Webstedets URL (vises som tekst)"
+    },
+    "cvr": {
+      "type": "string",
+      "description": "CVR-nummer"
+    },
+    "app_store_url": {
+      "type": "string",
+      "description": "App Store link"
+    },
+    "google_play_url": {
+      "type": "string",
+      "description": "Google Play link"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Logo URL"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
