@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');

@@ -112,15 +112,17 @@ Deno.serve(async (req) => {
       if (!profile.user_email) { skipped++; continue; }
 
       // Get all sleep logs for this user
-      const allLogs = await base44.asServiceRole.entities.SleepLog.filter({ user_email: profile.user_email });
-      const logDates = allLogs.map(l => l.date);
+       const allLogsRaw = await base44.asServiceRole.entities.SleepLog.list();
+       const allLogs = allLogsRaw.filter(l => l.user_email === profile.user_email);
+       const logDates = allLogs.map(l => l.date);
 
       // Only proceed if user has logged all 5 of the last 5 days
       const hasAll5Days = last5Days.every(day => logDates.includes(day));
       if (!hasAll5Days) { skipped++; continue; }
 
       // Don't send more than one notification per day per user
-      const allFeedback = await base44.asServiceRole.entities.SleepAdviceFeedback.filter({ user_email: profile.user_email });
+      const allFeedbackRaw = await base44.asServiceRole.entities.SleepAdviceFeedback.list();
+      const allFeedback = allFeedbackRaw.filter(f => f.user_email === profile.user_email);
       const alreadySentToday = allFeedback.some(f => f.sent_date === today);
       if (alreadySentToday) { skipped++; continue; }
 
