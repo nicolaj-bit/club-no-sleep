@@ -66,7 +66,7 @@ export function ThemeProvider({ children }) {
 
   // Load and apply the saved theme on mount
   useEffect(() => {
-    if (!colorThemeId) return;
+    if (!colorThemeId || colorThemeId === '__default__') return;
     fetchThemeById(colorThemeId).then(theme => {
       if (theme) {
         currentThemeRef.current = theme;
@@ -89,6 +89,10 @@ export function ThemeProvider({ children }) {
   const setColorTheme = async (id, themeObj) => {
     setColorThemeId(id);
     localStorage.setItem('lalatoto-color-theme-id', id);
+    if (id === '__default__') {
+      currentThemeRef.current = null;
+      return;
+    }
     let theme = themeObj || themeCache[id];
     if (!theme) theme = await fetchThemeById(id);
     if (theme) {
