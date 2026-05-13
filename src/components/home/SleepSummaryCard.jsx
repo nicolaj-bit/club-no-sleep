@@ -26,8 +26,9 @@ export default function SleepSummaryCard({ userEmail }) {
     import('@/api/base44Client').then(({ base44 }) => {
       const today = format(new Date(), 'yyyy-MM-dd');
       const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
-      base44.entities.SleepLog.filter({ user_email: userEmail }, '-date', 1).then(logs => {
-        const recent = logs.find(l => l.date === today || l.date === yesterday);
+      base44.entities.SleepLog.list('-date', 10).then(logs => {
+        const filtered = logs.filter(l => l.user_email === userEmail);
+        const recent = filtered.find(l => l.date === today || l.date === yesterday);
         setLog(recent || null);
         setLoading(false);
       });

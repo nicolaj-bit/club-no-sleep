@@ -133,7 +133,7 @@ export default function SleepLog() {
 
   const { data: todayLog } = useQuery({
     queryKey: ['sleeplog-today', user?.email, childId, today],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null, date: today }),
+    queryFn: () => base44.entities.SleepLog.list('-date', 100).then(logs => logs.filter(l => l.user_email === user.email && (childId ? l.child_id === childId : true) && l.date === today)),
     enabled: !!user,
     onSuccess: (data) => {
       if (data?.length > 0) {
@@ -156,7 +156,7 @@ export default function SleepLog() {
 
   const { data: history } = useQuery({
     queryKey: ['sleeplog-history', user?.email, childId],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null }, '-date', 30),
+    queryFn: () => base44.entities.SleepLog.list('-date', 100).then(logs => logs.filter(l => l.user_email === user.email && (childId ? l.child_id === childId : true)).slice(0, 30)),
     enabled: !!user && view === 'history',
   });
 
