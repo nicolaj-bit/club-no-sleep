@@ -62,16 +62,26 @@ function daysSince(dateStr) {
   return Math.floor((now - d) / (24 * 60 * 60 * 1000));
 }
 
-function weeksSince(dateStr) {
-  return Math.floor(daysSince(dateStr) / 7);
+// LMP = terminsdato - 280 dage (40 uger)
+// Uger gravid = dage siden LMP / 7
+function weeksPregnantFromDueDate(dueDateStr) {
+  const due = new Date(dueDateStr);
+  const lmp = new Date(due.getTime() - 280 * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  return Math.floor((now - lmp) / (7 * 24 * 60 * 60 * 1000));
 }
 
-// Weeks pregnant = weeks from LMP ≈ due_date - 40 weeks
-function weeksPregnant(dueDateStr) {
+// Er det præcis starten på en given graviditetsuge i dag?
+// Dvs. dage siden LMP er nøjagtigt weeks * 7
+function isTodayStartOfWeek(dueDateStr, weeks) {
   const due = new Date(dueDateStr);
+  const lmp = new Date(due.getTime() - 280 * 24 * 60 * 60 * 1000);
   const now = new Date();
-  const daysUntilDue = Math.floor((due - now) / (24 * 60 * 60 * 1000));
-  return 40 - Math.ceil(daysUntilDue / 7);
+  // Sæt begge til midnat for sammenligning
+  const lmpMidnight = new Date(lmp.getFullYear(), lmp.getMonth(), lmp.getDate());
+  const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysSinceLmp = Math.round((nowMidnight - lmpMidnight) / (24 * 60 * 60 * 1000));
+  return daysSinceLmp === weeks * 7;
 }
 
 async function sendPush(email, title, message, apiKey) {
@@ -134,16 +144,12 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── Graviditets-milepæle (barn ikke født endnu) ──
+      // ── Graviditets-milepæle (barn ikke født endnu – har terminsdato) ──
+      // Bruger terminsdato til at beregne præcis graviditetsuge.
+      // Notifikation sendes den dag en ny graviditetsuge starter.
       if (!child.birthdate && child.due_date) {
-        const wp = weeksPregnant(child.due_date);
         for (const m of PREGNANCY_MILESTONES) {
-          // Tjek om vi er præcis på den uge (dagens ugedag = mandag i den uge)
-          const daysUntilDue = Math.floor((new Date(child.due_date) - new Date()) / (24 * 60 * 60 * 1000));
-          const exactWeek = 40 - Math.floor(daysUntilDue / 7);
-          const dayIntoWeek = (40 * 7 - daysUntilDue) % 7;
-
-          if (exactWeek === m.weeks && dayIntoWeek === 0) {
+          if (isTodayStartOfWeek(child.due_date, m.weeks)) {
             const title = `${m.emoji} ${m.headline}`;
             const message = `Du er nu ${m.weeks} uger gravid! Fang øjeblikket med en milepæls-sticker 📸`;
             const ok = await sendPush(email, title, message, apiKey);
