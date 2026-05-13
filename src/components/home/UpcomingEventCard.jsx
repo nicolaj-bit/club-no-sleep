@@ -15,7 +15,7 @@ export default function UpcomingEventCard({ userEmail }) {
     if (!userEmail) return;
     import('@/api/base44Client').then(({ base44 }) => {
       const now = new Date().toISOString();
-      base44.entities.CalendarEvent.filter({ user_email: userEmail }, 'start_datetime', 5).then(events => {
+      base44.entities.CalendarEvent.list('start_datetime', 20).then(events => {
         const upcoming = events
           .filter(e => e.start_datetime >= now)
           .sort((a, b) => a.start_datetime.localeCompare(b.start_datetime));

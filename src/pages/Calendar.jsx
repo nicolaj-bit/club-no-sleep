@@ -41,7 +41,7 @@ export default function Calendar() {
 
   const { data: events = [] } = useQuery({
     queryKey: ['calendarEvents', user?.email],
-    queryFn: () => base44.entities.CalendarEvent.filter({ user_email: user.email }, 'start_datetime'),
+    queryFn: () => base44.entities.CalendarEvent.list('start_datetime'),
     enabled: !!user?.email
   });
 
