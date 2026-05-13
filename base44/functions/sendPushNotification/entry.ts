@@ -23,6 +23,15 @@ Deno.serve(async (req) => {
       included_segments: ['All'],
       headings: { en: title, da: title },
       contents: { en: message, da: message },
+      channel_for_external_user_ids: 'push',
+      target_channel: 'push',
+      isIos: true,
+      isAndroid: true,
+      isAnyWeb: false,
+      isChrome: false,
+      isChromeWeb: false,
+      isFirefox: false,
+      isSafari: false,
     };
 
     if (url) body.url = url;
