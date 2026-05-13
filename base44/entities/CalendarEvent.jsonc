@@ -24,6 +24,13 @@
       "type": "string",
       "description": "Ejers email"
     },
+    "shared_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails p\u00e5 personer aftalen er delt med (fx familiemedlemmer)"
+    },
     "category": {
       "type": "string",
       "enum": [
@@ -65,9 +72,20 @@
     "user_email"
   ],
   "rls": {
-    "create": {},
-    "read": {
+    "create": {
       "data.user_email": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "data.shared_with": {
+            "$contains": "{{user.email}}"
+          }
+        }
+      ]
     },
     "update": {
       "data.user_email": "{{user.email}}"
