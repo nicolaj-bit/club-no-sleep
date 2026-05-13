@@ -20,7 +20,14 @@
       "data.blocker_email": "{{user.email}}"
     },
     "read": {
-      "data.blocker_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.blocker_email": "{{user.email}}"
+        },
+        {
+          "data.blocked_email": "{{user.email}}"
+        }
+      ]
     },
     "update": {
       "data.blocker_email": "{{user.email}}"
