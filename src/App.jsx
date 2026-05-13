@@ -22,6 +22,7 @@ import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import AdminFooter from './pages/AdminFooter';
+import AdminNavMenu from './pages/AdminNavMenu';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -75,6 +76,7 @@ const AuthenticatedApp = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/AdminFooter" element={<AdminFooter />} />
+        <Route path="/AdminNavMenu" element={<AdminNavMenu />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>

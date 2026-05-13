@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
+import { base44 } from '@/api/base44Client';
 
 const APP_STORE_URL = 'https://apps.apple.com/app/lalatoto/id6478508842';
 const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.lalatoto.app';
@@ -14,9 +15,25 @@ function useScrollY() {
   return y;
 }
 
+const DEFAULT_NAV = [
+  { label: 'Funktioner', type: 'scroll', target: 'features', is_cta: false },
+  { label: 'Fordele', type: 'scroll', target: 'benefits', is_cta: false },
+  { label: 'Anmeldelser', type: 'scroll', target: 'reviews', is_cta: false },
+  { label: 'Hent appen', type: 'link', target: APP_STORE_URL, is_cta: true },
+];
+
 export default function LandingPage() {
   const scrollY = useScrollY();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navItems, setNavItems] = useState(DEFAULT_NAV);
+
+  useEffect(() => {
+    base44.entities.NavMenuContent.list('order').then((records) => {
+      if (records && records.length > 0) {
+        setNavItems(records.filter(r => r.is_active !== false));
+      }
+    }).catch(() => {});
+  }, []);
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -40,15 +57,17 @@ export default function LandingPage() {
         <img src="https://www.lalatoto.dk/cdn/shop/files/LALATOTO_logotype_Brun_600x.png?v=1730971736" alt="LALATOTO" style={{ height: 28, objectFit: 'contain' }} />
 
         <div className="hidden md:flex items-center gap-8">
-          {[['Funktioner', 'features'], ['Fordele', 'benefits'], ['Anmeldelser', 'reviews']].map(([label, id]) => (
-            <button key={id} onClick={() => scrollTo(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', color: '#5B3F2B', fontWeight: 500 }}>
-              {label}
-            </button>
+          {navItems.filter(i => !i.is_cta).map((item) => (
+            item.type === 'scroll'
+              ? <button key={item.target} onClick={() => scrollTo(item.target)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', color: '#5B3F2B', fontWeight: 500 }}>{item.label}</button>
+              : <a key={item.target} href={item.target} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.875rem', color: '#5B3F2B', fontWeight: 500, textDecoration: 'none' }}>{item.label}</a>
           ))}
-          <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer"
-            style={{ backgroundColor: '#5B3F2B', color: '#FAF6F1', borderRadius: 100, padding: '10px 22px', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>
-            Hent appen
-          </a>
+          {navItems.filter(i => i.is_cta).map((item) => (
+            <a key={item.target} href={item.target} target="_blank" rel="noopener noreferrer"
+              style={{ backgroundColor: '#5B3F2B', color: '#FAF6F1', borderRadius: 100, padding: '10px 22px', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>
+              {item.label}
+            </a>
+          ))}
         </div>
 
         {/* Mobile hamburger */}
@@ -62,15 +81,17 @@ export default function LandingPage() {
       {/* Mobile menu */}
       {menuOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 99, backgroundColor: '#FAF6F1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
-          {[['Funktioner', 'features'], ['Fordele', 'benefits'], ['Anmeldelser', 'reviews']].map(([label, id]) => (
-            <button key={id} onClick={() => scrollTo(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.5rem', fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-              {label}
-            </button>
+          {navItems.filter(i => !i.is_cta).map((item) => (
+            item.type === 'scroll'
+              ? <button key={item.target} onClick={() => scrollTo(item.target)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.5rem', fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>{item.label}</button>
+              : <a key={item.target} href={item.target} onClick={() => setMenuOpen(false)} style={{ fontSize: '1.5rem', fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', textDecoration: 'none' }}>{item.label}</a>
           ))}
-          <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer"
-            style={{ backgroundColor: '#5B3F2B', color: '#FAF6F1', borderRadius: 100, padding: '14px 36px', fontSize: '1rem', fontWeight: 600, textDecoration: 'none', marginTop: 8 }}>
-            Hent appen
-          </a>
+          {navItems.filter(i => i.is_cta).map((item) => (
+            <a key={item.target} href={item.target} target="_blank" rel="noopener noreferrer"
+              style={{ backgroundColor: '#5B3F2B', color: '#FAF6F1', borderRadius: 100, padding: '14px 36px', fontSize: '1rem', fontWeight: 600, textDecoration: 'none', marginTop: 8 }}>
+              {item.label}
+            </a>
+          ))}
           <button onClick={() => setMenuOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9A8478', fontSize: '0.875rem', marginTop: 16 }}>Luk ✕</button>
         </div>
       )}

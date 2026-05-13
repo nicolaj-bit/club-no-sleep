@@ -1,0 +1,60 @@
+{
+  "name": "NavMenuContent",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Tekst vist i menuen"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "scroll",
+        "link"
+      ],
+      "default": "scroll",
+      "description": "scroll = scroll til sektion p\u00e5 siden, link = ekstern/intern URL"
+    },
+    "target": {
+      "type": "string",
+      "description": "Sektion-ID (fx 'features') eller URL (fx '/about')"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "R\u00e6kkef\u00f8lge (lavest vises f\u00f8rst)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Vis dette menupunkt"
+    },
+    "is_cta": {
+      "type": "boolean",
+      "default": false,
+      "description": "Vis som knap (CTA) i stedet for link"
+    }
+  },
+  "required": [
+    "label",
+    "target"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
