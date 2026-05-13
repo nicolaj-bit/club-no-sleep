@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const COMPANY_INFO = {
   name: 'LALATOTO',
-  address: 'Kongevej 87, 2100 København Ø',
+  address: 'Kulbyvej 16, 4270 Høng',
   phone: '+45 40 40 88 88',
   email: 'kundeservice@lalatoto.dk',
   website: 'lalatoto.dk',
