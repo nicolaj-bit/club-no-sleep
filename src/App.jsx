@@ -85,7 +85,11 @@ const AuthenticatedApp = () => {
 
 function AppRoutes() {
   const location = useLocation();
-  if (location.pathname === '/') return <LandingPage />;
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (location.pathname === '/' && !isStandalone) return <LandingPage />;
   return <AuthenticatedApp />;
 }
 
