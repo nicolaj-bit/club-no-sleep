@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -83,22 +84,28 @@ const AuthenticatedApp = () => {
   );
 };
 
-function isInstalledApp() {
-  // iOS Safari standalone
-  if (window.navigator.standalone === true) return true;
-  // Android / desktop PWA
-  if (window.matchMedia('(display-mode: standalone)').matches) return true;
-  if (window.matchMedia('(display-mode: fullscreen)').matches) return true;
-  if (window.matchMedia('(display-mode: minimal-ui)').matches) return true;
-  // Capacitor / Cordova native wrapper
-  if (window.Capacitor || window.cordova) return true;
-  return false;
-}
-
 function AppRoutes() {
   const location = useLocation();
+  const [showLanding, setShowLanding] = React.useState(null);
 
-  if (location.pathname === '/' && !isInstalledApp()) return <LandingPage />;
+  React.useEffect(() => {
+    if (location.pathname !== '/') { setShowLanding(false); return; }
+
+    const isStandalone =
+      window.navigator.standalone === true ||
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      window.matchMedia('(display-mode: minimal-ui)').matches ||
+      !!window.Capacitor || !!window.cordova;
+
+    // Also check if user was previously authenticated (returning app user)
+    const wasAuthenticated = localStorage.getItem('lalatoto_was_authenticated') === 'true';
+
+    setShowLanding(!isStandalone && !wasAuthenticated);
+  }, [location.pathname]);
+
+  if (showLanding === null) return null; // brief flash prevention
+  if (showLanding) return <LandingPage />;
   return <AuthenticatedApp />;
 }
 

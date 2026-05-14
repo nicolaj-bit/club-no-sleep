@@ -95,6 +95,8 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setIsAuthenticated(true);
       setIsLoadingAuth(false);
+      // Mark as authenticated so landing page is skipped on next visit
+      localStorage.setItem('lalatoto_was_authenticated', 'true');
     } catch (error) {
       console.error('User auth check failed:', error);
       setIsLoadingAuth(false);
