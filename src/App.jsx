@@ -83,13 +83,22 @@ const AuthenticatedApp = () => {
   );
 };
 
+function isInstalledApp() {
+  // iOS Safari standalone
+  if (window.navigator.standalone === true) return true;
+  // Android / desktop PWA
+  if (window.matchMedia('(display-mode: standalone)').matches) return true;
+  if (window.matchMedia('(display-mode: fullscreen)').matches) return true;
+  if (window.matchMedia('(display-mode: minimal-ui)').matches) return true;
+  // Capacitor / Cordova native wrapper
+  if (window.Capacitor || window.cordova) return true;
+  return false;
+}
+
 function AppRoutes() {
   const location = useLocation();
-  const isStandalone =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true;
 
-  if (location.pathname === '/' && !isStandalone) return <LandingPage />;
+  if (location.pathname === '/' && !isInstalledApp()) return <LandingPage />;
   return <AuthenticatedApp />;
 }
 
