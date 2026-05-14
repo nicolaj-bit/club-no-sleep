@@ -189,6 +189,18 @@ export default function Subscription() {
         <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full opacity-10" style={{ background: '#EDE4DB' }} />
 
         <div className="relative z-10 flex flex-col items-center px-6 text-center">
+          {/* Logo */}
+          {display.logo_url ? (
+          <motion.img
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            src={display.logo_url}
+            alt="logo"
+            className="h-12 mb-5 object-contain"
+          />
+          ) : null}
+
           {/* Media / icon */}
           {display.media_type === 'image' && display.media_url ? (
             <motion.img
@@ -418,6 +430,41 @@ export default function Subscription() {
                 value={draft.footer_note}
                 onChange={e => setDraft(d => ({ ...d, footer_note: e.target.value }))}
               />
+            </div>
+
+            {/* Logo upload */}
+            <div>
+              <label className="text-xs font-medium mb-2 block" style={{ color: 'var(--color-text-muted)' }}>Logo billede</label>
+              <label
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl cursor-pointer text-sm"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px dashed var(--color-border)', color: 'var(--color-text-muted)' }}
+              >
+                {uploadingMedia
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Uploader…</>
+                  : <><Image className="w-4 h-4" /> Upload logo</>}
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setUploadingMedia(true);
+                    base44.integrations.Core.UploadFile({ file }).then(({ file_url }) => {
+                      setDraft(d => ({ ...d, logo_url: file_url }));
+                      setUploadingMedia(false);
+                    }).catch(() => setUploadingMedia(false));
+                  }
+                }} />
+              </label>
+              {draft.logo_url && (
+                <div className="mt-2 relative flex justify-center">
+                  <img src={draft.logo_url} alt="" className="h-12 object-contain" />
+                  <button
+                    onClick={() => setDraft(d => ({ ...d, logo_url: '' }))}
+                    className="absolute top-0 right-0 w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.5)' }}
+                  >
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Media upload */}

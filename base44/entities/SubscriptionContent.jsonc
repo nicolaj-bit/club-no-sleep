@@ -22,6 +22,10 @@
       "type": "string",
       "description": "Lille tekst under knapperne"
     },
+    "logo_url": {
+      "type": "string",
+      "description": "URL til logo billede i toppen"
+    },
     "media_type": {
       "type": "string",
       "enum": [
