@@ -100,10 +100,12 @@ function AppRoutes() {
       window.matchMedia('(display-mode: minimal-ui)').matches ||
       !!window.Capacitor || !!window.cordova;
 
-    // Also check if user was previously authenticated (returning app user)
     const wasAuthenticated = localStorage.getItem('lalatoto_was_authenticated') === 'true';
 
-    setShowLanding(!isStandalone && !wasAuthenticated);
+    // Check for any auth token in localStorage/sessionStorage as fallback
+    const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('auth') || k.includes('base44'));
+
+    setShowLanding(!isStandalone && !wasAuthenticated && !hasToken);
   }, [location.pathname]);
 
   if (showLanding === null) return null; // brief flash prevention
