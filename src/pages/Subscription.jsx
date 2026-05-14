@@ -100,6 +100,7 @@ export default function Subscription() {
       price_label: content?.price_label || (da ? '59 kr. / måned' : '59 DKK / month'),
       cta_label: content?.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.'),
       footer_note: content?.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.'),
+      logo_url: content?.logo_url || '',
       media_type: content?.media_type || 'none',
       media_url: content?.media_url || '',
       features: content?.features || DEFAULT_FEATURES_DA,
@@ -224,7 +225,7 @@ export default function Subscription() {
               playsInline
               className="w-full max-h-48 object-cover rounded-2xl mb-5"
             />
-          ) : (
+          ) : display.logo_url ? null : (
             <motion.div
               initial={{ scale: 0.75, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
