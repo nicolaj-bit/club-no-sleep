@@ -1,0 +1,74 @@
+{
+  "name": "SubscriptionContent",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "description": "Stor overskrift (fx 'LALATOTO')"
+    },
+    "subline": {
+      "type": "string",
+      "description": "Undertitel under overskrift"
+    },
+    "price_label": {
+      "type": "string",
+      "description": "Prislabel (fx '59 kr. / m\u00e5ned')"
+    },
+    "cta_label": {
+      "type": "string",
+      "description": "Tekst p\u00e5 abonner-knappen"
+    },
+    "footer_note": {
+      "type": "string",
+      "description": "Lille tekst under knapperne"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "image",
+        "video"
+      ],
+      "default": "none",
+      "description": "Medie type i hero"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "URL til billede eller video i hero"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "emoji": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Liste af features"
+    }
+  },
+  "required": [],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

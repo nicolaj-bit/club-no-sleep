@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Check, ArrowLeft, Sparkles, RefreshCw, Loader2, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { motion } from 'framer-motion';
 
-const FEATURES_DA = [
+const DEFAULT_FEATURES_DA = [
   { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
   { emoji: '💬', text: 'Ubegrænsede spørgsmål til eksperter' },
   { emoji: '🐯', text: 'Tigerspring notifikationer' },
   { emoji: '👩‍👩‍👦', text: 'Community for mødre & fædre' },
   { emoji: '📅', text: 'Kalender, søvnlog & dagbog' },
-];
-
-const FEATURES_EN = [
-  { emoji: '🌙', text: 'AI sleep advice for your baby' },
-  { emoji: '💬', text: 'Unlimited expert Q&A' },
-  { emoji: '🐯', text: 'Wonder week notifications' },
-  { emoji: '👩‍👩‍👦', text: 'Community for moms & dads' },
-  { emoji: '📅', text: 'Calendar, sleep log & diary' },
 ];
 
 export default function Subscription() {
@@ -28,16 +19,31 @@ export default function Subscription() {
   const [error, setError] = useState(null);
   const [restoreMessage, setRestoreMessage] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [content, setContent] = useState(null);
+  const [contentId, setContentId] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
   const da = lang === 'da';
-  const features = da ? FEATURES_DA : FEATURES_EN;
 
   useEffect(() => {
     const load = async () => {
       try {
         const user = await base44.auth.me();
-        if (!user) return;
-        const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-        if (profiles.length) setProfile(profiles[0]);
+        if (user) {
+          if (user.role === 'admin') setIsAdmin(true);
+          const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+          if (profiles.length) setProfile(profiles[0]);
+        }
+      } catch {}
+      try {
+        const records = await base44.entities.SubscriptionContent.list();
+        if (records.length) {
+          setContent(records[0]);
+          setContentId(records[0].id);
+        }
       } catch {}
     };
     load();
@@ -87,7 +93,73 @@ export default function Subscription() {
     }
   };
 
+  const startEditing = () => {
+    setDraft({
+      headline: content?.headline || 'LALATOTO',
+      subline: content?.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent'),
+      price_label: content?.price_label || (da ? '59 kr. / måned' : '59 DKK / month'),
+      cta_label: content?.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.'),
+      footer_note: content?.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.'),
+      media_type: content?.media_type || 'none',
+      media_url: content?.media_url || '',
+      features: content?.features || DEFAULT_FEATURES_DA,
+    });
+    setEditing(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      if (contentId) {
+        const updated = await base44.entities.SubscriptionContent.update(contentId, draft);
+        setContent(updated);
+      } else {
+        const created = await base44.entities.SubscriptionContent.create(draft);
+        setContent(created);
+        setContentId(created.id);
+      }
+      setEditing(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleMediaUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingMedia(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const type = file.type.startsWith('video') ? 'video' : 'image';
+      setDraft(d => ({ ...d, media_url: file_url, media_type: type }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploadingMedia(false);
+    }
+  };
+
+  const updateFeature = (i, key, val) => {
+    setDraft(d => {
+      const features = [...d.features];
+      features[i] = { ...features[i], [key]: val };
+      return { ...d, features };
+    });
+  };
+
+  const addFeature = () => setDraft(d => ({ ...d, features: [...d.features, { emoji: '✨', text: '' }] }));
+  const removeFeature = (i) => setDraft(d => ({ ...d, features: d.features.filter((_, idx) => idx !== i) }));
+
   const isActive = profile?.subscription_status === 'active';
+  const display = content || {};
+  const features = display.features?.length ? display.features : DEFAULT_FEATURES_DA;
+  const headline = display.headline || 'LALATOTO';
+  const subline = display.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent');
+  const priceLabel = display.price_label || (da ? '59 kr. / måned' : '59 DKK / month');
+  const ctaLabel = display.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.');
+  const footerNote = display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.');
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -101,29 +173,56 @@ export default function Subscription() {
           paddingBottom: 52,
         }}
       >
-        {/* Back button */}
-        <Link
-          to="/"
-          className="absolute top-4 left-4 z-20 flex items-center justify-center w-9 h-9 rounded-full"
-          style={{ background: 'rgba(255,255,255,0.12)', marginTop: 'env(safe-area-inset-top, 0px)' }}
-        >
-          <ArrowLeft className="w-4 h-4 text-white" />
-        </Link>
+        {/* Admin edit button */}
+        {isAdmin && !editing && (
+          <button
+            onClick={startEditing}
+            className="absolute top-4 right-4 z-20 flex items-center justify-center w-9 h-9 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.15)', marginTop: 'env(safe-area-inset-top, 0px)' }}
+          >
+            <Pencil className="w-4 h-4 text-white" />
+          </button>
+        )}
 
         {/* Decorative blobs */}
         <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-10" style={{ background: '#C29A73' }} />
         <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full opacity-10" style={{ background: '#EDE4DB' }} />
 
         <div className="relative z-10 flex flex-col items-center px-6 text-center">
-          <motion.div
-            initial={{ scale: 0.75, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="w-24 h-24 rounded-3xl flex items-center justify-center mb-5"
-            style={{ background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.18)' }}
-          >
-            <span className="text-5xl">🌙</span>
-          </motion.div>
+          {/* Media / icon */}
+          {display.media_type === 'image' && display.media_url ? (
+            <motion.img
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              src={display.media_url}
+              alt="hero"
+              className="w-28 h-28 object-cover rounded-3xl mb-5"
+              style={{ border: '2px solid rgba(255,255,255,0.2)' }}
+            />
+          ) : display.media_type === 'video' && display.media_url ? (
+            <motion.video
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              src={display.media_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full max-h-48 object-cover rounded-2xl mb-5"
+            />
+          ) : (
+            <motion.div
+              initial={{ scale: 0.75, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="w-24 h-24 rounded-3xl flex items-center justify-center mb-5"
+              style={{ background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.18)' }}
+            >
+              <span className="text-5xl">🌙</span>
+            </motion.div>
+          )}
 
           <motion.h1
             initial={{ y: 14, opacity: 0 }}
@@ -132,7 +231,7 @@ export default function Subscription() {
             className="text-4xl font-light text-white mb-2"
             style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '-0.01em' }}
           >
-            LALATOTO
+            {headline}
           </motion.h1>
 
           <motion.p
@@ -141,9 +240,7 @@ export default function Subscription() {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-sm text-white/70 max-w-xs leading-relaxed"
           >
-            {da
-              ? 'Din digitale følgesvend som forælder'
-              : 'Your digital companion as a parent'}
+            {subline}
           </motion.p>
         </div>
       </div>
@@ -164,7 +261,7 @@ export default function Subscription() {
           >
             <Sparkles className="w-4 h-4" style={{ color: '#C29A73' }} />
             <span className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-              {da ? '59 kr. / måned' : '59 DKK / month'}
+              {priceLabel}
             </span>
           </div>
         </motion.div>
@@ -181,17 +278,14 @@ export default function Subscription() {
             <div key={i} className="flex items-center gap-3">
               <span className="text-xl flex-shrink-0">{f.emoji}</span>
               <span className="text-sm flex-1" style={{ color: 'var(--color-text-primary)' }}>{f.text}</span>
-              <div
-                className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#C29A73' }}
-              >
+              <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#C29A73' }}>
                 <Check className="w-3 h-3 text-white" />
               </div>
             </div>
           ))}
         </motion.div>
 
-        {/* Error */}
+        {/* Error / restore message */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
@@ -203,7 +297,6 @@ export default function Subscription() {
             <p className="text-xs text-red-600">{error}</p>
           </motion.div>
         )}
-
         {restoreMessage && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
@@ -219,10 +312,8 @@ export default function Subscription() {
 
         {/* CTA */}
         {isActive ? (
-          <div
-            className="w-full py-4 rounded-2xl text-center text-sm font-semibold mb-3"
-            style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}
-          >
+          <div className="w-full py-4 rounded-2xl text-center text-sm font-semibold mb-3"
+            style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
             {da ? '✓ Aktivt abonnement' : '✓ Active subscription'}
           </div>
         ) : (
@@ -237,7 +328,7 @@ export default function Subscription() {
           >
             {loading
               ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
-              : (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.')}
+              : ctaLabel}
           </motion.button>
         )}
 
@@ -255,12 +346,155 @@ export default function Subscription() {
             : <><RefreshCw className="w-3.5 h-3.5" /> {da ? 'Gendan eksisterende køb' : 'Restore existing purchase'}</>}
         </motion.button>
 
-        <p className="text-xs text-center mt-4" style={{ color: 'var(--color-text-muted)' }}>
-          {da
-            ? 'Abonnementet fornyes automatisk. Annuller når som helst.'
-            : 'Subscription renews automatically. Cancel anytime.'}
-        </p>
+        <p className="text-xs text-center mt-4" style={{ color: 'var(--color-text-muted)' }}>{footerNote}</p>
       </div>
+
+      {/* Admin Edit Panel */}
+      {editing && draft && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col overflow-y-auto"
+          style={{ backgroundColor: 'var(--color-bg)' }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
+            <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>Rediger abonnementsside</h2>
+            <button onClick={() => setEditing(false)}>
+              <X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
+            </button>
+          </div>
+
+          <div className="flex-1 px-5 py-5 space-y-5">
+
+            {/* Headline */}
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-text-muted)' }}>Overskrift</label>
+              <input
+                className="w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                value={draft.headline}
+                onChange={e => setDraft(d => ({ ...d, headline: e.target.value }))}
+              />
+            </div>
+
+            {/* Subline */}
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-text-muted)' }}>Undertitel</label>
+              <input
+                className="w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                value={draft.subline}
+                onChange={e => setDraft(d => ({ ...d, subline: e.target.value }))}
+              />
+            </div>
+
+            {/* Price label */}
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-text-muted)' }}>Prislabel</label>
+              <input
+                className="w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                value={draft.price_label}
+                onChange={e => setDraft(d => ({ ...d, price_label: e.target.value }))}
+              />
+            </div>
+
+            {/* CTA label */}
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-text-muted)' }}>Knap tekst</label>
+              <input
+                className="w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                value={draft.cta_label}
+                onChange={e => setDraft(d => ({ ...d, cta_label: e.target.value }))}
+              />
+            </div>
+
+            {/* Footer note */}
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-text-muted)' }}>Bundtekst</label>
+              <input
+                className="w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                value={draft.footer_note}
+                onChange={e => setDraft(d => ({ ...d, footer_note: e.target.value }))}
+              />
+            </div>
+
+            {/* Media upload */}
+            <div>
+              <label className="text-xs font-medium mb-2 block" style={{ color: 'var(--color-text-muted)' }}>Hero medie (billede eller video)</label>
+              <label
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl cursor-pointer text-sm"
+                style={{ backgroundColor: 'var(--color-bg-card)', border: '1px dashed var(--color-border)', color: 'var(--color-text-muted)' }}
+              >
+                {uploadingMedia
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Uploader…</>
+                  : <><Image className="w-4 h-4" /><Video className="w-4 h-4" /> Upload billede / video</>}
+                <input type="file" accept="image/*,video/*" className="hidden" onChange={handleMediaUpload} />
+              </label>
+              {draft.media_url && (
+                <div className="mt-2 relative">
+                  {draft.media_type === 'video'
+                    ? <video src={draft.media_url} className="w-full rounded-xl max-h-32 object-cover" muted />
+                    : <img src={draft.media_url} alt="" className="w-full rounded-xl max-h-32 object-cover" />}
+                  <button
+                    onClick={() => setDraft(d => ({ ...d, media_url: '', media_type: 'none' }))}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.5)' }}
+                  >
+                    <X className="w-3.5 h-3.5 text-white" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Features */}
+            <div>
+              <label className="text-xs font-medium mb-2 block" style={{ color: 'var(--color-text-muted)' }}>Features</label>
+              <div className="space-y-2">
+                {draft.features.map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <input
+                      className="w-12 rounded-lg px-2 py-2 text-center text-sm outline-none"
+                      style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                      value={f.emoji}
+                      onChange={e => updateFeature(i, 'emoji', e.target.value)}
+                    />
+                    <input
+                      className="flex-1 rounded-lg px-3 py-2 text-sm outline-none"
+                      style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
+                      value={f.text}
+                      onChange={e => updateFeature(i, 'text', e.target.value)}
+                    />
+                    <button onClick={() => removeFeature(i)}>
+                      <Trash2 className="w-4 h-4 text-red-400" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addFeature}
+                  className="flex items-center gap-2 text-sm py-2"
+                  style={{ color: '#C29A73' }}
+                >
+                  <Plus className="w-4 h-4" /> Tilføj feature
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Save */}
+          <div className="px-5 pb-8 pt-3">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
+              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+            >
+              {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Gemmer…</> : 'Gem ændringer'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
