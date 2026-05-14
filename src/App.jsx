@@ -105,10 +105,18 @@ function AppRoutes() {
     // Check for any auth token in localStorage/sessionStorage as fallback
     const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('auth') || k.includes('base44'));
 
-    setShowLanding(!isStandalone && !wasAuthenticated && !hasToken);
+    const isLoggedIn = wasAuthenticated || hasToken;
+
+    if (isStandalone && !isLoggedIn) {
+      // PWA installed but not logged in → show subscription/onboarding page
+      setShowLanding('subscription');
+    } else {
+      setShowLanding(!isLoggedIn);
+    }
   }, [location.pathname]);
 
   if (showLanding === null) return null; // brief flash prevention
+  if (showLanding === 'subscription') return <Subscription />;
   if (showLanding) return <LandingPage />;
   return <AuthenticatedApp />;
 }
