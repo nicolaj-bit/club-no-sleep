@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
+import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
 import LandingPage from './pages/LandingPage';
 import AboutUs from './pages/AboutUs';
@@ -56,6 +57,7 @@ const AuthenticatedApp = () => {
   return (
     <SubscriptionGate>
       <Routes>
+        <Route path="/" element={<Navigate to="/app" replace />} />
         <Route path="/app" element={<LayoutWrapper currentPageName={mainPageKey}><MainPage /></LayoutWrapper>} />
         {Object.entries(Pages).map(([path, Page]) => (
           <Route
