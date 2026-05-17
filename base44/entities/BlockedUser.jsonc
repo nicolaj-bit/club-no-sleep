@@ -17,16 +17,49 @@
   ],
   "rls": {
     "create": {
-      "data.blocker_email": "{{user.email}}"
+      "data.blocker_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
-      "data.blocker_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.blocker_email": "{{user.email}}"
+        },
+        {
+          "data.blocked_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "update": {
-      "data.blocker_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.blocker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "delete": {
-      "data.blocker_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.blocker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     }
   }
 }
