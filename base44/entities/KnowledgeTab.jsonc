@@ -1,0 +1,50 @@
+{
+  "name": "KnowledgeTab",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Fanens navn (vises i UI)"
+    },
+    "key": {
+      "type": "string",
+      "description": "Unik n\u00f8gle (fx 'articles', 'tigerspring', 'faq', 'questions')"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Valgfri emoji foran fanens navn"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "R\u00e6kkef\u00f8lge (lavest vises f\u00f8rst)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om fanen er synlig"
+    }
+  },
+  "required": [
+    "label",
+    "key"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
