@@ -31,26 +31,14 @@
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          },
-          "user_condition": {
-            "isAuthenticated": true
-          }
-        },
-        {
-          "user_condition": {
-            "role": "admin"
+      "data.expert_id": {
+        "_filter": {
+          "entity": "Expert",
+          "query": {
+            "data.user_email": "{{user.email}}"
           }
         }
-      ]
+      }
     },
     "read": {},
     "update": {
@@ -63,9 +51,6 @@
                 "data.user_email": "{{user.email}}"
               }
             }
-          },
-          "user_condition": {
-            "isAuthenticated": true
           }
         },
         {
@@ -75,6 +60,24 @@
         }
       ]
     },
-    "delete": null
+    "delete": {
+      "$or": [
+        {
+          "data.expert_id": {
+            "_filter": {
+              "entity": "Expert",
+              "query": {
+                "data.user_email": "{{user.email}}"
+              }
+            }
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
   }
 }
