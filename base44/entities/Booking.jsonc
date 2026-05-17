@@ -61,16 +61,46 @@
   ],
   "rls": {
     "create": {
-      "data.client_email": "{{user.email}}"
+      "data.client_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
-      "data.client_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.client_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "update": {
-      "data.client_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.client_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     },
     "delete": {
-      "data.client_email": "{{user.email}}"
+      "$or": [
+        {
+          "data.client_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     }
   }
 }
