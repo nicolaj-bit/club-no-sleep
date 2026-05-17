@@ -9,6 +9,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { subscribeToUnreadCount } from '@/components/ui/NotificationBell';
 
 export default function BottomNav() {
   const location = useLocation();
@@ -20,6 +21,12 @@ export default function BottomNav() {
   const { isDark } = useTheme();
   const { t } = useLanguage();
   const { activeProfile } = useActiveProfile();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const unsub = subscribeToUnreadCount(setUnreadCount);
+    return unsub;
+  }, []);
 
   // Gravid: har terminsdato i fremtiden og ingen fødselsdato
   const isExpecting = activeProfile?.child_due_date
@@ -228,11 +235,18 @@ export default function BottomNav() {
           <button
             onClick={() => setMenuOpen(true)}
             className={cn(
-              'flex flex-col items-center gap-0.5 transition-all',
+              'flex flex-col items-center gap-0.5 transition-all relative',
               menuOpen ? 'opacity-100' : 'opacity-50 hover:opacity-75'
             )}
           >
-            <Menu className="w-5 h-5" strokeWidth={2} style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }} />
+            <div className="relative">
+              <Menu className="w-5 h-5" strokeWidth={2} style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 min-w-[15px] h-[15px] rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center px-1 leading-none">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </div>
             <span className="text-[10px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}>
               {t.menu}
             </span>

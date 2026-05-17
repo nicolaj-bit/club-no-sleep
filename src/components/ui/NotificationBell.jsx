@@ -18,6 +18,30 @@ function markAllRead(ids) {
   localStorage.setItem(READ_KEY, JSON.stringify(merged));
 }
 
+function setAppBadge(count) {
+  if ('setAppBadge' in navigator) {
+    if (count > 0) navigator.setAppBadge(count).catch(() => {});
+    else navigator.clearAppBadge().catch(() => {});
+  }
+}
+
+function vibrate() {
+  if ('vibrate' in navigator) {
+    navigator.vibrate([100, 50, 100]);
+  }
+}
+
+// Eksporter unread count så BottomNav kan vise badge
+export const notificationStore = { unreadCount: 0, listeners: [] };
+export function subscribeToUnreadCount(fn) {
+  notificationStore.listeners.push(fn);
+  return () => { notificationStore.listeners = notificationStore.listeners.filter(l => l !== fn); };
+}
+function emitUnreadCount(count) {
+  notificationStore.unreadCount = count;
+  notificationStore.listeners.forEach(fn => fn(count));
+}
+
 export default function NotificationBell({ userEmail }) {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
@@ -31,6 +55,9 @@ export default function NotificationBell({ userEmail }) {
         !n.target_emails || n.target_emails.length === 0 || n.target_emails.includes(userEmail)
       );
       setNotifications(visible);
+      const unread = visible.filter(n => !getReadIds().includes(n.id)).length;
+      setAppBadge(unread);
+      emitUnreadCount(unread);
     };
     if (userEmail) load();
   }, [userEmail]);
@@ -43,7 +70,15 @@ export default function NotificationBell({ userEmail }) {
       const n = event.data;
       if (n.target_emails && n.target_emails.length > 0 && !n.target_emails.includes(userEmail)) return;
 
-      setNotifications(prev => [n, ...prev]);
+      setNotifications(prev => {
+        const updated = [n, ...prev];
+        const unread = updated.filter(x => !getReadIds().includes(x.id)).length;
+        setAppBadge(unread);
+        emitUnreadCount(unread);
+        return updated;
+      });
+
+      vibrate();
 
       // Vis in-app toast
       toast(n.title, {
@@ -70,6 +105,8 @@ export default function NotificationBell({ userEmail }) {
       const allIds = notifications.map(n => n.id);
       markAllRead(allIds);
       setReadIds(prev => [...new Set([...prev, ...allIds])]);
+      setAppBadge(0);
+      emitUnreadCount(0);
     }
     setOpen(o => !o);
   };
