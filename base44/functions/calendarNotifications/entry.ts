@@ -25,6 +25,19 @@ async function sendPushToEmails(emails, title, message) {
   return res.json();
 }
 
+async function sendEmailFallback(base44, email, title, message) {
+  try {
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: email,
+      subject: title,
+      body: `<p>${message}</p><p style="color:#999;font-size:12px;">Denne besked er sendt fra LALATOTO kalender-påmindelser.</p>`,
+    });
+    console.log(`[calendarNotifications] Email sendt til ${email}`);
+  } catch (e) {
+    console.log(`[calendarNotifications] Email fejlede for ${email}: ${e.message}`);
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -51,26 +64,28 @@ Deno.serve(async (req) => {
       const emailsToNotify = [event.user_email];
 
       // Dagen før: mellem 23.5 og 25 timer til aftalen
-      if (!event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {
+      if (event.notify_day_before && !event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {
         const dateStr = start.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
-        await sendPushToEmails(
-          emailsToNotify,
-          `🗓️ Husk: ${event.title}`,
-          `Aftale i morgen kl. ${timeStr} — ${dateStr}`
-        );
+        const title = `🗓️ Husk: ${event.title}`;
+        const msg = `Aftale i morgen kl. ${timeStr} — ${dateStr}`;
+        await sendPushToEmails(emailsToNotify, title, msg);
+        for (const email of emailsToNotify) {
+          await sendEmailFallback(base44, email, title, msg);
+        }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_day_before_sent: true });
         sentCount++;
       }
 
       // 30 min før: mellem 28 og 32 minutter til aftalen
-      if (!event.notify_30min_before_sent && diffMins > 28 && diffMins <= 32) {
+      if (event.notify_30min_before && !event.notify_30min_before_sent && diffMins > 28 && diffMins <= 32) {
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
-        await sendPushToEmails(
-          emailsToNotify,
-          `⏰ Snart: ${event.title}`,
-          `Starter kl. ${timeStr} — om 30 minutter`
-        );
+        const title = `⏰ Snart: ${event.title}`;
+        const msg = `Starter kl. ${timeStr} — om 30 minutter`;
+        await sendPushToEmails(emailsToNotify, title, msg);
+        for (const email of emailsToNotify) {
+          await sendEmailFallback(base44, email, title, msg);
+        }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_30min_before_sent: true });
         sentCount++;
       }
