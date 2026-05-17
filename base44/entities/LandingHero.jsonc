@@ -1,0 +1,58 @@
+{
+  "name": "LandingHero",
+  "type": "object",
+  "properties": {
+    "badge_text": {
+      "type": "string",
+      "description": "Lille badge tekst \u00f8verst"
+    },
+    "headline": {
+      "type": "string",
+      "description": "Stor overskrift (linje 1)"
+    },
+    "headline_italic": {
+      "type": "string",
+      "description": "Kursiv del af overskrift"
+    },
+    "headline_suffix": {
+      "type": "string",
+      "description": "Slutning p\u00e5 overskrift (linje 3)"
+    },
+    "subtext": {
+      "type": "string",
+      "description": "Br\u00f8dtekst under overskrift"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "Billede eller video URL til app mockup"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "none"
+      ],
+      "default": "none"
+    }
+  },
+  "required": [],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

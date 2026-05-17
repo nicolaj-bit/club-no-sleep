@@ -1,0 +1,56 @@
+{
+  "name": "LandingFeature",
+  "type": "object",
+  "properties": {
+    "emoji": {
+      "type": "string",
+      "description": "Emoji ikon"
+    },
+    "title": {
+      "type": "string",
+      "description": "Funktionsnavn"
+    },
+    "description": {
+      "type": "string",
+      "description": "Beskrivelse"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "section_headline": {
+      "type": "string",
+      "description": "Overskrift for features-sektionen (kun f\u00f8rste post bruges)"
+    },
+    "section_subline": {
+      "type": "string",
+      "description": "Undertitel for features-sektionen (kun f\u00f8rste post bruges)"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

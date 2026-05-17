@@ -1,0 +1,56 @@
+{
+  "name": "LandingBenefit",
+  "type": "object",
+  "properties": {
+    "stat": {
+      "type": "string",
+      "description": "Stor stat eller emoji (fx '10+' eller '\ud83e\udd0d')"
+    },
+    "label": {
+      "type": "string",
+      "description": "Titel"
+    },
+    "sub": {
+      "type": "string",
+      "description": "Undertekst"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "section_headline": {
+      "type": "string",
+      "description": "Sektionens overskrift (kun f\u00f8rste post bruges)"
+    },
+    "section_subline": {
+      "type": "string",
+      "description": "Sektionens undertitel (kun f\u00f8rste post bruges)"
+    }
+  },
+  "required": [
+    "stat",
+    "label"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

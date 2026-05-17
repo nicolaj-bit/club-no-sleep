@@ -26,6 +26,7 @@ import Privacy from './pages/Privacy';
 import AdminFooter from './pages/AdminFooter';
 import AdminNavMenu from './pages/AdminNavMenu';
 import LandingPagePreview from './pages/LandingPage';
+import AdminLandingPage from './pages/AdminLandingPage';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminFooter" element={<AdminFooter />} />
         <Route path="/AdminNavMenu" element={<AdminNavMenu />} />
         <Route path="/landing" element={<LandingPagePreview />} />
+        <Route path="/AdminLandingPage" element={<LayoutWrapper currentPageName="AdminLandingPage"><AdminLandingPage /></LayoutWrapper>} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>
