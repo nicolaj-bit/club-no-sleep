@@ -61,10 +61,7 @@
   ],
   "rls": {
     "create": {
-      "data.client_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "data.client_email": "{{user.email}}"
     },
     "read": {
       "$or": [
