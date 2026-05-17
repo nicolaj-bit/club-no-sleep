@@ -232,7 +232,7 @@ export default function Subscription() {
               transition={{ duration: 0.5, ease: 'easeOut' }}
               src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4d581f250_Ikon.png"
               alt="LALATOTO"
-              className="w-24 h-24 mb-5 object-contain"
+              className="w-24 h-24 mb-5 object-contain rounded-3xl"
             />
           )}
 
