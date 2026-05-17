@@ -117,6 +117,24 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, sent: 1, mode: 'force_test' });
     }
 
+    // Opret test-event 30 min. fremme (kun til test)
+    const createTest = body.create_test_event_for;
+    if (createTest) {
+      const in30min = new Date(Date.now() + 30 * 60 * 1000);
+      const event = await base44.asServiceRole.entities.CalendarEvent.create({
+        title: createTest.title || '🌟 Tigerspring 5 – Relationer',
+        description: 'Test-event til 30-min notifikationstest',
+        start_datetime: in30min.toISOString(),
+        user_email: createTest.email,
+        category: 'andet',
+        notify_day_before: false,
+        notify_30min_before: true,
+        notify_day_before_sent: true,
+        notify_30min_before_sent: false,
+      });
+      return Response.json({ success: true, created_event: event.id, starts_at: in30min.toISOString(), mode: 'test_event_created' });
+    }
+
     const now = new Date();
     console.log(`[calendarNotifications] Kører nu: ${now.toISOString()}`);
 
