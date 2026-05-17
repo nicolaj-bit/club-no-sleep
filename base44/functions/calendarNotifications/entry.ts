@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       const emailsToNotify = [event.user_email];
 
       // Dagen før: mellem 23.5 og 25 timer til aftalen
-      if (event.notify_day_before && !event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {
+      if (event.notify_day_before !== false && !event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {
         const dateStr = start.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
         const title = `🗓️ Husk: ${event.title}`;
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
       }
 
       // 30 min før: mellem 28 og 32 minutter til aftalen
-      if (event.notify_30min_before && !event.notify_30min_before_sent && diffMins > 28 && diffMins <= 32) {
+      if (event.notify_30min_before !== false && !event.notify_30min_before_sent && diffMins > 28 && diffMins <= 32) {
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
         const title = `⏰ Snart: ${event.title}`;
         const msg = `Starter kl. ${timeStr} — om 30 minutter`;
