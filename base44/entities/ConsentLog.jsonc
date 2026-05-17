@@ -32,7 +32,10 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}"
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
       "$or": [
