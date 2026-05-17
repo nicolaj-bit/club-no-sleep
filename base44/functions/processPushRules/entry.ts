@@ -92,20 +92,27 @@ Deno.serve(async (req) => {
       is_active: true,
     });
 
+    console.log(`[processPushRules] trigger_type=${trigger_type}, fandt ${rules.length} aktive regler`);
+
     const results = [];
     for (const rule of rules) {
       if (trigger_type === 'scheduled') {
-        const copenhagenHour = new Date().toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen', hour: '2-digit', minute: '2-digit', hour12: false });
-        const currentDay = new Date().toLocaleString('en-US', { timeZone: 'Europe/Copenhagen', weekday: 'short' });
-        const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-        const currentDayNum = dayMap[currentDay];
+        const now = new Date();
+        const copenhagenDate = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Copenhagen' }));
+        const currentHH = String(copenhagenDate.getHours()).padStart(2, '0');
+        const currentMM = String(copenhagenDate.getMinutes()).padStart(2, '0');
+        const currentTime = `${currentHH}:${currentMM}`;
+        const currentDayNum = copenhagenDate.getDay(); // 0=Sun, 6=Sat
 
-        if (rule.schedule_time && copenhagenHour !== rule.schedule_time) continue;
+        if (rule.schedule_time && currentTime !== rule.schedule_time) continue;
         if (rule.schedule_days && rule.schedule_days.length > 0 && !rule.schedule_days.includes(currentDayNum)) continue;
       }
 
+      console.log(`[processPushRules] Sender regel: ${rule.name} (id: ${rule.id})`);
       const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment);
+      console.log(`[processPushRules] OneSignal resultat:`, JSON.stringify(pushResult));
       const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment);
+      console.log(`[processPushRules] Emails sendt: ${emailsSent}`);
 
       await base44.asServiceRole.entities.PushNotificationRule.update(rule.id, {
         last_triggered_at: new Date().toISOString(),
