@@ -29,9 +29,11 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const now = new Date();
+    console.log(`[calendarNotifications] Kører nu: ${now.toISOString()}`);
 
     // Hent alle kommende aftaler der ikke har fået notifikationer endnu
     const allEvents = await base44.asServiceRole.entities.CalendarEvent.list();
+    console.log(`[calendarNotifications] Fandt ${allEvents.length} events`);
 
     let sentCount = 0;
 
@@ -39,6 +41,8 @@ Deno.serve(async (req) => {
       const start = new Date(event.start_datetime);
       const diffMs = start - now;
       const diffMins = diffMs / 60000;
+
+      console.log(`[calendarNotifications] Event: "${event.title}" starter ${start.toISOString()}, om ${diffMins.toFixed(1)} minutter. notify_30min_before_sent=${event.notify_30min_before_sent}`);
 
       // Find alle profiler for denne bruger (mor + far)
       const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: event.user_email });
