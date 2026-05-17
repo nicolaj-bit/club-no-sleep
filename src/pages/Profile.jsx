@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight, Sparkles } from 'lucide-react';
@@ -103,7 +104,14 @@ export default function Profile() {
   const cardBgSolid = isDark ? '#3A2B22' : '#F0EBE3'; // fallback for border-b rows
   const cardBorder = isDark ? '#3A312B' : '#E8DDD2';
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries();
+    refreshProfiles();
+    refetchChildren();
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="pt-10 pb-3 px-5 flex items-center justify-between">
@@ -565,5 +573,6 @@ export default function Profile() {
         )}
       </AnimatePresence>
     </div>
+    </PullToRefresh>
   );
 }

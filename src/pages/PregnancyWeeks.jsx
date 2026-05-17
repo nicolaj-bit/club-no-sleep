@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
@@ -95,6 +96,16 @@ export default function PregnancyWeeks() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const handleRefresh = async () => {
+    setLoading(true);
+    try {
+      const user = await base44.auth.me();
+      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+      setProfile(profiles[0] || null);
+    } catch {}
+    setLoading(false);
+  };
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -117,6 +128,7 @@ export default function PregnancyWeeks() {
   const weeksToShow = Object.keys(PREGNANCY_WEEKS).map(Number).sort((a, b) => a - b);
 
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       <PageHeader title="Graviditet uge for uge" />
 
@@ -147,5 +159,6 @@ export default function PregnancyWeeks() {
         </div>
       </div>
     </div>
+    </PullToRefresh>
   );
 }

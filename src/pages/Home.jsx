@@ -21,6 +21,8 @@ import PregnancyHomeView from '@/components/home/PregnancyHomeView';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import PullToRefresh from '@/components/ui/PullToRefresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -45,6 +47,7 @@ function getGreeting(lang, name) {
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  const queryClient = useQueryClient();
   const { activeProfile, loading: profileLoading } = useActiveProfile();
   const { activeChild, loading: childLoading } = useActiveChild();
   const [user, setUser] = useState(null);
@@ -120,14 +123,23 @@ export default function Home() {
     );
   }
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries();
+  };
+
   // Graviditetsview: har terminsdato i fremtiden, barnet ikke født endnu
   if (isExpecting) {
-    return <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />;
+    return (
+      <PullToRefresh onRefresh={handleRefresh}>
+        <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />
+      </PullToRefresh>
+    );
   }
 
   // Normalt dashboard: barnet er født (child_birthdate sat) ELLER terminsdato er passeret
 
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div key={activeChild?.id || 'no-child'} className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
@@ -209,5 +221,6 @@ export default function Home() {
       {/* AI-curated blog posts */}
       <AIRelevantPosts profile={profile} allPosts={posts} />
     </div>
+    </PullToRefresh>
   );
 }

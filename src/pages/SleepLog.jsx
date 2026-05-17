@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, RefreshCw, X } from 'lucide-react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { Link, useNavigate } from 'react-router-dom';
@@ -225,7 +226,13 @@ export default function SleepLog() {
   const nightMinutes = calcNightMinutes();
   const fallAsleepMinutes = calcFallAsleep();
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['sleeplog-today']);
+    await queryClient.invalidateQueries(['sleeplog-history']);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
 
       {/* Header */}
@@ -562,6 +569,7 @@ export default function SleepLog() {
         </div>
       )}
     </div>
+    </PullToRefresh>
   );
 }
 

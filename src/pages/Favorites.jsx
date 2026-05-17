@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Trash2, ShoppingBag, BookOpen, FileText, Heart } from 'lucide-react';
@@ -91,7 +92,12 @@ export default function Favorites() {
     );
   };
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['myFavorites', user?.email]);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="pt-8 pb-4 px-6 text-center relative flex items-center justify-center">
@@ -145,5 +151,6 @@ export default function Favorites() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }

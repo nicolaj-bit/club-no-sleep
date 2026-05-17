@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, ChevronRight, MessageCircle, Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function MyQuestions() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -34,7 +36,12 @@ export default function MyQuestions() {
     closed: { background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' },
   };
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['myQuestions', user?.email]);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
       {/* Header */}
       <div className="pt-8 pb-4 px-6 text-center relative flex items-center justify-center">
@@ -113,5 +120,6 @@ export default function MyQuestions() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
