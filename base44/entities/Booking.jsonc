@@ -1,0 +1,76 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "expert_id": {
+      "type": "string",
+      "description": "Reference til Expert"
+    },
+    "expert_name": {
+      "type": "string"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Kundens email"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string",
+      "description": "Type af ydelse"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start tid (HH:mm)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Slut tid (HH:mm)"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "price": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expert_id",
+    "client_email",
+    "date",
+    "start_time"
+  ],
+  "rls": {
+    "create": {
+      "data.client_email": "{{user.email}}"
+    },
+    "read": {
+      "data.client_email": "{{user.email}}"
+    },
+    "update": {
+      "data.client_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.client_email": "{{user.email}}"
+    }
+  }
+}
