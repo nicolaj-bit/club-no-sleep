@@ -49,11 +49,7 @@
         }
       ]
     },
-    "read": {
-      "user_condition": {
-        "isAuthenticated": true
-      }
-    },
+    "read": {},
     "update": {
       "$or": [
         {
