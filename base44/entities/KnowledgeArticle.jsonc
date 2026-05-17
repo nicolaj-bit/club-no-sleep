@@ -1,0 +1,57 @@
+{
+  "name": "KnowledgeArticle",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Artikeltitel"
+    },
+    "content": {
+      "type": "string",
+      "description": "Indhold (markdown)"
+    },
+    "category": {
+      "type": "string",
+      "description": "Kategori"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_faq": {
+      "type": "boolean",
+      "default": false,
+      "description": "Er dette en FAQ?"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "category"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
