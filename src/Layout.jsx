@@ -40,13 +40,14 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // Kun aktiver OneSignal i appen (PWA standalone/installed), ikke på hjemmesiden
+    // OneSignal kun til Android (ikke iOS — Apple tillader ikke web push i PWA)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isApp = window.matchMedia('(display-mode: standalone)').matches
       || window.navigator.standalone === true;
 
-    if (!isApp) return;
+    if (!isApp || isIOS) return;
 
-    // Load OneSignal SDK
+    // Load OneSignal SDK kun på Android
     const script = document.createElement('script');
     script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
     script.defer = true;
@@ -58,7 +59,6 @@ export default function Layout({ children, currentPageName }) {
         appId: ONESIGNAL_APP_ID,
         allowLocalhostAsSecureOrigin: true,
       });
-      // Tag brugeren med deres email så vi kan sende målrettede tigerspring-notifikationer
       try {
         const isAuth = await base44.auth.isAuthenticated();
         if (isAuth) {
@@ -71,7 +71,9 @@ export default function Layout({ children, currentPageName }) {
     });
 
     return () => {
-      document.head.removeChild(script);
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
   }, []);
 

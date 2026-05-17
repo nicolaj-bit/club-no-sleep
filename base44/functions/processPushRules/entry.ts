@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-// Helper: send OneSignal push
-async function sendPush(title, message, url, segment = 'all') {
+// Send OneSignal push (Android/web only — iOS understøtter ikke web push)
+async function sendOneSignalPush(title, message, url, segment = 'all') {
   const appId = Deno.env.get('ONESIGNAL_APP_ID');
   const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
@@ -9,6 +9,9 @@ async function sendPush(title, message, url, segment = 'all') {
     app_id: appId,
     headings: { en: title, da: title },
     contents: { en: message, da: message },
+    isIos: false,
+    isAndroid: true,
+    isAnyWeb: true,
   };
 
   if (segment === 'all') {
@@ -35,15 +38,33 @@ async function sendPush(title, message, url, segment = 'all') {
   return await res.json();
 }
 
+// Send email til alle brugere som iOS fallback
+async function sendEmailToAllUsers(base44, title, message, url, segment) {
+  const profiles = await base44.asServiceRole.entities.UserProfile.list();
+
+  let sent = 0;
+  for (const profile of profiles) {
+    if (!profile.user_email) continue;
+    if (segment === 'moms' && profile.profile_label !== 'mor') continue;
+    if (segment === 'dads' && profile.profile_label !== 'far') continue;
+
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: profile.user_email,
+      subject: title,
+      body: `<p>${message}</p>${url ? `<p><a href="${url}">Læs mere</a></p>` : ''}`,
+    });
+    sent++;
+  }
+  return sent;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const payload = await req.json();
-
-    // Called with { trigger_type, rule_id } — or from admin with { rule_id, send_now: true }
     const { trigger_type, rule_id, send_now } = payload;
 
-    // Admin manual send — verify admin
+    // Admin manual send
     if (send_now && rule_id) {
       const user = await base44.auth.me();
       if (user?.role !== 'admin') {
@@ -52,14 +73,16 @@ Deno.serve(async (req) => {
       const rule = await base44.asServiceRole.entities.PushNotificationRule.get(rule_id);
       if (!rule) return Response.json({ error: 'Regel ikke fundet' }, { status: 404 });
 
-      const result = await sendPush(rule.title, rule.message, rule.url, rule.target_segment);
+      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment);
+      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment);
+
       await base44.asServiceRole.entities.PushNotificationRule.update(rule_id, {
         last_triggered_at: new Date().toISOString(),
       });
-      return Response.json({ success: true, recipients: result.recipients });
+      return Response.json({ success: true, push_recipients: pushResult.recipients, ios_emails: emailsSent });
     }
 
-    // Automated trigger — check rules matching trigger_type
+    // Automated trigger
     if (!trigger_type) {
       return Response.json({ error: 'trigger_type påkrævet' }, { status: 400 });
     }
@@ -71,10 +94,8 @@ Deno.serve(async (req) => {
 
     const results = [];
     for (const rule of rules) {
-      // For scheduled rules, check time and days
       if (trigger_type === 'scheduled') {
-        const now = new Date();
-        const copenhagenHour = now.toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen', hour: '2-digit', minute: '2-digit', hour12: false });
+        const copenhagenHour = new Date().toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen', hour: '2-digit', minute: '2-digit', hour12: false });
         const currentDay = new Date().toLocaleString('en-US', { timeZone: 'Europe/Copenhagen', weekday: 'short' });
         const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
         const currentDayNum = dayMap[currentDay];
@@ -83,15 +104,18 @@ Deno.serve(async (req) => {
         if (rule.schedule_days && rule.schedule_days.length > 0 && !rule.schedule_days.includes(currentDayNum)) continue;
       }
 
-      const result = await sendPush(rule.title, rule.message, rule.url, rule.target_segment);
+      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment);
+      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment);
+
       await base44.asServiceRole.entities.PushNotificationRule.update(rule.id, {
         last_triggered_at: new Date().toISOString(),
       });
-      results.push({ rule_id: rule.id, rule_name: rule.name, recipients: result.recipients });
+      results.push({ rule_id: rule.id, rule_name: rule.name, push_recipients: pushResult.recipients, ios_emails: emailsSent });
     }
 
     return Response.json({ success: true, triggered: results.length, results });
   } catch (error) {
+    console.error('processPushRules error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

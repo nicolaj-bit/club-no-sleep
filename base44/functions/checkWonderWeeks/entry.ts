@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 // Wonder weeks timing in weeks from due date
 const WONDER_WEEKS = [
@@ -21,58 +21,77 @@ function getAgeInDays(dueDateStr) {
   return Math.floor(diffMs / (24 * 60 * 60 * 1000));
 }
 
+// Send OneSignal push to a specific user (Android only)
+async function sendOneSignalToUser(email, title, message) {
+  const appId = Deno.env.get('ONESIGNAL_APP_ID');
+  const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
+
+  const body = {
+    app_id: appId,
+    include_aliases: { external_id: [email] },
+    target_channel: 'push',
+    isIos: false,
+    isAndroid: true,
+    headings: { en: title, da: title },
+    contents: { en: message, da: message },
+    url: 'https://app.lalatoto.dk/Knowledge',
+  };
+
+  const res = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${apiKey}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  return res.ok;
+}
+
+// Send email fallback for iOS users
+async function sendEmailFallback(base44, email, leapName) {
+  await base44.asServiceRole.integrations.Core.SendEmail({
+    to: email,
+    subject: `🌟 ${leapName} starter i morgen!`,
+    body: `<p>Hej! Dit barn starter på <strong>${leapName}</strong> i morgen.</p><p>Læs om hvad du kan forvente på <a href="https://app.lalatoto.dk/Knowledge">LALATOTO</a>.</p>`,
+  });
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-
-    // This is called by automation - use service role
     const profiles = await base44.asServiceRole.entities.UserProfile.list();
-
-    const appId = Deno.env.get('ONESIGNAL_APP_ID');
-    const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
     let notificationsSent = 0;
 
     for (const profile of profiles) {
       if (!profile.wonderweeks_notifications) continue;
-      
+
       const dateStr = profile.child_due_date || profile.child_birthdate;
       if (!dateStr) continue;
 
       const ageDays = getAgeInDays(dateStr);
-
-      // Check if tomorrow is exactly the start week of a wonder week (notify 1 day before)
       const tomorrowWeeks = Math.floor((ageDays + 1) / 7);
       const leap = WONDER_WEEKS.find(ww => ww.week === tomorrowWeeks && (ageDays + 1) % 7 === 0);
       if (!leap) continue;
 
-      // Send targeted notification to this user via external_user_id
-      const body = {
-        app_id: appId,
-        include_aliases: { external_id: [profile.user_email] },
-        target_channel: 'push',
-        headings: { en: `🌟 ${leap.name}`, da: `🌟 ${leap.name}` },
-        contents: {
-          en: `Your baby starts ${leap.name} tomorrow! Read about what to expect.`,
-          da: `Dit barn starter på ${leap.name} i morgen! Læs om hvad du kan forvente.`,
-        },
-        url: 'https://app.lalatoto.dk/Knowledge',
-      };
+      const title = `🌟 ${leap.name}`;
+      const message = `Dit barn starter på ${leap.name} i morgen! Læs om hvad du kan forvente.`;
 
-      const res = await fetch('https://onesignal.com/api/v1/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${apiKey}`,
-        },
-        body: JSON.stringify(body),
-      });
+      // Forsøg OneSignal push (virker på Android)
+      const pushSent = await sendOneSignalToUser(profile.user_email, title, message);
 
-      if (res.ok) notificationsSent++;
+      // Send altid email som fallback (dækker iOS-brugere)
+      await sendEmailFallback(base44, profile.user_email, leap.name);
+
+      console.log(`Notifikation sendt til ${profile.user_email}: push=${pushSent}, email=true`);
+      notificationsSent++;
     }
 
     return Response.json({ success: true, notificationsSent });
   } catch (error) {
+    console.error('checkWonderWeeks error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

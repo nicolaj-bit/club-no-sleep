@@ -20,15 +20,16 @@ Deno.serve(async (req) => {
     }
 
     const notif = notifications[0];
-
-    // Send via OneSignal
-    const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
+    const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
     const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
-    const body = {
+    // Send OneSignal push (Android only — iOS understøtter ikke web push)
+    const pushBody = {
       app_id: ONESIGNAL_APP_ID,
       include_aliases: { external_id: [user.email] },
       target_channel: 'push',
+      isIos: false,
+      isAndroid: true,
       headings: { en: notif.title, da: notif.title },
       contents: { en: notif.message, da: notif.message },
     };
@@ -39,11 +40,18 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
         'Authorization': `Key ${apiKey}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(pushBody),
     });
 
     const data = await res.json();
     console.log('OneSignal response:', JSON.stringify(data));
+
+    // Send email som fallback (dækker iOS-brugere)
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      to: user.email,
+      subject: notif.title,
+      body: `<p>${notif.message}</p>`,
+    });
 
     return Response.json({ sent: true, milestone_id, title: notif.title });
   } catch (error) {
