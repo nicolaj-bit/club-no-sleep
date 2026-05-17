@@ -108,6 +108,15 @@ async function sendEmailFallback(base44, email, eventTitle, eventTime, isReminde
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    const body = await req.json().catch(() => ({}));
+    const forceEmail = body.force_email; // { email, title, time }
+    
+    // Force-send test email
+    if (forceEmail) {
+      await sendEmailFallback(base44, forceEmail.email, forceEmail.title || 'Test aftale', forceEmail.time || '14:30', forceEmail.is30min !== false);
+      return Response.json({ success: true, sent: 1, mode: 'force_test' });
+    }
+
     const now = new Date();
     console.log(`[calendarNotifications] Kører nu: ${now.toISOString()}`);
 
