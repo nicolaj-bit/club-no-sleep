@@ -1,23 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-// Detect iOS user agent
-function isIOSEmail(userAgent) {
-  return /iPad|iPhone|iPod/.test(userAgent || '');
-}
-
-// Send OneSignal push (Android/web only)
+// Send OneSignal push til alle subscribed brugere
 async function sendOneSignalPush(title, message, url) {
   const appId = Deno.env.get('ONESIGNAL_APP_ID');
   const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
   const body = {
     app_id: appId,
-    included_segments: ['All'],
+    included_segments: ['Subscribed Users'],
     headings: { en: title, da: title },
     contents: { en: message, da: message },
-    isIos: true,
-    isAndroid: true,
-    isAnyWeb: true,
   };
 
   if (url) body.url = url;
@@ -31,25 +23,44 @@ async function sendOneSignalPush(title, message, url) {
     body: JSON.stringify(body),
   });
 
-  return await res.json();
+  const data = await res.json();
+  console.log('OneSignal svar:', JSON.stringify(data));
+  return data;
 }
 
-// Send email fallback for iOS users
-async function sendEmailToIOSUsers(base44, title, message, url) {
-  const profiles = await base44.asServiceRole.entities.UserProfile.list();
-  const users = await base44.asServiceRole.entities.User.list();
+// Hent alle OneSignal subscribers (external_user_id = email)
+async function getOneSignalSubscriberEmails() {
+  const appId = Deno.env.get('ONESIGNAL_APP_ID');
+  const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
-  const emailMap = {};
-  for (const u of users) {
-    emailMap[u.email] = u;
+  try {
+    const res = await fetch(`https://onesignal.com/api/v1/players?app_id=${appId}&limit=300`, {
+      headers: { 'Authorization': `Key ${apiKey}` },
+    });
+    const data = await res.json();
+    const emails = new Set();
+    for (const player of (data.players || [])) {
+      if (player.external_user_id) {
+        emails.add(player.external_user_id.toLowerCase());
+      }
+    }
+    console.log('OneSignal subscribers fundet:', emails.size);
+    return emails;
+  } catch (e) {
+    console.error('Kunne ikke hente OneSignal subscribers:', e.message);
+    return new Set();
   }
+}
+
+// Send email fallback til brugere der IKKE er OneSignal subscribers
+async function sendEmailFallback(base44, title, message, url, subscriberEmails) {
+  const profiles = await base44.asServiceRole.entities.UserProfile.list();
 
   let sent = 0;
   for (const profile of profiles) {
     if (!profile.user_email) continue;
-    const emailBody = url
-      ? `${message}\n\n👉 ${url}`
-      : message;
+    // Skip hvis de allerede får push via OneSignal
+    if (subscriberEmails.has(profile.user_email.toLowerCase())) continue;
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: profile.user_email,
@@ -76,15 +87,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'title og message er påkrævet' }, { status: 400 });
     }
 
-    // Send push til Android/web via OneSignal
+    // 1. Send push via OneSignal til alle subscribed
     const pushData = await sendOneSignalPush(title, message, url);
-    console.log('OneSignal push sendt:', JSON.stringify(pushData));
+    const pushRecipients = pushData.recipients || 0;
 
-    // Send email til iOS brugere
-    const emailsSent = await sendEmailToIOSUsers(base44, title, message, url);
-    console.log('Emails sendt til iOS brugere:', emailsSent);
+    // 2. Find hvem der er OneSignal subscribers
+    const subscriberEmails = await getOneSignalSubscriberEmails();
 
-    return Response.json({ success: true, push_recipients: pushData.recipients, ios_emails: emailsSent });
+    // 3. Send email til resten
+    const emailsSent = await sendEmailFallback(base44, title, message, url, subscriberEmails);
+    console.log('Email fallback sendt til:', emailsSent, 'brugere');
+
+    return Response.json({ 
+      success: true, 
+      push_recipients: pushRecipients,
+      ios_emails: emailsSent,
+      onesignal_subscribers: subscriberEmails.size
+    });
   } catch (error) {
     console.error('sendPushNotification error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
