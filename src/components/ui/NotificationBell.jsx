@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { da } from 'date-fns/locale';
+import { toast } from 'sonner';
 
 const READ_KEY = 'lalatoto-read-notifications';
 
@@ -32,6 +33,26 @@ export default function NotificationBell({ userEmail }) {
       setNotifications(visible);
     };
     if (userEmail) load();
+  }, [userEmail]);
+
+  // Real-time subscription — vis toast ved nye notifikationer
+  useEffect(() => {
+    if (!userEmail) return;
+    const unsub = base44.entities.AppNotification.subscribe((event) => {
+      if (event.type !== 'create') return;
+      const n = event.data;
+      if (n.target_emails && n.target_emails.length > 0 && !n.target_emails.includes(userEmail)) return;
+
+      setNotifications(prev => [n, ...prev]);
+
+      // Vis in-app toast
+      toast(n.title, {
+        description: n.message,
+        duration: 6000,
+        icon: n.emoji || '🔔',
+      });
+    });
+    return () => unsub();
   }, [userEmail]);
 
   useEffect(() => {
