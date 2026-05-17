@@ -1,0 +1,77 @@
+{
+  "name": "SleepAdviceFeedback",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Reference til bruger"
+    },
+    "ai_title": {
+      "type": "string",
+      "description": "Titel p\u00e5 AI-forslaget"
+    },
+    "ai_message": {
+      "type": "string",
+      "description": "AI-forslagets indhold"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Dato notifikationen blev sendt"
+    },
+    "feedback": {
+      "type": "string",
+      "enum": [
+        "helpful",
+        "not_helpful",
+        "already_tried",
+        "not_relevant"
+      ],
+      "description": "Brugerens feedback"
+    },
+    "feedback_note": {
+      "type": "string",
+      "description": "Valgfri kommentar fra bruger"
+    },
+    "child_age_months": {
+      "type": "number",
+      "description": "Barnets alder i m\u00e5neder da forslaget blev sendt"
+    },
+    "log_summary": {
+      "type": "string",
+      "description": "Kort opsummering af m\u00f8nsteret der udl\u00f8ste forslaget"
+    }
+  },
+  "required": [
+    "user_email",
+    "ai_title",
+    "ai_message",
+    "sent_date"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}
