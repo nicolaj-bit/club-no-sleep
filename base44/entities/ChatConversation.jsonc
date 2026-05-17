@@ -1,0 +1,58 @@
+{
+  "name": "ChatConversation",
+  "type": "object",
+  "properties": {
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email adresser p\u00e5 deltagere"
+    },
+    "participant_usernames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "participant_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_message": {
+      "type": "string"
+    },
+    "last_message_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_group": {
+      "type": "boolean",
+      "default": false
+    },
+    "group_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participants"
+  ],
+  "rls": {
+    "create": {
+      "data.participants": "{{user.email}}"
+    },
+    "read": {
+      "data.participants": "{{user.email}}"
+    },
+    "update": {
+      "data.participants": "{{user.email}}"
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
