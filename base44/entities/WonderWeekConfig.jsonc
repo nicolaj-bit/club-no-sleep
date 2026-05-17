@@ -1,0 +1,36 @@
+{
+  "name": "WonderWeekConfig",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "number",
+      "description": "Tigerspring nummer (1-10)"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Emoji for dette tigerspring"
+    }
+  },
+  "required": [
+    "number",
+    "emoji"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
