@@ -65,7 +65,9 @@
     "user_email"
   ],
   "rls": {
-    "create": {},
+    "create": {
+      "data.user_email": "{{user.email}}"
+    },
     "read": {
       "data.user_email": "{{user.email}}"
     },
