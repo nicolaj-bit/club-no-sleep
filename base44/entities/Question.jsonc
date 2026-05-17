@@ -1,0 +1,75 @@
+{
+  "name": "Question",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Sp\u00f8rgsm\u00e5lstitel"
+    },
+    "content": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Detaljeret sp\u00f8rgsm\u00e5l"
+    },
+    "category": {
+      "type": "string",
+      "description": "Kategori"
+    },
+    "author_username": {
+      "type": "string"
+    },
+    "author_image": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "answered",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "answer_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
