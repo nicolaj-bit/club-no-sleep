@@ -226,15 +226,14 @@ export default function Subscription() {
               className="w-full max-h-48 object-cover rounded-2xl mb-5"
             />
           ) : display.logo_url ? null : (
-            <motion.div
+            <motion.img
               initial={{ scale: 0.75, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="w-24 h-24 rounded-3xl flex items-center justify-center mb-5"
-              style={{ background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.18)' }}
-            >
-              <span className="text-5xl">🌙</span>
-            </motion.div>
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4d581f250_Ikon.png"
+              alt="LALATOTO"
+              className="w-24 h-24 mb-5 object-contain"
+            />
           )}
 
           <motion.h1
