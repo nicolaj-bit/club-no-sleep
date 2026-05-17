@@ -41,7 +41,9 @@
   ],
   "rls": {
     "create": {
-      "data.participants": "{{user.email}}"
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
       "data.participants": "{{user.email}}"
