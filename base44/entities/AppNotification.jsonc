@@ -46,6 +46,16 @@
           "data.target_emails": "{{user.email}}"
         },
         {
+          "data.target_emails": {
+            "$exists": false
+          }
+        },
+        {
+          "data.target_emails": {
+            "$size": 0
+          }
+        },
+        {
           "user_condition": {
             "role": "admin"
           }
