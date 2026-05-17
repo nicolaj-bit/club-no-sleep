@@ -40,11 +40,7 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // OneSignal til både Android og iOS (iOS 16.4+ understøtter web push i PWA)
-    const isApp = window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone === true;
-
-    if (!isApp) return;
+    // OneSignal initialiseres altid — virker i PWA, TestFlight og browser
 
     // Load OneSignal SDK kun på Android
     const script = document.createElement('script');
