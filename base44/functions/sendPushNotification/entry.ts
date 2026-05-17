@@ -15,7 +15,7 @@ async function sendOneSignalPush(title, message, url) {
     included_segments: ['All'],
     headings: { en: title, da: title },
     contents: { en: message, da: message },
-    isIos: false,
+    isIos: true,
     isAndroid: true,
     isAnyWeb: true,
   };
