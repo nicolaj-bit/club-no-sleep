@@ -51,7 +51,9 @@ export default function Privacy() {
         textTransform: header ? 'uppercase' : 'none',
         letterSpacing: header ? '0.04em' : 'normal',
         verticalAlign: 'top',
-        width: col3 ? '22%' : '28%'
+        width: col3 ? '20%' : '30%',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word'
       }}>{col1}</td>
       <td style={{
         paddingTop: header ? 16 : 18, paddingBottom: header ? 16 : 18, paddingRight: col3 ? 20 : 20, paddingLeft: 12,
@@ -62,7 +64,9 @@ export default function Privacy() {
         fontWeight: header ? 600 : 400,
         lineHeight: '1.55',
         verticalAlign: 'top',
-        width: col3 ? '40%' : '72%'
+        width: col3 ? '38%' : '70%',
+        wordBreak: 'break-word',
+        overflowWrap: 'break-word'
       }}>{col2}</td>
       {col3 !== undefined && (
         <td style={{
@@ -75,7 +79,9 @@ export default function Privacy() {
           fontStyle: header ? 'normal' : 'italic',
           lineHeight: '1.5',
           verticalAlign: 'top',
-          width: '50%'
+          width: '52%',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word'
         }}>{col3}</td>
       )}
     </tr>
