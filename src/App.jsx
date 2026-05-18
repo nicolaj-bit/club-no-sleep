@@ -112,15 +112,15 @@ function AppRoutes() {
     const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('auth') || k.includes('base44'));
     const isLoggedIn = wasAuthenticated || hasToken;
 
-    if (!isStandalone) {
-      // Browser → vis altid landing page
-      setShowLanding('landing');
-    } else if (!isLoggedIn) {
-      // PWA/App, ikke logget ind → vis subscription
-      setShowLanding('subscription');
-    } else {
-      // PWA/App, logget ind → gå til appen
+    if (isLoggedIn) {
+      // Logget ind → altid appen, uanset platform
       setShowLanding(false);
+    } else if (!isStandalone) {
+      // Browser, ikke logget ind → landing page
+      setShowLanding('landing');
+    } else {
+      // PWA/App, ikke logget ind → subscription
+      setShowLanding('subscription');
     }
   }, [location.pathname]);
 
