@@ -15,29 +15,71 @@ export default function Privacy() {
   };
 
   const sectionStyle = {
-    marginBottom: 48,
-    paddingBottom: 32,
+    marginBottom: 56,
+    paddingBottom: 40,
     borderBottom: '1px solid #EDE4DB'
   };
 
-  const liStyle = { marginBottom: 10, color: '#5B3F2B' };
+  const liStyle = { marginBottom: 12, color: '#5B3F2B' };
 
-  // Key-value table rows (like Terms virksomhedsoplysninger)
+  // Key-value table rows
   const InfoRow = ({ label, value }) => (
-    <tr style={{ borderTop: '1px solid #EDE4DB' }}>
-      <td style={{ fontWeight: 500, paddingRight: 24, paddingTop: 12, paddingBottom: 12, color: '#7A665A', fontSize: '0.9rem', verticalAlign: 'top', whiteSpace: 'nowrap' }}>{label}</td>
-      <td style={{ paddingTop: 12, paddingBottom: 12, color: '#2B1F16' }}>{value}</td>
+    <tr>
+      <td style={{
+        fontWeight: 500, paddingRight: 24, paddingTop: 14, paddingBottom: 14,
+        color: '#7A665A', fontSize: '0.88rem', verticalAlign: 'top',
+        whiteSpace: 'nowrap', borderBottom: '1px solid #F0E7DF', width: '30%'
+      }}>{label}</td>
+      <td style={{
+        paddingTop: 14, paddingBottom: 14, color: '#2B1F16',
+        fontSize: '0.95rem', borderBottom: '1px solid #F0E7DF'
+      }}>{value}</td>
     </tr>
   );
 
   // Two-column data table rows
-  const DataRow = ({ col1, col2, col3, header }) => (
-    <tr style={{ borderTop: '1px solid #EDE4DB', background: header ? '#F7F0EA' : 'transparent' }}>
-      <td style={{ paddingTop: 12, paddingBottom: 12, paddingRight: 20, color: header ? '#7A665A' : '#2B1F16', fontWeight: header ? 600 : 500, fontSize: '0.88rem', verticalAlign: 'top', width: col3 ? '22%' : '32%' }}>{col1}</td>
-      <td style={{ paddingTop: 12, paddingBottom: 12, paddingRight: col3 ? 20 : 0, color: header ? '#7A665A' : '#5B3F2B', fontSize: '0.9rem', verticalAlign: 'top', width: col3 ? '40%' : '68%' }}>{col2}</td>
-      {col3 !== undefined && <td style={{ paddingTop: 12, paddingBottom: 12, color: header ? '#7A665A' : '#5B3F2B', fontSize: '0.88rem', verticalAlign: 'top' }}>{col3}</td>}
-    </tr>
-  );
+  const DataRow = ({ col1, col2, col3, header }) => {
+    const isEven = false;
+    return (
+      <tr style={{ background: header ? '#EEE4D9' : 'transparent' }}>
+        <td style={{
+          paddingTop: 13, paddingBottom: 13, paddingRight: 20, paddingLeft: 14,
+          color: header ? '#5B3F2B' : '#2B1F16',
+          fontWeight: header ? 600 : 500,
+          fontSize: header ? '0.82rem' : '0.88rem',
+          textTransform: header ? 'uppercase' : 'none',
+          letterSpacing: header ? '0.04em' : 'normal',
+          verticalAlign: 'top',
+          width: col3 ? '22%' : '30%',
+          borderBottom: '1px solid #F0E7DF'
+        }}>{col1}</td>
+        <td style={{
+          paddingTop: 13, paddingBottom: 13, paddingRight: col3 ? 20 : 14,
+          color: header ? '#5B3F2B' : '#5B3F2B',
+          fontSize: header ? '0.82rem' : '0.9rem',
+          textTransform: header ? 'uppercase' : 'none',
+          letterSpacing: header ? '0.04em' : 'normal',
+          fontWeight: header ? 600 : 400,
+          verticalAlign: 'top',
+          width: col3 ? '40%' : '70%',
+          borderBottom: '1px solid #F0E7DF'
+        }}>{col2}</td>
+        {col3 !== undefined && (
+          <td style={{
+            paddingTop: 13, paddingBottom: 13, paddingRight: 14,
+            color: header ? '#5B3F2B' : '#7A665A',
+            fontSize: header ? '0.82rem' : '0.85rem',
+            textTransform: header ? 'uppercase' : 'none',
+            letterSpacing: header ? '0.04em' : 'normal',
+            fontWeight: header ? 600 : 400,
+            fontStyle: header ? 'normal' : 'italic',
+            verticalAlign: 'top',
+            borderBottom: '1px solid #F0E7DF'
+          }}>{col3}</td>
+        )}
+      </tr>
+    );
+  };
 
   return (
     <div style={{
@@ -107,15 +149,17 @@ export default function Privacy() {
           <section style={sectionStyle}>
             <h2 style={h2Style}>2. Dataansvarlig</h2>
             <p style={{ marginBottom: 16 }}>Den dataansvarlige for behandlingen af dine personoplysninger er LALATOTO of Denmark ApS.</p>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
-                <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
-                <InfoRow label="CVR-nr." value="45 14 92 18" />
-                <InfoRow label="Telefon" value="72 15 66 86" />
-                <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
-              </tbody>
-            </table>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                  <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
+                  <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
+                  <InfoRow label="CVR-nr." value="45 14 92 18" />
+                  <InfoRow label="Telefon" value="72 15 66 86" />
+                  <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
+                </tbody>
+              </table>
+            </div>
             <p style={{ marginTop: 16 }}>Spørgsmål om denne privatlivspolitik kan rettes til kundeservice@lalatoto.dk.</p>
           </section>
 
@@ -123,7 +167,8 @@ export default function Privacy() {
           <section style={sectionStyle}>
             <h2 style={h2Style}>3. Hvilke oplysninger behandler vi?</h2>
             <p style={{ marginBottom: 16 }}>Vi behandler kun personoplysninger, der er relevante for at levere og forbedre appen, administrere dit abonnement, yde support og overholde gældende lovgivning.</p>
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 8 }}>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 <DataRow header col1="Kategori" col2="Eksempler på oplysninger" />
                 <DataRow col1="Konto- og kontaktoplysninger" col2="Navn, e-mailadresse, telefonnummer hvis du oplyser det, loginoplysninger, bruger-ID og kontoindstillinger." />
@@ -136,13 +181,15 @@ export default function Privacy() {
                 <DataRow col1="Markedsføring" col2="E-mailadresse, navn, samtykkestatus og præferencer – kun hvis du har givet samtykke til markedsføring." />
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* 4 */}
           <section style={sectionStyle}>
             <h2 style={h2Style}>4. Formål og behandlingsgrundlag</h2>
             <p style={{ marginBottom: 16 }}>Vi behandler personoplysninger til nedenstående formål og på de angivne behandlingsgrundlag. Henvisningerne til GDPR er medtaget for at gøre behandlingen gennemsigtig.</p>
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 8 }}>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 <DataRow header col1="Formål" col2="Beskrivelse" col3="Behandlingsgrundlag" />
                 <DataRow col1="Drift af konto" col2="At oprette, administrere og give adgang til din brugerprofil og appens funktioner." col3="Art. 6(1)(b) – aftale" />
@@ -156,6 +203,7 @@ export default function Privacy() {
                 <DataRow col1="Lovgivning" col2="At opfylde bogføringskrav og håndtere myndighedshenvendelser." col3="Art. 6(1)(c) + (f)" />
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* 5 */}
@@ -207,7 +255,8 @@ export default function Privacy() {
           <section style={sectionStyle}>
             <h2 style={h2Style}>9. Opbevaring og sletning</h2>
             <p style={{ marginBottom: 16 }}>Vi opbevarer personoplysninger, så længe det er nødvendigt for de formål, oplysningerne er indsamlet til, eller så længe vi er forpligtet til det efter lovgivningen.</p>
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 8 }}>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 <DataRow header col1="Datatype" col2="Opbevaring" />
                 <DataRow col1="Konto- og profiloplysninger" col2="Opbevares så længe kontoen er aktiv. Slettes eller anonymiseres inden for rimelig tid ved kontosletning, medmindre der er lovligt grundlag for længere opbevaring." />
@@ -218,7 +267,8 @@ export default function Privacy() {
                 <DataRow col1="Tekniske logs og sikkerhedsdata" col2="Opbevares kun så længe nødvendigt for drift, fejlfinding og sikkerhed. Kan opbevares længere ved konkret sikkerhedshændelse eller tvist." />
               </tbody>
             </table>
-            <p style={{ marginTop: 16 }}>Sletning fra backup sker efter vores almindelige backup- og sikkerhedsprocedurer.</p>
+            </div>
+            <p style={{ marginTop: 20 }}>Sletning fra backup sker efter vores almindelige backup- og sikkerhedsprocedurer.</p>
           </section>
 
           {/* 10 */}
@@ -263,6 +313,7 @@ export default function Privacy() {
             <h2 style={h2Style}>14. Klage til Datatilsynet</h2>
             <p style={{ marginBottom: 12 }}>Hvis du er utilfreds med vores behandling af dine personoplysninger, opfordrer vi dig til først at kontakte os, så vi kan forsøge at finde en løsning.</p>
             <p style={{ marginBottom: 12 }}>Du har også ret til at klage til Datatilsynet:</p>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 <InfoRow label="Adresse" value="Carl Jacobsens Vej 35, 2500 Valby" />
@@ -271,6 +322,7 @@ export default function Privacy() {
                 <InfoRow label="Hjemmeside" value={<a href="https://www.datatilsynet.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }} target="_blank" rel="noopener noreferrer">www.datatilsynet.dk</a>} />
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* 15 */}
@@ -283,6 +335,7 @@ export default function Privacy() {
           <section>
             <h2 style={h2Style}>16. Kontakt</h2>
             <p style={{ marginBottom: 16 }}>Har du spørgsmål til privatlivspolitikken, vores behandling af personoplysninger eller dine rettigheder, kan du kontakte os her:</p>
+            <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
@@ -292,6 +345,7 @@ export default function Privacy() {
                 <InfoRow label="CVR-nr." value="45 14 92 18" />
               </tbody>
             </table>
+            </div>
           </section>
         </div>
       </article>
