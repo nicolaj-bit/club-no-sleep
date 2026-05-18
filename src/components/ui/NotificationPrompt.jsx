@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X } from 'lucide-react';
+import { requestPushPermission } from '@/utils/requestPushPermission';
 
 const STORAGE_KEY = 'lalatoto_notif_prompt_dismissed';
 
@@ -28,15 +29,7 @@ export default function NotificationPrompt() {
   const handleAllow = () => {
     setShow(false);
     localStorage.setItem(STORAGE_KEY, 'true');
-
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (OneSignal) => {
-      try {
-        await OneSignal.Notifications.requestPermission();
-      } catch (e) {
-        console.log('Push permission error:', e);
-      }
-    });
+    requestPushPermission();
   };
 
   const handleDismiss = () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { motion } from 'framer-motion';
@@ -47,6 +48,12 @@ export default function Subscription() {
       } catch {}
     };
     load();
+
+    // Hvis brugeren kommer tilbage fra succesfuld betaling, bed om push-tilladelse
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('subscription') === 'success') {
+      setTimeout(() => requestPushPermission(), 1500);
+    }
   }, []);
 
   const handleSubscribe = async () => {
