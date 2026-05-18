@@ -94,7 +94,11 @@ function AppRoutes() {
   const location = useLocation();
   const [showLanding, setShowLanding] = React.useState(null);
 
+  const publicPaths = ['/landing', '/terms', '/privacy'];
+  const isPublic = publicPaths.includes(location.pathname);
+
   React.useEffect(() => {
+    if (isPublic) return;
     if (location.pathname !== '/') { setShowLanding(false); return; }
 
     const isStandalone =
@@ -118,6 +122,12 @@ function AppRoutes() {
       setShowLanding(!isLoggedIn);
     }
   }, [location.pathname]);
+
+  if (isPublic) {
+    if (location.pathname === '/landing') return <LandingPagePreview />;
+    if (location.pathname === '/terms') return <Terms />;
+    if (location.pathname === '/privacy') return <Privacy />;
+  }
 
   if (showLanding === null) return null; // brief flash prevention
   if (showLanding === 'subscription') return <Subscription />;
