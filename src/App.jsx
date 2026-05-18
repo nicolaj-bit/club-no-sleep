@@ -109,17 +109,18 @@ function AppRoutes() {
       !!window.Capacitor || !!window.cordova;
 
     const wasAuthenticated = localStorage.getItem('lalatoto_was_authenticated') === 'true';
-
-    // Check for any auth token in localStorage/sessionStorage as fallback
     const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('auth') || k.includes('base44'));
-
     const isLoggedIn = wasAuthenticated || hasToken;
 
-    if (isStandalone && !isLoggedIn) {
-      // PWA installed but not logged in → show subscription/onboarding page
+    if (!isStandalone) {
+      // Browser → vis altid landing page
+      setShowLanding('landing');
+    } else if (!isLoggedIn) {
+      // PWA/App, ikke logget ind → vis subscription
       setShowLanding('subscription');
     } else {
-      setShowLanding(!isLoggedIn);
+      // PWA/App, logget ind → gå til appen
+      setShowLanding(false);
     }
   }, [location.pathname]);
 
@@ -129,9 +130,9 @@ function AppRoutes() {
     if (location.pathname === '/privacy') return <Privacy />;
   }
 
-  if (showLanding === null) return null; // brief flash prevention
+  if (showLanding === null) return null;
   if (showLanding === 'subscription') return <Subscription />;
-  if (showLanding) return <LandingPage />;
+  if (showLanding === 'landing') return <LandingPage />;
   return <AuthenticatedApp />;
 }
 
