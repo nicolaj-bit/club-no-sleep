@@ -59,7 +59,7 @@ const AuthenticatedApp = () => {
   return (
     <SubscriptionGate>
       <Routes>
-        <Route path="/" element={<Navigate to="/app" replace />} />
+        <Route path="/" element={<Navigate to="/landing" replace />} />
         <Route path="/app" element={<LayoutWrapper currentPageName={mainPageKey}><MainPage /></LayoutWrapper>} />
         {Object.entries(Pages).map(([path, Page]) => (
           <Route
