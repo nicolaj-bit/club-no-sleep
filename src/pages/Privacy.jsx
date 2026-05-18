@@ -22,19 +22,22 @@ export default function Privacy() {
 
   const liStyle = { marginBottom: 12, color: '#5B3F2B' };
 
-  // Key-value table rows
+  // Key-value rows (stacked: label over value)
   const InfoRow = ({ label, value }) => (
-    <tr style={{ borderBottom: '1px solid #F0E7DF' }}>
-      <td style={{
-        fontWeight: 500, paddingRight: 28, paddingTop: 18, paddingBottom: 18,
-        color: '#7A665A', fontSize: '0.9rem', verticalAlign: 'top',
-        whiteSpace: 'nowrap', width: '28%'
-      }}>{label}</td>
-      <td style={{
-        paddingTop: 18, paddingBottom: 18, paddingLeft: 12, color: '#2B1F16',
-        fontSize: '0.96rem'
-      }}>{value}</td>
-    </tr>
+    <div style={{
+      paddingTop: 18, paddingBottom: 18, paddingLeft: 20, paddingRight: 20,
+      borderBottom: '1px solid #F0E7DF'
+    }}>
+      <div style={{
+        fontWeight: 500, color: '#7A665A', fontSize: '0.85rem',
+        marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.03em'
+      }}>
+        {label}
+      </div>
+      <div style={{ color: '#2B1F16', fontSize: '0.96rem' }}>
+        {value}
+      </div>
+    </div>
   );
 
   // Two-column data table rows
@@ -147,15 +150,11 @@ export default function Privacy() {
             <h2 style={h2Style}>2. Dataansvarlig</h2>
             <p style={{ marginBottom: 16 }}>Den dataansvarlige for behandlingen af dine personoplysninger er LALATOTO of Denmark ApS.</p>
             <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <tbody>
-                  <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
-                  <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
-                  <InfoRow label="CVR-nr." value="45 14 92 18" />
-                  <InfoRow label="Telefon" value="72 15 66 86" />
-                  <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
-                </tbody>
-              </table>
+              <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
+              <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
+              <InfoRow label="CVR-nr." value="45 14 92 18" />
+              <InfoRow label="Telefon" value="72 15 66 86" />
+              <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
             </div>
             <p style={{ marginTop: 16 }}>Spørgsmål om denne privatlivspolitik kan rettes til kundeservice@lalatoto.dk.</p>
           </section>
@@ -311,14 +310,10 @@ export default function Privacy() {
             <p style={{ marginBottom: 12 }}>Hvis du er utilfreds med vores behandling af dine personoplysninger, opfordrer vi dig til først at kontakte os, så vi kan forsøge at finde en løsning.</p>
             <p style={{ marginBottom: 12 }}>Du har også ret til at klage til Datatilsynet:</p>
             <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <InfoRow label="Adresse" value="Carl Jacobsens Vej 35, 2500 Valby" />
-                <InfoRow label="Telefon" value="33 19 32 00" />
-                <InfoRow label="E-mail" value={<a href="mailto:dt@datatilsynet.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>dt@datatilsynet.dk</a>} />
-                <InfoRow label="Hjemmeside" value={<a href="https://www.datatilsynet.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }} target="_blank" rel="noopener noreferrer">www.datatilsynet.dk</a>} />
-              </tbody>
-            </table>
+              <InfoRow label="Adresse" value="Carl Jacobsens Vej 35, 2500 Valby" />
+              <InfoRow label="Telefon" value="33 19 32 00" />
+              <InfoRow label="E-mail" value={<a href="mailto:dt@datatilsynet.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>dt@datatilsynet.dk</a>} />
+              <InfoRow label="Hjemmeside" value={<a href="https://www.datatilsynet.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }} target="_blank" rel="noopener noreferrer">www.datatilsynet.dk</a>} />
             </div>
           </section>
 
@@ -333,15 +328,11 @@ export default function Privacy() {
             <h2 style={h2Style}>16. Kontakt</h2>
             <p style={{ marginBottom: 16 }}>Har du spørgsmål til privatlivspolitikken, vores behandling af personoplysninger eller dine rettigheder, kan du kontakte os her:</p>
             <div style={{ border: '1px solid #EDE4DB', borderRadius: 12, overflow: 'hidden', marginTop: 16 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
-                <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
-                <InfoRow label="Telefon" value="72 15 66 86" />
-                <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
-                <InfoRow label="CVR-nr." value="45 14 92 18" />
-              </tbody>
-            </table>
+              <InfoRow label="Virksomhed" value="LALATOTO of Denmark ApS" />
+              <InfoRow label="Adresse" value="Kulbyvej 16, 4270 Høng" />
+              <InfoRow label="Telefon" value="72 15 66 86" />
+              <InfoRow label="E-mail" value={<a href="mailto:kundeservice@lalatoto.dk" style={{ color: '#C29A73', textDecoration: 'none', fontWeight: 500 }}>kundeservice@lalatoto.dk</a>} />
+              <InfoRow label="CVR-nr." value="45 14 92 18" />
             </div>
           </section>
         </div>
