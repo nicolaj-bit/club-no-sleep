@@ -17,24 +17,15 @@
   ],
   "rls": {
     "create": {
-      "$or": [
-        {
-          "data.blocker_email": "{{user.email}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "data.blocker_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
       "$or": [
         {
           "data.blocker_email": "{{user.email}}"
-        },
-        {
-          "data.blocked_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -44,16 +35,9 @@
       ]
     },
     "update": {
-      "$or": [
-        {
-          "data.blocker_email": "{{user.email}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "delete": {
       "$or": [

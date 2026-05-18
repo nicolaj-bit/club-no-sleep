@@ -31,53 +31,20 @@
   ],
   "rls": {
     "create": {
-      "data.expert_id": {
-        "_filter": {
-          "entity": "Expert",
-          "query": {
-            "data.user_email": "{{user.email}}"
-          }
-        }
+      "user_condition": {
+        "role": "admin"
       }
     },
     "read": {},
     "update": {
-      "$or": [
-        {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          }
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     },
     "delete": {
-      "$or": [
-        {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          }
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     }
   }
 }

@@ -2,18 +2,53 @@
 <html lang="da">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="https://www.lalatoto.dk/cdn/shop/files/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Favicon & App Icons -->
+    <link rel="icon" type="image/png" href="https://www.lalatoto.dk/cdn/shop/files/favicon.png" />
+    <link rel="apple-touch-icon" href="https://www.lalatoto.dk/cdn/shop/files/favicon.png" />
+
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
+
+    <!-- iOS PWA / Native meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="LALATOTO" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Android / Theme -->
+    <meta name="theme-color" content="#FAF6F1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1F1A17" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="LALATOTO" />
+
+    <!-- SEO / Open Graph -->
     <title>LALATOTO</title>
-    <meta name="description" content="LALATOTO – Tryg søvn til baby og familie. Naturlige materialer, fri for polyester." />
+    <meta name="description" content="LALATOTO – Din digitale babybog. Søvnlog, tigerspring, kalender og fællesskab for forældre." />
+    <meta property="og:title" content="LALATOTO" />
+    <meta property="og:description" content="Din digitale babybog. Søvnlog, tigerspring, kalender og fællesskab for forældre." />
+    <meta property="og:image" content="https://www.lalatoto.dk/cdn/shop/files/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <style>
-      html, body { background-color: #FAF6F1 !important; }
-    </style>
 
+    <style>
+      html, body {
+        background-color: #FAF6F1 !important;
+        /* Prevent overscroll bounce on iOS */
+        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      /* Prevent text size adjustment on orientation change */
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
