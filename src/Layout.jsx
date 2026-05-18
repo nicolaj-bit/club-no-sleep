@@ -41,36 +41,58 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // OneSignal initialiseres altid — virker i PWA, TestFlight og browser
+    // OneSignal setup — virker i web, PWA, iOS (Capacitor) og Android (Capacitor)
+    const isCapacitor = !!window.Capacitor;
+    
+    if (isCapacitor) {
+      // Native iOS/Android via Capacitor
+      import('https://cdn.onesignal.com/sdks/OneSignalSDK.js').then(() => {
+        window.OneSignal = window.OneSignal || [];
+        window.OneSignal.push(async function(OneSignal) {
+          await OneSignal.init({
+            appId: ONESIGNAL_APP_ID,
+          });
+          try {
+            const isAuth = await base44.auth.isAuthenticated();
+            if (isAuth) {
+              const u = await base44.auth.me();
+              if (u?.email) {
+                OneSignal.login(u.email);
+              }
+            }
+          } catch (_) {}
+        });
+      }).catch(e => console.error('OneSignal import failed:', e));
+    } else {
+      // Web / PWA
+      const script = document.createElement('script');
+      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+      script.defer = true;
+      document.head.appendChild(script);
 
-    // Load OneSignal SDK kun på Android
-    const script = document.createElement('script');
-    script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-    script.defer = true;
-    document.head.appendChild(script);
-
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async (OneSignal) => {
-      await OneSignal.init({
-        appId: ONESIGNAL_APP_ID,
-        allowLocalhostAsSecureOrigin: true,
-      });
-      try {
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const u = await base44.auth.me();
-          if (u?.email) {
-            OneSignal.login(u.email);
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      window.OneSignalDeferred.push(async (OneSignal) => {
+        await OneSignal.init({
+          appId: ONESIGNAL_APP_ID,
+          allowLocalhostAsSecureOrigin: true,
+        });
+        try {
+          const isAuth = await base44.auth.isAuthenticated();
+          if (isAuth) {
+            const u = await base44.auth.me();
+            if (u?.email) {
+              OneSignal.login(u.email);
+            }
           }
-        }
-      } catch (_) {}
-    });
+        } catch (_) {}
+      });
 
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
+      return () => {
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
+      };
+    }
   }, []);
 
   return (

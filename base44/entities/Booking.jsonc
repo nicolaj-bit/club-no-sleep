@@ -9,6 +9,10 @@
     "expert_name": {
       "type": "string"
     },
+    "expert_email": {
+      "type": "string",
+      "description": "Ekspertens email (bruges til RLS)"
+    },
     "client_email": {
       "type": "string",
       "description": "Kundens email"
@@ -61,7 +65,10 @@
   ],
   "rls": {
     "create": {
-      "data.client_email": "{{user.email}}"
+      "data.client_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
     },
     "read": {
       "$or": [
@@ -69,14 +76,7 @@
           "data.client_email": "{{user.email}}"
         },
         {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          }
+          "data.expert_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -91,14 +91,7 @@
           "data.client_email": "{{user.email}}"
         },
         {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          }
+          "data.expert_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -108,26 +101,9 @@
       ]
     },
     "delete": {
-      "$or": [
-        {
-          "data.client_email": "{{user.email}}"
-        },
-        {
-          "data.expert_id": {
-            "_filter": {
-              "entity": "Expert",
-              "query": {
-                "data.user_email": "{{user.email}}"
-              }
-            }
-          }
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
+      "user_condition": {
+        "role": "admin"
+      }
     }
   }
 }

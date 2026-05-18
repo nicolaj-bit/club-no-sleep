@@ -1,0 +1,69 @@
+{
+  "name": "Answer",
+  "type": "object",
+  "properties": {
+    "question_id": {
+      "type": "string",
+      "description": "Reference til sp\u00f8rgsm\u00e5l"
+    },
+    "content": {
+      "type": "string",
+      "maxLength": 3000,
+      "description": "Svar indhold"
+    },
+    "author_username": {
+      "type": "string"
+    },
+    "author_image": {
+      "type": "string"
+    },
+    "author_role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "expert",
+        "admin"
+      ]
+    },
+    "is_accepted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "question_id",
+    "content"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

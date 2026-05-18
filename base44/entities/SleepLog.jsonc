@@ -8,11 +8,11 @@
     },
     "child_id": {
       "type": "string",
-      "description": "Reference til Child entity (aktivt barn ved logning)"
+      "description": "Reference til Child entity"
     },
     "profile_id": {
       "type": "string",
-      "description": "Reference til UserProfile (aktiv profil ved logning)"
+      "description": "Reference til UserProfile"
     },
     "date": {
       "type": "string",
