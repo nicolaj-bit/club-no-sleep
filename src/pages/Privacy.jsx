@@ -24,62 +24,59 @@ export default function Privacy() {
 
   // Key-value table rows
   const InfoRow = ({ label, value }) => (
-    <tr>
+    <tr style={{ borderBottom: '1px solid #F0E7DF' }}>
       <td style={{
-        fontWeight: 500, paddingRight: 24, paddingTop: 14, paddingBottom: 14,
-        color: '#7A665A', fontSize: '0.88rem', verticalAlign: 'top',
-        whiteSpace: 'nowrap', borderBottom: '1px solid #F0E7DF', width: '30%'
+        fontWeight: 500, paddingRight: 28, paddingTop: 18, paddingBottom: 18,
+        color: '#7A665A', fontSize: '0.9rem', verticalAlign: 'top',
+        whiteSpace: 'nowrap', width: '28%'
       }}>{label}</td>
       <td style={{
-        paddingTop: 14, paddingBottom: 14, color: '#2B1F16',
-        fontSize: '0.95rem', borderBottom: '1px solid #F0E7DF'
+        paddingTop: 18, paddingBottom: 18, paddingLeft: 12, color: '#2B1F16',
+        fontSize: '0.96rem'
       }}>{value}</td>
     </tr>
   );
 
   // Two-column data table rows
-  const DataRow = ({ col1, col2, col3, header }) => {
-    const isEven = false;
-    return (
-      <tr style={{ background: header ? '#EEE4D9' : 'transparent' }}>
+  const DataRow = ({ col1, col2, col3, header }) => (
+    <tr style={{ borderBottom: '1px solid #F0E7DF', background: header ? '#EEE4D9' : 'transparent' }}>
+      <td style={{
+        paddingTop: header ? 16 : 18, paddingBottom: header ? 16 : 18, paddingRight: 20, paddingLeft: 20,
+        color: header ? '#5B3F2B' : '#2B1F16',
+        fontWeight: header ? 600 : 500,
+        fontSize: header ? '0.8rem' : '0.9rem',
+        textTransform: header ? 'uppercase' : 'none',
+        letterSpacing: header ? '0.04em' : 'normal',
+        verticalAlign: 'top',
+        width: col3 ? '22%' : '28%'
+      }}>{col1}</td>
+      <td style={{
+        paddingTop: header ? 16 : 18, paddingBottom: header ? 16 : 18, paddingRight: col3 ? 20 : 20, paddingLeft: 12,
+        color: header ? '#5B3F2B' : '#5B3F2B',
+        fontSize: header ? '0.8rem' : '0.92rem',
+        textTransform: header ? 'uppercase' : 'none',
+        letterSpacing: header ? '0.04em' : 'normal',
+        fontWeight: header ? 600 : 400,
+        lineHeight: '1.55',
+        verticalAlign: 'top',
+        width: col3 ? '40%' : '72%'
+      }}>{col2}</td>
+      {col3 !== undefined && (
         <td style={{
-          paddingTop: 13, paddingBottom: 13, paddingRight: 20, paddingLeft: 14,
-          color: header ? '#5B3F2B' : '#2B1F16',
-          fontWeight: header ? 600 : 500,
-          fontSize: header ? '0.82rem' : '0.88rem',
-          textTransform: header ? 'uppercase' : 'none',
-          letterSpacing: header ? '0.04em' : 'normal',
-          verticalAlign: 'top',
-          width: col3 ? '22%' : '30%',
-          borderBottom: '1px solid #F0E7DF'
-        }}>{col1}</td>
-        <td style={{
-          paddingTop: 13, paddingBottom: 13, paddingRight: col3 ? 20 : 14,
-          color: header ? '#5B3F2B' : '#5B3F2B',
-          fontSize: header ? '0.82rem' : '0.9rem',
+          paddingTop: header ? 16 : 18, paddingBottom: header ? 16 : 18, paddingRight: 20, paddingLeft: 12,
+          color: header ? '#5B3F2B' : '#7A665A',
+          fontSize: header ? '0.8rem' : '0.87rem',
           textTransform: header ? 'uppercase' : 'none',
           letterSpacing: header ? '0.04em' : 'normal',
           fontWeight: header ? 600 : 400,
+          fontStyle: header ? 'normal' : 'italic',
+          lineHeight: '1.5',
           verticalAlign: 'top',
-          width: col3 ? '40%' : '70%',
-          borderBottom: '1px solid #F0E7DF'
-        }}>{col2}</td>
-        {col3 !== undefined && (
-          <td style={{
-            paddingTop: 13, paddingBottom: 13, paddingRight: 14,
-            color: header ? '#5B3F2B' : '#7A665A',
-            fontSize: header ? '0.82rem' : '0.85rem',
-            textTransform: header ? 'uppercase' : 'none',
-            letterSpacing: header ? '0.04em' : 'normal',
-            fontWeight: header ? 600 : 400,
-            fontStyle: header ? 'normal' : 'italic',
-            verticalAlign: 'top',
-            borderBottom: '1px solid #F0E7DF'
-          }}>{col3}</td>
-        )}
-      </tr>
-    );
-  };
+          width: '50%'
+        }}>{col3}</td>
+      )}
+    </tr>
+  );
 
   return (
     <div style={{
