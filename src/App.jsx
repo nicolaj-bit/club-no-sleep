@@ -108,9 +108,7 @@ function AppRoutes() {
       window.matchMedia('(display-mode: minimal-ui)').matches ||
       !!window.Capacitor || !!window.cordova;
 
-    const wasAuthenticated = localStorage.getItem('lalatoto_was_authenticated') === 'true';
-    const hasToken = Object.keys(localStorage).some(k => k.includes('token') || k.includes('auth') || k.includes('base44'));
-    const isLoggedIn = wasAuthenticated || hasToken;
+    const isLoggedIn = !!localStorage.getItem('base44_access_token');
 
     if (isLoggedIn) {
       // Logget ind → altid appen, uanset platform
