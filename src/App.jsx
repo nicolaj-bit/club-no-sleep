@@ -100,19 +100,17 @@ function AppRoutes() {
 
   // On root path only: show landing for regular browser, app for PWA/Capacitor
   if (location.pathname === '/') {
-    const isStandalone =
+    const isCapacitor = typeof window.Capacitor !== 'undefined' && window.Capacitor?.isNative === true;
+    const isPWA =
       window.navigator.standalone === true ||
       window.matchMedia('(display-mode: standalone)').matches ||
-      window.matchMedia('(display-mode: fullscreen)').matches ||
-      window.matchMedia('(display-mode: minimal-ui)').matches ||
-      typeof window.Capacitor !== 'undefined' ||
-      typeof window.cordova !== 'undefined';
+      window.matchMedia('(display-mode: minimal-ui)').matches;
 
-    if (!isStandalone) {
+    if (!isCapacitor && !isPWA) {
       // Regular browser → show landing page
       return <LandingPage />;
     }
-    // PWA/App → fall through to AuthenticatedApp which redirects to /app
+    // PWA/Native app → fall through to AuthenticatedApp which redirects to /app
   }
 
   return <AuthenticatedApp />;
