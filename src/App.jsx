@@ -109,14 +109,16 @@ function PublicOrAuth() {
   const location = useLocation();
 
   // Public pages — render completely outside AuthProvider (no auth check)
-  if (location.pathname === '/' ) {
-    const isCapacitor = typeof window.Capacitor !== 'undefined' && window.Capacitor?.isNative === true;
+  if (location.pathname === '/') {
+    const isCapacitor = typeof window.Capacitor !== 'undefined';
     const isPWA =
       window.navigator.standalone === true ||
       window.matchMedia('(display-mode: standalone)').matches ||
       window.matchMedia('(display-mode: minimal-ui)').matches;
+    // TestFlight / Capacitor iOS wraps in a WKWebView — detect via user agent
+    const isWKWebView = /iPhone|iPad/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
 
-    if (!isCapacitor && !isPWA) {
+    if (!isCapacitor && !isPWA && !isWKWebView) {
       return <LandingPage />;
     }
   }
