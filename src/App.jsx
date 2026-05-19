@@ -92,15 +92,14 @@ const AuthenticatedApp = () => {
 
 function AppRoutes() {
   const location = useLocation();
-  const [showLanding, setShowLanding] = React.useState(null);
 
-  const publicPaths = ['/landing', '/terms', '/privacy'];
-  const isPublic = publicPaths.includes(location.pathname);
+  // Always serve public pages directly
+  if (location.pathname === '/landing') return <LandingPagePreview />;
+  if (location.pathname === '/terms') return <Terms />;
+  if (location.pathname === '/privacy') return <Privacy />;
 
-  React.useEffect(() => {
-    if (isPublic) return;
-    if (location.pathname !== '/') { setShowLanding(false); return; }
-
+  // If root path: check if browser (not standalone/PWA) and not logged in → show landing
+  if (location.pathname === '/') {
     const isStandalone =
       window.navigator.standalone === true ||
       window.matchMedia('(display-mode: standalone)').matches ||
@@ -110,27 +109,15 @@ function AppRoutes() {
 
     const isLoggedIn = !!localStorage.getItem('base44_access_token');
 
-    if (isLoggedIn) {
-      // Logget ind → altid appen, uanset platform
-      setShowLanding(false);
-    } else if (!isStandalone) {
-      // Browser, ikke logget ind → landing page
-      setShowLanding('landing');
-    } else {
-      // PWA/App, ikke logget ind → subscription
-      setShowLanding('subscription');
+    if (!isLoggedIn && !isStandalone) {
+      return <LandingPage />;
     }
-  }, [location.pathname]);
-
-  if (isPublic) {
-    if (location.pathname === '/landing') return <LandingPagePreview />;
-    if (location.pathname === '/terms') return <Terms />;
-    if (location.pathname === '/privacy') return <Privacy />;
+    if (!isLoggedIn && isStandalone) {
+      return <Subscription />;
+    }
+    // Logged in → go to app
   }
 
-  if (showLanding === null) return null;
-  if (showLanding === 'subscription') return <Subscription />;
-  if (showLanding === 'landing') return <LandingPage />;
   return <AuthenticatedApp />;
 }
 
