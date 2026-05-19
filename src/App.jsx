@@ -93,31 +93,12 @@ const AuthenticatedApp = () => {
 function AppRoutes() {
   const location = useLocation();
 
-  // Always serve public pages directly
+  // Public pages — no auth needed
   if (location.pathname === '/landing') return <LandingPagePreview />;
   if (location.pathname === '/terms') return <Terms />;
   if (location.pathname === '/privacy') return <Privacy />;
 
-  // If root path: check if browser (not standalone/PWA) and not logged in → show landing
-  if (location.pathname === '/') {
-    const isStandalone =
-      window.navigator.standalone === true ||
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.matchMedia('(display-mode: fullscreen)').matches ||
-      window.matchMedia('(display-mode: minimal-ui)').matches ||
-      !!window.Capacitor || !!window.cordova;
-
-    const isLoggedIn = !!localStorage.getItem('base44_access_token');
-
-    if (!isLoggedIn && !isStandalone) {
-      return <LandingPage />;
-    }
-    if (!isLoggedIn && isStandalone) {
-      return <Subscription />;
-    }
-    // Logged in → go to app
-  }
-
+  // Everything else goes through AuthenticatedApp (handles auth + redirect to /app)
   return <AuthenticatedApp />;
 }
 
