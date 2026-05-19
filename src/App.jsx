@@ -91,15 +91,25 @@ const AuthenticatedApp = () => {
 };
 
 function AppRoutes() {
+  return <AuthenticatedApp />;
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClientInstance}>
+      <Router>
+        <PublicOrAuth />
+      </Router>
+      <Toaster />
+    </QueryClientProvider>
+  );
+}
+
+function PublicOrAuth() {
   const location = useLocation();
 
-  // Public pages — no auth needed
-  if (location.pathname === '/landing') return <LandingPagePreview />;
-  if (location.pathname === '/terms') return <Terms />;
-  if (location.pathname === '/privacy') return <Privacy />;
-
-  // On root path only: show landing for regular browser, app for PWA/Capacitor
-  if (location.pathname === '/') {
+  // Public pages — render completely outside AuthProvider (no auth check)
+  if (location.pathname === '/' ) {
     const isCapacitor = typeof window.Capacitor !== 'undefined' && window.Capacitor?.isNative === true;
     const isPWA =
       window.navigator.standalone === true ||
@@ -107,24 +117,18 @@ function AppRoutes() {
       window.matchMedia('(display-mode: minimal-ui)').matches;
 
     if (!isCapacitor && !isPWA) {
-      // Regular browser → show landing page
       return <LandingPage />;
     }
-    // PWA/Native app → fall through to AuthenticatedApp which redirects to /app
   }
 
-  return <AuthenticatedApp />;
-}
+  if (location.pathname === '/landing') return <LandingPagePreview />;
+  if (location.pathname === '/terms') return <Terms />;
+  if (location.pathname === '/privacy') return <Privacy />;
 
-function App() {
+  // Everything else needs auth
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <AppRoutes />
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
+      <AppRoutes />
     </AuthProvider>
   );
 }
