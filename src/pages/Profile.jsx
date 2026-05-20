@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '@/components/ui/PullToRefresh';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight, Sparkles } from 'lucide-react';
-import CompleteProfileOnboarding from '@/components/profile/CompleteProfileOnboarding';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -28,6 +27,7 @@ import { Baby, Pencil } from 'lucide-react';
 export default function Profile() {
   const { isDark } = useTheme();
   const { t, lang, setLang } = useLanguage();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { activeProfile, allProfiles, refreshProfiles } = useActiveProfile();
   const [user, setUser] = useState(null);
@@ -36,7 +36,6 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({});
   const [langSheetOpen, setLangSheetOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [helpConfig, setHelpConfig] = useState(null);
   const [addChildOpen, setAddChildOpen] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
@@ -126,7 +125,7 @@ export default function Profile() {
         {!profile && (
           <>
             <button
-              onClick={() => setOnboardingOpen(true)}
+              onClick={() => navigate('/Onboarding')}
               className="w-full rounded-3xl overflow-hidden relative active:opacity-90 transition-opacity text-left"
               style={{
                 background: 'linear-gradient(135deg, #C8A882, #8A5A30)',
@@ -148,12 +147,7 @@ export default function Profile() {
               </div>
             </button>
 
-            <CompleteProfileOnboarding
-              user={user}
-              open={onboardingOpen}
-              onClose={() => setOnboardingOpen(false)}
-              onComplete={() => { setOnboardingOpen(false); refreshProfiles(); }}
-            />
+
           </>
         )}
 

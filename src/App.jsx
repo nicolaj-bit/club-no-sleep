@@ -11,6 +11,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
 import LandingPage from './pages/LandingPage';
+import Onboarding from './pages/Onboarding';
 import AboutUs from './pages/AboutUs';
 import FamilyInvite from './pages/FamilyInvite';
 import Subscription from './pages/Subscription.jsx';
@@ -54,6 +55,9 @@ const AuthenticatedApp = () => {
   return (
     <SubscriptionGate>
       <Routes>
+        {/* Onboarding — ingen subscription gate, ingen bottom nav */}
+        <Route path="/Onboarding" element={<Onboarding />} />
+
         <Route path="/" element={<Navigate to="/app" replace />} />
         <Route path="/app" element={<LayoutWrapper currentPageName={mainPageKey}><MainPage /></LayoutWrapper>} />
         {Object.entries(Pages).map(([path, Page]) => (

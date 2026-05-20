@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import Paywall from './Paywall';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * SubscriptionGate — wraps the entire app.
@@ -9,8 +10,16 @@ import Paywall from './Paywall';
  */
 export default function SubscriptionGate({ children }) {
   const [status, setStatus] = useState('loading'); // loading | ok | paywall
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const checkSubscription = useCallback(async () => {
+    // Onboarding-siden er altid tilgængelig — ingen gate
+    if (location.pathname === '/Onboarding') {
+      setStatus('ok');
+      return;
+    }
+
     try {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
@@ -27,7 +36,9 @@ export default function SubscriptionGate({ children }) {
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
 
       if (!profiles.length) {
-        setStatus('paywall');
+        // Ny bruger uden profil → send til onboarding
+        navigate('/Onboarding', { replace: true });
+        setStatus('ok');
         return;
       }
 
@@ -56,7 +67,7 @@ export default function SubscriptionGate({ children }) {
     } catch {
       setStatus('ok');
     }
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     checkSubscription();
