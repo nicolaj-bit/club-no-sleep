@@ -21,8 +21,7 @@ import PregnancyWeeks from './pages/PregnancyWeeks';
 import Practitioners from './pages/Practitioners';
 import Milestones from './pages/Milestones';
 import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
-import AdminFooter from './pages/AdminFooter';
-import AdminNavMenu from './pages/AdminNavMenu';
+
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -74,8 +73,7 @@ const AuthenticatedApp = () => {
         <Route path="/Practitioners" element={<LayoutWrapper currentPageName="Practitioners"><Practitioners /></LayoutWrapper>} />
         <Route path="/Milestones" element={<LayoutWrapper currentPageName="Milestones"><Milestones /></LayoutWrapper>} />
         <Route path="/BabyFriendlyCafes" element={<LayoutWrapper currentPageName="BabyFriendlyCafes"><BabyFriendlyCafes /></LayoutWrapper>} />
-        <Route path="/AdminFooter" element={<AdminFooter />} />
-        <Route path="/AdminNavMenu" element={<AdminNavMenu />} />
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>
