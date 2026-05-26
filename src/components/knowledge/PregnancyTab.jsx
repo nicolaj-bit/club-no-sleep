@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, ArrowRight, BookOpen } from 'lucide-react';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from './pregnancyWeekData';
 
@@ -92,6 +94,7 @@ function WeekCard({ week, data, isCurrent }) {
 export default function PregnancyTab() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { isActive: hasSubscription } = useSubscription();
 
   useEffect(() => {
     const load = async () => {
@@ -164,16 +167,18 @@ export default function PregnancyTab() {
         <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
           Alle uger
         </p>
-        <div className="space-y-2">
-          {weeksToShow.map(week => (
-            <WeekCard
-              key={week}
-              week={week}
-              data={PREGNANCY_WEEKS[week]}
-              isCurrent={isPregnant && week === currentWeek}
-            />
-          ))}
-        </div>
+        <ContentLock locked={!hasSubscription} blurHeight="260px">
+          <div className="space-y-2">
+            {weeksToShow.map(week => (
+              <WeekCard
+                key={week}
+                week={week}
+                data={PREGNANCY_WEEKS[week]}
+                isCurrent={isPregnant && week === currentWeek}
+              />
+            ))}
+          </div>
+        </ContentLock>
       </div>
     </div>
   );

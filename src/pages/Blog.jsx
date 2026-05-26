@@ -11,8 +11,11 @@ import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 export default function Blog() {
+  const { isActive: hasSubscription } = useSubscription();
   const queryClient = useQueryClient();
   const { lang, t } = useLanguage();
   const { isDark } = useTheme();
@@ -96,6 +99,7 @@ export default function Blog() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+
       <div
         className="sticky top-0 z-40 transition-transform duration-300"
         style={{ transform: hidden ? 'translateY(-100%)' : 'translateY(0)' }}
@@ -183,31 +187,33 @@ export default function Blog() {
             <p style={{ color: 'var(--color-text-muted)' }}>{t.noPosts}</p>
           </div>
         ) : (
-          <>
-            {/* Featured Post */}
-            {featuredPost && (
-              <BlogCard
-                post={featuredPost}
-                variant="featured"
-                translatedTitle={getTranslated(postTranslations, featuredPost.id, 'title', null)}
-                translatedCategory={getTranslated(postTranslations, featuredPost.id, 'category', null)}
-                lang={lang}
-              />
-            )}
-            
-            {/* Other Posts */}
-            <div className="space-y-4">
-              {otherPosts.map(post => (
+          <ContentLock locked={!hasSubscription} blurHeight="320px">
+            <>
+              {/* Featured Post */}
+              {featuredPost && (
                 <BlogCard
-                  key={post.id}
-                  post={post}
-                  translatedTitle={getTranslated(postTranslations, post.id, 'title', null)}
-                  translatedCategory={getTranslated(postTranslations, post.id, 'category', null)}
+                  post={featuredPost}
+                  variant="featured"
+                  translatedTitle={getTranslated(postTranslations, featuredPost.id, 'title', null)}
+                  translatedCategory={getTranslated(postTranslations, featuredPost.id, 'category', null)}
                   lang={lang}
                 />
-              ))}
-            </div>
-          </>
+              )}
+              
+              {/* Other Posts */}
+              <div className="space-y-4">
+                {otherPosts.map(post => (
+                  <BlogCard
+                    key={post.id}
+                    post={post}
+                    translatedTitle={getTranslated(postTranslations, post.id, 'title', null)}
+                    translatedCategory={getTranslated(postTranslations, post.id, 'category', null)}
+                    lang={lang}
+                  />
+                ))}
+              </div>
+            </>
+          </ContentLock>
         )}
       </div>
     </div>

@@ -6,12 +6,15 @@ import { createPageUrl } from '@/utils';
 import { getAgeInWeeks, getCurrentWonderWeek, wonderWeeks } from '@/components/wonderweeks/wonderweeksData';
 import { ChevronRight, Sparkles, Clock } from 'lucide-react';
 import { useWonderWeekEmojis } from './useWonderWeekEmojis';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeeksTab() {
   const [user, setUser] = useState(null);
   const emojiMap = useWonderWeekEmojis();
+  const { isActive: hasSubscription } = useSubscription();
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
@@ -67,6 +70,7 @@ export default function WonderWeeksTab() {
       </div>
 
       {/* Wonder Weeks list */}
+      <ContentLock locked={!hasSubscription} blurHeight="280px">
       <div className="space-y-2">
         {wonderWeeks.map((ww) => {
           const status = getStatus(ww);
@@ -132,6 +136,7 @@ export default function WonderWeeksTab() {
           );
         })}
       </div>
+      </ContentLock>
     </div>
   );
 }

@@ -1,20 +1,19 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
-import Paywall from './Paywall';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { clearSubscriptionCache } from './useSubscription';
 
 /**
  * SubscriptionGate — wraps the entire app.
- * Shows Paywall for logged-in users without an active subscription.
- * Passes through for unauthenticated users (login flow handles them).
+ * In DEMO MODE: all pages are accessible, but premium content is locked inside components.
+ * Only redirects to onboarding if no profile exists.
  */
 export default function SubscriptionGate({ children }) {
-  const [status, setStatus] = useState('loading'); // loading | ok | paywall
+  const [status, setStatus] = useState('loading');
   const location = useLocation();
   const navigate = useNavigate();
 
-  const checkSubscription = useCallback(async () => {
-    // Onboarding-siden er altid tilgængelig — ingen gate
+  const checkAccess = useCallback(async () => {
     if (location.pathname === '/Onboarding') {
       setStatus('ok');
       return;
@@ -36,52 +35,21 @@ export default function SubscriptionGate({ children }) {
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
 
       if (!profiles.length) {
-        // Ny bruger uden profil → send til onboarding
         navigate('/Onboarding', { replace: true });
         setStatus('ok');
         return;
       }
 
-      // Admin users always get access
-      if (user.role === 'admin') {
-        setStatus('ok');
-        return;
-      }
-
-      const profile = profiles[0];
-      const subStatus = profile.subscription_status;
-
-      if (subStatus === 'active') {
-        setStatus('ok');
-        return;
-      }
-
-      if (subStatus === 'trial') {
-        const trialStart = new Date(profile.trial_started_at || profile.created_date);
-        const daysDiff = (Date.now() - trialStart.getTime()) / (1000 * 60 * 60 * 24);
-        setStatus(daysDiff <= 30 ? 'ok' : 'paywall');
-        return;
-      }
-
-      setStatus('paywall');
+      // Everyone gets access — premium content is locked inside components
+      setStatus('ok');
     } catch {
       setStatus('ok');
     }
   }, [location.pathname]);
 
   useEffect(() => {
-    checkSubscription();
-  }, [checkSubscription]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && status === 'paywall') {
-        checkSubscription();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [checkSubscription, status]);
+    checkAccess();
+  }, [checkAccess]);
 
   if (status === 'loading') {
     return (
@@ -89,10 +57,6 @@ export default function SubscriptionGate({ children }) {
         <div className="w-8 h-8 border-4 border-slate-200 border-t-amber-700 rounded-full animate-spin" />
       </div>
     );
-  }
-
-  if (status === 'paywall') {
-    return <Paywall onSubscribed={() => setStatus('ok')} />;
   }
 
   return children;
