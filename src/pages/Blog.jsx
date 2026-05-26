@@ -15,7 +15,7 @@ import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 
 export default function Blog() {
-  const { isActive: hasSubscription } = useSubscription();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const queryClient = useQueryClient();
   const { lang, t } = useLanguage();
   const { isDark } = useTheme();
@@ -187,7 +187,7 @@ export default function Blog() {
             <p style={{ color: 'var(--color-text-muted)' }}>{t.noPosts}</p>
           </div>
         ) : (
-          <ContentLock locked={!hasSubscription} blurHeight="320px">
+          <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="320px">
             <>
               {/* Featured Post */}
               {featuredPost && (

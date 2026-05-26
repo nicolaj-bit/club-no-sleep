@@ -37,7 +37,7 @@ export default function Community() {
   const queryClient = useQueryClient();
   const { isMom, activeProfile } = useActiveProfile();
   const { t } = useLanguage();
-  const { isActive: hasSubscription } = useSubscription();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const TABS = [
     { value: 'nearby', icon: Radio, label: t.nearMe },
     { value: 'chats', icon: MessageCircle, label: t.chats },
@@ -241,7 +241,7 @@ export default function Community() {
         </div>
         </div>
         <div>
-          <ContentLock locked={!hasSubscription} blurHeight="400px">
+          <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="400px">
           {/* Far-profil blokeringsbesked for community-tabs */}
           {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">

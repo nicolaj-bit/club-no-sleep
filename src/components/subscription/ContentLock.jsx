@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Sparkles, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import { Lock, Sparkles, Loader2, RefreshCw, AlertCircle, Loader } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { clearSubscriptionCache } from './useSubscription';
@@ -10,14 +10,29 @@ import { clearSubscriptionCache } from './useSubscription';
  * 
  * Props:
  *   locked: boolean   — whether to show the lock
+ *   loading: boolean  — still checking subscription (show spinner, block interactions)
  *   children          — the content to show/blur
  *   blurHeight: string — height of the blurred preview area (default '200px')
  */
-export default function ContentLock({ locked, children, blurHeight = '200px', onUnlocked }) {
+export default function ContentLock({ locked, loading: subscriptionLoading, children, blurHeight = '200px', onUnlocked }) {
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState(null);
   const [restoreMsg, setRestoreMsg] = useState(null);
+
+  // While subscription is still loading, show a full-height spinner overlay so nothing is clickable
+  if (subscriptionLoading) {
+    return (
+      <div className="relative min-h-[300px]">
+        <div style={{ filter: 'blur(4px)', pointerEvents: 'none', userSelect: 'none' }}>
+          {children}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(250,246,241,0.7)' }}>
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-primary)' }} />
+        </div>
+      </div>
+    );
+  }
 
   if (!locked) return children;
 

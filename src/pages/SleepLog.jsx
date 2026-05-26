@@ -79,7 +79,7 @@ export default function SleepLog() {
   const { activeChild } = useActiveChild();
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
-  const { isActive: hasSubscription } = useSubscription();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -266,7 +266,7 @@ export default function SleepLog() {
       {view === 'history' ? (
         <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />
       ) : (
-        <ContentLock locked={!hasSubscription} blurHeight="300px">
+        <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="300px">
         <div className="px-4 py-5 space-y-4 max-w-lg mx-auto">
 
           {/* Hero gradient card */}

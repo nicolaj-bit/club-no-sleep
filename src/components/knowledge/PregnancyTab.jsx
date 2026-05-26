@@ -94,7 +94,7 @@ function WeekCard({ week, data, isCurrent }) {
 export default function PregnancyTab() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { isActive: hasSubscription } = useSubscription();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
 
   useEffect(() => {
     const load = async () => {
@@ -167,7 +167,7 @@ export default function PregnancyTab() {
         <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
           Alle uger
         </p>
-        <ContentLock locked={!hasSubscription} blurHeight="260px">
+        <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="260px">
           <div className="space-y-2">
             {weeksToShow.map(week => (
               <WeekCard
