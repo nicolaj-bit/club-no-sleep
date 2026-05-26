@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import MilestoneFrameEditor from '@/components/admin/MilestoneFrameEditor';
@@ -14,7 +15,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -33,6 +34,9 @@ export default function AdminEditor() {
   const [sharingConfig, setSharingConfig] = useState(null);
   const [sharingForm, setSharingForm] = useState({});
   const [sharingSaving, setShareSaving] = useState(false);
+  const [demoConfig, setDemoConfig] = useState(null);
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoSaving, setDemoSaving] = useState(false);
 
 
   useEffect(() => {
@@ -117,6 +121,28 @@ export default function AdminEditor() {
     mutationFn: (id) => base44.entities.LegalContent.delete(id),
     onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
   });
+
+  useEffect(() => {
+    if (activeTab !== 'DemoMode') return;
+    base44.entities.AppConfig.filter({ key: 'main' }).then(results => {
+      const config = results[0] || null;
+      setDemoConfig(config);
+      setDemoMode(config?.demo_mode === true);
+    });
+  }, [activeTab]);
+
+  const handleToggleDemoMode = async (checked) => {
+    setDemoSaving(true);
+    setDemoMode(checked);
+    if (demoConfig?.id) {
+      await base44.entities.AppConfig.update(demoConfig.id, { demo_mode: checked });
+    } else {
+      const created = await base44.entities.AppConfig.create({ key: 'main', demo_mode: checked });
+      setDemoConfig(created);
+    }
+    setDemoSaving(false);
+    toast.success(checked ? 'Demo-tilstand aktiveret' : 'Demo-tilstand deaktiveret');
+  };
 
   useEffect(() => {
     if (activeTab !== 'SharingPage') return;
@@ -375,7 +401,7 @@ export default function AdminEditor() {
             <Bell className="w-3.5 h-3.5" /> Notifikationer
           </button>
         </Link>
-        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && (
+        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && (
           <button
             onClick={handleNew}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
@@ -396,8 +422,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : <Star className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : 'Milepæle'}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : tab === 'Milestones' ? 'Milepæle' : 'Demo'}
           </button>
         ))}
       </div>
@@ -484,8 +510,35 @@ export default function AdminEditor() {
       {activeTab === 'ColorTheme' && <ColorThemeEditor />}
       {activeTab === 'Milestones' && <MilestoneFrameEditor />}
 
+      {activeTab === 'DemoMode' && (
+        <div className="p-4 max-w-lg mx-auto mt-4 space-y-4">
+          <div className="rounded-2xl border p-5 space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: demoMode ? '#fef3c7' : 'var(--color-bg-subtle)' }}>
+                <FlaskConical className="w-5 h-5" style={{ color: demoMode ? '#d97706' : 'var(--color-text-muted)' }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>Demo-tilstand</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Alle brugere får fuld adgang uden abonnement</p>
+              </div>
+              <Switch checked={demoMode} onCheckedChange={handleToggleDemoMode} disabled={demoSaving} />
+            </div>
+            {demoMode && (
+              <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: '#fef3c7', color: '#92400e' }}>
+                ⚠️ Demo-tilstand er <strong>aktiv</strong> — alle brugere har fuld adgang. Husk at slå det fra efter App Store-review.
+              </div>
+            )}
+            {!demoMode && (
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                Bruges typisk til App Store / Google Play review, hvor reviewere ikke har abonnement.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>

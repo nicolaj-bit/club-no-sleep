@@ -34,6 +34,11 @@
       ],
       "default": "sand",
       "description": "Appens farvetema (v\u00e6lges af admin)"
+    },
+    "demo_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Demo-tilstand: alle brugere f\u00e5r fuld adgang (bruges til App Store/Google Play review)"
     }
   },
   "required": [
