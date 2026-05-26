@@ -28,9 +28,11 @@ export function useSubscription() {
           return;
         }
 
-        // Check demo mode — if enabled, everyone gets full access
+        // Check demo mode — if enabled, everyone (including admin) sees app as a regular user would
         const configs = await base44.entities.AppConfig.filter({ key: 'main' });
-        if (configs.length > 0 && configs[0].demo_mode === true) {
+        const isDemoMode = configs.length > 0 && configs[0].demo_mode === true;
+
+        if (isDemoMode) {
           const result = { isActive: true, isTrial: false, demoMode: true };
           _cache = result;
           _cacheTime = Date.now();
@@ -38,6 +40,7 @@ export function useSubscription() {
           return;
         }
 
+        // Admin always gets full access (when not in demo mode)
         if (user.role === 'admin') {
           const result = { isActive: true, isTrial: false };
           _cache = result;

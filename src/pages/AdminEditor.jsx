@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import { clearSubscriptionCache } from '@/components/subscription/useSubscription';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import MilestoneFrameEditor from '@/components/admin/MilestoneFrameEditor';
@@ -140,8 +141,9 @@ export default function AdminEditor() {
       const created = await base44.entities.AppConfig.create({ key: 'main', demo_mode: checked });
       setDemoConfig(created);
     }
+    clearSubscriptionCache();
     setDemoSaving(false);
-    toast.success(checked ? 'Demo-tilstand aktiveret' : 'Demo-tilstand deaktiveret');
+    toast.success(checked ? 'Demo-tilstand aktiveret — genindlæs appen for at se det' : 'Demo-tilstand deaktiveret');
   };
 
   useEffect(() => {
