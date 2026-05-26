@@ -17,6 +17,8 @@ import NearbyUserCard from '@/components/community/NearbyUserCard';
 import DenmarkMap from '@/components/community/DenmarkMap';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in km
@@ -35,6 +37,7 @@ export default function Community() {
   const queryClient = useQueryClient();
   const { isMom, activeProfile } = useActiveProfile();
   const { t } = useLanguage();
+  const { isActive: hasSubscription } = useSubscription();
   const TABS = [
     { value: 'nearby', icon: Radio, label: t.nearMe },
     { value: 'chats', icon: MessageCircle, label: t.chats },
@@ -238,7 +241,7 @@ export default function Community() {
         </div>
         </div>
         <div>
-
+          <ContentLock locked={!hasSubscription} blurHeight="400px">
           {/* Far-profil blokeringsbesked for community-tabs */}
           {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
@@ -416,8 +419,7 @@ export default function Community() {
               })
             )}
           </div>}
-
-
+          </ContentLock>
 
 
 

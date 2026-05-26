@@ -13,6 +13,8 @@ import { da, enUS } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 
 
@@ -77,6 +79,7 @@ export default function SleepLog() {
   const { activeChild } = useActiveChild();
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
+  const { isActive: hasSubscription } = useSubscription();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -263,6 +266,7 @@ export default function SleepLog() {
       {view === 'history' ? (
         <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />
       ) : (
+        <ContentLock locked={!hasSubscription} blurHeight="300px">
         <div className="px-4 py-5 space-y-4 max-w-lg mx-auto">
 
           {/* Hero gradient card */}
@@ -566,12 +570,13 @@ export default function SleepLog() {
               {aiCard && aiCard !== 'loading' ? t.updateAiAdvice : t.getAiAdvice}
             </button>
           </div>
-        </div>
-      )}
-    </div>
-    </PullToRefresh>
-  );
-}
+          </div>
+          </ContentLock>
+          )}
+          </div>
+          </PullToRefresh>
+          );
+          }
 
 function HistoryView({ history, t, lang, dateLocale, MOODS }) {
   if (!history) return (
