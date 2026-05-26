@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import { format } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
@@ -22,7 +21,7 @@ import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import PullToRefresh from '@/components/ui/PullToRefresh';
-import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/lib/AuthContext';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -50,24 +49,7 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { activeProfile, loading: profileLoading } = useActiveProfile();
   const { activeChild, loading: childLoading } = useActiveChild();
-  const [user, setUser] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
-  const [, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    base44.auth.isAuthenticated().then(isAuth => {
-      if (isAuth) {
-        base44.auth.me().then(u => { setUser(u); setUserLoading(false); }).catch(() => setUserLoading(false));
-      } else {
-        setUserLoading(false);
-      }
-    }).catch(() => setUserLoading(false));
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const { user, isLoadingAuth } = useAuth();
 
   // Handle return from Stripe checkout — trigger subscription verification
   useEffect(() => {
@@ -85,6 +67,7 @@ export default function Home() {
   const { data: posts = [] } = useQuery({
     queryKey: ['blogPosts'],
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date', 20),
+    staleTime: 5 * 60 * 1000, // 5 min cache
   });
 
   const profile = activeProfile;
@@ -115,7 +98,7 @@ export default function Home() {
     : affirmation;
 
   // Vent til BÅDE profil OG user er loaded før vi beslutter view
-  if (profileLoading || userLoading) {
+  if (profileLoading || childLoading || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>

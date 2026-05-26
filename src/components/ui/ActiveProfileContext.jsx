@@ -15,15 +15,20 @@ export function ActiveProfileProvider({ children }) {
   const [activeProfile, setActiveProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const refreshProfiles = useCallback(async () => {
+  const refreshProfiles = useCallback(async (userEmail) => {
     try {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (!isAuth) { setLoading(false); return; }
-      const user = await base44.auth.me();
-      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+      let email = userEmail;
+      if (!email) {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) { setLoading(false); return; }
+        const user = await base44.auth.me();
+        email = user?.email;
+      }
+      if (!email) { setLoading(false); return; }
+
+      const profiles = await base44.entities.UserProfile.filter({ user_email: email });
       setAllProfiles(profiles);
 
-      // Hent gemt aktiv profil-id fra localStorage
       const savedId = localStorage.getItem('active_profile_id');
       const saved = profiles.find(p => p.id === savedId);
       const active = saved || profiles[0] || null;

@@ -18,6 +18,7 @@ export function ActiveChildProvider({ children: reactChildren }) {
 
   const fetchChildren = useCallback(async () => {
     try {
+      // Brug cachet user-email hvis muligt for at undgå ekstra auth-kald
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) { setLoading(false); return; }
       const user = await base44.auth.me();
@@ -26,7 +27,6 @@ export function ActiveChildProvider({ children: reactChildren }) {
       const list = await base44.entities.Child.filter({ user_email: user.email }, 'order', 20);
       setChildren(list);
 
-      // Auto-select first child if none selected or stored one doesn't exist
       if (list.length > 0) {
         const stored = localStorage.getItem('active-child-id');
         const exists = list.some(c => c.id === stored);
