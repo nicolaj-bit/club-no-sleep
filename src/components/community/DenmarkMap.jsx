@@ -1,9 +1,21 @@
-import React, { useState, useMemo } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import React, { useMemo, useEffect } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const DENMARK_CENTER = [56.0, 10.5];
+
+function AutoZoom({ location }) {
+  const map = useMap();
+  useEffect(() => {
+    if (location) {
+      map.flyTo([location.lat, location.lng], 11, { duration: 1.2 });
+    } else {
+      map.flyTo(DENMARK_CENTER, 6, { duration: 1.2 });
+    }
+  }, [location?.lat, location?.lng]);
+  return null;
+}
 
 export default function DenmarkMap({ users = [], currentUserLocation = null, onStartChat }) {
   const mappedUsers = users.filter(u => u.latitude && u.longitude);
@@ -44,6 +56,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         attributionControl={false}
       >
         <TileLayer url={tileUrl} />
+        <AutoZoom location={currentUserLocation} />
 
         {/* Other active users — gold dots */}
         {mappedUsers.map((u, i) => (
