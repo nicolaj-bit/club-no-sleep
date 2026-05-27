@@ -111,7 +111,7 @@ export default function Settings() {
   };
 
   const gridItems = [
-    ...(isAdmin ? [{ icon: FileText, label: t.blogAndArticles, link: 'AdminEditor' }] : []),
+    ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
     { icon: Lock,        label: t.password,      action: () => setPasswordOpen(true) },
     { icon: Bell,        label: t.notifications, toggle: true, defaultChecked: true },
     { icon: Shield,      label: t.privacy,       action: openPrivacy },
