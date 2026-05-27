@@ -52,7 +52,8 @@ export default function WonderWeeksTab() {
         <div className="relative z-10">
           <h2 className="text-lg font-semibold text-white mb-1">Tigerspring</h2>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            De 10 store udviklingsspring i dit barns første leveår. Tider beregnes fra terminsdatoen.
+            Tigerspring er perioder, hvor dit barn udvikler sig særligt meget mentalt. Det kan gøre barnet mere uroligt, mere kontaktsøgende eller påvirke søvnen i en periode.
+            Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt, så brug springet som en kærlig guide, ikke som en facitliste.
           </p>
           {!profile?.child_due_date && (
             <Link
