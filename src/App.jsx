@@ -10,7 +10,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
-import LandingPage from './pages/LandingPage';
+
 import Onboarding from './pages/Onboarding';
 import AboutUs from './pages/AboutUs';
 import FamilyInvite from './pages/FamilyInvite';
@@ -100,24 +100,6 @@ function App() {
 }
 
 function PublicOrAuth() {
-  const location = useLocation();
-
-  // Public pages — render completely outside AuthProvider (no auth check)
-  if (location.pathname === '/') {
-    const isCapacitor = typeof window.Capacitor !== 'undefined';
-    const isPWA =
-      window.navigator.standalone === true ||
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.matchMedia('(display-mode: minimal-ui)').matches;
-    // TestFlight / Capacitor iOS wraps in a WKWebView — detect via user agent
-    const isWKWebView = /iPhone|iPad/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
-
-    if (!isCapacitor && !isPWA && !isWKWebView) {
-      return <LandingPage />;
-    }
-  }
-
-  // Everything else needs auth
   return (
     <AuthProvider>
       <AppRoutes />
