@@ -13,6 +13,28 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Native calendar helper — kun aktiv i Capacitor (iOS/Android)
+const isCapacitor = typeof window !== 'undefined' && !!window.Capacitor;
+
+async function addToNativeCalendar(event) {
+  if (!isCapacitor) return;
+  try {
+    const { CapacitorCalendar } = await import('@capgo/capacitor-calendar');
+    const perm = await CapacitorCalendar.requestWriteOnlyCalendarAccess();
+    if (perm.result !== 'granted') return;
+    const start = new Date(event.start_datetime).getTime();
+    const end = event.end_datetime ? new Date(event.end_datetime).getTime() : start + 60 * 60 * 1000;
+    await CapacitorCalendar.createEvent({
+      title: event.title,
+      notes: event.description || '',
+      startDate: start,
+      endDate: end,
+    });
+  } catch (e) {
+    console.warn('Native calendar sync fejlede:', e);
+  }
+}
+
 export default function Calendar() {
   const { t, lang } = useLanguage();
   const dateLocale = lang === 'en' ? enUS : da;
@@ -47,11 +69,13 @@ export default function Calendar() {
 
   const createEvent = useMutation({
     mutationFn: (data) => base44.entities.CalendarEvent.create({ ...data, user_email: user.email }),
-    onSuccess: () => {
+    onSuccess: async (savedEvent, variables) => {
       queryClient.invalidateQueries(['calendarEvents', user?.email]);
       setShowForm(false);
       setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
       toast.success(t.eventCreated);
+      // Sync til telefonens native kalender (kun i native app)
+      await addToNativeCalendar({ ...variables, user_email: user.email });
     }
   });
 
