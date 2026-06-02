@@ -5,12 +5,12 @@ import { Moon, ArrowRight, Star } from 'lucide-react';
 import LegalModal from '@/components/landing/LegalModal';
 
 const FEATURES = [
-  { emoji: '🌙', icon: Moon, title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
-  { emoji: '🐯', title: 'Tigerspring', desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
-  { emoji: '📅', title: 'Kalender', desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
-  { emoji: '👩‍👧', title: 'Fællesskab', desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
-  { emoji: '📖', title: 'Videnscenter', desc: 'Ekspertviden om graviditet, baby og det første år.' },
-  { emoji: '🔔', title: 'Notifikationer', desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' },
+  { title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
+  { title: 'Tigerspring', desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
+  { title: 'Kalender', desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
+  { title: 'Fællesskab', desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
+  { title: 'Videnscenter', desc: 'Ekspertviden om graviditet, baby og det første år.' },
+  { title: 'Notifikationer', desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' },
 ];
 
 const REVIEWS = [
@@ -89,7 +89,7 @@ export default function Landing() {
 
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-7"
               style={{ backgroundColor: '#F3E9E1', color: '#8A6245', border: '1px solid #DCC1B0' }}>
-              🌙 Din trygge havn som ny forælder
+              Din trygge havn som ny forælder
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
@@ -149,7 +149,7 @@ export default function Landing() {
                   <p className="text-white text-xs text-center opacity-60">Din app for nye forældre</p>
                   {/* Fake cards */}
                   <div className="w-full space-y-2 mt-4">
-                    {['🌙 Søvnråd', '🐯 Tigerspring', '📅 Kalender'].map((item, i) => (
+                    {['Søvnråd', 'Tigerspring', 'Kalender'].map((item, i) => (
                       <div key={i} className="rounded-xl px-4 py-2.5 text-xs text-white"
                         style={{ background: 'rgba(255,255,255,0.12)' }}>
                         {item}
@@ -180,7 +180,6 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
                 className="rounded-2xl p-6 flex flex-col gap-3 transition-shadow hover:shadow-md"
                 style={{ backgroundColor: '#FFFDF9', border: '1px solid #EDE4DB' }}>
-                <span className="text-3xl">{f.emoji}</span>
                 <p className="font-semibold" style={{ color: '#2B1F16' }}>{f.title}</p>
                 <p className="text-sm leading-relaxed" style={{ color: '#7A665A' }}>{f.desc}</p>
               </motion.div>
@@ -349,14 +348,11 @@ export default function Landing() {
             {/* App badges */}
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8A6A5A' }}>Hent appen</p>
-              {[
-                { icon: '🍎', label: 'App Store' },
-                { icon: '🤖', label: 'Google Play' },
-              ].map((s, i) => (
+              {['App Store', 'Google Play'].map((label, i) => (
                 <a key={i} href="#"
                   className="flex items-center gap-2 text-sm transition-colors hover:text-white"
                   style={{ color: '#C8A882' }}>
-                  <span>{s.icon}</span> {s.label}
+                  {label}
                 </a>
               ))}
             </div>
