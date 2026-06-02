@@ -40,8 +40,8 @@ export default function Landing() {
     <div style={{ backgroundColor: '#FAF6F1', color: '#2B1F16', fontFamily: 'Inter, sans-serif', minHeight: '100vh' }}>
 
       {/* NAVBAR */}
-      <nav style={{ backgroundColor: 'rgba(250,246,241,0.92)', borderBottom: '1px solid #EDE4DB', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', paddingTop: 'max(16px, env(safe-area-inset-top))' }}
-        className="sticky top-0 z-50 flex items-center justify-between px-6 pb-4">
+      <nav style={{ backgroundColor: 'rgba(250,246,241,0.92)', borderBottom: '1px solid #EDE4DB', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+        className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 safe-top">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>
             <Moon className="w-4 h-4 text-white" />
