@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Moon, ArrowRight, Star, Heart, MessageCircle, Calendar, BookOpen, Bell } from 'lucide-react';
+import { Moon, ArrowRight, Star } from 'lucide-react';
+import LegalModal from '@/components/landing/LegalModal';
 
 const FEATURES = [
   { emoji: '🌙', icon: Moon, title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
@@ -26,6 +27,7 @@ const STATS = [
 
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
+  const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy'
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
@@ -309,15 +311,70 @@ export default function Landing() {
       </section>
 
       {/* FOOTER */}
-      <footer className="px-6 py-8 text-center" style={{ borderTop: '1px solid #EDE4DB' }}>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>
-            <Moon className="w-3 h-3 text-white" />
+      <footer style={{ backgroundColor: '#2B1F16', color: '#DCC1B0' }} className="px-6 py-14">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-10 mb-10">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>
+                  <Moon className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-semibold" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#F5EFE9' }}>
+                  clubnosleep
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed max-w-xs" style={{ color: '#9A7A6A' }}>
+                Din trygge havn som ny forælder — søvn, fællesskab og viden samlet ét sted.
+              </p>
+            </div>
+
+            {/* Links */}
+            <div className="flex flex-col gap-3">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8A6A5A' }}>Juridisk</p>
+              <button
+                onClick={() => setLegalModal('terms')}
+                className="text-sm text-left transition-colors hover:text-white"
+                style={{ color: '#C8A882' }}>
+                Handelsbetingelser
+              </button>
+              <button
+                onClick={() => setLegalModal('privacy')}
+                className="text-sm text-left transition-colors hover:text-white"
+                style={{ color: '#C8A882' }}>
+                Privatlivspolitik
+              </button>
+            </div>
+
+            {/* App badges */}
+            <div className="flex flex-col gap-3">
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8A6A5A' }}>Hent appen</p>
+              {[
+                { icon: '🍎', label: 'App Store' },
+                { icon: '🤖', label: 'Google Play' },
+              ].map((s, i) => (
+                <a key={i} href="#"
+                  className="flex items-center gap-2 text-sm transition-colors hover:text-white"
+                  style={{ color: '#C8A882' }}>
+                  <span>{s.icon}</span> {s.label}
+                </a>
+              ))}
+            </div>
           </div>
-          <span className="font-semibold text-sm" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#5B3F2B' }}>clubnosleep</span>
+
+          <div style={{ borderTop: '1px solid #3A2A1A' }} className="pt-6 text-center">
+            <p className="text-xs" style={{ color: '#6A5A50' }}>© 2025 Clubnosleep · Alle rettigheder forbeholdes</p>
+          </div>
         </div>
-        <p className="text-xs" style={{ color: '#B08D72' }}>© 2025 Clubnosleep · Alle rettigheder forbeholdes</p>
       </footer>
+
+      {/* Legal modals */}
+      {legalModal === 'terms' && (
+        <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setLegalModal(null)} />
+      )}
+      {legalModal === 'privacy' && (
+        <LegalModal type="privacy" title="Privatlivspolitik" onClose={() => setLegalModal(null)} />
+      )}
     </div>
   );
 }
