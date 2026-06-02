@@ -1,0 +1,61 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "admin_email": {
+      "type": "string",
+      "description": "Admin der udf\u00f8rte handlingen"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "view_conversation",
+        "delete_message",
+        "delete_conversation",
+        "export_user_data",
+        "ban_user",
+        "review_report",
+        "delete_user_data"
+      ]
+    },
+    "affected_user_email": {
+      "type": "string",
+      "description": "Ber\u00f8rt bruger"
+    },
+    "details": {
+      "type": "string",
+      "description": "Ekstra detaljer"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "admin_email",
+    "action",
+    "timestamp"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "Reference til ChatConversation"
+    },
+    "sender_email": {
+      "type": "string"
+    },
+    "sender_username": {
+      "type": "string"
+    },
+    "sender_image": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Beskedindhold"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "conversation_id",
+    "sender_email",
+    "content"
+  ],
+  "rls": {
+    "create": {
+      "data.sender_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "data.conversation_id": {
+        "_filter": {
+          "entity": "ChatConversation",
+          "query": {
+            "data.participants": "{{user.email}}"
+          }
+        }
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "data.sender_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.sender_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

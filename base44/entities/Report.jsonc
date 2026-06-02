@@ -1,0 +1,72 @@
+{
+  "name": "Report",
+  "type": "object",
+  "properties": {
+    "reporter_email": {
+      "type": "string",
+      "description": "Den der indberetter"
+    },
+    "reported_email": {
+      "type": "string",
+      "description": "Den der indberettes"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "message"
+      ],
+      "description": "Type af indberetning"
+    },
+    "message_id": {
+      "type": "string",
+      "description": "ID p\u00e5 besked (hvis type=message)"
+    },
+    "reason": {
+      "type": "string",
+      "description": "\u00c5rsag til indberetning"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "admin_note": {
+      "type": "string",
+      "description": "Admin note"
+    }
+  },
+  "required": [
+    "reporter_email",
+    "reported_email",
+    "type",
+    "reason"
+  ],
+  "rls": {
+    "create": {
+      "data.reporter_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

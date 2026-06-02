@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import Landing from './pages/Landing';
 
 import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
@@ -34,8 +35,10 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const location = useLocation();
+  const isPublicRoute = location.pathname === '/';
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  if (!isPublicRoute && (isLoadingPublicSettings || isLoadingAuth)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -43,7 +46,7 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
+  if (!isPublicRoute && authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
@@ -55,10 +58,12 @@ const AuthenticatedApp = () => {
   return (
     <SubscriptionGate>
       <Routes>
-        {/* Onboarding — ingen subscription gate, ingen bottom nav */}
+        {/* Public landing page — ingen auth, ingen layout */}
+        <Route path="/" element={<Landing />} />
+
+        {/* Onboarding — ingen bottom nav */}
         <Route path="/Onboarding" element={<Onboarding />} />
 
-        <Route path="/" element={<Navigate to="/app" replace />} />
         <Route path="/app" element={<LayoutWrapper currentPageName={mainPageKey}><MainPage /></LayoutWrapper>} />
         {Object.entries(Pages).map(([path, Page]) => (
           <Route

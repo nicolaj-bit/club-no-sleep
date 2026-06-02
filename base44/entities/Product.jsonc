@@ -1,0 +1,92 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Produktnavn"
+    },
+    "description": {
+      "type": "string",
+      "description": "Produktbeskrivelse"
+    },
+    "price": {
+      "type": "number",
+      "description": "Pris i DKK"
+    },
+    "compare_at_price": {
+      "type": "number",
+      "description": "Sammenlign pris (f\u00f8r rabat)"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Billede URLs"
+    },
+    "category": {
+      "type": "string",
+      "description": "Produktkategori"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags"
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "in_stock": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Produktvarianter"
+    },
+    "in_stock": {
+      "type": "boolean",
+      "default": true
+    },
+    "shopify_url": {
+      "type": "string",
+      "description": "Link til Shopify checkout"
+    },
+    "shopify_id": {
+      "type": "string",
+      "description": "Shopify produkt ID"
+    }
+  },
+  "required": [
+    "title",
+    "price"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

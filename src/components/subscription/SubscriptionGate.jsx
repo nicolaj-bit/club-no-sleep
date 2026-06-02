@@ -14,7 +14,8 @@ export default function SubscriptionGate({ children }) {
   const navigate = useNavigate();
 
   const checkAccess = useCallback(async () => {
-    if (location.pathname === '/Onboarding') {
+    // Public routes — ingen auth krævet
+    if (location.pathname === '/' || location.pathname === '/Onboarding') {
       setStatus('ok');
       return;
     }

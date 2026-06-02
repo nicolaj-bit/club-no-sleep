@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import PlanChooser from '@/components/onboarding/PlanChooser';
 
 export default function Onboarding() {
   const { t } = useLanguage();
@@ -87,17 +88,18 @@ export default function Onboarding() {
     setUploading(false);
   };
 
-  const handleFinish = async () => {
+  const handleFinish = async (plan = 'demo') => {
     setSaving(true);
 
+    const isActive = hasPaid || plan === 'paid';
     const { accept_terms, accept_privacy, ...profileData } = form;
     await base44.entities.UserProfile.create({
       ...profileData,
       gender: form.profile_label === 'mor' ? 'female' : 'male',
       user_email: user.email,
-      subscription_status: hasPaid ? 'active' : 'trial',
-      subscription_started_at: hasPaid ? new Date().toISOString() : undefined,
-      trial_started_at: hasPaid ? undefined : new Date().toISOString(),
+      subscription_status: isActive ? 'active' : 'trial',
+      subscription_started_at: isActive ? new Date().toISOString() : undefined,
+      trial_started_at: isActive ? undefined : new Date().toISOString(),
     });
     // Gem GDPR consent-log
     await base44.entities.ConsentLog.create({
@@ -116,6 +118,7 @@ export default function Onboarding() {
     { icon: Shield, title: t.welcomeTitle, subtitle: t.welcomeSubtitle },
     { icon: MapPin, title: t.whereDoYouLive, subtitle: t.findNearbyMoms },
     { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
+    { icon: Sparkles, title: 'Vælg din plan', subtitle: 'Kom i gang — første 30 dage er gratis' },
   ];
 
   const current = STEPS[step];
@@ -340,6 +343,11 @@ export default function Onboarding() {
               </motion.div>
             )}
 
+            {/* STEP 4 – Vælg plan */}
+            {step === 4 && (
+              <PlanChooser onChoose={() => handleFinish()} />
+            )}
+
             {/* STEP 3 – Barn */}
             {step === 3 && (
               <motion.div key="s3" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
@@ -380,7 +388,7 @@ export default function Onboarding() {
 
         {/* Bottom nav */}
         <div className="px-6 py-8 space-y-3">
-          <Button
+          {step !== 4 && <Button
             className="w-full h-14 text-base font-semibold rounded-2xl"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             disabled={saving || uploading}
@@ -392,16 +400,14 @@ export default function Onboarding() {
               } else if (step === 2) {
                 setStep(3);
               } else if (step === 3) {
-                handleFinish();
+                setStep(4);
               }
             }}
           >
-            {saving ? t.saving : step === 3 ? (
-              <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" /> {hasPaid ? t.getStarted : 'Start gratis prøveperiode'}</span>
-            ) : (
+            {saving ? t.saving : (
               <span className="flex items-center gap-2">{t.next} <ArrowRight className="w-5 h-5" /></span>
             )}
-          </Button>
+          </Button>}
 
           {step > 0 && (
             <button

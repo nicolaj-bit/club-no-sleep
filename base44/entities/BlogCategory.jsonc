@@ -1,22 +1,10 @@
 {
-  "name": "ShopCategory",
+  "name": "BlogCategory",
   "type": "object",
   "properties": {
-    "label_da": {
+    "label": {
       "type": "string",
-      "description": "Kategorinavn p\u00e5 dansk (vises i UI)"
-    },
-    "label_en": {
-      "type": "string",
-      "description": "Category name in English"
-    },
-    "key": {
-      "type": "string",
-      "description": "Matcher category-feltet p\u00e5 produkterne i databasen (fx 'Pleje')"
-    },
-    "icon": {
-      "type": "string",
-      "description": "Emoji der vises foran kategorinavnet (fx \ud83e\uddf4)"
+      "description": "Kategorinavn (vises i UI)"
     },
     "order": {
       "type": "number",
@@ -26,12 +14,11 @@
     "is_active": {
       "type": "boolean",
       "default": true,
-      "description": "Om kategorien vises i appen"
+      "description": "Om kategorien er synlig"
     }
   },
   "required": [
-    "label_da",
-    "key"
+    "label"
   ],
   "rls": {
     "create": {

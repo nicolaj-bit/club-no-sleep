@@ -1,0 +1,77 @@
+{
+  "name": "Favorite",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "product",
+        "blog",
+        "article"
+      ],
+      "description": "Type af favorit"
+    },
+    "item_id": {
+      "type": "string",
+      "description": "ID p\u00e5 det gemte element"
+    },
+    "item_title": {
+      "type": "string"
+    },
+    "item_image": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "item_type",
+    "item_id"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -127,9 +127,6 @@
     "profile_label"
   ],
   "rls": {
-    "create": {
-      "data.user_email": "{{user.email}}"
-    },
     "read": {
       "$or": [
         {
@@ -159,6 +156,18 @@
       ]
     },
     "delete": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
       "$or": [
         {
           "data.user_email": "{{user.email}}"

@@ -1,0 +1,98 @@
+{
+  "name": "BlogPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Blogtitel"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-venlig titel"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "Kort uddrag"
+    },
+    "content": {
+      "type": "string",
+      "description": "Fuldt indhold (markdown)"
+    },
+    "featured_image": {
+      "type": "string",
+      "description": "Hovedbillede URL"
+    },
+    "category": {
+      "type": "string",
+      "description": "Kategori"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_image": {
+      "type": "string"
+    },
+    "published": {
+      "type": "boolean",
+      "default": true
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.published": true
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
