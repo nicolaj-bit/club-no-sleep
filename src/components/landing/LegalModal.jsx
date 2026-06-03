@@ -16,51 +16,113 @@ export default function LegalModal({ type, title, onClose }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-        onClick={onClose}>
+      <div
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        onClick={onClose}
+      >
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
-          className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-lg"
-          style={{ backgroundColor: '#FFFDF9' }}
-          onClick={e => e.stopPropagation()}>
-
-          {/* Close Button */}
-          <button onClick={onClose}
-            className="absolute top-6 right-6 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
-            style={{ backgroundColor: '#F3E9E1', color: '#5B3F2B' }}>
-            <X className="w-4 h-4" />
-          </button>
-
-          {/* Content */}
-          <div className="px-12 py-12 sm:px-16 sm:py-14">
-            {/* Title */}
-            <h1 className="text-center mb-10 text-2xl sm:text-3xl tracking-wider uppercase font-light"
-              style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', letterSpacing: '0.08em' }}>
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 60 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="relative w-full sm:max-w-2xl flex flex-col"
+          style={{
+            backgroundColor: '#FFFDF9',
+            maxHeight: '90vh',
+            borderRadius: '20px 20px 0 0',
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Sticky header */}
+          <div
+            className="flex items-center justify-between px-6 py-5 border-b flex-shrink-0"
+            style={{ borderColor: '#EDE4DB' }}
+          >
+            <h2
+              className="text-lg font-semibold tracking-wide"
+              style={{ color: '#2B1F16', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.25rem' }}
+            >
               {title}
-            </h1>
+            </h2>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-full flex-shrink-0"
+              style={{ backgroundColor: '#F0E8DF', color: '#5B3F2B' }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
+          {/* Scrollable body */}
+          <div className="overflow-y-auto flex-1 px-6 py-6" style={{ WebkitOverflowScrolling: 'touch' }}>
             {loading ? (
-              <div className="flex justify-center py-16">
-                <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#C8A882', borderTopColor: 'transparent' }} />
+              <div className="flex justify-center py-12">
+                <div
+                  className="w-6 h-6 rounded-full border-2 animate-spin"
+                  style={{ borderColor: '#EDE4DB', borderTopColor: '#C8A882' }}
+                />
               </div>
             ) : content?.content ? (
               <div
-                className="text-base leading-relaxed [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:mb-5 [&_p]:text-justify [&_ul]:ml-6 [&_ul]:list-disc [&_ul]:mb-5 [&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:mb-5 [&_li]:mb-2 [&_strong]:font-semibold"
-                style={{ color: '#3A2A1A', wordSpacing: '0.05em' }}
+                className="legal-content"
+                style={{ color: '#2B1F16' }}
                 dangerouslySetInnerHTML={{ __html: content.content }}
               />
             ) : (
-              <p className="text-center py-16 text-sm" style={{ color: '#9A7A6A' }}>
+              <p className="text-center py-12 text-sm" style={{ color: '#9A7A6A' }}>
                 Indholdet er endnu ikke tilgængeligt.
               </p>
             )}
           </div>
+
+          {/* Safe area bottom */}
+          <div style={{ height: 'env(safe-area-inset-bottom, 8px)' }} />
         </motion.div>
       </div>
+
+      <style>{`
+        .legal-content {
+          font-size: 15px;
+          line-height: 1.75;
+          font-family: 'Inter', -apple-system, sans-serif;
+        }
+        .legal-content p {
+          margin-bottom: 1rem;
+          color: #3A2A1A;
+        }
+        .legal-content h1, .legal-content h2 {
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 1.15rem;
+          font-weight: 600;
+          color: #2B1F16;
+          margin-top: 1.75rem;
+          margin-bottom: 0.5rem;
+        }
+        .legal-content h3 {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #2B1F16;
+          margin-top: 1.25rem;
+          margin-bottom: 0.4rem;
+        }
+        .legal-content ul, .legal-content ol {
+          padding-left: 1.4rem;
+          margin-bottom: 1rem;
+        }
+        .legal-content li {
+          margin-bottom: 0.4rem;
+          color: #3A2A1A;
+        }
+        .legal-content strong {
+          font-weight: 600;
+          color: #2B1F16;
+        }
+        .legal-content a {
+          color: #8B6348;
+          text-decoration: underline;
+        }
+      `}</style>
     </AnimatePresence>
   );
 }
