@@ -3,6 +3,28 @@ import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+function formatLegalContent(html) {
+  if (!html) return '';
+  // If it's plain text (no HTML tags), convert newlines to paragraphs
+  const hasHtmlTags = /<\/?[a-z][\s\S]*>/i.test(html);
+  if (!hasHtmlTags) {
+    return html
+      .split(/\n{2,}/) // Split on double newlines (paragraphs)
+      .map(block => {
+        const trimmed = block.trim();
+        if (!trimmed) return '';
+        // Detect section headers (e.g. "1. Virksomhedsoplysninger")
+        if (/^\d+\.\s/.test(trimmed) && !trimmed.includes('\n')) {
+          return `<h2>${trimmed}</h2>`;
+        }
+        // Convert single newlines within a block to <br>
+        return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
+      })
+      .join('');
+  }
+  return html;
+}
+
 export default function LegalModal({ type, title, onClose }) {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -67,7 +89,7 @@ export default function LegalModal({ type, title, onClose }) {
               <div
                 className="legal-content"
                 style={{ color: '#2B1F16' }}
-                dangerouslySetInnerHTML={{ __html: content.content }}
+                dangerouslySetInnerHTML={{ __html: formatLegalContent(content.content) }}
               />
             ) : (
               <p className="text-center py-12 text-sm" style={{ color: '#9A7A6A' }}>
@@ -88,16 +110,18 @@ export default function LegalModal({ type, title, onClose }) {
           font-family: 'Inter', -apple-system, sans-serif;
         }
         .legal-content p {
-          margin-bottom: 1rem;
+          margin-bottom: 1.2rem;
           color: #3A2A1A;
         }
         .legal-content h1, .legal-content h2 {
           font-family: 'Cormorant Garamond', Georgia, serif;
           font-size: 1.15rem;
-          font-weight: 600;
+          font-weight: 700;
           color: #2B1F16;
-          margin-top: 1.75rem;
-          margin-bottom: 0.5rem;
+          margin-top: 2rem;
+          margin-bottom: 0.75rem;
+          padding-top: 0.5rem;
+          border-top: 1px solid #EDE4DB;
         }
         .legal-content h3 {
           font-size: 1rem;
