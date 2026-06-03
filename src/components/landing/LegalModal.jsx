@@ -38,7 +38,7 @@ export default function LegalModal({ type, title, onClose }) {
           {/* Content */}
           <div className="px-12 py-12 sm:px-16 sm:py-14">
             {/* Title */}
-            <h1 className="text-center mb-12 text-3xl tracking-wider uppercase"
+            <h1 className="text-center mb-10 text-2xl sm:text-3xl tracking-wider uppercase font-light"
               style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', letterSpacing: '0.08em' }}>
               {title}
             </h1>
@@ -49,8 +49,8 @@ export default function LegalModal({ type, title, onClose }) {
               </div>
             ) : content?.content ? (
               <div
-                className="text-base leading-relaxed space-y-6 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:text-justify [&_ul]:ml-6 [&_ul]:list-disc [&_ol]:ml-6 [&_ol]:list-decimal [&_li]:mb-2 [&_strong]:font-semibold"
-                style={{ color: '#3A2A1A' }}
+                className="text-base leading-relaxed [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:mb-5 [&_p]:text-justify [&_ul]:ml-6 [&_ul]:list-disc [&_ul]:mb-5 [&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:mb-5 [&_li]:mb-2 [&_strong]:font-semibold"
+                style={{ color: '#3A2A1A', wordSpacing: '0.05em' }}
                 dangerouslySetInnerHTML={{ __html: content.content }}
               />
             ) : (
