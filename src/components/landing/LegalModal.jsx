@@ -16,41 +16,41 @@ export default function LegalModal({ type, title, onClose }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6"
-        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
         onClick={onClose}>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          transition={{ duration: 0.3 }}
-          className="relative w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+          className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-lg"
           style={{ backgroundColor: '#FFFDF9' }}
           onClick={e => e.stopPropagation()}>
 
-          {/* Header */}
-          <div className="sticky top-0 flex items-center justify-between px-8 py-6 border-b backdrop-blur-sm"
-            style={{ backgroundColor: 'rgba(255,253,249,0.95)', borderColor: '#EDE4DB' }}>
-            <h2 className="text-2xl font-light tracking-wide" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-              {title}
-            </h2>
-            <button onClick={onClose}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
-              style={{ backgroundColor: '#F3E9E1', color: '#5B3F2B' }}>
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          {/* Close Button */}
+          <button onClick={onClose}
+            className="absolute top-6 right-6 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
+            style={{ backgroundColor: '#F3E9E1', color: '#5B3F2B' }}>
+            <X className="w-4 h-4" />
+          </button>
 
           {/* Content */}
-          <div className="px-8 py-8 space-y-6">
+          <div className="px-12 py-12 sm:px-16 sm:py-14">
+            {/* Title */}
+            <h1 className="text-center mb-12 text-3xl tracking-wider uppercase"
+              style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', letterSpacing: '0.08em' }}>
+              {title}
+            </h1>
+
             {loading ? (
               <div className="flex justify-center py-16">
                 <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: '#C8A882', borderTopColor: 'transparent' }} />
               </div>
             ) : content?.content ? (
               <div
-                className="prose prose-sm max-w-none text-base leading-relaxed [&_h1]:text-xl [&_h1]:font-light [&_h1]:tracking-wide [&_h2]:text-lg [&_h2]:font-light [&_h3]:text-base [&_h3]:font-semibold [&_p]:text-justify [&_ul]:space-y-2 [&_ol]:space-y-2 [&_li]:pl-2"
-                style={{ color: '#4A3A2A' }}
+                className="text-base leading-relaxed space-y-6 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:text-justify [&_ul]:ml-6 [&_ul]:list-disc [&_ol]:ml-6 [&_ol]:list-decimal [&_li]:mb-2 [&_strong]:font-semibold"
+                style={{ color: '#3A2A1A' }}
                 dangerouslySetInnerHTML={{ __html: content.content }}
               />
             ) : (
