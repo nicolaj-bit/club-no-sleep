@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2, Bell, BellOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Switch } from '@/components/ui/switch';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -37,6 +38,7 @@ async function addToNativeCalendar(event) {
 
 export default function Calendar() {
   const { t, lang } = useLanguage();
+  const navigate = useNavigate();
   const dateLocale = lang === 'en' ? enUS : da;
   const [user, setUser] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -195,8 +197,9 @@ export default function Calendar() {
             {selectedDayEvents.map((event) =>
           <div
           key={event.id}
-          className="flex items-start gap-3 rounded-2xl p-4 border"
-          style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+          className={`flex items-start gap-3 rounded-2xl p-4 border ${event.category === 'milepæl' ? 'cursor-pointer active:opacity-70' : ''}`}
+          style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
+          onClick={() => event.category === 'milepæl' && navigate('/Milestones')}>
 
               <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 {getCategoryEmoji(event.category)}
