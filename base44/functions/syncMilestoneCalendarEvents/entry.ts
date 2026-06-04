@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 // Alle aldersbaserede milepæle med offset i dage fra fødselsdato
 const AGE_MILESTONES = [
@@ -69,16 +69,22 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const body = await req.json().catch(() => ({}));
 
-    // Kan kaldes med child_id direkte, fra entity automation event, eller hente alle
+    // Entity automation sender: { event: { entity_id, ... }, data: { ...childFields } }
     const childId = body.child_id || body.event?.entity_id || null;
 
     let children;
     if (childId) {
-      const child = await base44.asServiceRole.entities.Child.get(childId);
-      children = child ? [child] : [];
+      // Fra entity automation: data er i body.data
+      const childData = body.data;
+      if (childData && (childData.birthdate || childData.due_date)) {
+        children = [{ id: childId, ...childData }];
+      } else {
+        children = [];
+      }
     } else {
       children = await base44.asServiceRole.entities.Child.list();
     }
+    console.log(`Fandt ${children.length} børn`);
 
     let created = 0;
     let skipped = 0;
@@ -140,15 +146,17 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Opret i batches
+      // Opret én ad gangen (service role)
+      for (const event of toCreate) {
+        await base44.asServiceRole.entities.CalendarEvent.create(event);
+        created++;
+      }
       if (toCreate.length > 0) {
-        await base44.asServiceRole.entities.CalendarEvent.bulkCreate(toCreate);
-        created += toCreate.length;
         console.log(`Oprettet ${toCreate.length} milepæle for ${email} (barn: ${child.name})`);
       }
     }
 
-    return Response.json({ success: true, created, skipped });
+    return Response.json({ success: true, created, skipped, childrenFound: children.length, childNames: children.map(c => c.name) });
   } catch (error) {
     console.error('syncMilestoneCalendarEvents error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
