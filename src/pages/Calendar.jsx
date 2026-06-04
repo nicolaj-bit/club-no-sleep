@@ -199,7 +199,7 @@ export default function Calendar() {
           key={event.id}
           className={`flex items-start gap-3 rounded-2xl p-4 border ${event.category === 'milepæl' ? 'cursor-pointer active:opacity-70' : ''}`}
           style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-          onClick={() => event.category === 'milepæl' && navigate('/Milestones')}>
+          onClick={() => event.category === 'milepæl' && navigate(`/Milestones${event.milestone_id ? `?open=${event.milestone_id}` : ''}`)}>
 
               <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 {getCategoryEmoji(event.category)}

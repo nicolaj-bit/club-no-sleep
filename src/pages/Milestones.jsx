@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/ui/PageHeader';
@@ -40,10 +40,22 @@ function normalizeDbFrame(f) {
 export default function Milestones() {
   const [cameraFrame, setCameraFrame] = useState(null);
 
-  const { data: dbFrames = [] } = useQuery({
+  const { data: dbFrames = [], isSuccess } = useQuery({
     queryKey: ['milestoneFrames'],
     queryFn: () => base44.entities.MilestoneFrame.filter({ is_active: true }, 'order', 100),
   });
+
+  // Auto-åbn kamera hvis ?open=milestone_id er i URL
+  useEffect(() => {
+    if (!isSuccess) return;
+    const params = new URLSearchParams(window.location.search);
+    const openId = params.get('open');
+    if (!openId) return;
+
+    const frames = dbFrames.length > 0 ? dbFrames.map(normalizeDbFrame) : MILESTONE_FRAMES;
+    const match = frames.find(f => f.milestone_id === openId);
+    if (match) setCameraFrame(match);
+  }, [isSuccess, dbFrames]);
 
   if (cameraFrame) {
     return <MilestoneCamera frame={cameraFrame} onClose={() => setCameraFrame(null)} />;
