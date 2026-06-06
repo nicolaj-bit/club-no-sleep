@@ -285,6 +285,9 @@ export default function Onboarding() {
                     Forestil dig, at når du sidder med en vågen baby om natten, så tændes der et lille lys over dit hus. Og forestil dig så, hvor mange små lys der er tændt over huse nær dig
                   </p>
                 </div>
+                <div className="flex justify-center">
+                  <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt="Vågne mødre kort over Danmark" className="w-48 h-auto" />
+                </div>
                 <div className="space-y-2">
                   <Label>{t.yourCity}</Label>
                   <Input
