@@ -108,12 +108,13 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
   return (
     <div className="mx-5 mb-5">
       <div
-        className="rounded-3xl p-5"
-        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', border: '1px solid var(--color-border)' }}
+        className="rounded-2xl p-5 relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
       >
+        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: '#808072' }}>Daglig affirmation</p>
         <p
-          className="text-sm leading-relaxed italic"
-          style={{ color: 'var(--color-text-secondary)', fontFamily: 'Georgia, serif', lineHeight: '1.7' }}
+          className="text-[16px] font-light leading-relaxed"
+          style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.55', color: '#2B1F16' }}
         >
           {message}
         </p>
