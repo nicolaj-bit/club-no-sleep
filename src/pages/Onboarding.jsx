@@ -339,6 +339,15 @@ export default function Onboarding() {
                 {childMode === 'fodt' && (
                   <div className="space-y-4">
                     <div className="space-y-2">
+                      <Label>Barnets navn</Label>
+                      <Input
+                        value={form.child_name || ''}
+                        onChange={e => setForm(f => ({ ...f, child_name: e.target.value }))}
+                        placeholder="Skriv barnets navn"
+                        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                      />
+                    </div>
+                    <div className="space-y-2">
                       <Label>Barnets fødselsdato</Label>
                       <Input
                         type="date"
