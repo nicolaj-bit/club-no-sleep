@@ -108,7 +108,7 @@ export default function Onboarding() {
 
   const STEPS = [
     { icon: Shield, title: 'Velkommen til CLUB NO SLEEP', subtitle: 'Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app' },
-    { icon: MapPin, title: 'Mindre natteensomhed', subtitle: 'Forestil dig, at når du sidder med en vågen baby om natten, så tændes der et lille lys over dit hus' },
+    { icon: MapPin, title: 'Mindre Natteensomhed', subtitle: '' },
     { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
     { icon: Sparkles, title: 'Vælg din plan', subtitle: 'Kom i gang — første 30 dage er gratis' },
   ];
@@ -159,6 +159,12 @@ export default function Onboarding() {
                 <span>CLUB NO SLEEP</span>
               </h1>
               <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app</p>
+            </div>
+          ) : step === 1 ? (
+            <div>
+              <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+                {current.title}
+              </h1>
             </div>
           ) : (
             <div className="flex items-center gap-3">
