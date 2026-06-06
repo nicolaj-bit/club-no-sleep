@@ -54,6 +54,73 @@ function wrapTextCanvas(ctx, text, maxWidth) {
   return lines;
 }
 
+function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
+  // Position: bottom-left corner
+  const balloonX = canvasW * 0.1;
+  const balloonY = canvasH * 0.7;
+  const balloonRadiusX = canvasW * 0.12;
+  const balloonRadiusY = canvasW * 0.15;
+
+  ctx.save();
+
+  // String
+  ctx.strokeStyle = '#D4C4B0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(balloonX, balloonY + balloonRadiusY);
+  ctx.lineTo(balloonX, canvasH - canvasW * 0.05);
+  ctx.stroke();
+
+  // Balloon ellipse
+  ctx.fillStyle = '#F5E8D8';
+  ctx.strokeStyle = '#E8D7C3';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(balloonX, balloonY, balloonRadiusX, balloonRadiusY, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Shine
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+  ctx.beginPath();
+  ctx.ellipse(balloonX - balloonRadiusX * 0.3, balloonY - balloonRadiusY * 0.5, balloonRadiusX * 0.2, balloonRadiusY * 0.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Text
+  ctx.font = `bold ${canvasW * 0.028}px 'Cormorant Garamond', serif`;
+  ctx.fillStyle = '#8B7355';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  const lines = headline.split(' ');
+  const lineHeight = canvasW * 0.04;
+  const startY = balloonY - canvasW * 0.04;
+  
+  lines.forEach((line, i) => {
+    ctx.fillText(line, balloonX, startY + i * lineHeight);
+  });
+
+  // Heart
+  ctx.fillStyle = '#9B7F6E';
+  const heartX = balloonX;
+  const heartY = balloonY + canvasW * 0.04;
+  const heartSize = canvasW * 0.015;
+  ctx.beginPath();
+  ctx.moveTo(heartX, heartY - heartSize);
+  ctx.bezierCurveTo(heartX - heartSize * 2, heartY - heartSize * 3, heartX - heartSize * 3, heartY - heartSize * 2, heartX - heartSize * 1.5, heartY + heartSize);
+  ctx.bezierCurveTo(heartX, heartY + heartSize * 3, heartX + heartSize * 1.5, heartY + heartSize, heartX + heartSize * 3, heartY - heartSize * 2);
+  ctx.bezierCurveTo(heartX + heartSize * 2, heartY - heartSize * 3, heartX, heartY - heartSize, heartX, heartY - heartSize);
+  ctx.fill();
+
+  // Date
+  ctx.font = `${canvasW * 0.024}px 'Inter', sans-serif`;
+  ctx.fillStyle = '#8B7355';
+  ctx.textAlign = 'center';
+  ctx.fillText(dateStr, balloonX, balloonY + canvasW * 0.12);
+
+  ctx.restore();
+}
+
 function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   // Position: bottom-left corner, 6% margin
   const S = canvasW * 0.44; // sticker diameter
@@ -183,7 +250,8 @@ export default function MilestoneCamera({ frame, onClose }) {
     await loadFont();
     const canvas = canvasRef.current;
     drawSource(canvas);
-    drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
+    const stickerDrawer = frame.isCustomSticker ? drawBalloonStickerOnCanvas : drawStickerOnCanvas;
+    stickerDrawer(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
     setMode('preview');
     sendMilestoneNotification();
