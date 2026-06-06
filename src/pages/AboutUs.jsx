@@ -241,23 +241,7 @@ export default function AboutUs() {
           </div>
         </section>
 
-        {/* Team */}
-        <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Teamet bag</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <PersonCard person={sara} openId={openId} setOpenId={setOpenId} />
-            <PersonCard person={nicolaj} openId={openId} setOpenId={setOpenId} />
-          </div>
-        </section>
 
-        {/* Partners */}
-        <section>
-          <h2 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>Vores samarbejdspartnere</h2>
-          <p className="text-sm mb-4" style={{ color: 'var(--color-text-muted)' }}>Vi er stolte over de dygtige mennesker vi samarbejder med.</p>
-          <div className="grid grid-cols-2 gap-4">
-            <PersonCard person={julie} openId={openId} setOpenId={setOpenId} />
-          </div>
-        </section>
 
         {/* Contact info */}
         <section className="rounded-2xl p-5 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
