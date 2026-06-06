@@ -281,7 +281,7 @@ export default function Onboarding() {
             {step === 1 && (
               <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
-                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                  <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
                     Forestil dig, at når du sidder med en vågen baby om natten, så tændes der et lille lys over dit hus. Og forestil dig så, hvor mange små lys der er tændt over huse nær dig
                   </p>
                 </div>
