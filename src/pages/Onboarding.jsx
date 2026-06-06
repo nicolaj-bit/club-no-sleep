@@ -111,8 +111,8 @@ export default function Onboarding() {
   const STEPS = [
     { icon: Shield, title: 'Velkommen til CLUB NO SLEEP', subtitle: 'Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app' },
     { icon: MapPin, title: 'Mindre Natteensomhed', subtitle: '' },
-    { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
-    { icon: Sparkles, title: 'Vælg din plan', subtitle: 'Kom i gang — første 30 dage er gratis' },
+    { icon: Baby, title: t.aboutYourChild, subtitle: '' },
+    { icon: Sparkles, title: 'Vælg din plan', subtitle: '' },
   ];
 
   const current = STEPS[step];
