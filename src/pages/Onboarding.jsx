@@ -19,6 +19,7 @@ export default function Onboarding() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [dateError, setDateError] = useState('');
   const [openModal, setOpenModal] = useState(null);
   const [legalContent, setLegalContent] = useState({ terms: '', privacy: '' });
 
@@ -397,6 +398,12 @@ export default function Onboarding() {
 
         {/* Bottom nav */}
         <div className="px-6 py-8 space-y-3">
+          {step === 2 && dateError && (
+            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: '#FEE2E2', color: '#B91C1C', border: '1px solid #FECACA' }}>
+              {dateError}
+            </div>
+          )}
+
           {step !== 3 && <Button
             className="w-full h-14 text-base font-semibold rounded-2xl"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
@@ -411,9 +418,10 @@ export default function Onboarding() {
                   ? !!form.child_due_date
                   : !!(form.child_birthdate || form.child_due_date);
                 if (!hasDate) {
-                  toast.error(childMode === 'gravid' ? 'Indtast venligst din terminsdato' : 'Indtast venligst barnets fødselsdato eller terminsdato');
+                  setDateError(childMode === 'gravid' ? 'Udfyld venligst din terminsdato for at fortsætte' : 'Udfyld venligst barnets fødselsdato eller terminsdato for at fortsætte');
                   return;
                 }
+                setDateError('');
                 setStep(3);
               }
             }}
