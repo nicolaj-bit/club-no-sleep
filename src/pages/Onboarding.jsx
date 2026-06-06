@@ -437,16 +437,7 @@ export default function Onboarding() {
             </button>
           )}
 
-          {step === 2 && (
-            <button
-              onClick={() => setStep(3)}
-              disabled={saving}
-              className="w-full py-2 text-sm text-center"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {t.skip}
-            </button>
-          )}
+
         </div>
 
       </div>
