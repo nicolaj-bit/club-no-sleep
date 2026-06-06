@@ -14,6 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BottomSheet } from '@/components/ui/BottomSheet';
+import LegalModal from '@/components/landing/LegalModal';
 
 // Brand-farver fra style guide – matcher menu-knapper præcist
 const CARD_BG_LIGHT_SOLID = '#F0EBE3';
@@ -31,8 +32,6 @@ export default function Settings() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [passwordForm, setPasswordForm] = useState({ current: '', new: '', confirm: '' });
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [privacyContent, setPrivacyContent] = useState(null);
-  const [privacyLoading, setPrivacyLoading] = useState(false);
   const [faqContent, setFaqContent] = useState(null);
   const [supportContent, setSupportContent] = useState(null);
   const [helpLoaded, setHelpLoaded] = useState(false);
@@ -40,8 +39,6 @@ export default function Settings() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const [termsOpen, setTermsOpen] = useState(false);
-  const [termsContent, setTermsContent] = useState(null);
-  const [termsLoading, setTermsLoading] = useState(false);
 
   const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
   const cardBgSolid = isDark ? CARD_BG_DARK : CARD_BG_LIGHT_SOLID;
@@ -88,27 +85,8 @@ export default function Settings() {
     loadHelp();
   }, []);
 
-  const openPrivacy = async () => {
-    setPrivacyLoading(true);
-    try {
-      const results = await base44.entities.LegalContent.filter({ type: 'privacy' });
-      setPrivacyContent(results[0] || null);
-      setPrivacyOpen(true);
-    } finally {
-      setPrivacyLoading(false);
-    }
-  };
-
-  const openTerms = async () => {
-    setTermsLoading(true);
-    try {
-      const results = await base44.entities.LegalContent.filter({ type: 'terms' });
-      setTermsContent(results[0] || null);
-      setTermsOpen(true);
-    } finally {
-      setTermsLoading(false);
-    }
-  };
+  const openPrivacy = () => setPrivacyOpen(true);
+  const openTerms = () => setTermsOpen(true);
 
   const gridItems = [
     ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
@@ -258,21 +236,19 @@ export default function Settings() {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={openTerms}
-            disabled={termsLoading}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
             style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
           >
             <FileText className="w-4 h-4" style={{ color: ICON_COLOR }} />
-            {termsLoading ? '…' : 'Betingelser'}
+            Betingelser
           </button>
           <button
             onClick={openPrivacy}
-            disabled={privacyLoading}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
             style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
           >
             <Shield className="w-4 h-4" style={{ color: ICON_COLOR }} />
-            {privacyLoading ? '…' : 'Privatliv'}
+            Privatliv
           </button>
         </div>
 
@@ -333,34 +309,10 @@ export default function Settings() {
       </BottomSheet>
 
       {/* Terms */}
-      <BottomSheet open={termsOpen} onOpenChange={setTermsOpen} title="Handelsbetingelser">
-        <div className="px-5 py-4">
-          {termsContent ? (
-            <div className="rounded-2xl p-5 mb-4 border" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
-              <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: termsContent.content }} />
-            </div>
-          ) : (
-            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>Ingen handelsbetingelser tilgængelige</p>
-          )}
-          <div className="h-2" />
-        </div>
-      </BottomSheet>
+      {termsOpen && <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setTermsOpen(false)} />}
 
       {/* Privacy */}
-      <BottomSheet open={privacyOpen} onOpenChange={setPrivacyOpen} title={t.privacy}>
-        <div className="px-5 py-4">
-          {privacyLoading ? (
-            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.loading}</p>
-          ) : privacyContent ? (
-            <div className="rounded-2xl p-5 mb-4 border" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
-              <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: privacyContent.content }} />
-            </div>
-          ) : (
-            <p className="text-sm text-center py-8" style={{ color: 'var(--color-text-muted)' }}>{t.noPrivacyPolicy}</p>
-          )}
-          <div className="h-2" />
-        </div>
-      </BottomSheet>
+      {privacyOpen && <LegalModal type="privacy" title={t.privacy} onClose={() => setPrivacyOpen(false)} />}
 
       {/* Cancel subscription */}
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
@@ -373,11 +325,10 @@ export default function Settings() {
           </p>
           <button
             onClick={openTerms}
-            disabled={termsLoading}
             className="text-sm underline underline-offset-2 cursor-pointer"
             style={{ color: 'var(--color-accent)' }}
           >
-            {termsLoading ? '…' : 'Læs handelsbetingelserne →'}
+            Læs handelsbetingelserne →
           </button>
           <Button
             variant="destructive"
