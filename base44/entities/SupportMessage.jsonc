@@ -1,0 +1,78 @@
+{
+  "name": "SupportMessage",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Brugerens email"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Brugerens navn"
+    },
+    "message": {
+      "type": "string",
+      "description": "Brugerens besked"
+    },
+    "admin_reply": {
+      "type": "string",
+      "description": "Admins svar"
+    },
+    "replied_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tidspunkt for admins svar"
+    },
+    "is_read_by_admin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om admin har l\u00e6st beskeden"
+    },
+    "is_read_by_user": {
+      "type": "boolean",
+      "default": true,
+      "description": "Om brugeren har set admins svar"
+    }
+  },
+  "required": [
+    "user_email",
+    "message"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

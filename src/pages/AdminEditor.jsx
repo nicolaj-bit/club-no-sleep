@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { clearSubscriptionCache } from '@/components/subscription/useSubscription';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
@@ -398,6 +398,11 @@ export default function AdminEditor() {
           </button>
         </Link>
         <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>Admin Editor</h1>
+        <Link to="/AdminSupport">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
+            <MessageCircle className="w-3.5 h-3.5" /> Support
+          </button>
+        </Link>
         <Link to="/AdminNotifications">
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
             <Bell className="w-3.5 h-3.5" /> Notifikationer

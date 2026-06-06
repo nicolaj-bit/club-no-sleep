@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, Phone, Mail, Clock, Send, ChevronDown, ChevronUp, Pencil, X, Check } from 'lucide-react';
+import { ChevronLeft, Phone, Mail, Clock, ChevronDown, ChevronUp, Pencil, X, Check } from 'lucide-react';
+import UserSupportChat from '@/components/support/UserSupportChat';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -145,8 +146,6 @@ function PersonCard({ person, openId, setOpenId }) {
 
 export default function AboutUs() {
   const { isDark } = useTheme();
-  const [form, setForm] = useState({ message: '' });
-  const [sending, setSending] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -166,20 +165,6 @@ export default function AboutUs() {
   });
 
   const refetch = () => queryClient.invalidateQueries({ queryKey: ['aboutContent'] });
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!form.message) { toast.error('Skriv venligst en besked'); return; }
-    setSending(true);
-    await base44.functions.invoke('sendContactEmail', {
-      name: currentUser?.full_name || 'Ukendt bruger',
-      email: currentUser?.email || '',
-      message: form.message
-    });
-    toast.success('Besked sendt! Vi vender tilbage inden for 24 timer.');
-    setForm({ message: '' });
-    setSending(false);
-  };
 
   const sara = {
     name: getTitle(content, 'team_sara', DEFAULTS.team_sara_name),
@@ -286,31 +271,16 @@ export default function AboutUs() {
           </EditableBlock>
         </section>
 
-        {/* Contact form */}
+        {/* Support chat */}
         <section className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Send os en besked</h2>
-          {currentUser && (
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium text-white flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-                {currentUser.full_name?.charAt(0) || '?'}
-              </div>
-              <div>
-                <p className="text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>{currentUser.full_name}</p>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{currentUser.email}</p>
-              </div>
-            </div>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Skriv til os 💬</h2>
+          {currentUser ? (
+            <UserSupportChat user={currentUser} />
+          ) : (
+            <p className="text-sm text-center py-6" style={{ color: 'var(--color-text-muted)' }}>
+              Log ind for at sende en besked til os.
+            </p>
           )}
-          <form onSubmit={handleSend} className="space-y-3">
-            <Textarea placeholder="Skriv din besked her..." rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none', resize: 'none' }} />
-            <button
-              type="submit" disabled={sending}
-              className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-opacity active:opacity-70 disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
-            >
-              <Send className="w-4 h-4" />
-              {sending ? 'Sender...' : 'Send meddelelse'}
-            </button>
-          </form>
         </section>
 
       </div>
