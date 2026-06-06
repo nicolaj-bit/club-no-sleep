@@ -25,7 +25,7 @@ export default function Onboarding() {
   const [form, setForm] = useState({
     username: '',
     display_name: '',
-    profile_label: '', // 'mor' | 'far'
+    profile_label: 'mor',
     city: '',
     profile_image: '',
     child_birthdate: '',
@@ -59,13 +59,6 @@ export default function Onboarding() {
   const setField = (key, value) => {
     setForm(f => ({ ...f, [key]: value }));
     if (errors[key]) setErrors(e => ({ ...e, [key]: undefined }));
-  };
-
-  const validateStep0 = () => {
-    const newErrors = {};
-    if (!form.profile_label) newErrors.profile_label = t.errorChooseRole;
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const validateStep1 = () => {
@@ -114,7 +107,6 @@ export default function Onboarding() {
   };
 
   const STEPS = [
-    { icon: Shield, title: t.whoAreYou, subtitle: t.chooseRoleSubtitle },
     { icon: Shield, title: t.welcomeTitle, subtitle: t.welcomeSubtitle },
     { icon: MapPin, title: t.whereDoYouLive, subtitle: t.findNearbyMoms },
     { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
@@ -177,61 +169,8 @@ export default function Onboarding() {
         <div className="flex-1 px-6 overflow-y-auto">
           <AnimatePresence mode="wait">
 
-            {/* STEP 0 – Mor eller far */}
+            {/* STEP 0 – Profil & betingelser */}
             {step === 0 && (
-              <motion.div key="s0" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-6">
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                  {t.lalatotoBuiltForFamily}
-                </p>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { label: t.mom, value: 'mor', emoji: '🤍', desc: t.momDesc },
-                    { label: t.dad, value: 'far', emoji: '💙', desc: t.dadDesc },
-                  ].map(option => {
-                    const active = form.profile_label === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        onClick={() => { setField('profile_label', option.value); setErrors({}); }}
-                        className="flex flex-col items-center gap-3 p-5 rounded-3xl transition-all active:scale-95"
-                        style={{
-                          backgroundColor: active ? 'transparent' : 'var(--color-bg-subtle)',
-                          border: `2px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                          background: active ? 'linear-gradient(135deg, rgba(200,168,130,0.18), rgba(160,120,90,0.12))' : '',
-                        }}
-                      >
-                        <span className="text-4xl">{option.emoji}</span>
-                        <div className="text-center">
-                          <p className="font-bold text-base" style={{ color: 'var(--color-text-primary)' }}>{option.label}</p>
-                          <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{option.desc}</p>
-                        </div>
-                        {active && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent)' }}>
-                            <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                              <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-                {errors.profile_label && <p className="text-xs text-red-500 text-center">{errors.profile_label}</p>}
-
-                {form.profile_label === 'mor' && (
-                  <div className="rounded-2xl p-4 text-sm leading-relaxed" style={{ backgroundColor: 'rgba(200,168,130,0.12)', border: '1px solid rgba(200,168,130,0.25)' }}>
-                    <p className="font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>{t.nightLonelinessTitle}</p>
-                    <p style={{ color: 'var(--color-text-secondary)' }}>
-                      {t.nightLonelinessDesc}
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {/* STEP 1 – Profil & betingelser */}
-            {step === 1 && (
               <motion.div key="s1" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
 
                 {/* Profilbillede */}
@@ -322,8 +261,8 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {/* STEP 2 – Lokation */}
-            {step === 2 && (
+            {/* STEP 1 – Lokation */}
+            {step === 1 && (
               <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <MapPin className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-accent)' }} />
@@ -343,13 +282,13 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {/* STEP 4 – Vælg plan */}
-            {step === 4 && (
+            {/* STEP 3 – Vælg plan */}
+            {step === 3 && (
               <PlanChooser onChoose={() => handleFinish()} />
             )}
 
-            {/* STEP 3 – Barn */}
-            {step === 3 && (
+            {/* STEP 2 – Barn */}
+            {step === 2 && (
               <motion.div key="s3" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <span className="text-4xl">🐯</span>
@@ -388,19 +327,17 @@ export default function Onboarding() {
 
         {/* Bottom nav */}
         <div className="px-6 py-8 space-y-3">
-          {step !== 4 && <Button
+          {step !== 3 && <Button
             className="w-full h-14 text-base font-semibold rounded-2xl"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             disabled={saving || uploading}
             onClick={() => {
               if (step === 0) {
-                if (validateStep0()) setStep(1);
+                if (validateStep1()) setStep(1);
               } else if (step === 1) {
-                if (validateStep1()) setStep(2);
+                setStep(2);
               } else if (step === 2) {
                 setStep(3);
-              } else if (step === 3) {
-                setStep(4);
               }
             }}
           >
@@ -419,10 +356,10 @@ export default function Onboarding() {
             </button>
           )}
 
-          {/* Skip for step 2 (city) and step 3 (child date) */}
-          {step === 2 && (
+          {/* Skip for step 1 (city) and step 2 (child date) */}
+          {step === 1 && (
             <button
-              onClick={() => setStep(3)}
+              onClick={() => setStep(2)}
               className="w-full py-2 text-sm text-center"
               style={{ color: 'var(--color-text-muted)' }}
             >
@@ -430,9 +367,9 @@ export default function Onboarding() {
             </button>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <button
-              onClick={handleFinish}
+              onClick={() => setStep(3)}
               disabled={saving}
               className="w-full py-2 text-sm text-center"
               style={{ color: 'var(--color-text-muted)' }}
