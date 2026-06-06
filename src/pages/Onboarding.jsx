@@ -418,7 +418,7 @@ export default function Onboarding() {
                   ? !!form.child_due_date
                   : !!(form.child_birthdate || form.child_due_date);
                 if (!hasDate) {
-                  setDateError(childMode === 'gravid' ? 'Udfyld venligst din terminsdato for at fortsætte' : 'Udfyld venligst barnets fødselsdato eller terminsdato for at fortsætte');
+                  setDateError('Angiv mindst én dato');
                   return;
                 }
                 setDateError('');
