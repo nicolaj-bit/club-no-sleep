@@ -145,8 +145,13 @@ function PersonCard({ person, openId, setOpenId }) {
 
 export default function AboutUs() {
   const { isDark } = useTheme();
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ message: '' });
   const [sending, setSending] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(u => { if (u) setCurrentUser(u); }).catch(() => {});
+  }, []);
   const [openId, setOpenId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const queryClient = useQueryClient();
@@ -164,11 +169,15 @@ export default function AboutUs() {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) { toast.error('Udfyld venligst alle felter'); return; }
+    if (!form.message) { toast.error('Skriv venligst en besked'); return; }
     setSending(true);
-    await base44.functions.invoke('sendContactEmail', { name: form.name, email: form.email, message: form.message });
+    await base44.functions.invoke('sendContactEmail', {
+      name: currentUser?.full_name || 'Ukendt bruger',
+      email: currentUser?.email || '',
+      message: form.message
+    });
     toast.success('Besked sendt! Vi vender tilbage inden for 24 timer.');
-    setForm({ name: '', email: '', message: '' });
+    setForm({ message: '' });
     setSending(false);
   };
 
@@ -280,10 +289,19 @@ export default function AboutUs() {
         {/* Contact form */}
         <section className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Send os en besked</h2>
+          {currentUser && (
+            <div className="flex items-center gap-2 mb-3 px-1">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium text-white flex-shrink-0" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+                {currentUser.full_name?.charAt(0) || '?'}
+              </div>
+              <div>
+                <p className="text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>{currentUser.full_name}</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{currentUser.email}</p>
+              </div>
+            </div>
+          )}
           <form onSubmit={handleSend} className="space-y-3">
-            <Input placeholder="Dit navn" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none' }} />
-            <Input type="email" placeholder="Din e-mail" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none' }} />
-            <Textarea placeholder="Din besked..." rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none', resize: 'none' }} />
+            <Textarea placeholder="Skriv din besked her..." rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none', resize: 'none' }} />
             <button
               type="submit" disabled={sending}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-opacity active:opacity-70 disabled:opacity-50"
