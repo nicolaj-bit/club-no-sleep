@@ -407,6 +407,13 @@ export default function Onboarding() {
               } else if (step === 1) {
                 setStep(2);
               } else if (step === 2) {
+                const hasDate = childMode === 'gravid'
+                  ? !!form.child_due_date
+                  : !!(form.child_birthdate || form.child_due_date);
+                if (!hasDate) {
+                  toast.error(childMode === 'gravid' ? 'Indtast venligst din terminsdato' : 'Indtast venligst barnets fødselsdato eller terminsdato');
+                  return;
+                }
                 setStep(3);
               }
             }}
