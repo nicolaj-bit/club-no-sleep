@@ -22,6 +22,8 @@ export default function Onboarding() {
   const [openModal, setOpenModal] = useState(null);
   const [legalContent, setLegalContent] = useState({ terms: '', privacy: '' });
 
+  const [childMode, setChildMode] = useState('fodt'); // 'fodt' | 'gravid'
+
   const [form, setForm] = useState({
     username: '',
     display_name: '',
@@ -167,16 +169,11 @@ export default function Onboarding() {
               </h1>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: 'var(--color-bg-subtle)' }}>
-                <StepIcon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-              </div>
-              <div>
-                <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-                  {current.title}
-                </h1>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{current.subtitle}</p>
-              </div>
+            <div>
+              <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+                {current.title}
+              </h1>
+              {current.subtitle ? <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{current.subtitle}</p> : null}
             </div>
           )}
         </div>
@@ -311,35 +308,76 @@ export default function Onboarding() {
             {/* STEP 2 – Barn */}
             {step === 2 && (
               <motion.div key="s3" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
-                <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
-                  <span className="text-4xl">🐯</span>
-                  <p className="text-sm mt-3" style={{ color: 'var(--color-text-secondary)' }}>
-                    {t.calculateWonderWeeksSubtitle}
-                  </p>
+
+                {/* Toggle */}
+                <div className="flex rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setChildMode('fodt'); setForm(f => ({ ...f, child_due_date: '' })); }}
+                    className="flex-1 py-3 text-sm font-medium transition-all"
+                    style={{
+                      background: childMode === 'fodt' ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
+                      color: childMode === 'fodt' ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+                    }}
+                  >
+                    Jeg har født
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setChildMode('gravid'); setForm(f => ({ ...f, child_birthdate: '' })); }}
+                    className="flex-1 py-3 text-sm font-medium transition-all"
+                    style={{
+                      background: childMode === 'gravid' ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
+                      color: childMode === 'gravid' ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+                    }}
+                  >
+                    Jeg er gravid
+                  </button>
                 </div>
-                <div className="space-y-2">
-                  <Label>{t.childBirthdateLabel}</Label>
-                  <Input
-                    type="date"
-                    value={form.child_birthdate}
-                    onChange={e => setForm(f => ({ ...f, child_birthdate: e.target.value, child_due_date: '' }))}
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
-                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t.dueDateLabel}</Label>
-                  <Input
-                    type="date"
-                    value={form.child_due_date}
-                    onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value, child_birthdate: '' }))}
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
-                  />
-                </div>
+
+                {/* Jeg har født */}
+                {childMode === 'fodt' && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Barnets fødselsdato</Label>
+                      <Input
+                        type="date"
+                        value={form.child_birthdate}
+                        onChange={e => setForm(f => ({ ...f, child_birthdate: e.target.value }))}
+                        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Terminsdato</Label>
+                      <Input
+                        type="date"
+                        value={form.child_due_date}
+                        onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value }))}
+                        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                      />
+                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                        Terminsdatoen bruges til præcis udregning af tigerspring
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Jeg er gravid */}
+                {childMode === 'gravid' && (
+                  <div className="space-y-2">
+                    <Label>Terminsdato</Label>
+                    <Input
+                      type="date"
+                      value={form.child_due_date}
+                      onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value }))}
+                      style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                    />
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                      Terminsdatoen bruges til udregning af tigerspring
+                    </p>
+                  </div>
+                )}
+
               </motion.div>
             )}
 
