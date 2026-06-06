@@ -155,8 +155,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Child development / terminsdato kort */}
-      <ChildDevelopmentCard profile={profile} child={activeChild} />
+
 
       {/* Daily Affirmation */}
       {(!profile?.child_due_date || new Date(profile.child_due_date) <= new Date()) && (
