@@ -156,7 +156,7 @@ export default function Onboarding() {
             <div>
               <h1 className="text-2xl font-serif leading-snug" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
                 Velkommen til<br />
-                <span style={{ color: 'var(--color-accent)' }}>CLUB NO SLEEP</span>
+                <span>CLUB NO SLEEP</span>
               </h1>
               <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app</p>
             </div>
