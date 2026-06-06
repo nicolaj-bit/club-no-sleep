@@ -367,9 +367,6 @@ export default function Onboarding() {
                         onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value }))}
                         style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                       />
-                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                        Terminsdatoen bruges til præcis udregning af tigerspring
-                      </p>
                     </div>
                   </div>
                 )}
