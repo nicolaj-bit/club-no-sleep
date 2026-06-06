@@ -32,93 +32,47 @@ function formatDateDa() {
   return new Date().toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-function buildPrompt(profile, logs) {
+function buildPrompt(profile) {
   const motherName = profile?.display_name || profile?.username || '';
-  const babyName = '';
   const babyAge = (() => {
-    const bd = profile?.child_birthdate;
-    if (!bd) return 'ukendt';
+    const bd = profile?.child_birthdate || profile?.child_due_date;
+    if (!bd) return null;
     const months = Math.floor((Date.now() - new Date(bd).getTime()) / (1000 * 60 * 60 * 24 * 30.44));
-    return `${months} måneder`;
+    return months >= 0 ? `${months} måneder` : null;
   })();
 
-  const today = logs[0];
-  const prev = logs.slice(1, 4);
+  return `Du skriver en kort daglig affirmation til forsiden af en dansk app for mødre med babyer og småbørn.
+Affirmationen vises, når brugeren logger ind. Den skal føles som en enkel, varm og styrkende sætning, moderen kan tage med sig ind i dagen.
+Formålet er at give moderen et lille øjeblik af ro, selvværd, mod og kærlig bekræftelse.
+Affirmationen skal være positiv, men ikke amerikansk, overdrevet, cheesy eller kunstig.
+Den skal være: dansk, kort, varm, jordnær, rolig, styrkende, menneskelig, blød, ikke klinisk, ikke spirituel, ikke terapeutisk, ikke som en coach, ikke som en reklame, ikke som en selvhjælpsplakat.
+Skriv i jeg form.
+Affirmationen skal helst lyde som noget, en dansk mor faktisk kan sige til sig selv uden at krumme tæer.
 
-  const totalSleep = (() => {
-    if (!today?.bedtime || !today?.wake_time) return 'ukendt';
-    const [bh, bm] = today.bedtime.split(':').map(Number);
-    const [wh, wm] = today.wake_time.split(':').map(Number);
-    const bedMins = bh * 60 + bm;
-    const wakeMins = wh * 60 + wm;
-    const diff = wakeMins < bedMins ? (wakeMins + 1440 - bedMins) : (wakeMins - bedMins);
-    return `${Math.floor(diff / 60)}t ${diff % 60}m`;
-  })();
+Undgå formuleringer som: "Jeg er en supermor", "Jeg kan klare alt", "Jeg stråler af guddommelig energi", "Jeg vælger lykken", "Jeg manifesterer ro", "Alt sker af en grund", "Jeg er perfekt", "Jeg elsker hvert øjeblik", "Jeg håndterer alt med elegance og overskud", "Jeg er fantastisk på alle måder", "Jeg er stærkest når jeg aldrig giver op".
 
-  const wakeups = today?.wakings?.length || 0;
-  const naps = today?.naps?.length || 0;
-  const napDurations = today?.naps?.map(n => {
-    if (!n.start || !n.end) return null;
-    const [sh, sm] = n.start.split(':').map(Number);
-    const [eh, em] = n.end.split(':').map(Number);
-    return (eh * 60 + em) - (sh * 60 + sm);
-  }).filter(Boolean) || [];
-  const shortestNap = napDurations.length ? Math.min(...napDurations) + ' min' : 'ukendt';
-  const longestNap = napDurations.length ? Math.max(...napDurations) + ' min' : 'ukendt';
-  const manyShortNaps = napDurations.filter(d => d < 30).length >= 2 ? 'ja' : 'nej';
+Skriv ikke gode råd. Skriv ikke forklaringer. Skriv ikke som en analyse. Skriv ikke om konkrete symptomer. Skriv ikke om sygdom. Skriv ikke en lang tekst.
 
-  const avgPrev = prev.length ? (prev.reduce((s, l) => s + (l?.wakings?.length || 0), 0) / prev.length).toFixed(1) : null;
-  const severalHardNights = avgPrev && wakeups >= 3 && Number(avgPrev) >= 2.5 ? 'ja' : 'nej';
-  const betterThanUsual = avgPrev && wakeups < Number(avgPrev) - 1 ? 'ja' : 'nej';
-  const lessSleepThanUsual = 'nej';
-  const earlyMorning = today?.wake_time ? parseInt(today.wake_time) < 6 ? 'ja' : 'nej' : 'nej';
-  const sleepTrend = prev.length >= 2
-    ? ((prev[0]?.wakings?.length || 0) > (prev[prev.length - 1]?.wakings?.length || 0) ? 'faldende' : 'stigende')
-    : 'ukendt';
+Format: 1 til 2 sætninger. Maks 25 ord. Ingen emojis. Ingen udråbstegn. Ingen engelske vendinger. Ingen bindestreger. Ingen overskrift. Returner kun selve affirmationen.
 
-  const userNotes = today?.notes || '';
+Affirmationen må gerne være mildt poetisk, men den skal stadig være enkel og naturlig.
 
-  return `Du skriver en daglig personlig besked til en mor i en dansk babyapp.
+Inputdata (bruges kun meget diskret til stemning):
+Mors navn: ${motherName || 'ukendt'}
+Barnets alder: ${babyAge || 'ukendt'}
+Tidspunkt på dagen: ${getTimeOfDay()}
 
-Beskeden vises på forsiden, når brugeren har registreret en baby. Den skal føles som en lille rolig hilsen, der møder moderen dér, hvor hun er.
-
-Inputdata:
-Mors navn: ${motherName}
-Barnets navn: ${babyName}
-Barnets alder: ${babyAge}
-Dato: ${formatDateDa()}
-Tidspunkt: ${getTimeOfDay()}
-
-Søvn sidste nat:
-Samlet søvn: ${totalSleep}
-Antal opvågninger: ${wakeups}
-Tidlig morgenstart: ${earlyMorning}
-
-Lure:
-Antal lure i går: ${naps}
-Korteste lur: ${shortestNap}
-Længste lur: ${longestNap}
-Mange korte lure: ${manyShortNaps}
-
-Mønstre:
-Søvntrend seneste 3 dage: ${sleepTrend}
-Flere svære nætter i træk: ${severalHardNights}
-Bedre nat end normalt: ${betterThanUsual}
-Mindre søvn end normalt: ${lessSleepThanUsual}
-
-Brugerens egne noter: ${userNotes || 'ingen'}
-
----
-
-Vigtige regler:
-- Skriv på dansk
-- 2 til 4 sætninger, maks 65 ord
-- Ingen emojis, ingen udråbstegn, ingen engelske vendinger, ingen bindestreger
-- Ingen råd, forslag, løsninger eller opfordringer
-- Brug forståelse frem for handling
-- Tonen er varm, jordnær, rolig, mildt poetisk — ikke cheesy, ikke motiverende
-- Skriv direkte til moderen
-- Returner KUN selve beskeden, ingen overskrift, ingen forklaring`;
+Gode eksempler på ønsket tone:
+"Jeg er nok, også når dagen ikke bliver, som jeg havde håbet."
+"Jeg må gerne tale til mig selv med samme varme, som jeg giver mit barn."
+"Jeg stoler på, at jeg kender mit barn bedst."
+"Jeg er mere end det, jeg når i dag."
+"Jeg lærer at være mor, mens mit barn lærer verden at kende."
+"Jeg må gerne bede om hjælp. Det gør mig ikke mindre stærk."
+"Jeg er en tryg base, også når jeg selv er træt."
+"Jeg behøver ikke være perfekt for at være en god mor."
+"Jeg kan være både træt og taknemmelig på samme tid."
+"Jeg gør det bedre, end jeg selv kan se lige nu."`;
 }
 
 export default function DailyPersonalMessage({ userEmail, profile }) {
@@ -138,15 +92,8 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
       return;
     }
 
-    base44.entities.SleepLog.filter({ user_email: userEmail }, '-date', 5).then(logs => {
-      if (!logs.length) {
-        setLoading(false);
-        return;
-      }
-
-      const prompt = buildPrompt(profile, logs);
-
-      base44.integrations.Core.InvokeLLM({ prompt }).then(text => {
+    const prompt = buildPrompt(profile);
+    base44.integrations.Core.InvokeLLM({ prompt }).then(text => {
         const msg = typeof text === 'string' ? text.trim() : '';
         if (msg) {
           setCache(cacheKey, msg);
@@ -154,7 +101,6 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
         }
         setLoading(false);
       }).catch(() => setLoading(false));
-    }).catch(() => setLoading(false));
   }, [userEmail, profile]);
 
   if (loading || !message) return null;
