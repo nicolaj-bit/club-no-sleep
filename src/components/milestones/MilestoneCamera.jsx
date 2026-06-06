@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook } from 'lucide-react';
 import { toast } from 'sonner';
 import WobblySticker from './WobblySticker';
+import BalloonSticker from './BalloonSticker';
 
 const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -288,7 +289,11 @@ export default function MilestoneCamera({ frame, onClose }) {
 
           {/* Live sticker overlay */}
           <div className="absolute bottom-28 left-5 pointer-events-none" style={{ filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.35))' }}>
-            <WobblySticker headline={cleanHeadline} date={dateStr} size={150} />
+            {frame.isCustomSticker ? (
+              <BalloonSticker headline={cleanHeadline} date={dateStr} size={150} />
+            ) : (
+              <WobblySticker headline={cleanHeadline} date={dateStr} size={150} />
+            )}
           </div>
 
           {/* Top bar */}

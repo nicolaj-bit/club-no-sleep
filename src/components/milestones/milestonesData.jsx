@@ -30,7 +30,7 @@ export const MILESTONE_FRAMES = [
   { id: 'baby-roll2',   category: 'Baby', label: 'Rullede ryg→mave',                emoji: '🔄', ...B, headline: 'I dag rullede jeg',                 subline: 'Fra ryg til mave' },
   { id: 'baby-sit',     category: 'Baby', label: 'Sad selv',                        emoji: '🧘', ...B, headline: 'I dag sad jeg selv',                subline: 'For første gang' },
   { id: 'baby-feet',    category: 'Baby', label: 'Opdagede fødderne',               emoji: '🦶', ...B, headline: 'I dag opdagede jeg',                subline: 'Mine fødder' },
-  { id: 'baby-crawl',   category: 'Baby', label: 'Første kravl',                    emoji: '🐣', ...B, headline: 'I dag lærte jeg at kravle',         subline: '' },
+  { id: 'baby-crawl',   category: 'Baby', label: 'Første kravl',                    emoji: '🐣', ...B, headline: 'I dag kravlede jeg',                subline: 'For første gang', isCustomSticker: true },
   { id: 'baby-food',    category: 'Baby', label: 'Første mad',                      emoji: '🥄', ...B, headline: 'I dag smagte jeg',                  subline: 'Min første mad' },
   { id: 'baby-cup',     category: 'Baby', label: 'Drak af kop',                     emoji: '🥤', ...B, headline: 'I dag drak jeg selv af kop',        subline: '' },
   { id: 'baby-tooth',   category: 'Baby', label: 'Første tand',                     emoji: '🦷', ...B, headline: 'Jeg har fået min første tand',      subline: 'Lille perletand!' },
