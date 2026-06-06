@@ -250,8 +250,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     await loadFont();
     const canvas = canvasRef.current;
     drawSource(canvas);
-    const stickerDrawer = frame.isCustomSticker ? drawBalloonStickerOnCanvas : drawStickerOnCanvas;
-    stickerDrawer(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
+    drawBalloonStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
     setMode('preview');
     sendMilestoneNotification();
@@ -357,11 +356,7 @@ export default function MilestoneCamera({ frame, onClose }) {
 
           {/* Live sticker overlay */}
           <div className="absolute bottom-28 left-5 pointer-events-none" style={{ filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.35))' }}>
-            {frame.isCustomSticker ? (
-              <BalloonSticker headline={cleanHeadline} date={dateStr} size={150} />
-            ) : (
-              <WobblySticker headline={cleanHeadline} date={dateStr} size={150} />
-            )}
+            <BalloonSticker headline={cleanHeadline} date={dateStr} size={150} />
           </div>
 
           {/* Top bar */}
