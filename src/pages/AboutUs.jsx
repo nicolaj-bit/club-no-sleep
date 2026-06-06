@@ -233,7 +233,7 @@ export default function AboutUs() {
               initialValue={storyBody}
             >
               <div
-                className="text-sm leading-relaxed"
+                className="prose prose-sm max-w-none space-y-4 text-sm leading-relaxed"
                 style={{ color: 'var(--color-text-secondary)' }}
                 dangerouslySetInnerHTML={{ __html: storyBody }}
               />
