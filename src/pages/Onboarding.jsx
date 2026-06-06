@@ -373,17 +373,19 @@ export default function Onboarding() {
 
                 {/* Jeg er gravid */}
                 {childMode === 'gravid' && (
-                  <div className="space-y-2">
-                    <Label>Terminsdato</Label>
-                    <Input
-                      type="date"
-                      value={form.child_due_date}
-                      onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value }))}
-                      style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
-                    />
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                      Terminsdatoen bruges til udregning af tigerspring
+                  <div className="space-y-4">
+                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      Terminsdatoen er vigtig for at kunne sende dig opdateringer om graviditeten uge for uge. Terminsdatoen anvendes også senere til at beregne tigerspring.
                     </p>
+                    <div className="space-y-2">
+                      <Label>Terminsdato</Label>
+                      <Input
+                        type="date"
+                        value={form.child_due_date}
+                        onChange={e => setForm(f => ({ ...f, child_due_date: e.target.value }))}
+                        style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+                      />
+                    </div>
                   </div>
                 )}
 
