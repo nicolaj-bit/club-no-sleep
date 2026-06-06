@@ -56,28 +56,14 @@ export default function Subscription() {
     }
   }, []);
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     if (window.self !== window.top) {
       alert(da
         ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
         : 'Checkout only works from the published app, not the preview.');
       return;
     }
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      if (response.data?.url) {
-        window.location.href = response.data.url;
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-    } catch (e) {
-      console.error(e);
-      setError(da ? 'Noget gik galt. Prøv igen.' : 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = 'https://buy.stripe.com/28E4gz10E8HLgWk6m33cc01';
   };
 
   const handleRestore = async () => {
