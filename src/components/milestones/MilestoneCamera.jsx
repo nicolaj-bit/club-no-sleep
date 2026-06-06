@@ -54,12 +54,12 @@ function wrapTextCanvas(ctx, text, maxWidth) {
   return lines;
 }
 
-function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
-  // Position: bottom-left corner
-  const balloonX = canvasW * 0.1;
-  const balloonY = canvasH * 0.7;
-  const balloonRadiusX = canvasW * 0.12;
-  const balloonRadiusY = canvasW * 0.15;
+function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, subline, dateStr) {
+  const balloonX = canvasW * 0.22;
+  const balloonY = canvasH * 0.72;
+  const balloonRadiusX = canvasW * 0.14;
+  const balloonRadiusY = canvasW * 0.17;
+  const maxTextW = balloonRadiusX * 1.7;
 
   ctx.save();
 
@@ -68,7 +68,7 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(balloonX, balloonY + balloonRadiusY);
-  ctx.lineTo(balloonX, canvasH - canvasW * 0.05);
+  ctx.lineTo(balloonX, canvasH - canvasW * 0.03);
   ctx.stroke();
 
   // Balloon ellipse
@@ -81,42 +81,83 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   ctx.stroke();
 
   // Shine
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
   ctx.beginPath();
-  ctx.ellipse(balloonX - balloonRadiusX * 0.3, balloonY - balloonRadiusY * 0.5, balloonRadiusX * 0.2, balloonRadiusY * 0.3, 0, 0, Math.PI * 2);
+  ctx.ellipse(balloonX - balloonRadiusX * 0.3, balloonY - balloonRadiusY * 0.5, balloonRadiusX * 0.2, balloonRadiusY * 0.27, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Text
-  ctx.font = `bold ${canvasW * 0.028}px 'Cormorant Garamond', serif`;
-  ctx.fillStyle = '#8B7355';
   ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  
-  const lines = headline.split(' ');
-  const lineHeight = canvasW * 0.04;
-  const startY = balloonY - canvasW * 0.04;
-  
-  lines.forEach((line, i) => {
-    ctx.fillText(line, balloonX, startY + i * lineHeight);
+  ctx.textBaseline = 'alphabetic';
+
+  // Auto-fit headline: reduce font size until lines fit
+  let headlineFs = canvasW * 0.032;
+  let headlineLines;
+  for (let fs = headlineFs; fs >= canvasW * 0.018; fs -= canvasW * 0.002) {
+    ctx.font = `400 ${fs}px 'Cormorant Garamond', serif`;
+    headlineLines = wrapTextCanvas(ctx, headline, maxTextW);
+    if (headlineLines.length <= 3) { headlineFs = fs; break; }
+  }
+
+  const headlineLineH = headlineFs * 1.3;
+
+  // Subline
+  let subLines = [];
+  let subFs = canvasW * 0.026;
+  if (subline) {
+    for (let fs = subFs; fs >= canvasW * 0.015; fs -= canvasW * 0.002) {
+      ctx.font = `italic 400 ${fs}px 'Cormorant Garamond', serif`;
+      subLines = wrapTextCanvas(ctx, subline, maxTextW);
+      if (subLines.length <= 2) { subFs = fs; break; }
+    }
+  }
+  const subLineH = subFs * 1.2;
+
+  const heartH = canvasW * 0.025;
+  const dateH = canvasW * 0.022;
+  const totalH =
+    headlineLines.length * headlineLineH +
+    (subLines.length > 0 ? canvasW * 0.01 + subLines.length * subLineH : 0) +
+    heartH + canvasW * 0.01 + dateH;
+
+  let curY = balloonY - totalH / 2;
+
+  // Draw headline
+  ctx.fillStyle = '#8B7355';
+  headlineLines.forEach((line) => {
+    ctx.font = `400 ${headlineFs}px 'Cormorant Garamond', serif`;
+    ctx.fillText(line, balloonX, curY + headlineFs);
+    curY += headlineLineH;
   });
 
+  // Draw subline
+  if (subLines.length > 0) {
+    curY += canvasW * 0.01;
+    ctx.fillStyle = '#A08060';
+    subLines.forEach((line) => {
+      ctx.font = `italic 400 ${subFs}px 'Cormorant Garamond', serif`;
+      ctx.fillText(line, balloonX, curY + subFs);
+      curY += subLineH;
+    });
+  }
+
   // Heart
+  curY += canvasW * 0.01;
   ctx.fillStyle = '#9B7F6E';
-  const heartX = balloonX;
-  const heartY = balloonY + canvasW * 0.04;
-  const heartSize = canvasW * 0.015;
+  const hx = balloonX;
+  const hy = curY;
+  const hs = heartH * 0.5;
   ctx.beginPath();
-  ctx.moveTo(heartX, heartY - heartSize);
-  ctx.bezierCurveTo(heartX - heartSize * 2, heartY - heartSize * 3, heartX - heartSize * 3, heartY - heartSize * 2, heartX - heartSize * 1.5, heartY + heartSize);
-  ctx.bezierCurveTo(heartX, heartY + heartSize * 3, heartX + heartSize * 1.5, heartY + heartSize, heartX + heartSize * 3, heartY - heartSize * 2);
-  ctx.bezierCurveTo(heartX + heartSize * 2, heartY - heartSize * 3, heartX, heartY - heartSize, heartX, heartY - heartSize);
+  ctx.moveTo(hx, hy - hs);
+  ctx.bezierCurveTo(hx - hs * 2, hy - hs * 3, hx - hs * 3, hy - hs * 2, hx - hs * 1.5, hy + hs);
+  ctx.bezierCurveTo(hx, hy + hs * 3, hx + hs * 1.5, hy + hs, hx + hs * 3, hy - hs * 2);
+  ctx.bezierCurveTo(hx + hs * 2, hy - hs * 3, hx, hy - hs, hx, hy - hs);
   ctx.fill();
+  curY += heartH + canvasW * 0.01;
 
   // Date
-  ctx.font = `${canvasW * 0.024}px 'Inter', sans-serif`;
+  ctx.font = `${dateH}px 'Inter', sans-serif`;
   ctx.fillStyle = '#8B7355';
-  ctx.textAlign = 'center';
-  ctx.fillText(dateStr, balloonX, balloonY + canvasW * 0.12);
+  ctx.fillText(dateStr, balloonX, curY + dateH);
 
   ctx.restore();
 }
@@ -250,7 +291,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     await loadFont();
     const canvas = canvasRef.current;
     drawSource(canvas);
-    drawBalloonStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
+    drawBalloonStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, frame.subline || '', dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
     setMode('preview');
     sendMilestoneNotification();
@@ -356,7 +397,7 @@ export default function MilestoneCamera({ frame, onClose }) {
 
           {/* Live sticker overlay */}
           <div className="absolute bottom-28 left-5 pointer-events-none" style={{ filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.35))' }}>
-            <BalloonSticker headline={cleanHeadline} date={dateStr} size={150} />
+            <BalloonSticker headline={cleanHeadline} subline={frame.subline} date={dateStr} size={150} />
           </div>
 
           {/* Top bar */}

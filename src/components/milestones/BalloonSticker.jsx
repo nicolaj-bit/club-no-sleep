@@ -1,40 +1,57 @@
 import React from 'react';
 
-// Splits headline into max 2 lines that fit inside balloon (~16 chars per line)
-function splitText(text, maxChars = 16) {
-  if (!text) return ['', ''];
-  if (text.length <= maxChars) return [text, ''];
-  const words = text.split(' ');
-  let line1 = '';
-  let line2 = '';
-  for (const word of words) {
-    if ((line1 + ' ' + word).trim().length <= maxChars) {
-      line1 = (line1 + ' ' + word).trim();
-    } else {
-      line2 = (line2 + ' ' + word).trim();
+// Auto-fit text into the balloon by reducing font size if needed
+function fitLines(text, maxWidth, maxFontSize = 11, minFontSize = 7) {
+  if (!text) return { lines: [], fontSize: maxFontSize };
+
+  // We simulate fitting using character-width estimation (SVG has no measureText)
+  // Approx char width at fontSize 11 ≈ 6px, scales linearly
+  for (let fs = maxFontSize; fs >= minFontSize; fs--) {
+    const charW = fs * 0.55;
+    const charsPerLine = Math.floor(maxWidth / charW);
+    const words = text.split(' ');
+    const lines = [];
+    let line = '';
+    for (const word of words) {
+      const candidate = line ? `${line} ${word}` : word;
+      if (candidate.length <= charsPerLine) {
+        line = candidate;
+      } else {
+        if (line) lines.push(line);
+        line = word;
+      }
     }
+    if (line) lines.push(line);
+    // Allow max 3 lines; if fits, use this font size
+    if (lines.length <= 3) return { lines, fontSize: fs };
   }
-  return [line1, line2];
+  // Fallback: force 3 lines at min size
+  const words = text.split(' ');
+  return { lines: [words.slice(0, 2).join(' '), words.slice(2, 4).join(' '), words.slice(4).join(' ')].filter(Boolean), fontSize: minFontSize };
 }
 
 export default function BalloonSticker({ headline, subline, date, size = 120 }) {
-  const balloonSize = size;
-  const [line1, line2] = splitText(headline);
-  const subText = subline || '';
+  const maxWidth = 58; // px inside balloon at viewBox scale (balloon rx=38)
 
-  // Adjust text y positions based on how many lines we have
-  const hasSubline = subText.length > 0;
-  const hasLine2 = line2.length > 0;
+  const { lines: headlineLines, fontSize: headlineFs } = fitLines(headline, maxWidth, 11, 7);
+  const { lines: subLines, fontSize: subFs } = subline ? fitLines(subline, maxWidth, 9, 6) : { lines: [], fontSize: 9 };
 
-  // Center text block vertically in balloon (balloon cy=50, ry=45 → range ~5 to 95)
-  const textStartY = hasLine2 ? (hasSubline ? 28 : 32) : (hasSubline ? 32 : 40);
-  const lineHeight = 13;
+  const lineH = headlineFs * 1.35;
+  const subLineH = subFs * 1.3;
+
+  const totalHeight =
+    headlineLines.length * lineH +
+    (subLines.length > 0 ? 4 + subLines.length * subLineH : 0) +
+    (date ? 14 : 0); // heart + date row
+
+  // Center text block in balloon (cy=50, ry=45 → usable center ~50)
+  let curY = 50 - totalHeight / 2 + headlineFs;
 
   return (
     <svg
       viewBox="0 0 120 280"
-      width={balloonSize}
-      height={balloonSize * 2.33}
+      width={size}
+      height={size * 2.33}
       className="drop-shadow-sm"
     >
       {/* String */}
@@ -43,74 +60,78 @@ export default function BalloonSticker({ headline, subline, date, size = 120 }) 
       {/* Balloon */}
       <ellipse cx="60" cy="50" rx="38" ry="45" fill="#F5E8D8" stroke="#E8D7C3" strokeWidth="0.5" />
 
-      {/* Shine effect */}
+      {/* Shine */}
       <ellipse cx="48" cy="25" rx="8" ry="12" fill="#FFFFFF" opacity="0.6" />
 
-      {/* Line 1 */}
-      <text
-        x="60"
-        y={textStartY}
-        textAnchor="middle"
-        fontSize="10"
-        fontFamily="'Cormorant Garamond', Georgia, serif"
-        fill="#8B7355"
-        fontWeight="400"
-      >
-        {line1}
-      </text>
+      {/* Headline lines */}
+      {headlineLines.map((line, i) => {
+        const y = curY + i * lineH;
+        return (
+          <text
+            key={`h${i}`}
+            x="60"
+            y={y}
+            textAnchor="middle"
+            fontSize={headlineFs}
+            fontFamily="'Cormorant Garamond', Georgia, serif"
+            fill="#8B7355"
+            fontWeight="400"
+          >
+            {line}
+          </text>
+        );
+      })}
 
-      {/* Line 2 (if exists) */}
-      {hasLine2 && (
-        <text
-          x="60"
-          y={textStartY + lineHeight}
-          textAnchor="middle"
-          fontSize="10"
-          fontFamily="'Cormorant Garamond', Georgia, serif"
-          fill="#8B7355"
-          fontWeight="400"
-        >
-          {line2}
-        </text>
-      )}
-
-      {/* Subline */}
-      {hasSubline && (
-        <text
-          x="60"
-          y={textStartY + (hasLine2 ? lineHeight * 2 : lineHeight)}
-          textAnchor="middle"
-          fontSize="9"
-          fontFamily="'Cormorant Garamond', Georgia, serif"
-          fill="#A08060"
-          fontWeight="400"
-          fontStyle="italic"
-        >
-          {subText}
-        </text>
-      )}
+      {/* Subline lines */}
+      {subLines.map((line, i) => {
+        const y = curY + headlineLines.length * lineH + 4 + i * subLineH + subFs;
+        return (
+          <text
+            key={`s${i}`}
+            x="60"
+            y={y}
+            textAnchor="middle"
+            fontSize={subFs}
+            fontFamily="'Cormorant Garamond', Georgia, serif"
+            fill="#A08060"
+            fontWeight="400"
+            fontStyle="italic"
+          >
+            {line}
+          </text>
+        );
+      })}
 
       {/* Heart */}
-      <g transform="translate(60, 74)">
-        <path
-          d="M0,-2 C-2,-4 -4.5,-4 -5,-2 C-5.5,0 -4,2 0,5 C4,2 5.5,0 5,-2 C4.5,-4 2,-4 0,-2Z"
-          fill="#9B7F6E"
-        />
-      </g>
+      {(() => {
+        const heartY = curY + headlineLines.length * lineH + (subLines.length > 0 ? 4 + subLines.length * subLineH : 0) + 4;
+        return (
+          <g transform={`translate(60, ${heartY})`}>
+            <path
+              d="M0,-2 C-2,-4 -4.5,-4 -5,-2 C-5.5,0 -4,2 0,5 C4,2 5.5,0 5,-2 C4.5,-4 2,-4 0,-2Z"
+              fill="#9B7F6E"
+            />
+          </g>
+        );
+      })()}
 
       {/* Date */}
-      <text
-        x="60"
-        y="88"
-        textAnchor="middle"
-        fontSize="9"
-        fontFamily="'Inter', sans-serif"
-        fill="#8B7355"
-        fontWeight="400"
-        letterSpacing="0.3"
-      >
-        {date}
-      </text>
+      {date && (() => {
+        const dateY = curY + headlineLines.length * lineH + (subLines.length > 0 ? 4 + subLines.length * subLineH : 0) + 16;
+        return (
+          <text
+            x="60"
+            y={dateY}
+            textAnchor="middle"
+            fontSize={8}
+            fontFamily="'Inter', sans-serif"
+            fill="#8B7355"
+            letterSpacing="0.3"
+          >
+            {date}
+          </text>
+        );
+      })()}
     </svg>
   );
 }
