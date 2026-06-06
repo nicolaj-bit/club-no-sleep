@@ -152,17 +152,27 @@ export default function Onboarding() {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: 'var(--color-bg-subtle)' }}>
-              <StepIcon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-            </div>
+          {step === 0 ? (
             <div>
-              <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-                {current.title}
+              <h1 className="text-2xl font-serif leading-snug" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+                Velkommen til<br />
+                <span style={{ color: 'var(--color-accent)' }}>CLUB NO SLEEP</span>
               </h1>
-              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{current.subtitle}</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app</p>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: 'var(--color-bg-subtle)' }}>
+                <StepIcon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+              </div>
+              <div>
+                <h1 className="text-2xl font-serif" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
+                  {current.title}
+                </h1>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{current.subtitle}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
