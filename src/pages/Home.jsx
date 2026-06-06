@@ -159,6 +159,9 @@ export default function Home() {
 
 
 
+      {/* Daglig personlig besked */}
+      {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
+
       {/* Sleep/Diary + Calendar row */}
       {user && (
         <div className="mx-5 mb-5 flex gap-3">
@@ -180,9 +183,6 @@ export default function Home() {
           <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
         </div>
       )}
-
-      {/* Daglig personlig besked baseret på søvndata */}
-      {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
 
       {/* AI Sleep Advice — only shown when 5+ logs exist */}
       {user && <SleepAdviceCard userEmail={user.email} />}
