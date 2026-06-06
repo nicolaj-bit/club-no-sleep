@@ -108,7 +108,7 @@ export default function Onboarding() {
 
   const STEPS = [
     { icon: Shield, title: 'Velkommen til CLUB NO SLEEP', subtitle: 'Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app' },
-    { icon: MapPin, title: t.whereDoYouLive, subtitle: t.findNearbyMoms },
+    { icon: MapPin, title: 'Mindre natteensomhed', subtitle: 'Forestil dig, at når du sidder med en vågen baby om natten, så tændes der et lille lys over dit hus' },
     { icon: Baby, title: t.aboutYourChild, subtitle: t.calculateWonderWeeksSubtitle },
     { icon: Sparkles, title: 'Vælg din plan', subtitle: 'Kom i gang — første 30 dage er gratis' },
   ];
@@ -275,9 +275,8 @@ export default function Onboarding() {
             {step === 1 && (
               <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
-                  <MapPin className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-accent)' }} />
                   <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                    {t.cityDesc}
+                    Forestil dig så, hvor mange små lys der er tændt over huse nær dig
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -288,6 +287,9 @@ export default function Onboarding() {
                     placeholder={t.cityPlaceholder}
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                   />
+                  <p className="text-xs" style={{ color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
+                    Når du oplyser din by, har du mulighed for at "tænde et lys" og vise andre mødre i nærheden af dig, at de ikke er alene. Det er valgfrit om du ønsker at oplyse din by. Såfremt du springer trinnet over, men stadig ønsker at gøre brug af natteensomhedskortet, indsættes et lys et tilfældigt sted
+                  </p>
                 </div>
               </motion.div>
             )}
