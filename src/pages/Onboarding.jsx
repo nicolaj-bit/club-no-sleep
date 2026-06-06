@@ -338,6 +338,9 @@ export default function Onboarding() {
                 {/* Jeg har født */}
                 {childMode === 'fodt' && (
                   <div className="space-y-4">
+                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      Terminsdatoen bruges til at beregne tigerspring mens fødselsdatoen blandt andet bruges til at beregne milepæle og give korrekt søvnvejledning.
+                    </p>
                     <div className="space-y-2">
                       <Label>Barnets navn</Label>
                       <Input
