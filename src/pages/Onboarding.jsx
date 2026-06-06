@@ -22,7 +22,7 @@ export default function Onboarding() {
   const [openModal, setOpenModal] = useState(null);
   const [legalContent, setLegalContent] = useState({ terms: '', privacy: '' });
 
-  const [childMode, setChildMode] = useState('fodt'); // 'fodt' | 'gravid'
+  const [childMode, setChildMode] = useState('gravid'); // 'fodt' | 'gravid'
 
   const [form, setForm] = useState({
     username: '',
@@ -313,17 +313,6 @@ export default function Onboarding() {
                 <div className="flex rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
                   <button
                     type="button"
-                    onClick={() => { setChildMode('fodt'); setForm(f => ({ ...f, child_due_date: '' })); }}
-                    className="flex-1 py-3 text-sm font-medium transition-all"
-                    style={{
-                      background: childMode === 'fodt' ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
-                      color: childMode === 'fodt' ? 'var(--color-bg)' : 'var(--color-text-secondary)',
-                    }}
-                  >
-                    Jeg har født
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => { setChildMode('gravid'); setForm(f => ({ ...f, child_birthdate: '' })); }}
                     className="flex-1 py-3 text-sm font-medium transition-all"
                     style={{
@@ -332,6 +321,17 @@ export default function Onboarding() {
                     }}
                   >
                     Jeg er gravid
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setChildMode('fodt'); setForm(f => ({ ...f, child_due_date: '' })); }}
+                    className="flex-1 py-3 text-sm font-medium transition-all"
+                    style={{
+                      background: childMode === 'fodt' ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
+                      color: childMode === 'fodt' ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+                    }}
+                  >
+                    Jeg har født
                   </button>
                 </div>
 
