@@ -41,7 +41,11 @@
     "content"
   ],
   "rls": {
-    "create": {},
+    "create": {
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
     "read": {},
     "update": {
       "$or": [
