@@ -1,83 +1,25 @@
 {
   "name": "LALATOTO",
   "short_name": "LALATOTO",
-  "description": "Din digitale babybog - søvnlog, tigerspring, kalender og fællesskab",
+  "description": "Din digitale babybog. Søvnlog, tigerspring, kalender og fællesskab for forældre.",
+  "version": "1.0.0",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "background_color": "#FAF6F1",
   "theme_color": "#5B3F2B",
-  "categories": ["lifestyle", "productivity"],
-  "screenshots": [
-    {
-      "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
+      "src": "https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/735d0e148_Ikon.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
+      "src": "https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/735d0e148_Ikon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
-  ],
-  "shortcuts": [
-    {
-      "name": "Søvnlog",
-      "short_name": "Søvn",
-      "description": "Log søvn for dit barn",
-      "url": "/SleepLog",
-      "icons": [
-        {
-          "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Kalender",
-      "short_name": "Aftaler",
-      "description": "Se dine aftaler",
-      "url": "/Calendar",
-      "icons": [
-        {
-          "src": "https://www.lalatoto.dk/cdn/shop/files/favicon.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "share_target": {
-    "action": "/share",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text"
-    }
-  }
+  ]
 }
