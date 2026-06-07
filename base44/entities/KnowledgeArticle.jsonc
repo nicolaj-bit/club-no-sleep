@@ -42,17 +42,17 @@
         "role": "admin"
       }
     },
+    "read": {
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
     "update": {
       "user_condition": {
         "role": "admin"
       }
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "write": {
       "user_condition": {
         "role": "admin"
       }
