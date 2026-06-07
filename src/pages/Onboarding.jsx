@@ -14,7 +14,7 @@ import PlanChooser from '@/components/onboarding/PlanChooser';
 export default function Onboarding() {
   const { t } = useLanguage();
   const [user, setUser] = useState(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
   const hasPaid = new URLSearchParams(window.location.search).get('subscription') === 'success';
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -116,7 +116,8 @@ export default function Onboarding() {
     { icon: Sparkles, title: 'Vælg din plan', subtitle: '' },
   ];
 
-  const current = STEPS[step];
+  // step -1 = velkomstskærm, step 0-3 = de rigtige steps
+  const current = step >= 0 ? STEPS[step] : STEPS[0];
   const StepIcon = current.icon;
 
   return (
@@ -142,8 +143,70 @@ export default function Onboarding() {
 
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
 
-        {/* Header */}
-        <div className="px-6 pt-14 pb-6">
+        {/* VELKOMSTSKÆRM (step -1) */}
+        {step === -1 && (
+          <div className="flex-1 flex flex-col items-center justify-between px-6 pt-14 pb-12">
+            <div className="flex flex-col items-center gap-6 flex-1 justify-center">
+              {/* Logo / app navn */}
+              <div className="text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-accent)' }}>Velkommen til</p>
+                <h1 className="text-4xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '-0.01em' }}>
+                  CLUB NO SLEEP
+                </h1>
+              </div>
+
+              {/* Billeder af Sara & Nicolaj */}
+              <div className="flex items-end gap-4 mt-2">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2" style={{ borderColor: 'var(--color-accent-soft)' }}>
+                    <img
+                      src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face"
+                      alt="Sara"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Sara</p>
+                </div>
+                <div className="w-10 h-px mb-12" style={{ background: 'var(--color-border)' }} />
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2" style={{ borderColor: 'var(--color-accent-soft)' }}>
+                    <img
+                      src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face"
+                      alt="Nicolaj"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Nicolaj</p>
+                </div>
+              </div>
+
+              {/* Velkomstbesked */}
+              <div className="rounded-3xl p-5 text-center max-w-xs" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
+                <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
+                  "Hej! Vi er Sara og Nicolaj — og vi har selv siddet oppe om natten med sovnige øjne og en baby på armen.
+                </p>
+                <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
+                  CLUB NO SLEEP er lavet til jer. Vi glæder os til at følge dig."
+                </p>
+                <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>— Sara & Nicolaj</p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="w-full space-y-3">
+              <Button
+                className="w-full h-14 text-base font-semibold rounded-2xl"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+                onClick={() => setStep(0)}
+              >
+                <span className="flex items-center gap-2">Kom i gang <ArrowRight className="w-5 h-5" /></span>
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Header — vises kun fra step 0+ */}
+        {step >= 0 && <div className="px-6 pt-14 pb-6">
           {/* Progress bar */}
           <div className="flex gap-2 mb-8">
             {STEPS.map((_, i) => (
@@ -177,10 +240,10 @@ export default function Onboarding() {
               {current.subtitle ? <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{current.subtitle}</p> : null}
             </div>
           )}
-        </div>
+        </div>}
 
-        {/* Content */}
-        <div className="flex-1 px-6 overflow-y-auto">
+        {/* Content — vises kun fra step 0+ */}
+        {step >= 0 && <div className="flex-1 px-6 overflow-y-auto">
           <AnimatePresence mode="wait">
 
             {/* STEP 0 – Profil & betingelser */}
@@ -394,10 +457,10 @@ export default function Onboarding() {
             )}
 
           </AnimatePresence>
-        </div>
+        </div>}
 
-        {/* Bottom nav */}
-        <div className="px-6 py-8 space-y-3">
+        {/* Bottom nav — vises kun fra step 0+ */}
+        {step >= 0 && <div className="px-6 py-8 space-y-3">
           {step === 2 && dateError && (
             <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: '#FEE2E2', color: '#B91C1C', border: '1px solid #FECACA' }}>
               {dateError}
@@ -431,15 +494,13 @@ export default function Onboarding() {
             )}
           </Button>}
 
-          {step > 0 && (
-            <button
-              onClick={() => setStep(s => s - 1)}
-              className="w-full py-3 text-sm flex items-center justify-center gap-2"
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              <ArrowLeft className="w-4 h-4" /> {t.back}
-            </button>
-          )}
+          <button
+            onClick={() => setStep(s => s === 0 ? -1 : s - 1)}
+            className="w-full py-3 text-sm flex items-center justify-center gap-2"
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            <ArrowLeft className="w-4 h-4" /> {t.back}
+          </button>
 
           {/* Skip for step 1 (city) and step 2 (child date) */}
           {step === 1 && (
@@ -453,7 +514,7 @@ export default function Onboarding() {
           )}
 
 
-        </div>
+        </div>}
 
       </div>
     </>
