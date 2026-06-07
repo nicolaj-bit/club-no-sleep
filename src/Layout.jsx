@@ -41,28 +41,35 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    // OneSignal setup — virker i web, PWA, iOS (Capacitor) og Android (Capacitor)
     const isCapacitor = !!window.Capacitor;
-    
+
+    const loginUser = async (OneSignalInstance) => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const u = await base44.auth.me();
+          if (u?.email) {
+            OneSignalInstance.login(u.email);
+          }
+        }
+      } catch (_) {}
+    };
+
     if (isCapacitor) {
-      // Native iOS/Android via Capacitor
-      import('https://cdn.onesignal.com/sdks/OneSignalSDK.js').then(() => {
-        window.OneSignal = window.OneSignal || [];
-        window.OneSignal.push(async function(OneSignal) {
-          await OneSignal.init({
-            appId: ONESIGNAL_APP_ID,
-          });
-          try {
-            const isAuth = await base44.auth.isAuthenticated();
-            if (isAuth) {
-              const u = await base44.auth.me();
-              if (u?.email) {
-                OneSignal.login(u.email);
-              }
-            }
-          } catch (_) {}
-        });
-      }).catch(e => console.error('OneSignal import failed:', e));
+      // Native iOS/Android via Capacitor — OneSignal plugin skal initialiseres via global window.OneSignal
+      // (plugin'et injiceres af Capacitor runtime, ikke via npm import)
+      const waitForPlugin = (retries = 20) => {
+        if (window.OneSignal && typeof window.OneSignal.initialize === 'function') {
+          window.OneSignal.initialize(ONESIGNAL_APP_ID);
+          window.OneSignal.Notifications.requestPermission(true);
+          loginUser(window.OneSignal);
+        } else if (retries > 0) {
+          setTimeout(() => waitForPlugin(retries - 1), 300);
+        } else {
+          console.warn('OneSignal Capacitor plugin ikke fundet');
+        }
+      };
+      waitForPlugin();
     } else {
       // Web / PWA
       const script = document.createElement('script');
@@ -76,15 +83,7 @@ export default function Layout({ children, currentPageName }) {
           appId: ONESIGNAL_APP_ID,
           allowLocalhostAsSecureOrigin: true,
         });
-        try {
-          const isAuth = await base44.auth.isAuthenticated();
-          if (isAuth) {
-            const u = await base44.auth.me();
-            if (u?.email) {
-              OneSignal.login(u.email);
-            }
-          }
-        } catch (_) {}
+        loginUser(OneSignal);
       });
 
       return () => {
