@@ -251,23 +251,53 @@ export default function Profile() {
                 {/* Divider */}
                 <div className="h-px w-full" style={{ background: 'var(--color-border)' }} />
 
-                {/* Barnets fødselsdato */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="birthdate" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.childBirthdate}</Label>
-                  <Input id="birthdate" type="date" value={editForm.child_birthdate || ''} onChange={(e) => setEditForm({ ...editForm, child_birthdate: e.target.value })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.orLabel}</span>
-                  <div className="flex-1 h-px" style={{ background: 'var(--color-border)' }} />
-                </div>
-
-                {/* Terminsdato */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="due_date" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.dueDateLabel}</Label>
-                  <Input id="due_date" type="date" value={editForm.child_due_date || ''} onChange={(e) => setEditForm({ ...editForm, child_due_date: e.target.value })} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.wonderWeekInfo}</p>
+                {/* Børn */}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                    {lang === 'da' ? 'Mine børn' : 'My children'}
+                  </p>
+                  {myChildren.length === 0 && (
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                      {lang === 'da' ? 'Ingen børn tilføjet endnu' : 'No children added yet'}
+                    </p>
+                  )}
+                  {myChildren.map((child) => (
+                    <div
+                      key={child.id}
+                      className="flex items-center justify-between px-4 py-3 rounded-xl"
+                      style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}
+                    >
+                      <div>
+                        <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                          {child.name}{!child.birthdate && child.due_date ? ' 🤰' : ''}
+                        </p>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                          {child.birthdate
+                            ? (lang === 'da' ? `Født ${child.birthdate}` : `Born ${child.birthdate}`)
+                            : child.due_date
+                              ? (lang === 'da' ? `Termin ${child.due_date}` : `Due ${child.due_date}`)
+                              : ''}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(child); setAddChildOpen(true); }, 200); }}
+                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
+                        style={{ background: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+                      >
+                        <Pencil className="w-3 h-3" />
+                        {lang === 'da' ? 'Rediger' : 'Edit'}
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(null); setAddChildOpen(true); }, 200); }}
+                    className="text-xs px-3 py-1.5 rounded-full"
+                    style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)', color: 'var(--color-accent)' }}
+                  >
+                    + {lang === 'da' ? 'Tilføj barn' : 'Add child'}
+                  </button>
                 </div>
 
               </div>
