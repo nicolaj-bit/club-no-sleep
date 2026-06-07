@@ -40,7 +40,11 @@
     "participants"
   ],
   "rls": {
-    "create": {},
+    "create": {
+      "user_condition": {
+        "isAuthenticated": true
+      }
+    },
     "read": {
       "data.participants": "{{user.email}}"
     },
