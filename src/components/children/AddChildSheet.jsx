@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export default function AddChildSheet({ open, onClose, onSaved, editChild = null }) {
-  const [name, setName] = useState(editChild?.name || '');
-  const [birthdate, setBirthdate] = useState(editChild?.birthdate || '');
-  const [dueDate, setDueDate] = useState(editChild?.due_date || '');
+  const [name, setName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setName(editChild?.name || '');
+      setBirthdate(editChild?.birthdate || '');
+      setDueDate(editChild?.due_date || '');
+      setError('');
+    }
+  }, [open, editChild]);
 
   if (!open) return null;
 
