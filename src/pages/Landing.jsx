@@ -18,14 +18,13 @@ export default function Landing() {
 
       {/* ── NAVBAR ── */}
       <nav style={{ backgroundColor: '#F5EDE0', borderBottom: '1px solid #E2D4C0', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
-          <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="lnd-nav-inner" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
+          <span className="lnd-nav-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
             <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
-
             <>
-                <button onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
+                <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
                 <button onClick={handleLogin} style={btnDark}>Bliv medlem</button>
               </>
             }
@@ -36,12 +35,12 @@ export default function Landing() {
       {/* ════════════════════════════════
            HERO 1 — "Til dig, der er vågen"
         ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#F5EDE0', padding: '6rem 2.5rem 5rem' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
+      <section className="lnd-hero1-section" style={{ backgroundColor: '#F5EDE0', padding: '6rem 2.5rem 5rem' }}>
+        <div className="lnd-hero1-inner" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
 
           {/* Left copy */}
-          <div style={{ flex: '1 1 340px', minWidth: 260 }}>
-            <h1 style={{
+          <div className="lnd-hero1-copy" style={{ flex: '1 1 340px', minWidth: 260 }}>
+            <h1 className="lnd-hero1-h1" style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(2.4rem, 4.5vw, 3.4rem)',
               fontWeight: 400,
@@ -60,37 +59,22 @@ export default function Landing() {
               </svg>
             </div>
 
-            <p style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 0.6rem' }}>
+            <p className="lnd-hero1-p" style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 0.6rem' }}>
               Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; <strong>Natteensomhed.</strong>
             </p>
-            <p style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 2.8rem' }}>
+            <p className="lnd-hero1-p" style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 2.8rem' }}>
               <strong>CLUB NO SLEEP</strong> er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
             </p>
 
-            <button onClick={handleLogin} style={btnBrown}>Hent app</button>
+            <div className="lnd-hero1-cta">
+              <button className="lnd-hero1-btn" onClick={handleLogin} style={btnBrown}>Hent app</button>
+            </div>
           </div>
 
-          {/* Right — two iPhones with iframe screens */}
-          <div style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
-
-            {/* iPhone A — /Home — front left, larger */}
-            <IPhoneMockup
-              url="/Home"
-              width={220}
-              height={450}
-              style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }}
-              frameColor="#C8A882" />
-            
-
-            {/* iPhone B — /SleepLog — behind right, offset down */}
-            <IPhoneMockup
-              url="/SleepLog"
-              width={200}
-              height={415}
-              style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }}
-              frameColor="#DDD0BC" />
-            
-
+          {/* Right — two iPhones */}
+          <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
+            <IPhoneMockup url="/Home" width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />
+            <IPhoneMockup url="/SleepLog" width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />
           </div>
         </div>
       </section>
@@ -106,28 +90,20 @@ export default function Landing() {
           backgroundColor: 'rgba(190,155,105,0.28)', pointerEvents: 'none', zIndex: 0
         }} />
 
-        <div style={{ display: 'flex', alignItems: 'center', padding: '3rem 4rem 3rem 3.5rem', gap: '4.5rem', position: 'relative', zIndex: 1 }}>
+        <div className="lnd-klub-inner" style={{ display: 'flex', alignItems: 'center', padding: '3rem 4rem 3rem 3.5rem', gap: '4.5rem', position: 'relative', zIndex: 1 }}>
 
-          {/* LEFT — photo with margin, portrait style */}
-          <div style={{ flexShrink: 0, width: 260, height: 360, borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
+          {/* LEFT — photo */}
+          <div className="lnd-klub-img" style={{ flexShrink: 0, width: 260, height: 360, borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
             <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/eca32e989_Skrmbillede2026-06-08161849.png"
-
             alt="Kvinde med Club No Sleep taske og barnevogn"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
-            
           </div>
 
-          {/* RIGHT — copy, vertically centred */}
+          {/* RIGHT — copy */}
           <div style={{ flex: 1, maxWidth: 520 }}>
-            <h2 style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontSize: '2.55rem', fontWeight: 400,
-              color: '#1E140A', lineHeight: 1.15,
-              margin: '0 0 1.3rem'
-            }}>
+            <h2 className="lnd-klub-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.55rem', fontWeight: 400, color: '#1E140A', lineHeight: 1.15, margin: '0 0 1.3rem' }}>
               Kom med i klubben
             </h2>
-
             <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.82, margin: '0 0 1.2rem' }}>
               Vi har været der.<br />
               Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du
@@ -136,17 +112,11 @@ export default function Landing() {
               CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde
               andre, der er vågen sammen med dig.
             </p>
-
             <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.82, margin: '0 0 1.8rem' }}>
               Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig
               alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
             </p>
-
-            <p style={{
-              fontFamily: "'Dancing Script', cursive",
-              fontSize: '1.6rem', fontWeight: 400,
-              color: '#3A2412', margin: 0, lineHeight: 1.3
-            }}>
+            <p className="lnd-klub-sig" style={{ fontFamily: "'Dancing Script', cursive", fontSize: '1.6rem', fontWeight: 400, color: '#3A2412', margin: 0, lineHeight: 1.3 }}>
               Kærligst og kram fra Sara &amp; Nicolaj
             </p>
           </div>
@@ -157,12 +127,12 @@ export default function Landing() {
       {/* ════════════════════════════════
            HERO 3 — "Dette finder du i appen"
         ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#FFFDF9', padding: '5.5rem 3rem 6.5rem' }}>
+      <section className="lnd-features-section" style={{ backgroundColor: '#FFFDF9', padding: '5.5rem 3rem 6.5rem' }}>
         <div style={{ maxWidth: 1020, margin: '0 auto' }}>
 
           {/* Headline + heart */}
           <div style={{ textAlign: 'center', marginBottom: '3.8rem' }}>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.9rem' }}>
+            <h2 className="lnd-features-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.9rem' }}>
               Dette finder du i appen
             </h2>
             <svg width="20" height="18" viewBox="0 0 20 18" fill="none" style={{ display: 'inline-block' }}>
@@ -171,7 +141,7 @@ export default function Landing() {
           </div>
 
           {/* 3-column grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3rem 3.5rem' }}>
+          <div className="lnd-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3rem 3.5rem' }}>
             {[
               {
                 icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><ellipse cx="24" cy="28" rx="9" ry="11" /><path d="M18 17c0-5 3-9 6-9s6 4 6 9" /><path d="M13 33c-2 1.5-4 4-4 7" /><path d="M35 33c2 1.5 4 4 4 7" /><circle cx="21" cy="26" r="1.5" fill="#8B6A50" stroke="none" /><circle cx="27" cy="26" r="1.5" fill="#8B6A50" stroke="none" /><path d="M21 31 q3 2.5 6 0" /></svg>,
@@ -220,7 +190,7 @@ export default function Landing() {
               },
             ].map((f, i) => (
               <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                <div style={{ width: 74, height: 74, borderRadius: '50%', backgroundColor: '#EBD8C4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div className="lnd-feature-circle" style={{ width: 74, height: 74, borderRadius: '50%', backgroundColor: '#EBD8C4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   {f.icon}
                 </div>
                 <div style={{ paddingTop: 5 }}>
@@ -237,27 +207,27 @@ export default function Landing() {
       {/* ════════════════════════════════
            HERO 4 — "Du skal ikke stå med det hele alene"
         ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#D9C4A0', padding: '5rem 2.5rem' }}>
-        <div style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, flexWrap: 'wrap' }}>
+      <section className="lnd-partner-section" style={{ backgroundColor: '#D9C4A0', padding: '5rem 2.5rem' }}>
+        <div className="lnd-partner-inner" style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, flexWrap: 'wrap' }}>
 
           {/* Left copy */}
-          <div style={{ flex: '1 1 280px', maxWidth: 360 }}>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.5vw, 3rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1.18, margin: '0 0 1.3rem' }}>
+          <div className="lnd-partner-copy" style={{ flex: '1 1 280px', maxWidth: 360 }}>
+            <h2 className="lnd-partner-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.5vw, 3rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1.18, margin: '0 0 1.3rem' }}>
               Du skal ikke stå<br />med det hele alene
             </h2>
             <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.9, maxWidth: 300, margin: '0 0 2.4rem' }}>
               Én konto inkluderer altid en gratis bruger mere, så du kan vælge at dele alt fra søvnlog, kalender og tigerspring med din partner. Sammen bliver det ofte lettere.
             </p>
-            <button onClick={handleLogin} style={{ backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
+            <button className="lnd-partner-btn" onClick={handleLogin} style={{ backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
               Bliv medlem
             </button>
           </div>
 
           {/* Right — partner card + calendar */}
-          <div style={{ flex: '0 0 auto', display: 'flex', gap: 18, alignItems: 'flex-start' }}>
+          <div className="lnd-partner-cards" style={{ flex: '0 0 auto', display: 'flex', gap: 18, alignItems: 'flex-start' }}>
 
             {/* Partner card */}
-            <div style={{ width: 210, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
+            <div className="lnd-partner-card" style={{ width: 210, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
               <div style={{ padding: '14px 16px', borderBottom: '1px solid #F0E8DF' }}>
                 <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>Del med partner</p>
               </div>
@@ -297,7 +267,7 @@ export default function Landing() {
             </div>
 
             {/* Calendar card */}
-            <div style={{ width: 220, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
+            <div className="lnd-partner-card" style={{ width: 220, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
               <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F0E8DF' }}>
                 <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>Fælles kalender</p>
                 <span style={{ color: '#C8A882', fontSize: '0.8rem' }}>›</span>
@@ -343,7 +313,7 @@ export default function Landing() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ backgroundColor: '#1E140A', padding: '3.5rem 2.5rem 2rem' }}>
+      <footer className="lnd-footer" style={{ backgroundColor: '#1E140A', padding: '3.5rem 2.5rem 2rem' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
             <div>
@@ -379,11 +349,75 @@ export default function Landing() {
       {/* Responsive */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Dancing+Script:wght@400;500&display=swap');
-        @media (max-width: 768px) {
-          .landing-features-grid { grid-template-columns: 1fr 1fr !important; }
+
+        /* ── NAVBAR ── */
+        .lnd-nav-inner { padding: 0 2.5rem !important; }
+
+        /* ── HERO 1 ── */
+        .lnd-hero1-section { padding: 6rem 2.5rem 5rem !important; }
+        .lnd-hero1-inner { gap: 80px !important; }
+        .lnd-hero1-phones { width: 380px !important; height: 500px !important; }
+        .lnd-phone-a { width: 220px !important; height: 450px !important; }
+        .lnd-phone-b { width: 200px !important; height: 415px !important; }
+
+        /* ── "KOM MED I KLUBBEN" ── */
+        .lnd-klub-inner { padding: 3rem 4rem 3rem 3.5rem !important; gap: 4.5rem !important; flex-direction: row !important; }
+        .lnd-klub-img { width: 260px !important; height: 360px !important; display: block !important; }
+
+        /* ── HERO 3 features grid ── */
+        .lnd-features-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 3rem 3.5rem !important; }
+
+        /* ── HERO 4 partner section ── */
+        .lnd-partner-cards { display: flex !important; }
+
+        @media (max-width: 900px) {
+          .lnd-hero1-phones { display: none !important; }
+          .lnd-hero1-section { padding: 4rem 1.5rem 4rem !important; }
+          .lnd-features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem 2rem !important; }
+          .lnd-klub-inner { flex-direction: column !important; padding: 2.5rem 1.5rem !important; gap: 2rem !important; align-items: flex-start !important; }
+          .lnd-klub-img { width: 100% !important; height: 280px !important; }
         }
-        @media (max-width: 480px) {
-          .landing-features-grid { grid-template-columns: 1fr !important; }
+
+        @media (max-width: 600px) {
+          /* Navbar */
+          .lnd-nav-inner { padding: 0 1.2rem !important; }
+          .lnd-nav-title { font-size: 1rem !important; }
+          .lnd-nav-btn-text { display: none !important; }
+
+          /* Hero 1 */
+          .lnd-hero1-section { padding: 3rem 1.2rem 3.5rem !important; }
+          .lnd-hero1-inner { flex-direction: column !important; gap: 2rem !important; }
+          .lnd-hero1-copy { min-width: unset !important; width: 100% !important; }
+          .lnd-hero1-phones { display: none !important; }
+          .lnd-hero1-h1 { font-size: 2.1rem !important; }
+          .lnd-hero1-p { font-size: 0.88rem !important; }
+          .lnd-hero1-cta { width: 100% !important; text-align: center !important; }
+          .lnd-hero1-btn { width: 100% !important; padding: 16px !important; font-size: 1rem !important; border-radius: 14px !important; }
+
+          /* Klub */
+          .lnd-klub-inner { flex-direction: column !important; padding: 2rem 1.2rem !important; gap: 1.5rem !important; align-items: flex-start !important; }
+          .lnd-klub-img { width: 100% !important; height: 240px !important; border-radius: 12px !important; }
+          .lnd-klub-h2 { font-size: 2rem !important; }
+          .lnd-klub-sig { font-size: 1.35rem !important; }
+
+          /* Features */
+          .lnd-features-section { padding: 3.5rem 1.2rem 4rem !important; }
+          .lnd-features-h2 { font-size: 2rem !important; }
+          .lnd-features-grid { grid-template-columns: 1fr !important; gap: 1.6rem !important; }
+          .lnd-feature-circle { width: 58px !important; height: 58px !important; flex-shrink: 0 !important; }
+          .lnd-feature-circle svg { width: 28px !important; height: 28px !important; }
+
+          /* Partner section */
+          .lnd-partner-section { padding: 3rem 1.2rem !important; }
+          .lnd-partner-inner { flex-direction: column !important; gap: 2rem !important; }
+          .lnd-partner-copy { max-width: 100% !important; }
+          .lnd-partner-h2 { font-size: 2rem !important; }
+          .lnd-partner-btn { width: 100% !important; padding: 16px !important; border-radius: 14px !important; font-size: 1rem !important; }
+          .lnd-partner-cards { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+          .lnd-partner-card { width: 100% !important; }
+
+          /* Footer */
+          .lnd-footer { padding: 2.5rem 1.2rem 1.5rem !important; }
         }
       `}</style>
     </div>);
