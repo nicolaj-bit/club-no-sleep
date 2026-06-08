@@ -98,51 +98,51 @@ export default function Landing() {
       {/* ════════════════════════════════
           HERO 2 — "Kom med i klubben"
       ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#E8D9C0', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}>
+      <section style={{ backgroundColor: '#E8D6BC', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 420 }}>
 
-          {/* Photo — left, fixed width, no padding */}
-          <div style={{ flex: '0 0 320px', minHeight: 380, position: 'relative', overflow: 'hidden' }}>
+          {/* Photo — left, portrait, fixed width matching design */}
+          <div style={{ flex: '0 0 280px', position: 'relative', overflow: 'hidden' }}>
             <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/eca32e989_Skrmbillede2026-06-08161849.png"
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/96a80cdaf_Hero2.png"
               alt="Kvinde med Club No Sleep taske og barnevogn"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
             />
           </div>
 
           {/* Right copy */}
-          <div style={{ flex: '1 1 340px', padding: '4rem 4.5rem 4rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+          <div style={{ flex: 1, padding: '3.5rem 5rem 3.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
             {/* Decorative circle bottom-right */}
-            <div style={{ position: 'absolute', right: -100, bottom: -100, width: 300, height: 300, borderRadius: '50%', backgroundColor: 'rgba(180,140,100,0.22)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', right: -80, bottom: -80, width: 280, height: 280, borderRadius: '50%', backgroundColor: 'rgba(185,148,105,0.25)', pointerEvents: 'none' }} />
 
             <h2 style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontSize: 'clamp(2rem, 3vw, 2.6rem)',
+              fontSize: '2.5rem',
               fontWeight: 400,
               color: '#1E140A',
-              lineHeight: 1.2,
-              margin: '0 0 1.4rem',
+              lineHeight: 1.15,
+              margin: '0 0 1.6rem',
             }}>
               Kom med i klubben
             </h2>
 
-            <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.85, maxWidth: 440, margin: '0 0 1.4rem' }}>
+            <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.8, maxWidth: 460, margin: '0 0 1.4rem' }}>
               Vi har været der.<br />
               Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du står i. Hvor far sover på sofaen og mor sover siddende. Hvor frygten for natten allerede starter i løbet af eftermiddagen.<br />
               CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde andre, der er vågen sammen med dig.
             </p>
 
-            <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.85, maxWidth: 440, margin: '0 0 2rem' }}>
+            <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.8, maxWidth: 460, margin: '0 0 2.2rem' }}>
               Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
             </p>
 
             <p style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontStyle: 'italic',
-              fontSize: '1.5rem',
-              color: '#3E2810',
+              fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
+              fontSize: '1.6rem',
+              color: '#3A2412',
               margin: 0,
               lineHeight: 1.3,
+              fontWeight: 400,
             }}>
               Kærligst og kram fra Sara & Nicolaj
             </p>
@@ -372,7 +372,7 @@ export default function Landing() {
 
       {/* Responsive */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Dancing+Script:wght@400;500&display=swap');
         @media (max-width: 768px) {
           .landing-features-grid { grid-template-columns: 1fr 1fr !important; }
         }
