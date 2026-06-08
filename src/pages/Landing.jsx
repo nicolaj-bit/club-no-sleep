@@ -4,16 +4,16 @@ import { Moon, BookOpen, Users, Calendar, Bell, Zap, Heart, ShoppingBag, Lightbu
 import LegalModal from '@/components/landing/LegalModal';
 
 const FEATURES = [
-  { icon: Moon,        title: 'Søvnrådgivning',  desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
-  { icon: BookOpen,    title: 'Videnscenter',     desc: 'Ekspertviden om graviditet, baby og det første år.' },
-  { icon: Lightbulb,   title: 'Top søvn tips',    desc: 'Praktiske råd til bedre søvn for hele familien.' },
-  { icon: Users,       title: 'Er vi mødre',      desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
-  { icon: Heart,       title: 'De sunde aftier',  desc: 'Byg gode rutiner for bedre søvn og velvære.' },
-  { icon: ShoppingBag, title: 'Tilbud',           desc: 'Find de bedste produkter til baby og dig.' },
-  { icon: Calendar,    title: 'Kalender',         desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
-  { icon: Zap,         title: 'Tigerspring',      desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
-  { icon: Bell,        title: 'Notifikationer',   desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' },
-];
+{ icon: Moon, title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
+{ icon: BookOpen, title: 'Videnscenter', desc: 'Ekspertviden om graviditet, baby og det første år.' },
+{ icon: Lightbulb, title: 'Top søvn tips', desc: 'Praktiske råd til bedre søvn for hele familien.' },
+{ icon: Users, title: 'Er vi mødre', desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
+{ icon: Heart, title: 'De sunde aftier', desc: 'Byg gode rutiner for bedre søvn og velvære.' },
+{ icon: ShoppingBag, title: 'Tilbud', desc: 'Find de bedste produkter til baby og dig.' },
+{ icon: Calendar, title: 'Kalender', desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
+{ icon: Zap, title: 'Tigerspring', desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
+{ icon: Bell, title: 'Notifikationer', desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' }];
+
 
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
@@ -24,7 +24,7 @@ export default function Landing() {
   }, []);
 
   const handleLogin = () => base44.auth.redirectToLogin('/app');
-  const handleEnterApp = () => { window.location.href = '/app'; };
+  const handleEnterApp = () => {window.location.href = '/app';};
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", color: '#2B1F16', backgroundColor: '#F5EDE0' }}>
@@ -41,23 +41,23 @@ export default function Landing() {
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {isAuth ? (
-              <button onClick={handleEnterApp}
-                style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}>
+            {isAuth ?
+            <button onClick={handleEnterApp}
+            style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}>
                 Åbn app →
-              </button>
-            ) : (
-              <>
+              </button> :
+
+            <>
                 <button onClick={handleLogin}
-                  style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>
+              style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>
                   Log ind
                 </button>
                 <button onClick={handleLogin}
-                  style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}>
+              style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 22px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}>
                   Bliv medlem
                 </button>
               </>
-            )}
+            }
           </div>
         </div>
       </nav>
@@ -80,12 +80,12 @@ export default function Landing() {
             <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '1.1rem', marginTop: 0 }}>
               Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; Natteensomhed.
             </p>
-            <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '2.5rem', marginTop: 0 }}>
+            <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '2.5rem', marginTop: 0 }} className="font-normal">
               CLUB NO SLEEP er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
             </p>
 
             <button onClick={handleLogin}
-              style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 9, padding: '14px 34px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer' }}>
+            style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 9, padding: '14px 34px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer' }}>
               Hent app
             </button>
           </div>
@@ -140,9 +140,9 @@ export default function Landing() {
                   <div style={{ backgroundColor: '#fff', borderRadius: 10, padding: '7px 9px' }}>
                     <p style={{ color: '#9A7A6A', fontSize: '0.32rem', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>AKTIVE I DIN DIN</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      {['👩','👩‍🦱','👩‍🦰'].map((av, i) => (
-                        <div key={i} style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#EDE0CC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', border: '1.5px solid #fff' }}>{av}</div>
-                      ))}
+                      {['👩', '👩‍🦱', '👩‍🦰'].map((av, i) =>
+                      <div key={i} style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#EDE0CC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', border: '1.5px solid #fff' }}>{av}</div>
+                      )}
                       <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#C8A882', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.3rem', color: '#fff', fontWeight: 700, border: '1.5px solid #fff' }}>+3</div>
                     </div>
                   </div>
@@ -153,12 +153,12 @@ export default function Landing() {
                   </div>
                   {/* Bottom nav */}
                   <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 6, borderTop: '1px solid #EDE4DB' }}>
-                    {[['🏠','Hjem'],['📋','Søvnlog'],['➕',''],['💬','Fælles'],['👤','Profil']].map(([ic, lb], i) => (
-                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                    {[['🏠', 'Hjem'], ['📋', 'Søvnlog'], ['➕', ''], ['💬', 'Fælles'], ['👤', 'Profil']].map(([ic, lb], i) =>
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                         <span style={{ fontSize: i === 2 ? '1rem' : '0.65rem' }}>{ic}</span>
                         {lb && <span style={{ fontSize: '0.26rem', color: i === 0 ? '#C8A882' : '#9A7A6A' }}>{lb}</span>}
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
@@ -176,28 +176,28 @@ export default function Landing() {
                 {/* Sleep time entries */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {[
-                    { time: '21:30 – 07:14', dur: '9:44 min', note: '', dark: false },
-                    { time: '21:00 – 13:30', dur: '8:16min', note: 'Søvn', dark: false },
-                    { time: '17:00 – 17:45', dur: '45 min', note: '', dark: true },
-                    { time: '18:30 – 21:47', dur: '3:17', note: '', dark: false },
-                  ].map((row, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: row.dark ? '#3A2416' : '#F3E9E1', borderRadius: 8, padding: '5px 8px' }}>
+                  { time: '21:30 – 07:14', dur: '9:44 min', note: '', dark: false },
+                  { time: '21:00 – 13:30', dur: '8:16min', note: 'Søvn', dark: false },
+                  { time: '17:00 – 17:45', dur: '45 min', note: '', dark: true },
+                  { time: '18:30 – 21:47', dur: '3:17', note: '', dark: false }].
+                  map((row, i) =>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: row.dark ? '#3A2416' : '#F3E9E1', borderRadius: 8, padding: '5px 8px' }}>
                       <p style={{ color: row.dark ? '#C8A882' : '#5B3F2B', fontSize: '0.36rem', margin: 0, fontWeight: 500 }}>{row.time}</p>
                       <p style={{ color: row.dark ? '#C8A882' : '#9A7A6A', fontSize: '0.34rem', margin: 0 }}>{row.dur}</p>
                     </div>
-                  ))}
+                  )}
                 </div>
                 <div style={{ backgroundColor: '#C8A882', borderRadius: 8, padding: '5px 8px', marginTop: 2 }}>
                   <p style={{ color: '#fff', fontSize: '0.36rem', fontWeight: 600, textAlign: 'center', margin: 0 }}>Se alle →</p>
                 </div>
                 {/* Bottom nav */}
                 <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 6, borderTop: '1px solid #EDE4DB' }}>
-                  {[['🏠','Hjem'],['📋','Søvnlog'],['➕',''],['💬','Kalender'],['👤','Profil']].map(([ic, lb], i) => (
-                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                  {[['🏠', 'Hjem'], ['📋', 'Søvnlog'], ['➕', ''], ['💬', 'Kalender'], ['👤', 'Profil']].map(([ic, lb], i) =>
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                       <span style={{ fontSize: i === 2 ? '0.95rem' : '0.6rem' }}>{ic}</span>
                       {lb && <span style={{ fontSize: '0.26rem', color: i === 1 ? '#C8A882' : '#9A7A6A' }}>{lb}</span>}
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -214,8 +214,8 @@ export default function Landing() {
             <img
               src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=700&q=80"
               alt="Mor med barnevogn"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            
           </div>
           {/* Text */}
           <div style={{ flex: '1 1 300px', padding: '4.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -248,15 +248,15 @@ export default function Landing() {
             <div style={{ fontSize: '1.4rem' }}>🌸</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.75rem 3rem' }}>
-            {FEATURES.map((f, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {FEATURES.map((f, i) =>
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div style={{ width: 42, height: 42, borderRadius: '50%', backgroundColor: '#EDE0CC', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <f.icon style={{ width: 20, height: 20, color: '#5B3F2B' }} />
                 </div>
                 <p style={{ color: '#1E140A', fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>{f.title}</p>
                 <p style={{ color: '#7A665A', fontSize: '0.8rem', lineHeight: 1.55, margin: 0 }}>{f.desc}</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -274,7 +274,7 @@ export default function Landing() {
               Tal med andre forældre, del dine oplevelser og følg dit barns udvikling. Clubnosleep er med dig — i de svære øjeblikke og de gode.
             </p>
             <button onClick={handleLogin}
-              style={{ backgroundColor: '#2B1A10', color: '#F5EFE9', border: 'none', borderRadius: 9, padding: '13px 30px', fontSize: '0.92rem', fontWeight: 600, cursor: 'pointer' }}>
+            style={{ backgroundColor: '#2B1A10', color: '#F5EFE9', border: 'none', borderRadius: 9, padding: '13px 30px', fontSize: '0.92rem', fontWeight: 600, cursor: 'pointer' }}>
               Bliv medlem
             </button>
           </div>
@@ -289,10 +289,10 @@ export default function Landing() {
               </div>
               <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
-                  { name: 'Olivert', msg: 'Det vil så alt at bare...', sub: 'dig.', av: '👩' },
-                  { name: 'Creati', msg: 'hvod frem at gir', av: '👩‍🦱' },
-                ].map((m, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                { name: 'Olivert', msg: 'Det vil så alt at bare...', sub: 'dig.', av: '👩' },
+                { name: 'Creati', msg: 'hvod frem at gir', av: '👩‍🦱' }].
+                map((m, i) =>
+                <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                     <div style={{ width: 26, height: 26, borderRadius: '50%', backgroundColor: '#F3E9E1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', flexShrink: 0 }}>
                       {m.av}
                     </div>
@@ -302,7 +302,7 @@ export default function Landing() {
                       {m.sub && <p style={{ color: '#7A665A', fontSize: '0.44rem', margin: 0 }}>{m.sub}</p>}
                     </div>
                   </div>
-                ))}
+                )}
                 <button style={{ width: '100%', backgroundColor: '#C8A882', color: '#fff', border: 'none', borderRadius: 10, padding: '8px 0', fontSize: '0.5rem', fontWeight: 700, cursor: 'pointer', marginTop: 2 }}>
                   Bliv medlem
                 </button>
@@ -316,14 +316,14 @@ export default function Landing() {
               </div>
               <div style={{ padding: '12px 14px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 8 }}>
-                  {['M','T','O','T','F','L','S'].map((d, i) => (
-                    <div key={i} style={{ textAlign: 'center', fontSize: '0.33rem', color: '#9A7A6A', fontWeight: 700 }}>{d}</div>
-                  ))}
-                  {Array.from({ length: 28 }, (_, i) => i + 1).map(d => (
-                    <div key={d} style={{ textAlign: 'center', fontSize: '0.32rem', borderRadius: 4, padding: '2px 0', backgroundColor: d === 18 ? '#C8A882' : [9,24].includes(d) ? '#F3E9E1' : 'transparent', color: d === 18 ? '#fff' : '#5B3F2B', fontWeight: d === 18 ? 700 : 400 }}>
+                  {['M', 'T', 'O', 'T', 'F', 'L', 'S'].map((d, i) =>
+                  <div key={i} style={{ textAlign: 'center', fontSize: '0.33rem', color: '#9A7A6A', fontWeight: 700 }}>{d}</div>
+                  )}
+                  {Array.from({ length: 28 }, (_, i) => i + 1).map((d) =>
+                  <div key={d} style={{ textAlign: 'center', fontSize: '0.32rem', borderRadius: 4, padding: '2px 0', backgroundColor: d === 18 ? '#C8A882' : [9, 24].includes(d) ? '#F3E9E1' : 'transparent', color: d === 18 ? '#fff' : '#5B3F2B', fontWeight: d === 18 ? 700 : 400 }}>
                       {d}
                     </div>
-                  ))}
+                  )}
                 </div>
                 <div style={{ backgroundColor: '#F3E9E1', borderRadius: 10, padding: '8px 10px' }}>
                   <p style={{ color: '#5B3F2B', fontSize: '0.45rem', fontWeight: 600, margin: '0 0 2px' }}>Continease til alt</p>
@@ -390,6 +390,6 @@ export default function Landing() {
 
       {legalModal === 'terms' && <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setLegalModal(null)} />}
       {legalModal === 'privacy' && <LegalModal type="privacy" title="Privatlivspolitik" onClose={() => setLegalModal(null)} />}
-    </div>
-  );
+    </div>);
+
 }
