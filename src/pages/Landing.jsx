@@ -11,7 +11,7 @@ const FEATURES = [
   },
   {
     icon: Lightbulb,
-    title: 'Videpæle',
+    title: 'miledepæle',
     desc: 'Hold styr på de baby milepæle og støt barnet og hvad de nærmere. Appen giver et samlet overblik.'
   },
   {
