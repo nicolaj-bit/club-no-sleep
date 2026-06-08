@@ -69,116 +69,68 @@ export default function Landing() {
             <button onClick={handleLogin} style={btnBrown}>Hent app</button>
           </div>
 
-          {/* Right — two phones */}
-          <div style={{ flex: '0 0 auto', display: 'flex', gap: 16, alignItems: 'flex-start', paddingTop: 20 }}>
+          {/* Right — two phones with real app iframes */}
+          <div style={{ flex: '0 0 auto', display: 'flex', gap: 20, alignItems: 'flex-start', paddingTop: 20 }}>
 
-            {/* Phone A — Home screen */}
+            {/* Phone A — /Home (front, left, slightly larger) */}
             <div style={{
-              width: 195, height: 400,
-              borderRadius: 28, overflow: 'hidden',
-              boxShadow: '0 32px 80px rgba(0,0,0,0.20)',
-              border: '6px solid #C8A882',
-              backgroundColor: '#C8A882',
+              width: 210, height: 430,
+              borderRadius: 36, overflow: 'hidden',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.22)',
+              border: '8px solid #D4B896',
+              backgroundColor: '#D4B896',
               position: 'relative', flexShrink: 0,
+              zIndex: 2,
             }}>
-              <PhoneNotch color="#C8A882" />
-              <div style={{ backgroundColor: '#FBF6EF', height: '100%', paddingTop: 22, boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
-                {/* Status bar */}
-                <div style={{ padding: '0 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <div>
-                    <p style={tiny('#9A7A6A')}>Mandag, 17. april</p>
-                    <p style={{ color: '#1E140A', fontSize: '0.65rem', fontWeight: 700, margin: '2px 0 0' }}>Godmorgen, Sara</p>
-                  </div>
-                  <span style={{ fontSize: '0.8rem' }}>🔔</span>
-                </div>
-
-                {/* Pregnancy card */}
-                <div style={{ margin: '0 10px 8px', backgroundColor: '#EBD9C6', borderRadius: 12, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ flex: 1 }}>
-                    <p style={tiny('#7A5A44')}>I dag er du</p>
-                    <p style={{ color: '#1E140A', fontSize: '1.4rem', fontWeight: 700, margin: '1px 0 0', lineHeight: 1 }}>7 <span style={{ fontSize: '0.55rem', fontWeight: 400 }}>uger</span></p>
-                    <p style={tiny('#7A5A44')}>og 3 dage med</p>
-                    <p style={{ color: '#9A7A6A', fontSize: '0.3rem', margin: '2px 0 0' }}>Dato: 17/6 ikke tilgge</p>
-                  </div>
-                  <div style={{ width: 50, height: 50, borderRadius: 10, overflow: 'hidden', backgroundColor: '#D4BDA5' }}>
-                    <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=100&q=80" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                </div>
-
-                {/* Two cards */}
-                <div style={{ margin: '0 10px 8px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                  <div style={{ backgroundColor: '#3A2416', borderRadius: 10, padding: '9px 10px' }}>
-                    <p style={{ fontSize: '0.85rem', margin: '0 0 3px' }}>😴</p>
-                    <p style={{ color: '#C8A882', fontSize: '0.4rem', fontWeight: 600, margin: '0 0 2px' }}>Søv i nat</p>
-                    <p style={{ color: 'rgba(200,168,130,0.5)', fontSize: '0.32rem', margin: 0 }}>Log søvn +</p>
-                  </div>
-                  <div style={{ backgroundColor: '#EBD9C6', borderRadius: 10, padding: '9px 10px' }}>
-                    <p style={{ fontSize: '0.85rem', margin: '0 0 3px' }}>👶</p>
-                    <p style={{ color: '#2B1A10', fontSize: '0.4rem', fontWeight: 600, margin: '0 0 2px' }}>Næste påske</p>
-                    <p style={{ color: '#9A7A6A', fontSize: '0.32rem', margin: 0 }}>Følge 14. uge</p>
-                  </div>
-                </div>
-
-                {/* Community row */}
-                <div style={{ margin: '0 10px 8px', backgroundColor: '#fff', borderRadius: 10, padding: '8px 10px' }}>
-                  <p style={{ color: '#9A7A6A', fontSize: '0.32rem', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AKTIVE I DIN OMEGN</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                    {['👩','👩','👩'].map((av, i) => (
-                      <div key={i} style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: '#EBD9C6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5rem', border: '1.5px solid #fff', marginLeft: i > 0 ? -4 : 0 }}>{av}</div>
-                    ))}
-                    <p style={{ color: '#5B3F2B', fontSize: '0.32rem', margin: '0 0 0 5px' }}>+3</p>
-                  </div>
-                  <p style={{ color: '#9A7A6A', fontSize: '0.3rem', margin: '3px 0 0' }}>Du er ikke alene</p>
-                </div>
-
-                {/* Bottom nav */}
-                <MiniNav active={0} />
-              </div>
+              <PhoneNotch color="#D4B896" />
+              {/* Speaker dot */}
+              <div style={{ position: 'absolute', top: 6, left: '50%', transform: 'translateX(-50%)', width: 36, height: 5, backgroundColor: '#BFA080', borderRadius: 3, zIndex: 11 }} />
+              <iframe
+                src="/Home"
+                style={{
+                  width: '390px',
+                  height: '844px',
+                  border: 'none',
+                  transform: 'scale(0.495)',
+                  transformOrigin: 'top left',
+                  display: 'block',
+                  pointerEvents: 'none',
+                  backgroundColor: '#FBF6EF',
+                }}
+                scrolling="no"
+                title="Home screen"
+              />
             </div>
 
-            {/* Phone B — Søvndag */}
+            {/* Phone B — /SleepLog (behind, right, slightly offset down) */}
             <div style={{
-              width: 185, height: 378,
-              borderRadius: 26, overflow: 'hidden',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.17)',
-              border: '6px solid #DDD0BC',
-              backgroundColor: '#DDD0BC',
+              width: 195, height: 400,
+              borderRadius: 34, overflow: 'hidden',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.16)',
+              border: '8px solid #E8DDD0',
+              backgroundColor: '#E8DDD0',
               position: 'relative', flexShrink: 0,
-              marginTop: 28,
+              marginTop: 36,
+              zIndex: 1,
+              marginLeft: -30,
             }}>
-              <PhoneNotch color="#DDD0BC" />
-              <div style={{ backgroundColor: '#FFFDF9', height: '100%', paddingTop: 22, boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ padding: '0 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                  <p style={{ color: '#1E140A', fontSize: '0.68rem', fontWeight: 700, margin: 0 }}>Søvndag</p>
-                  <span style={{ fontSize: '0.55rem' }}>✏️</span>
-                </div>
-                <p style={{ ...tiny('#9A7A6A'), padding: '0 12px', marginBottom: 8 }}>Tirsdag, 11. april</p>
-
-                {/* Tabs */}
-                <div style={{ padding: '0 12px', display: 'flex', gap: 8, marginBottom: 8 }}>
-                  {['Dag', 'Uge', 'Måned'].map((t, i) => (
-                    <span key={t} style={{ fontSize: '0.35rem', color: i === 0 ? '#1E140A' : '#9A7A6A', fontWeight: i === 0 ? 600 : 400, borderBottom: i === 0 ? '1px solid #C8A882' : 'none', paddingBottom: 1 }}>{t}</span>
-                  ))}
-                </div>
-
-                {[
-                  { time: '21:30 – 11:15', dur: '1t 55 min', dark: false },
-                  { time: '12:40 – 13:20', dur: '40 min', dark: false },
-                  { time: '13:30 – 15:00', dur: '30 min', dark: false },
-                  { time: '17:30 – 19:30', dur: '25 min', dark: false },
-                  { time: '17:45 – 20:10', dur: '20 min', dark: false },
-                  { time: '19:45 – 20:10', dur: '10 min', dark: true },
-                ].map((row, i) => (
-                  <div key={i} style={{ margin: '2px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: row.dark ? '#C8A882' : '#F3EDE5', borderRadius: 7, padding: '5px 9px' }}>
-                    <p style={{ color: row.dark ? '#fff' : '#5B3F2B', fontSize: '0.32rem', margin: 0, fontWeight: 500 }}>{row.time}</p>
-                    <p style={{ color: row.dark ? '#fff' : '#9A7A6A', fontSize: '0.3rem', margin: 0 }}>{row.dur}</p>
-                  </div>
-                ))}
-                <div style={{ margin: '6px 10px 0', backgroundColor: '#C8A882', borderRadius: 8, padding: '6px 0' }}>
-                  <p style={{ color: '#fff', fontSize: '0.36rem', fontWeight: 600, textAlign: 'center', margin: 0 }}>Se alle →</p>
-                </div>
-                <MiniNav active={1} />
-              </div>
+              <PhoneNotch color="#E8DDD0" />
+              <div style={{ position: 'absolute', top: 6, left: '50%', transform: 'translateX(-50%)', width: 32, height: 5, backgroundColor: '#D4C8BC', borderRadius: 3, zIndex: 11 }} />
+              <iframe
+                src="/SleepLog"
+                style={{
+                  width: '390px',
+                  height: '844px',
+                  border: 'none',
+                  transform: 'scale(0.46)',
+                  transformOrigin: 'top left',
+                  display: 'block',
+                  pointerEvents: 'none',
+                  backgroundColor: '#FFFDF9',
+                }}
+                scrolling="no"
+                title="Sleep log screen"
+              />
             </div>
 
           </div>
