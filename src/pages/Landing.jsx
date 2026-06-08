@@ -1,33 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Moon, ArrowRight, Star } from 'lucide-react';
+import { Moon, BookOpen, Users, Calendar, Bell, Zap, Heart, ShoppingBag, Lightbulb, MessageCircle, Star } from 'lucide-react';
 import LegalModal from '@/components/landing/LegalModal';
 
 const FEATURES = [
-  { title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
-  { title: 'Tigerspring', desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
-  { title: 'Kalender', desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
-  { title: 'Fællesskab', desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
-  { title: 'Videnscenter', desc: 'Ekspertviden om graviditet, baby og det første år.' },
-  { title: 'Notifikationer', desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' },
-];
-
-const REVIEWS = [
-  { name: 'Sofie M.', role: 'Mor til 6 måneder', text: 'Endelig en app der forstår, hvad det vil sige at være ny mor. Uundværlig!', stars: 5 },
-  { name: 'Mette K.', role: 'Mor til 1 år', text: 'Søvnrådene har reddet os. Vores datter sover nu hele natten.', stars: 5 },
-  { name: 'Thomas R.', role: 'Far til 4 måneder', text: 'Som far er det rart at have ét sted med al relevant info.', stars: 5 },
-];
-
-const STATS = [
-  { value: '10.000+', label: 'Forældre i fællesskabet' },
-  { value: '4.9★', label: 'App Store rating' },
-  { value: '24/7', label: 'AI-søvnekspert online' },
+  { icon: Moon, title: 'Søvnrådgivning', desc: 'AI-baserede råd tilpasset præcis dit barns alder og søvnmønstre.' },
+  { icon: BookOpen, title: 'Videnscenter', desc: 'Ekspertviden om graviditet, baby og det første år.' },
+  { icon: Lightbulb, title: 'Top søvn tips', desc: 'Praktiske råd til bedre søvn for hele familien.' },
+  { icon: Users, title: 'Er vi mødre', desc: 'Mød mødre og fædre nær dig — også midt om natten.' },
+  { icon: Heart, title: 'De sunde aftier', desc: 'Byg gode rutiner for bedre søvn og velvære.' },
+  { icon: ShoppingBag, title: 'Tilbud', desc: 'Find de bedste produkter til baby og dig.' },
+  { icon: Calendar, title: 'Kalender', desc: 'Hold styr på jordemoder, scanning og alle vigtige aftaler.' },
+  { icon: Zap, title: 'Tigerspring', desc: 'Følg dit barns udviklingsspring og forstå de urolige perioder.' },
+  { icon: Bell, title: 'Notifikationer', desc: 'Bliv mindet om vigtige milepæle og kommende aftaler.' },
 ];
 
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
-  const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy'
+  const [legalModal, setLegalModal] = useState(null);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
@@ -37,11 +28,11 @@ export default function Landing() {
   const handleEnterApp = () => { window.location.href = '/app'; };
 
   return (
-    <div style={{ backgroundColor: '#FAF6F1', color: '#2B1F16', fontFamily: 'Inter, sans-serif', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#EFE4D4', fontFamily: 'Inter, sans-serif', minHeight: '100vh' }}>
 
       {/* NAVBAR */}
-      <nav style={{ backgroundColor: 'rgba(250,246,241,0.92)', borderBottom: '1px solid #EDE4DB', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
-        className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 safe-top">
+      <nav style={{ backgroundColor: 'rgba(239,228,212,0.92)', borderBottom: '1px solid #DDD0C0', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+        className="sticky top-0 z-50 flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>
             <Moon className="w-4 h-4 text-white" />
@@ -60,7 +51,7 @@ export default function Landing() {
           ) : (
             <>
               <button onClick={handleLogin}
-                className="hidden sm:block text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+                className="hidden sm:block text-sm font-medium px-4 py-2 rounded-xl"
                 style={{ color: '#5B3F2B' }}>
                 Log ind
               </button>
@@ -74,246 +65,220 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden px-6 pt-20 pb-28 max-w-5xl mx-auto">
-        {/* Decorative blobs */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-30"
-          style={{ background: 'radial-gradient(circle, #DCC1B0, transparent 70%)' }} />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, #C8A882, transparent 70%)' }} />
+      {/* CARD CONTAINER */}
+      <div className="max-w-2xl mx-auto my-8 px-4">
+        <div className="rounded-3xl overflow-hidden shadow-xl" style={{ backgroundColor: '#FFFCF8' }}>
 
-        <div className="relative flex flex-col lg:flex-row items-center gap-12">
-          {/* Left text */}
-          <motion.div className="flex-1 text-center lg:text-left"
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+          {/* ── 1. HERO ── */}
+          <section className="px-8 pt-10 pb-8" style={{ backgroundColor: '#FFFCF8' }}>
+            <div className="flex items-start gap-6">
+              {/* Left */}
+              <div className="flex-1 min-w-0">
+                <div className="text-lg mb-3">🌙</div>
+                <h1 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.9rem', fontWeight: 600, lineHeight: 1.25, color: '#2B1F16' }}>
+                  Til dig, der er vågen,<br />
+                  <em style={{ color: '#5B3F2B' }}>når resten af verden sover.</em>
+                </h1>
+                <div className="flex items-center gap-1.5 mt-3 mb-1">
+                  <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#C8A882' }}>
+                    <Star className="w-2 h-2 text-white fill-white" />
+                  </div>
+                </div>
+                <p className="text-sm leading-relaxed mt-2" style={{ color: '#7A665A', maxWidth: 280 }}>
+                  Du er ikke alene i de lange nætter. Der er en app, som holder dig med selskab, giver dig råd og forbinder dig med andre forældre i samme situation.
+                </p>
+                <p className="text-xs font-semibold mt-3 mb-4" style={{ color: '#5B3F2B', letterSpacing: '0.05em' }}>
+                  <span style={{ color: '#8A6245' }}>CLUBNOSLEEP</span> — din app til de første år som forælder. Til søvn, viden og fællesskab.
+                </p>
+                <button onClick={handleLogin}
+                  className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)', color: '#fff' }}>
+                  Bliv medlem
+                </button>
+              </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-7"
-              style={{ backgroundColor: '#F3E9E1', color: '#8A6245', border: '1px solid #DCC1B0' }}>
-              Din trygge havn som ny forælder
+              {/* Right — phone mockup */}
+              <div className="flex-shrink-0 flex gap-2 items-end">
+                {/* Phone 1 */}
+                <div className="rounded-2xl overflow-hidden shadow-lg" style={{ width: 90, height: 160, background: 'linear-gradient(160deg, #4A3020 0%, #7A5235 100%)' }}>
+                  <div className="flex flex-col gap-1.5 p-3 h-full">
+                    <div className="rounded-lg p-1.5" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
+                      <p className="text-white text-xs font-semibold" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '0.5rem' }}>clubnosleep</p>
+                      <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.38rem' }}>Godmorgen ☀️</p>
+                    </div>
+                    {['Søvnråd', 'Tigerspring', 'Fællesskab'].map((t, i) => (
+                      <div key={i} className="rounded-md px-2 py-1" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                        <p style={{ color: '#DCC1B0', fontSize: '0.38rem' }}>{t}</p>
+                      </div>
+                    ))}
+                    <div className="mt-auto rounded-lg p-1.5 flex items-center gap-1" style={{ backgroundColor: 'rgba(200,168,130,0.3)' }}>
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#C8A882' }} />
+                      <div>
+                        <p style={{ color: '#DCC1B0', fontSize: '0.35rem' }}>Ny besked</p>
+                        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.3rem' }}>Sara delte...</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Phone 2 */}
+                <div className="rounded-2xl overflow-hidden shadow-lg" style={{ width: 90, height: 140, background: '#FFFCF8', border: '1px solid #EDE4DB' }}>
+                  <div className="p-2.5 h-full flex flex-col gap-1.5">
+                    <p style={{ color: '#2B1F16', fontSize: '0.45rem', fontWeight: 600 }}>Min søvnlog</p>
+                    <div className="grid grid-cols-2 gap-1">
+                      {[['🌙','Sengetid','20:30'],['⭐','Sov','21:15'],['☀️','Vågnet','06:45'],['💤','Total','9t']].map(([e,l,v], i) => (
+                        <div key={i} className="rounded-md p-1.5" style={{ backgroundColor: '#F3E9E1' }}>
+                          <p style={{ fontSize: '0.5rem' }}>{e}</p>
+                          <p style={{ color: '#7A665A', fontSize: '0.3rem' }}>{l}</p>
+                          <p style={{ color: '#5B3F2B', fontSize: '0.35rem', fontWeight: 600 }}>{v}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </section>
 
-            <h1 className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
-              style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-              Søvn, fællesskab{' '}
-              <span style={{ fontStyle: 'italic', color: '#B08D72' }}>& tryghed</span>{' '}
-              som forælder
-            </h1>
-
-            <p className="text-lg leading-relaxed mb-10" style={{ color: '#7A665A', maxWidth: 480 }}>
-              Clubnosleep samler alt det vigtige — søvnrådgivning, tigerspring, kalender og et fællesskab af forældre der forstår dig.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <button onClick={handleLogin}
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold shadow-lg transition-opacity hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)', color: '#fff' }}>
-                Bliv medlem <ArrowRight className="w-5 h-5" />
-              </button>
-              <button onClick={handleLogin}
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold transition-colors"
-                style={{ backgroundColor: '#fff', color: '#5B3F2B', border: '1px solid #EDE4DB' }}>
-                Log ind
-              </button>
+          {/* ── 2. KOM MED I KLUBBEN ── */}
+          <section className="flex" style={{ backgroundColor: '#E8CEAE', minHeight: 220 }}>
+            {/* Left photo */}
+            <div className="w-5/12 flex-shrink-0" style={{ minHeight: 220 }}>
+              <img
+                src="https://images.unsplash.com/photo-1602928309370-35b74ef2c3ef?w=400&q=80"
+                alt="Mor med barnevogn"
+                className="w-full h-full object-cover"
+                style={{ minHeight: 220 }}
+              />
             </div>
+            {/* Right text */}
+            <div className="flex-1 p-7 flex flex-col justify-center">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: 'rgba(91,63,43,0.15)' }}>
+                <Heart className="w-3 h-3" style={{ color: '#5B3F2B' }} />
+              </div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.5rem', fontWeight: 600, color: '#2B1F16', lineHeight: 1.2 }}>
+                Kom med i klubben
+              </h2>
+              <p className="text-xs leading-relaxed mt-3" style={{ color: '#5B3F2B', maxWidth: 260 }}>
+                Vi er en klub af forældre der støtter hinanden. Del dine oplevelser, få råd og mød nogen der forstår dig — dag som nat.
+              </p>
+              <p className="text-xs leading-relaxed mt-2" style={{ color: '#5B3F2B', maxWidth: 260, opacity: 0.85 }}>
+                Fordi det bedste fællesskab opstår, når man deler sine ærlige oplevelser — og ved at man ikke er alene om dem.
+              </p>
+              <p className="mt-5" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', fontSize: '1rem', color: '#7A4F2B', fontWeight: 400 }}>
+                #ærlighedsfordereleretRarity
+              </p>
+            </div>
+          </section>
 
-            {/* Stats */}
-            <div className="flex flex-wrap gap-6 mt-10 justify-center lg:justify-start">
-              {STATS.map((s, i) => (
-                <div key={i}>
-                  <p className="text-xl font-bold" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#3A2A1A' }}>{s.value}</p>
-                  <p className="text-xs" style={{ color: '#9A7A6A' }}>{s.label}</p>
+          {/* ── 3. FEATURES ── */}
+          <section className="px-8 py-10" style={{ backgroundColor: '#FFFCF8' }}>
+            <div className="text-center mb-6">
+              <h2 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.5rem', fontWeight: 600, color: '#2B1F16' }}>
+                Dette finder du i appen
+              </h2>
+              <div className="text-base mt-1">🌸</div>
+            </div>
+            <div className="grid grid-cols-3 gap-x-6 gap-y-5">
+              {FEATURES.map((f, i) => (
+                <div key={i} className="flex flex-col gap-1.5">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #DCC1B0, #C8A882)' }}>
+                    <f.icon className="w-4 h-4" style={{ color: '#5B3F2B' }} />
+                  </div>
+                  <p className="text-xs font-semibold" style={{ color: '#2B1F16' }}>{f.title}</p>
+                  <p style={{ color: '#7A665A', fontSize: '0.68rem', lineHeight: 1.4 }}>{f.desc}</p>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </section>
 
-          {/* Right — phone mockup */}
-          <motion.div className="flex-shrink-0"
-            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
-            <div className="relative">
-              {/* Glow */}
-              <div className="absolute inset-0 rounded-[3rem] blur-3xl opacity-40 scale-90"
-                style={{ background: 'linear-gradient(160deg, #DCC1B0, #C8A882)' }} />
-              {/* Phone */}
-              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl"
-                style={{ width: 260, height: 520, background: 'linear-gradient(160deg, #3A2A1A 0%, #5B3F2B 50%, #8A6245 100%)' }}>
-                {/* Notch */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-black opacity-80" />
-                {/* Screen content */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 pt-12">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                    style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}>
-                    <Moon className="w-8 h-8 text-white" />
+          {/* ── 4. DU SKAL IKKE STÅ ALENE ── */}
+          <section className="px-8 py-10" style={{ backgroundColor: '#DEB98A' }}>
+            <div className="flex gap-6 items-center">
+              {/* Left text */}
+              <div className="flex-1 min-w-0">
+                <h2 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.6rem', fontWeight: 600, color: '#2B1F16', lineHeight: 1.2 }}>
+                  Du skal ikke stå<br />med det hele alene
+                </h2>
+                <p className="text-xs leading-relaxed mt-3" style={{ color: '#5B3F2B', maxWidth: 220 }}>
+                  Tal med andre forældre, del dine oplevelser og følg dit barns udvikling. Clubnosleep er med dig — i de svære øjeblikke og de gode.
+                </p>
+                <button onClick={handleLogin}
+                  className="mt-4 px-5 py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: '#5B3F2B', color: '#F5EFE9' }}>
+                  Bliv medlem
+                </button>
+              </div>
+
+              {/* Right — app mockups */}
+              <div className="flex-shrink-0 flex gap-2 items-start">
+                {/* Chat mockup */}
+                <div className="rounded-2xl overflow-hidden shadow-md" style={{ width: 110, backgroundColor: '#FFFCF8', border: '1px solid #EDE4DB' }}>
+                  <div className="px-3 py-2" style={{ borderBottom: '1px solid #EDE4DB' }}>
+                    <p style={{ fontSize: '0.45rem', fontWeight: 600, color: '#2B1F16' }}>Dét fællesskab</p>
                   </div>
-                  <p className="text-white font-bold text-2xl" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>clubnosleep</p>
-                  <p className="text-white text-xs text-center opacity-60">Din app for nye forældre</p>
-                  {/* Fake cards */}
-                  <div className="w-full space-y-2 mt-4">
-                    {['Søvnråd', 'Tigerspring', 'Kalender'].map((item, i) => (
-                      <div key={i} className="rounded-xl px-4 py-2.5 text-xs text-white"
-                        style={{ background: 'rgba(255,255,255,0.12)' }}>
-                        {item}
+                  <div className="p-2.5 flex flex-col gap-2">
+                    {[
+                      { name: 'Sara M.', msg: 'Har prøvet dette råd...', time: '09:14', avatar: '👩' },
+                      { name: 'Maria K.', msg: 'Det virkede for os!', time: '09:22', avatar: '👩‍🦱' },
+                    ].map((m, i) => (
+                      <div key={i} className="flex gap-1.5 items-start">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs"
+                          style={{ backgroundColor: '#F3E9E1' }}>
+                          <span style={{ fontSize: '0.55rem' }}>{m.avatar}</span>
+                        </div>
+                        <div className="flex-1 rounded-lg px-2 py-1" style={{ backgroundColor: '#F3E9E1' }}>
+                          <p style={{ fontSize: '0.35rem', fontWeight: 600, color: '#5B3F2B' }}>{m.name}</p>
+                          <p style={{ fontSize: '0.32rem', color: '#7A665A' }}>{m.msg}</p>
+                        </div>
                       </div>
                     ))}
+                    <button className="w-full rounded-lg py-1 mt-1 text-center"
+                      style={{ backgroundColor: '#C8A882', fontSize: '0.38rem', color: '#fff' }}>
+                      Skriv besked
+                    </button>
+                  </div>
+                </div>
+
+                {/* Calendar mockup */}
+                <div className="rounded-2xl overflow-hidden shadow-md" style={{ width: 100, backgroundColor: '#FFFCF8', border: '1px solid #EDE4DB' }}>
+                  <div className="px-3 py-2" style={{ borderBottom: '1px solid #EDE4DB' }}>
+                    <p style={{ fontSize: '0.45rem', fontWeight: 600, color: '#2B1F16' }}>Kalender</p>
+                  </div>
+                  <div className="p-2.5">
+                    <div className="grid grid-cols-7 gap-0.5 mb-2">
+                      {['M','T','O','T','F','L','S'].map((d, i) => (
+                        <div key={i} className="text-center" style={{ fontSize: '0.3rem', color: '#9A7A6A' }}>{d}</div>
+                      ))}
+                      {Array.from({ length: 28 }, (_, i) => i + 1).map(d => (
+                        <div key={d} className="text-center rounded-sm py-0.5"
+                          style={{
+                            fontSize: '0.3rem',
+                            color: d === 12 ? '#fff' : '#5B3F2B',
+                            backgroundColor: d === 12 ? '#C8A882' : d === 8 || d === 19 ? '#F3E9E1' : 'transparent',
+                            fontWeight: d === 12 ? 700 : 400
+                          }}>
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="rounded-lg px-2 py-1" style={{ backgroundColor: '#F3E9E1' }}>
+                      <p style={{ fontSize: '0.32rem', fontWeight: 600, color: '#5B3F2B' }}>Scanning kl. 10:30</p>
+                      <p style={{ fontSize: '0.28rem', color: '#9A7A6A' }}>Rigshospitalet</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </section>
+
         </div>
-      </section>
+      </div>
 
-      {/* FEATURES */}
-      <section className="px-6 py-20" style={{ backgroundColor: '#F3E9E1' }}>
-        <div className="max-w-4xl mx-auto">
-          <motion.div className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl font-bold mb-3"
-              style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-              Alt hvad du har brug for
-            </h2>
-            <p className="text-sm" style={{ color: '#7A665A' }}>Bygget specielt til mødre og fædre i det første år</p>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map((f, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                className="rounded-2xl p-6 flex flex-col gap-3 transition-shadow hover:shadow-md"
-                style={{ backgroundColor: '#FFFDF9', border: '1px solid #EDE4DB' }}>
-                <p className="font-semibold" style={{ color: '#2B1F16' }}>{f.title}</p>
-                <p className="text-sm leading-relaxed" style={{ color: '#7A665A' }}>{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section className="px-6 py-20 max-w-lg mx-auto text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-4xl font-bold mb-3"
-            style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-            Simpel og ærlig pris
-          </h2>
-          <p className="text-sm mb-10" style={{ color: '#7A665A' }}>Ingen bindingsperiode · Opsig når som helst</p>
-
-          <div className="rounded-3xl overflow-hidden shadow-2xl">
-            {/* Top gradient band */}
-            <div className="py-8 px-8" style={{ background: 'linear-gradient(135deg, #5B3F2B, #8A6245)' }}>
-              <p className="text-white text-xs font-semibold uppercase tracking-widest opacity-70 mb-2">Fuld adgang</p>
-              <div className="flex items-end justify-center gap-1">
-                <span className="text-6xl font-bold text-white leading-none">59</span>
-                <div className="mb-1">
-                  <span className="text-2xl text-white">kr.</span>
-                  <span className="text-white opacity-60 text-sm block">/ måned</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Feature list */}
-            <div className="py-8 px-8" style={{ backgroundColor: '#FFFDF9' }}>
-              <ul className="space-y-3 mb-8 text-left">
-                {['Fuld søvnrådgivning med AI', 'Tigerspring & udviklingsguide', 'Kalender & påmindelser', 'Fællesskab & chat', 'Videnscenter med ekspertartikler', 'Ekspert booking'].map(item => (
-                  <li key={item} className="flex items-center gap-3 text-sm" style={{ color: '#2B1F16' }}>
-                    <span className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs"
-                      style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <button onClick={handleLogin}
-                className="w-full py-4 rounded-2xl font-semibold text-base transition-opacity hover:opacity-90 shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)', color: '#fff' }}>
-                Bliv medlem nu
-              </button>
-              <p className="mt-3 text-xs" style={{ color: '#B08D72' }}>Ingen bindingsperiode · Opsig når som helst</p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* REVIEWS */}
-      <section className="px-6 py-20" style={{ backgroundColor: '#F3E9E1' }}>
-        <div className="max-w-4xl mx-auto">
-          <motion.h2 className="text-4xl font-bold text-center mb-12"
-            style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            Hvad siger forældrene?
-          </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {REVIEWS.map((r, i) => (
-              <motion.div key={i}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="rounded-2xl p-6 flex flex-col justify-between"
-                style={{ backgroundColor: '#FFFDF9', border: '1px solid #EDE4DB' }}>
-                <div>
-                  <div className="flex mb-4">
-                    {Array(r.stars).fill(0).map((_, j) => (
-                      <Star key={j} className="w-4 h-4 fill-current" style={{ color: '#C8A882' }} />
-                    ))}
-                  </div>
-                  <p className="text-sm italic leading-relaxed mb-5" style={{ color: '#2B1F16' }}>"{r.text}"</p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: '#5B3F2B' }}>{r.name}</p>
-                  <p className="text-xs" style={{ color: '#B08D72' }}>{r.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section className="px-6 py-20">
-        <motion.div className="max-w-2xl mx-auto rounded-3xl p-10 text-center shadow-xl"
-          style={{ background: 'linear-gradient(135deg, #3A2A1A, #5B3F2B)' }}
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <p className="text-4xl mb-4" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#F5EFE9', fontWeight: 700 }}>
-            Klar til at komme i gang?
-          </p>
-          <p className="text-sm mb-8 opacity-70" style={{ color: '#DCC1B0' }}>
-            Slut dig til tusindvis af forældre der allerede bruger Clubnosleep.
-          </p>
-          <button onClick={handleLogin}
-            className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-semibold mx-auto transition-opacity hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)', color: '#fff' }}>
-            Bliv medlem nu <ArrowRight className="w-5 h-5" />
-          </button>
-        </motion.div>
-      </section>
-
-      {/* DOWNLOAD */}
-      <section className="px-6 pb-20 text-center">
-        <h2 className="text-3xl font-bold mb-3"
-          style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16' }}>
-          Hent appen
-        </h2>
-        <p className="text-sm mb-8" style={{ color: '#7A665A' }}>Tilgængelig på iOS og Android</p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          {[
-            { icon: '🍎', label: 'App Store', sub: 'Download fra' },
-            { icon: '🤖', label: 'Google Play', sub: 'Hent fra' },
-          ].map((s, i) => (
-            <a key={i} href="#"
-              className="flex items-center gap-3 px-6 py-3.5 rounded-2xl transition-opacity hover:opacity-80"
-              style={{ backgroundColor: '#2B1F16', color: '#fff' }}>
-              <span className="text-2xl">{s.icon}</span>
-              <div className="text-left">
-                <p className="text-xs opacity-60">{s.sub}</p>
-                <p className="font-semibold text-sm">{s.label}</p>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* FOOTER */}
+      {/* FOOTER — uændret */}
       <footer style={{ backgroundColor: '#2B1F16', color: '#DCC1B0' }} className="px-6 py-14">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start gap-10 mb-10">
-            {/* Brand */}
             <div>
               <div className="flex items-center gap-2.5 mb-3">
                 <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #C8A882, #8A6245)' }}>
@@ -327,50 +292,32 @@ export default function Landing() {
                 Din trygge havn som ny forælder — søvn, fællesskab og viden samlet ét sted.
               </p>
             </div>
-
-            {/* Links */}
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8A6A5A' }}>Juridisk</p>
-              <button
-                onClick={() => setLegalModal('terms')}
-                className="text-sm text-left transition-colors hover:text-white"
-                style={{ color: '#C8A882' }}>
+              <button onClick={() => setLegalModal('terms')} className="text-sm text-left transition-colors hover:text-white" style={{ color: '#C8A882' }}>
                 Handelsbetingelser
               </button>
-              <button
-                onClick={() => setLegalModal('privacy')}
-                className="text-sm text-left transition-colors hover:text-white"
-                style={{ color: '#C8A882' }}>
+              <button onClick={() => setLegalModal('privacy')} className="text-sm text-left transition-colors hover:text-white" style={{ color: '#C8A882' }}>
                 Privatlivspolitik
               </button>
             </div>
-
-            {/* App badges */}
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8A6A5A' }}>Hent appen</p>
               {['App Store', 'Google Play'].map((label, i) => (
-                <a key={i} href="#"
-                  className="flex items-center gap-2 text-sm transition-colors hover:text-white"
-                  style={{ color: '#C8A882' }}>
+                <a key={i} href="#" className="flex items-center gap-2 text-sm transition-colors hover:text-white" style={{ color: '#C8A882' }}>
                   {label}
                 </a>
               ))}
             </div>
           </div>
-
           <div style={{ borderTop: '1px solid #3A2A1A' }} className="pt-6 text-center">
             <p className="text-xs" style={{ color: '#6A5A50' }}>© 2025 Clubnosleep · Alle rettigheder forbeholdes</p>
           </div>
         </div>
       </footer>
 
-      {/* Legal modals */}
-      {legalModal === 'terms' && (
-        <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setLegalModal(null)} />
-      )}
-      {legalModal === 'privacy' && (
-        <LegalModal type="privacy" title="Privatlivspolitik" onClose={() => setLegalModal(null)} />
-      )}
+      {legalModal === 'terms' && <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setLegalModal(null)} />}
+      {legalModal === 'privacy' && <LegalModal type="privacy" title="Privatlivspolitik" onClose={() => setLegalModal(null)} />}
     </div>
   );
 }
