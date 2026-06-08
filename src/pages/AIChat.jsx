@@ -104,6 +104,9 @@ export default function AIChat() {
 
   useEffect(() => {
     const init = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) return;
+
       const conv = await base44.agents.createConversation({
         agent_name: 'baby_expert',
         metadata: { name: 'Baby & Søvn Chat' }
