@@ -104,7 +104,7 @@ export default function Landing() {
           {/* Photo — left, fixed width, no padding */}
           <div style={{ flex: '0 0 320px', minHeight: 380, position: 'relative', overflow: 'hidden' }}>
             <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/c7458619a_Hero2.png"
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/eca32e989_Skrmbillede2026-06-08161849.png"
               alt="Kvinde med Club No Sleep taske og barnevogn"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
             />
