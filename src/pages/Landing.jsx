@@ -98,63 +98,68 @@ export default function Landing() {
       {/* ════════════════════════════════
           HERO 2 — "Kom med i klubben"
       ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#E8D6BC', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 440 }}>
+      {/* ════════════════════════════════
+          HERO — "Kom med i klubben"
+      ════════════════════════════════ */}
+      <section style={{ backgroundColor: '#DEC9A8', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch' }}>
 
-          {/* Photo — left, fills full height via absolute positioning */}
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
+          {/* LEFT — photo, fixed width, full height */}
+          <div style={{ flexShrink: 0, width: 300, minHeight: 460, position: 'relative' }}>
             <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/96a80cdaf_Hero2.png"
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/dc7526739_Hero2.png"
               alt="Kvinde med Club No Sleep taske og barnevogn"
               style={{
-                position: 'absolute',
-                top: 0, left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center top',
+                position: 'absolute', top: 0, left: 0,
+                width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center top',
                 display: 'block',
               }}
             />
           </div>
 
-          {/* Right copy */}
-          <div style={{ padding: '3.5rem 5rem 3.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
-            {/* Decorative circle bottom-right */}
-            <div style={{ position: 'absolute', right: -80, bottom: -80, width: 280, height: 280, borderRadius: '50%', backgroundColor: 'rgba(185,148,105,0.25)', pointerEvents: 'none' }} />
+          {/* RIGHT — copy */}
+          <div style={{ flex: 1, padding: '3.5rem 4.5rem 3.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+            {/* Decorative half-circle bottom-right */}
+            <div style={{
+              position: 'absolute', right: -120, bottom: -120,
+              width: 340, height: 340, borderRadius: '50%',
+              backgroundColor: 'rgba(195,158,110,0.30)', pointerEvents: 'none',
+            }} />
 
             <h2 style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontSize: '2.5rem',
-              fontWeight: 400,
-              color: '#1E140A',
-              lineHeight: 1.15,
-              margin: '0 0 1.6rem',
+              fontSize: '2.6rem', fontWeight: 400,
+              color: '#1E140A', lineHeight: 1.15,
+              margin: '0 0 1.5rem', position: 'relative',
             }}>
               Kom med i klubben
             </h2>
 
-            <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.8, maxWidth: 460, margin: '0 0 1.4rem' }}>
+            <p style={{ color: '#3A2412', fontSize: '0.87rem', lineHeight: 1.82, maxWidth: 450, margin: '0 0 1.4rem', position: 'relative' }}>
               Vi har været der.<br />
-              Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du står i. Hvor far sover på sofaen og mor sover siddende. Hvor frygten for natten allerede starter i løbet af eftermiddagen.<br />
-              CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde andre, der er vågen sammen med dig.
+              Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du
+              står i. Hvor far sover på sofaen og mor sover siddende. Hvor frygten for
+              natten allerede starter i løbet af eftermiddagen.<br />
+              CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde
+              andre, der er vågen sammen med dig.
             </p>
 
-            <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.8, maxWidth: 460, margin: '0 0 2.2rem' }}>
-              Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
+            <p style={{ color: '#3A2412', fontSize: '0.87rem', lineHeight: 1.82, maxWidth: 450, margin: '0 0 2.2rem', position: 'relative' }}>
+              Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig
+              alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
             </p>
 
             <p style={{
-              fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
-              fontSize: '1.6rem',
-              color: '#3A2412',
-              margin: 0,
-              lineHeight: 1.3,
-              fontWeight: 400,
+              fontFamily: "'Dancing Script', cursive",
+              fontSize: '1.65rem', fontWeight: 400,
+              color: '#3A2412', margin: 0, lineHeight: 1.3,
+              position: 'relative',
             }}>
-              Kærligst og kram fra Sara & Nicolaj
+              Kærligst og kram fra Sara &amp; Nicolaj
             </p>
           </div>
+
         </div>
       </section>
 
