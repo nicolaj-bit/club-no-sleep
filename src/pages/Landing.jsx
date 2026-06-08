@@ -78,10 +78,10 @@ export default function Landing() {
             </div>
 
             <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '1.1rem', marginTop: 0 }}>
-              Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; <strong>Natteensomhed.</strong>
+              Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; Natteensomhed.
             </p>
             <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '2.5rem', marginTop: 0 }}>
-              <strong>CLUB NO SLEEP</strong> er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
+              CLUB NO SLEEP er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
             </p>
 
             <button onClick={handleLogin}
