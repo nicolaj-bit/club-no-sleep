@@ -96,41 +96,55 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-          HERO 3 — "Kom med i klubben"
+          HERO 2 — "Kom med i klubben"
       ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#EDE0CC' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', minHeight: 460 }}>
+      <section style={{ backgroundColor: '#E8D9C0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'stretch' }}>
 
-          {/* Photo — left, square-ish */}
-          <div style={{ flex: '0 0 38%', minWidth: 240, minHeight: 420, position: 'relative', overflow: 'hidden' }}>
+          {/* Photo — left, fixed width, no padding */}
+          <div style={{ flex: '0 0 320px', minHeight: 380, position: 'relative', overflow: 'hidden' }}>
             <img
-              src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=900&q=85"
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/c7458619a_Hero2.png"
               alt="Kvinde med Club No Sleep taske og barnevogn"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
             />
           </div>
 
-          {/* Decorative circle top-right */}
-          <div style={{ flex: '1 1 300px', padding: '4.5rem 5rem 4.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
-            {/* Big circle decoration */}
-            <div style={{ position: 'absolute', right: -120, bottom: -120, width: 340, height: 340, borderRadius: '50%', backgroundColor: 'rgba(180,140,100,0.18)' }} />
+          {/* Right copy */}
+          <div style={{ flex: '1 1 340px', padding: '4rem 4.5rem 4rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+            {/* Decorative circle bottom-right */}
+            <div style={{ position: 'absolute', right: -100, bottom: -100, width: 300, height: 300, borderRadius: '50%', backgroundColor: 'rgba(180,140,100,0.22)', pointerEvents: 'none' }} />
 
-            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 500, color: '#1E140A', lineHeight: 1.2, margin: '0 0 1.4rem' }}>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 'clamp(2rem, 3vw, 2.6rem)',
+              fontWeight: 400,
+              color: '#1E140A',
+              lineHeight: 1.2,
+              margin: '0 0 1.4rem',
+            }}>
               Kom med i klubben
             </h2>
 
-            <p style={{ color: '#3E2810', fontSize: '0.9rem', lineHeight: 1.95, maxWidth: 420, margin: '0 0 1.4rem' }}>
+            <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.85, maxWidth: 440, margin: '0 0 1.4rem' }}>
               Vi har været der.<br />
               Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du står i. Hvor far sover på sofaen og mor sover siddende. Hvor frygten for natten allerede starter i løbet af eftermiddagen.<br />
               CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde andre, der er vågen sammen med dig.
             </p>
 
-            <p style={{ color: '#3E2810', fontSize: '0.9rem', lineHeight: 1.95, maxWidth: 420, margin: '0 0 2rem' }}>
+            <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.85, maxWidth: 440, margin: '0 0 2rem' }}>
               Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
             </p>
 
-            <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: '1.45rem', color: '#5B3F2B', margin: 0, lineHeight: 1.3 }}>
-              Kærligst og kram fra Sara &amp; Nicolaj
+            <p style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: '1.5rem',
+              color: '#3E2810',
+              margin: 0,
+              lineHeight: 1.3,
+            }}>
+              Kærligst og kram fra Sara & Nicolaj
             </p>
           </div>
         </div>
