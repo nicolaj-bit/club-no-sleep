@@ -56,20 +56,14 @@ export default function Layout({ children, currentPageName }) {
     };
 
     if (isCapacitor) {
-      // Native iOS/Android via Capacitor — OneSignal plugin skal initialiseres via global window.OneSignal
-      // (plugin'et injiceres af Capacitor runtime, ikke via npm import)
-      const waitForPlugin = (retries = 20) => {
-        if (window.OneSignal && typeof window.OneSignal.initialize === 'function') {
-          window.OneSignal.initialize(ONESIGNAL_APP_ID);
-          window.OneSignal.Notifications.requestPermission(true);
-          loginUser(window.OneSignal);
-        } else if (retries > 0) {
-          setTimeout(() => waitForPlugin(retries - 1), 300);
-        } else {
-          console.warn('OneSignal Capacitor plugin ikke fundet');
-        }
-      };
-      waitForPlugin();
+      // Native iOS/Android via Capacitor — brug den installerede @onesignal/capacitor-plugin
+      import('@onesignal/capacitor-plugin').then(({ OneSignal }) => {
+        OneSignal.initialize(ONESIGNAL_APP_ID);
+        OneSignal.Notifications.requestPermission(true);
+        loginUser(OneSignal);
+      }).catch((err) => {
+        console.warn('OneSignal Capacitor plugin fejl:', err);
+      });
     } else {
       // Web / PWA
       const script = document.createElement('script');
