@@ -5,7 +5,7 @@ import React from 'react';
  * The iframe is rendered at 390px wide (standard iPhone viewport)
  * and scaled down to fit the phone frame.
  */
-export default function IPhoneMockup({ url, width = 220, height = 450, style = {}, frameColor = '#C8A882' }) {
+export default function IPhoneMockup({ url, imageUrl, width = 220, height = 450, style = {}, frameColor = '#C8A882' }) {
   // Inner screen dimensions (exclude frame border)
   const BORDER = 10;          // frame thickness
   const TOP_BAR = 32;         // space for dynamic island
@@ -75,24 +75,39 @@ export default function IPhoneMockup({ url, width = 220, height = 450, style = {
           </div>
         </div>
 
-        {/* iframe screen content */}
-        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          <iframe
-            src={url}
-            title={url}
-            scrolling="no"
-            style={{
-              width: NATIVE_W,
-              height: nativeH,
-              border: 'none',
-              transform: `scale(${scale})`,
-              transformOrigin: 'top left',
-              display: 'block',
-              pointerEvents: 'none',
-              backgroundColor: '#FBF6EF',
-            }}
-          />
-        </div>
+        {/* Screen content — iframe or image */}
+         <div style={{ flex: 1, overflow: 'hidden', position: 'relative', backgroundColor: '#FBF6EF' }}>
+           {imageUrl ? (
+             // Static screenshot
+             <img
+               src={imageUrl}
+               alt="Screenshot"
+               style={{
+                 width: '100%',
+                 height: '100%',
+                 objectFit: 'cover',
+                 display: 'block',
+               }}
+             />
+           ) : (
+             // Live iframe
+             <iframe
+               src={url}
+               title={url}
+               scrolling="no"
+               style={{
+                 width: NATIVE_W,
+                 height: nativeH,
+                 border: 'none',
+                 transform: `scale(${scale})`,
+                 transformOrigin: 'top left',
+                 display: 'block',
+                 pointerEvents: 'none',
+                 backgroundColor: '#FBF6EF',
+               }}
+             />
+           )}
+         </div>
 
         {/* Home indicator */}
         <div style={{

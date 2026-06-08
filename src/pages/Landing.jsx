@@ -72,11 +72,11 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Right — two iPhones */}
-          <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
-            <IPhoneMockup url="/Home" width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />
-            <IPhoneMockup url="/SleepLog" width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />
-          </div>
+          {/* Right — two iPhones with screenshots */}
+           <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
+             <IPhoneMockup imageUrl="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png" width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />
+             <IPhoneMockup imageUrl="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png" width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />
+           </div>
         </div>
       </section>
 
