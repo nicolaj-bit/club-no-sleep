@@ -99,19 +99,27 @@ export default function Landing() {
           HERO 2 — "Kom med i klubben"
       ════════════════════════════════ */}
       <section style={{ backgroundColor: '#E8D6BC', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 420 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 440 }}>
 
-          {/* Photo — left, portrait, fixed width matching design */}
-          <div style={{ flex: '0 0 280px', position: 'relative', overflow: 'hidden' }}>
+          {/* Photo — left, fills full height via absolute positioning */}
+          <div style={{ position: 'relative', overflow: 'hidden' }}>
             <img
               src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/96a80cdaf_Hero2.png"
               alt="Kvinde med Club No Sleep taske og barnevogn"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+              style={{
+                position: 'absolute',
+                top: 0, left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                display: 'block',
+              }}
             />
           </div>
 
           {/* Right copy */}
-          <div style={{ flex: 1, padding: '3.5rem 5rem 3.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
+          <div style={{ padding: '3.5rem 5rem 3.5rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
             {/* Decorative circle bottom-right */}
             <div style={{ position: 'absolute', right: -80, bottom: -80, width: 280, height: 280, borderRadius: '50%', backgroundColor: 'rgba(185,148,105,0.25)', pointerEvents: 'none' }} />
 
