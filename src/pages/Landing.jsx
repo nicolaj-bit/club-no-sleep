@@ -21,21 +21,21 @@ export default function Landing() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
           <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {isAuth ? (
-              <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button>
-            ) : (
-              <>
+            {isAuth ?
+            <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
+
+            <>
                 <button onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
                 <button onClick={handleLogin} style={btnDark}>Bliv medlem</button>
               </>
-            )}
+            }
           </div>
         </div>
       </nav>
 
       {/* ════════════════════════════════
-          HERO 1 — "Til dig, der er vågen"
-      ════════════════════════════════ */}
+           HERO 1 — "Til dig, der er vågen"
+        ════════════════════════════════ */}
       <section style={{ backgroundColor: '#F5EDE0', padding: '6rem 2.5rem 5rem' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
 
@@ -47,7 +47,7 @@ export default function Landing() {
               fontWeight: 400,
               lineHeight: 1.15,
               color: '#1E140A',
-              margin: '0 0 1.6rem',
+              margin: '0 0 1.6rem'
             }}>
               Til dig, der er vågen,<br />
               når resten af verden sover.
@@ -56,7 +56,7 @@ export default function Landing() {
             {/* Heart */}
             <div style={{ marginBottom: '1.4rem' }}>
               <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
-                <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5"/>
+                <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5" />
               </svg>
             </div>
 
@@ -79,8 +79,8 @@ export default function Landing() {
               width={220}
               height={450}
               style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }}
-              frameColor="#C8A882"
-            />
+              frameColor="#C8A882" />
+            
 
             {/* iPhone B — /SleepLog — behind right, offset down */}
             <IPhoneMockup
@@ -88,33 +88,33 @@ export default function Landing() {
               width={200}
               height={415}
               style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }}
-              frameColor="#DDD0BC"
-            />
+              frameColor="#DDD0BC" />
+            
 
           </div>
         </div>
       </section>
 
       {/* ════════════════════════════════
-          "Kom med i klubben"
-      ════════════════════════════════ */}
+           "Kom med i klubben"
+        ════════════════════════════════ */}
       <section style={{ backgroundColor: '#D9C9AE', position: 'relative', overflow: 'hidden' }}>
         {/* Big decorative circle — bottom right, partially clipped */}
         <div style={{
           position: 'absolute', right: -110, bottom: -110,
           width: 380, height: 380, borderRadius: '50%',
-          backgroundColor: 'rgba(190,155,105,0.28)', pointerEvents: 'none', zIndex: 0,
+          backgroundColor: 'rgba(190,155,105,0.28)', pointerEvents: 'none', zIndex: 0
         }} />
 
         <div style={{ display: 'flex', alignItems: 'center', padding: '3rem 4rem 3rem 3.5rem', gap: '4.5rem', position: 'relative', zIndex: 1 }}>
 
           {/* LEFT — photo with margin, portrait style */}
           <div style={{ flexShrink: 0, width: 260, height: 360, borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
-            <img
-              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4d9f301ca_Hero2.png"
-              alt="Kvinde med Club No Sleep taske og barnevogn"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
-            />
+            <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/eca32e989_Skrmbillede2026-06-08161849.png"
+
+            alt="Kvinde med Club No Sleep taske og barnevogn"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+            
           </div>
 
           {/* RIGHT — copy, vertically centred */}
@@ -123,7 +123,7 @@ export default function Landing() {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: '2.55rem', fontWeight: 400,
               color: '#1E140A', lineHeight: 1.15,
-              margin: '0 0 1.3rem',
+              margin: '0 0 1.3rem'
             }}>
               Kom med i klubben
             </h2>
@@ -145,7 +145,7 @@ export default function Landing() {
             <p style={{
               fontFamily: "'Dancing Script', cursive",
               fontSize: '1.6rem', fontWeight: 400,
-              color: '#3A2412', margin: 0, lineHeight: 1.3,
+              color: '#3A2412', margin: 0, lineHeight: 1.3
             }}>
               Kærligst og kram fra Sara &amp; Nicolaj
             </p>
@@ -155,8 +155,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-          HERO 2 — "Dette finder du i appen"
-      ════════════════════════════════ */}
+           HERO 2 — "Dette finder du i appen"
+        ════════════════════════════════ */}
       <section style={{ backgroundColor: '#FFFDF9', padding: '6rem 2.5rem 7rem' }}>
         <div style={{ maxWidth: 980, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -164,60 +164,60 @@ export default function Landing() {
               Dette finder du i appen
             </h2>
             <svg width="18" height="16" viewBox="0 0 18 16" fill="none" style={{ display: 'inline-block' }}>
-              <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5"/>
+              <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5" />
             </svg>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3rem 4rem' }}>
 
             {[
-              {
-                img: '🤰',
-                title: 'Graviditeten uge for uge',
-                desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til "et lille næste skridt".',
-              },
-              {
-                img: '🎯',
-                title: 'Milepæle',
-                desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.',
-              },
-              {
-                img: '🐯',
-                title: 'Tigerspring',
-                desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.',
-              },
-              {
-                img: '🌙',
-                title: 'Et lys i mørket',
-                desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.',
-              },
-              {
-                img: '☕',
-                title: 'Babyvenlige caféer',
-                desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.',
-              },
-              {
-                img: '📅',
-                title: 'Kalender',
-                desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.',
-              },
-              {
-                img: '✏️',
-                title: 'Søvnlog',
-                desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.',
-              },
-              {
-                img: '💬',
-                title: 'Fællesskab',
-                desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.',
-              },
-              {
-                img: '✅',
-                title: 'Din app dine valg',
-                desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.',
-              },
-            ].map((f, i) => (
-              <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+            {
+              img: '🤰',
+              title: 'Graviditeten uge for uge',
+              desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til "et lille næste skridt".'
+            },
+            {
+              img: '🎯',
+              title: 'Milepæle',
+              desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.'
+            },
+            {
+              img: '🐯',
+              title: 'Tigerspring',
+              desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.'
+            },
+            {
+              img: '🌙',
+              title: 'Et lys i mørket',
+              desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.'
+            },
+            {
+              img: '☕',
+              title: 'Babyvenlige caféer',
+              desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.'
+            },
+            {
+              img: '📅',
+              title: 'Kalender',
+              desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.'
+            },
+            {
+              img: '✏️',
+              title: 'Søvnlog',
+              desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.'
+            },
+            {
+              img: '💬',
+              title: 'Fællesskab',
+              desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.'
+            },
+            {
+              img: '✅',
+              title: 'Din app dine valg',
+              desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.'
+            }].
+            map((f, i) =>
+            <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                 <div style={{ width: 54, height: 54, borderRadius: '50%', backgroundColor: '#EBD9C6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.35rem', flexShrink: 0 }}>
                   {f.img}
                 </div>
@@ -226,15 +226,15 @@ export default function Landing() {
                   <p style={{ color: '#7A665A', fontSize: '0.78rem', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
                 </div>
               </div>
-            ))}
+            )}
 
           </div>
         </div>
       </section>
 
       {/* ════════════════════════════════
-          HERO 4 — "Du skal ikke stå med det hele alene"
-      ════════════════════════════════ */}
+           HERO 4 — "Du skal ikke stå med det hele alene"
+        ════════════════════════════════ */}
       <section style={{ backgroundColor: '#D9C4A0', padding: '5rem 2.5rem' }}>
         <div style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, flexWrap: 'wrap' }}>
 
@@ -304,23 +304,23 @@ export default function Landing() {
                 <p style={{ color: '#9A7A6A', fontSize: '0.6rem', margin: '0 0 8px', fontWeight: 500 }}>April 2025</p>
                 {/* Calendar grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 10 }}>
-                  {['M','T','O','T','F','L','S'].map((d, i) => (
-                    <div key={i} style={{ textAlign: 'center', fontSize: '0.38rem', color: '#9A7A6A', fontWeight: 700, paddingBottom: 2 }}>{d}</div>
-                  ))}
+                  {['M', 'T', 'O', 'T', 'F', 'L', 'S'].map((d, i) =>
+                  <div key={i} style={{ textAlign: 'center', fontSize: '0.38rem', color: '#9A7A6A', fontWeight: 700, paddingBottom: 2 }}>{d}</div>
+                  )}
                   {/* Blanks for Tuesday start */}
                   <div />
-                  {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30].map(d => (
-                    <div key={d} style={{
-                      textAlign: 'center', fontSize: '0.38rem',
-                      borderRadius: '50%', width: 14, height: 14,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      margin: '0 auto',
-                      backgroundColor: d === 4 ? 'transparent' : d === 9 ? '#C8A882' : d === 27 ? '#3A2416' : 'transparent',
-                      border: d === 4 ? '1.5px solid #C8A882' : 'none',
-                      color: d === 9 || d === 27 ? '#fff' : '#4A3525',
-                      fontWeight: [4, 9, 27].includes(d) ? 700 : 400,
-                    }}>{d}</div>
-                  ))}
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((d) =>
+                  <div key={d} style={{
+                    textAlign: 'center', fontSize: '0.38rem',
+                    borderRadius: '50%', width: 14, height: 14,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto',
+                    backgroundColor: d === 4 ? 'transparent' : d === 9 ? '#C8A882' : d === 27 ? '#3A2416' : 'transparent',
+                    border: d === 4 ? '1.5px solid #C8A882' : 'none',
+                    color: d === 9 || d === 27 ? '#fff' : '#4A3525',
+                    fontWeight: [4, 9, 27].includes(d) ? 700 : 400
+                  }}>{d}</div>
+                  )}
                 </div>
                 {/* Events */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
@@ -384,20 +384,20 @@ export default function Landing() {
           .landing-features-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ── Style helpers ── */
 const btnDark = {
   backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none',
   borderRadius: 8, padding: '9px 20px', fontSize: '0.87rem',
-  fontWeight: 600, cursor: 'pointer',
+  fontWeight: 600, cursor: 'pointer'
 };
 const btnBrown = {
   backgroundColor: '#7A5535', color: '#fff', border: 'none',
   borderRadius: 10, padding: '14px 34px', fontSize: '0.92rem',
-  fontWeight: 600, cursor: 'pointer',
+  fontWeight: 600, cursor: 'pointer'
 };
 const tiny = (color) => ({ color, fontSize: '0.34rem', margin: 0 });
 
@@ -406,21 +406,21 @@ function PhoneNotch({ color }) {
     <div style={{
       position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
       width: 56, height: 16, backgroundColor: color,
-      borderRadius: '0 0 12px 12px', zIndex: 10,
-    }} />
-  );
+      borderRadius: '0 0 12px 12px', zIndex: 10
+    }} />);
+
 }
 
 function MiniNav({ active }) {
   const items = [['🏠', 'Hjem'], ['📋', 'Dagbog'], ['➕', ''], ['👥', 'Fællesskab'], ['👤', 'Profil']];
   return (
     <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', padding: '6px 0 4px', borderTop: '1px solid #EDE4DB', backgroundColor: '#FFFDF9' }}>
-      {items.map(([ic, lb], i) => (
-        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+      {items.map(([ic, lb], i) =>
+      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
           <span style={{ fontSize: i === 2 ? '0.95rem' : '0.62rem' }}>{ic}</span>
           {lb && <span style={{ fontSize: '0.25rem', color: i === active ? '#C8A882' : '#9A7A6A' }}>{lb}</span>}
         </div>
-      ))}
-    </div>
-  );
+      )}
+    </div>);
+
 }
