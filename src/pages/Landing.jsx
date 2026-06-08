@@ -63,114 +63,145 @@ export default function Landing() {
       </nav>
 
       {/* ── HERO ── */}
-      <section style={{ backgroundColor: '#F5EDE0', padding: '5rem 2rem 4rem' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 64, flexWrap: 'wrap' }}>
+      <section style={{ backgroundColor: '#F5EDE0', padding: '5rem 2rem 5rem' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
 
           {/* Left */}
-          <div style={{ flex: '1 1 360px', minWidth: 300 }}>
-            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌙</div>
-            <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.75rem', fontWeight: 600, lineHeight: 1.2, color: '#1E140A', marginBottom: '0.75rem' }}>
+          <div style={{ flex: '1 1 380px', minWidth: 300 }}>
+            <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '3rem', fontWeight: 500, lineHeight: 1.2, color: '#1E140A', marginBottom: '1.5rem', marginTop: 0 }}>
               Til dig, der er vågen,<br />
-              <em style={{ fontStyle: 'italic', color: '#1E140A' }}>når resten af verden sover.</em>
+              når resten af verden sover.
             </h1>
 
-            <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: '#C8A882', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-              <span style={{ color: '#fff', fontSize: '0.7rem', lineHeight: 1 }}>→</span>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Heart style={{ width: 18, height: 18, color: '#C8A882', fill: '#C8A882' }} />
             </div>
 
-            <p style={{ color: '#5B3F2B', fontSize: '1rem', lineHeight: 1.75, maxWidth: 400, marginBottom: '1rem' }}>
-              Du er ikke alene i de lange nætter. Der er en app, som holder dig med selskab, giver dig råd og forbinder dig med andre forældre i samme situation.
+            <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '1.1rem', marginTop: 0 }}>
+              Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; <strong>Natteensomhed.</strong>
             </p>
-            <p style={{ color: '#1E140A', fontSize: '0.9rem', fontWeight: 600, lineHeight: 1.6, maxWidth: 400, marginBottom: '2rem' }}>
-              CLUBNOSLEEP — din app til de første år som forælder.<br />
-              Til søvn, viden og Fællesskab.
+            <p style={{ color: '#5B3F2B', fontSize: '0.97rem', lineHeight: 1.8, maxWidth: 420, marginBottom: '2.5rem', marginTop: 0 }}>
+              <strong>CLUB NO SLEEP</strong> er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
             </p>
 
             <button onClick={handleLogin}
-              style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 9, padding: '13px 30px', fontSize: '0.92rem', fontWeight: 600, cursor: 'pointer' }}>
-              Bliv medlem
+              style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 9, padding: '14px 34px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer' }}>
+              Hent app
             </button>
           </div>
 
-          {/* Right — phone mockups */}
-          <div style={{ flex: '0 0 auto', position: 'relative', height: 360, width: 420 }}>
+          {/* Right — two phone mockups side by side */}
+          <div style={{ flex: '0 0 auto', display: 'flex', gap: 16, alignItems: 'flex-end' }}>
 
-            {/* Phone A – dark, back-left */}
-            <div style={{ position: 'absolute', left: 0, top: 24, width: 165, height: 320, borderRadius: 22, backgroundColor: '#2B1A10', boxShadow: '0 24px 60px rgba(0,0,0,0.28)', overflow: 'hidden', zIndex: 1 }}>
-              <div style={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', gap: 8 }}>
-                <p style={{ color: '#C8A882', fontSize: '0.68rem', fontWeight: 700, margin: 0 }}>Godmorgen</p>
-                <div style={{ backgroundColor: 'rgba(255,255,255,0.07)', borderRadius: 10, padding: '7px 10px' }}>
-                  <p style={{ color: '#E8CFA8', fontSize: '0.53rem', margin: 0 }}>Godmorgen! ⭐</p>
-                </div>
-                {['Søvnrådgivning', 'Min søvnlog', 'Søvnrådgivning'].map((t, i) => (
-                  <div key={i} style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 9, padding: '6px 10px' }}>
-                    <p style={{ color: '#C8A882', fontSize: '0.52rem', margin: 0 }}>{t}</p>
+            {/* Phone 1 — Home screen (slightly taller, left) */}
+            <div style={{ width: 190, height: 380, borderRadius: 28, overflow: 'hidden', boxShadow: '0 30px 80px rgba(0,0,0,0.22)', border: '6px solid #2B1A10', backgroundColor: '#2B1A10', position: 'relative' }}>
+              {/* notch */}
+              <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 60, height: 18, backgroundColor: '#2B1A10', borderRadius: '0 0 12px 12px', zIndex: 10 }} />
+              <div style={{ width: '100%', height: '100%', overflowY: 'hidden', overflowX: 'hidden' }}>
+                {/* Home screen content */}
+                <div style={{ backgroundColor: '#F5EDE0', height: '100%', padding: '22px 10px 8px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <p style={{ color: '#9A7A6A', fontSize: '0.38rem', margin: 0 }}>Mandag, 17. april</p>
+                      <p style={{ color: '#1E140A', fontSize: '0.65rem', fontWeight: 700, margin: '1px 0 0' }}>Godmorgen, Sara</p>
+                    </div>
+                    <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#EDE0CC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5rem' }}>🔔</div>
                   </div>
-                ))}
-                <div style={{ backgroundColor: 'rgba(200,168,130,0.22)', borderRadius: 9, padding: '7px 10px', marginTop: 4 }}>
-                  <p style={{ color: '#C8A882', fontSize: '0.48rem', fontWeight: 700, margin: '0 0 2px' }}>CLUBNOSLEEP</p>
-                  <p style={{ color: 'rgba(200,168,130,0.55)', fontSize: '0.4rem', margin: 0 }}>til søvn og fællesskab</p>
-                </div>
-                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                  {['🏠','🔍','💬','👤'].map((ic, i) => <span key={i} style={{ fontSize: '0.75rem' }}>{ic}</span>)}
+                  {/* Pregnancy card */}
+                  <div style={{ backgroundColor: '#C8A882', borderRadius: 12, overflow: 'hidden', flex: '0 0 auto' }}>
+                    <div style={{ display: 'flex', alignItems: 'stretch', minHeight: 72 }}>
+                      <div style={{ flex: 1, padding: '8px 10px' }}>
+                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.36rem', margin: '0 0 2px' }}>I dag er du i Uge</p>
+                        <p style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800, lineHeight: 1, margin: 0 }}>7</p>
+                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.32rem', margin: '2px 0 0' }}>og 3 dage med</p>
+                        <div style={{ backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: 6, padding: '3px 6px', marginTop: 4, display: 'inline-block' }}>
+                          <p style={{ color: '#fff', fontSize: '0.35rem', margin: 0 }}>Åben din uge-plan →</p>
+                        </div>
+                      </div>
+                      <div style={{ width: 58, overflow: 'hidden', flexShrink: 0 }}>
+                        <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=150&q=80" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                      </div>
+                    </div>
+                  </div>
+                  {/* Feature cards grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
+                    <div style={{ backgroundColor: '#3A2416', borderRadius: 10, padding: '8px 9px' }}>
+                      <span style={{ fontSize: '0.8rem' }}>🌙</span>
+                      <p style={{ color: '#C8A882', fontSize: '0.42rem', fontWeight: 600, margin: '3px 0 1px' }}>Søvn chat</p>
+                      <p style={{ color: 'rgba(200,168,130,0.6)', fontSize: '0.34rem', margin: 0 }}>Lær mere »</p>
+                    </div>
+                    <div style={{ backgroundColor: '#EDE0CC', borderRadius: 10, padding: '8px 9px' }}>
+                      <span style={{ fontSize: '0.8rem' }}>📅</span>
+                      <p style={{ color: '#2B1A10', fontSize: '0.42rem', fontWeight: 600, margin: '3px 0 1px' }}>Ekspert paftaler</p>
+                      <p style={{ color: '#9A7A6A', fontSize: '0.34rem', margin: 0 }}>Følge til igt →</p>
+                    </div>
+                  </div>
+                  {/* Community row */}
+                  <div style={{ backgroundColor: '#fff', borderRadius: 10, padding: '7px 9px' }}>
+                    <p style={{ color: '#9A7A6A', fontSize: '0.32rem', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>AKTIVE I DIN DIN</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {['👩','👩‍🦱','👩‍🦰'].map((av, i) => (
+                        <div key={i} style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#EDE0CC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', border: '1.5px solid #fff' }}>{av}</div>
+                      ))}
+                      <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#C8A882', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.3rem', color: '#fff', fontWeight: 700, border: '1.5px solid #fff' }}>+3</div>
+                    </div>
+                  </div>
+                  <div style={{ backgroundColor: '#fff', borderRadius: 10, padding: '7px 9px' }}>
+                    <p style={{ color: '#9A7A6A', fontSize: '0.32rem', margin: '0 0 3px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>DE 10 TIDLIGERE TEGN</p>
+                    <p style={{ color: '#5B3F2B', fontSize: '0.35rem', margin: 0 }}>• Lav</p>
+                    <p style={{ color: '#7A665A', fontSize: '0.3rem', margin: '1px 0 0' }}>Du er ikke alene</p>
+                  </div>
+                  {/* Bottom nav */}
+                  <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 6, borderTop: '1px solid #EDE4DB' }}>
+                    {[['🏠','Hjem'],['📋','Søvnlog'],['➕',''],['💬','Fælles'],['👤','Profil']].map(([ic, lb], i) => (
+                      <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                        <span style={{ fontSize: i === 2 ? '1rem' : '0.65rem' }}>{ic}</span>
+                        {lb && <span style={{ fontSize: '0.26rem', color: i === 0 ? '#C8A882' : '#9A7A6A' }}>{lb}</span>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Phone B – light, front-center */}
-            <div style={{ position: 'absolute', left: 126, top: 0, width: 176, height: 330, borderRadius: 24, backgroundColor: '#FFFDF9', border: '1px solid #EDE4DB', boxShadow: '0 28px 80px rgba(0,0,0,0.18)', overflow: 'hidden', zIndex: 2 }}>
-              <div style={{ padding: '14px 13px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', gap: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-                  <p style={{ color: '#1E140A', fontSize: '0.63rem', fontWeight: 700, margin: 0 }}>Min søvnlog</p>
-                  <p style={{ color: '#C8A882', fontSize: '0.5rem', margin: 0 }}>Se alle</p>
+            {/* Phone 2 — SleepLog (slightly shorter, right, elevated) */}
+            <div style={{ width: 178, height: 356, borderRadius: 26, overflow: 'hidden', boxShadow: '0 24px 70px rgba(0,0,0,0.18)', border: '5px solid #E8DDD0', backgroundColor: '#E8DDD0', position: 'relative', marginBottom: 12 }}>
+              <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 52, height: 14, backgroundColor: '#E8DDD0', borderRadius: '0 0 10px 10px', zIndex: 10 }} />
+              <div style={{ backgroundColor: '#FFFDF9', height: '100%', padding: '20px 10px 8px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <p style={{ color: '#1E140A', fontSize: '0.65rem', fontWeight: 700, margin: 0 }}>Søvndag</p>
+                  <div style={{ fontSize: '0.55rem' }}>✏️</div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                  {[['🌙','Sengetid','22:26', true],['⭐','Vågnet','22:15', true],['☀️','Napper','25-20', false],['💤','I dag','21', false]].map(([e,l,v,dark], i) => (
-                    <div key={i} style={{ borderRadius: 12, padding: '8px 6px', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: dark ? '#2B1A10' : '#F3E9E1' }}>
-                      <span style={{ fontSize: '0.9rem' }}>{e}</span>
-                      <p style={{ color: dark ? '#C8A882' : '#7A665A', fontSize: '0.36rem', margin: '2px 0 1px' }}>{l}</p>
-                      <p style={{ color: dark ? '#fff' : '#2B1F16', fontSize: '0.55rem', fontWeight: 700, margin: 0 }}>{v}</p>
+                <p style={{ color: '#9A7A6A', fontSize: '0.35rem', margin: 0 }}>Fredag 11. april</p>
+                {/* Sleep time entries */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {[
+                    { time: '21:30 – 07:14', dur: '9:44 min', note: '', dark: false },
+                    { time: '21:00 – 13:30', dur: '8:16min', note: 'Søvn', dark: false },
+                    { time: '17:00 – 17:45', dur: '45 min', note: '', dark: true },
+                    { time: '18:30 – 21:47', dur: '3:17', note: '', dark: false },
+                  ].map((row, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: row.dark ? '#3A2416' : '#F3E9E1', borderRadius: 8, padding: '5px 8px' }}>
+                      <p style={{ color: row.dark ? '#C8A882' : '#5B3F2B', fontSize: '0.36rem', margin: 0, fontWeight: 500 }}>{row.time}</p>
+                      <p style={{ color: row.dark ? '#C8A882' : '#9A7A6A', fontSize: '0.34rem', margin: 0 }}>{row.dur}</p>
                     </div>
                   ))}
                 </div>
-                <div style={{ backgroundColor: '#F3E9E1', borderRadius: 12, overflow: 'hidden', marginTop: 2 }}>
-                  <p style={{ color: '#1E140A', fontSize: '0.55rem', fontWeight: 600, margin: 0, padding: '8px 10px 4px' }}>Søvnråd</p>
-                  <div style={{ display: 'flex', gap: 8, padding: '0 10px 10px' }}>
-                    <div style={{ width: 46, height: 38, borderRadius: 8, overflow: 'hidden', flexShrink: 0 }}>
-                      <img src="https://images.unsplash.com/photo-1566004100631-35d015d6a491?w=100&q=80" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                    </div>
-                    <p style={{ color: '#7A665A', fontSize: '0.36rem', lineHeight: 1.5, margin: 0 }}>Blid musik kan hjælpe barnet til at falde i søvn hurtigere og sove dybere...</p>
-                  </div>
+                <div style={{ backgroundColor: '#C8A882', borderRadius: 8, padding: '5px 8px', marginTop: 2 }}>
+                  <p style={{ color: '#fff', fontSize: '0.36rem', fontWeight: 600, textAlign: 'center', margin: 0 }}>Se alle →</p>
                 </div>
-                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 8, borderTop: '1px solid #EDE4DB' }}>
-                  {['🏠','🔍','🤱','📅'].map((ic, i) => <span key={i} style={{ fontSize: '0.78rem' }}>{ic}</span>)}
+                {/* Bottom nav */}
+                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-around', paddingTop: 6, borderTop: '1px solid #EDE4DB' }}>
+                  {[['🏠','Hjem'],['📋','Søvnlog'],['➕',''],['💬','Kalender'],['👤','Profil']].map(([ic, lb], i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                      <span style={{ fontSize: i === 2 ? '0.95rem' : '0.6rem' }}>{ic}</span>
+                      {lb && <span style={{ fontSize: '0.26rem', color: i === 1 ? '#C8A882' : '#9A7A6A' }}>{lb}</span>}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Phone C – light, back-right */}
-            <div style={{ position: 'absolute', left: 276, top: 28, width: 154, height: 308, borderRadius: 20, backgroundColor: '#FFFDF9', border: '1px solid #EDE4DB', boxShadow: '0 18px 52px rgba(0,0,0,0.13)', overflow: 'hidden', zIndex: 1 }}>
-              <div style={{ padding: '12px 12px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box', gap: 8 }}>
-                <p style={{ color: '#1E140A', fontSize: '0.63rem', fontWeight: 700, margin: 0 }}>Søvnråd</p>
-                <div style={{ backgroundColor: '#F3E9E1', borderRadius: 10, padding: '8px 10px' }}>
-                  <p style={{ color: '#5B3F2B', fontSize: '0.4rem', lineHeight: 1.6, margin: 0 }}>AI-rådgiveren har tilpasset disse råd specielt til dit barn — de som hjælper de fleste forældre mest...</p>
-                </div>
-                <div style={{ backgroundColor: '#F3E9E1', borderRadius: 10, padding: '8px 10px' }}>
-                  <p style={{ color: '#5B3F2B', fontSize: '0.4rem', fontWeight: 600, margin: '0 0 3px' }}>Søvnråd</p>
-                  <p style={{ color: '#7A665A', fontSize: '0.37rem', lineHeight: 1.5, margin: 0 }}>Forældre der bruger denne rutine sover mere sammenhængende natten igennem...</p>
-                </div>
-                <div style={{ display: 'flex', gap: 4 }}>
-                  {[1,2,3,4,5].map(n => (
-                    <div key={n} style={{ flex: 1, textAlign: 'center', borderRadius: 6, padding: '5px 0', backgroundColor: n <= 3 ? '#2B1A10' : '#F3E9E1', fontSize: '0.34rem', color: n <= 3 ? '#C8A882' : '#7A665A', fontWeight: n <= 3 ? 700 : 400 }}>{n}</div>
-                  ))}
-                </div>
-                <p style={{ color: '#C8A882', fontSize: '0.38rem', textAlign: 'center', margin: '2px 0' }}>Se næste råd →</p>
-                <div style={{ borderTop: '1px solid #EDE4DB', paddingTop: 8 }}>
-                  <p style={{ color: '#1E140A', fontSize: '0.55rem', fontWeight: 600, margin: '0 0 4px' }}>Tilbud</p>
-                  <p style={{ color: '#7A665A', fontSize: '0.37rem', margin: 0 }}>Første præmie produkt i søjle...</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
