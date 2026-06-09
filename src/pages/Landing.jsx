@@ -15,11 +15,11 @@ export default function Landing() {
   const handleLogin = () => base44.auth.redirectToLogin('/app');
 
   return (
-    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", backgroundColor: '#F5EDE0', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", backgroundColor: '#F5EDE0', overflowX: 'hidden', minHeight: '100dvh' }}>
 
       {/* ── NAVBAR ── */}
-      <nav style={{ backgroundColor: '#F5EDE0', borderBottom: '1px solid #E2D4C0', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="lnd-nav-inner" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
+       <nav style={{ backgroundColor: '#F5EDE0', borderBottom: '1px solid #E2D4C0', position: 'sticky', top: 0, zIndex: 50, paddingTop: 'env(safe-area-inset-top)' }}>
+         <div className="lnd-nav-inner" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
           <span className="lnd-nav-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
@@ -255,7 +255,7 @@ export default function Landing() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="lnd-footer" style={{ backgroundColor: '#1E140A', padding: '3.5rem 2.5rem 2rem' }}>
+       <footer className="lnd-footer" style={{ backgroundColor: '#1E140A', padding: '3.5rem 2.5rem 2rem', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
             <div>
@@ -321,46 +321,46 @@ export default function Landing() {
         }
 
         @media (max-width: 600px) {
-          /* Navbar */
-          .lnd-nav-inner { padding: 0 1.2rem !important; }
-          .lnd-nav-title { font-size: 1rem !important; }
-          .lnd-nav-btn-text { display: none !important; }
+           /* Navbar */
+           .lnd-nav-inner { padding: 0 1.2rem !important; height: 56px !important; }
+           .lnd-nav-title { font-size: 0.95rem !important; }
+           .lnd-nav-btn-text { display: none !important; }
 
-          /* Hero 1 */
-          .lnd-hero1-section { padding: 3rem 1.2rem 3.5rem !important; }
-          .lnd-hero1-inner { flex-direction: column !important; gap: 2rem !important; }
-          .lnd-hero1-copy { min-width: unset !important; width: 100% !important; }
-          .lnd-hero1-phones { display: none !important; }
-          .lnd-hero1-h1 { font-size: 2.1rem !important; }
-          .lnd-hero1-p { font-size: 0.88rem !important; }
-          .lnd-hero1-cta { width: 100% !important; text-align: center !important; }
-          .lnd-hero1-btn { width: 100% !important; padding: 16px !important; font-size: 1rem !important; border-radius: 14px !important; }
+           /* Hero 1 */
+           .lnd-hero1-section { padding: 2.5rem 1.2rem 3rem !important; }
+           .lnd-hero1-inner { flex-direction: column !important; gap: 1.5rem !important; }
+           .lnd-hero1-copy { min-width: unset !important; width: 100% !important; }
+           .lnd-hero1-phones { display: none !important; }
+           .lnd-hero1-h1 { font-size: 1.85rem !important; line-height: 1.2 !important; margin-bottom: 1rem !important; }
+           .lnd-hero1-p { font-size: 0.82rem !important; line-height: 1.7 !important; }
+           .lnd-hero1-cta { width: 100% !important; text-align: center !important; }
+           .lnd-hero1-btn { width: 100% !important; padding: 14px !important; font-size: 0.95rem !important; border-radius: 12px !important; }
 
           /* Klub */
-          .lnd-klub-inner { flex-direction: column !important; padding: 2rem 1.2rem !important; gap: 1.5rem !important; align-items: flex-start !important; }
-          .lnd-klub-img { width: 100% !important; height: 240px !important; border-radius: 12px !important; }
-          .lnd-klub-h2 { font-size: 2rem !important; }
-          .lnd-klub-sig { font-size: 1.35rem !important; }
+          .lnd-klub-inner { flex-direction: column !important; padding: 1.8rem 1.2rem !important; gap: 1.2rem !important; align-items: flex-start !important; }
+          .lnd-klub-img { width: 100% !important; height: 220px !important; border-radius: 12px !important; }
+          .lnd-klub-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+          .lnd-klub-sig { font-size: 1.15rem !important; }
 
           /* Features */
-          .lnd-features-section { padding: 3.5rem 1.2rem 4rem !important; }
-          .lnd-features-h2 { font-size: 2rem !important; }
-          .lnd-features-grid { grid-template-columns: 1fr !important; gap: 1.6rem !important; }
-          .lnd-feature-circle { width: 58px !important; height: 58px !important; flex-shrink: 0 !important; }
-          .lnd-feature-circle svg { width: 28px !important; height: 28px !important; }
+          .lnd-features-section { padding: 2.8rem 1.2rem 3.2rem !important; }
+          .lnd-features-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+          .lnd-features-grid { grid-template-columns: 1fr !important; gap: 1.4rem !important; }
+          .lnd-feature-circle { width: 52px !important; height: 52px !important; flex-shrink: 0 !important; }
+          .lnd-feature-circle svg { width: 24px !important; height: 24px !important; }
 
           /* Partner section */
-          .lnd-partner-section { padding: 3rem 1.2rem !important; }
-          .lnd-partner-inner { flex-direction: column !important; gap: 2rem !important; }
+          .lnd-partner-section { padding: 2.5rem 1.2rem !important; }
+          .lnd-partner-inner { flex-direction: column !important; gap: 1.6rem !important; }
           .lnd-partner-copy { max-width: 100% !important; }
-          .lnd-partner-h2 { font-size: 2rem !important; }
-          .lnd-partner-btn { width: 100% !important; padding: 16px !important; border-radius: 14px !important; font-size: 1rem !important; }
-          .lnd-partner-cards { flex-direction: column !important; gap: 12px !important; width: 100% !important; }
-          .lnd-partner-card { width: 100% !important; }
+          .lnd-partner-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+          .lnd-partner-btn { width: 100% !important; padding: 14px !important; border-radius: 12px !important; font-size: 0.95rem !important; }
+          .lnd-partner-cards { flex-direction: column !important; gap: 10px !important; width: 100% !important; }
+          .lnd-partner-card { width: 100% !important; font-size: 0.8rem !important; }
 
           /* Footer */
-          .lnd-footer { padding: 2.5rem 1.2rem 1.5rem !important; }
-        }
+          .lnd-footer { padding: 2rem 1.2rem !important; }
+          }
       `}</style>
     </div>);
 
