@@ -313,11 +313,16 @@ export default function Landing() {
         .lnd-partner-cards { display: flex !important; }
 
         @media (max-width: 900px) {
-          .lnd-hero1-phones { display: none !important; }
-          .lnd-hero1-section { padding: 4rem 1.5rem 4rem !important; }
-          .lnd-features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem 2rem !important; }
-          .lnd-klub-inner { flex-direction: column !important; padding: 2.5rem 1.5rem !important; gap: 2rem !important; align-items: flex-start !important; }
-          .lnd-klub-img { width: 100% !important; height: 280px !important; }
+           .lnd-hero1-phones { display: none !important; }
+           .lnd-hero1-section { padding: 4rem 1.5rem 4rem !important; }
+           .lnd-hero1-inner { align-items: flex-start !important; }
+           .lnd-hero1-copy { flex: 0 0 100% !important; }
+           .lnd-features-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem 2rem !important; }
+           .lnd-klub-inner { flex-direction: column !important; padding: 2.5rem 1.5rem !important; gap: 2rem !important; align-items: flex-start !important; }
+           .lnd-klub-img { width: 100% !important; height: 280px !important; }
+           .lnd-partner-inner { flex-direction: column !important; align-items: flex-start !important; }
+           .lnd-partner-copy { max-width: 100% !important; flex: 0 0 100% !important; }
+           .lnd-partner-cards { flex-direction: row !important; flex-wrap: wrap !important; width: 100% !important; }
         }
 
         @media (max-width: 600px) {
@@ -328,12 +333,12 @@ export default function Landing() {
 
            /* Hero 1 */
            .lnd-hero1-section { padding: 2.5rem 1.2rem 3rem !important; }
-           .lnd-hero1-inner { flex-direction: column !important; gap: 1.5rem !important; }
-           .lnd-hero1-copy { min-width: unset !important; width: 100% !important; }
+           .lnd-hero1-inner { flex-direction: column !important; gap: 1.5rem !important; align-items: flex-start !important; }
+           .lnd-hero1-copy { min-width: unset !important; width: 100% !important; flex: 0 0 100% !important; }
            .lnd-hero1-phones { display: none !important; }
            .lnd-hero1-h1 { font-size: 1.85rem !important; line-height: 1.2 !important; margin-bottom: 1rem !important; }
-           .lnd-hero1-p { font-size: 0.82rem !important; line-height: 1.7 !important; }
-           .lnd-hero1-cta { width: 100% !important; text-align: center !important; }
+           .lnd-hero1-p { font-size: 0.82rem !important; line-height: 1.7 !important; max-width: 100% !important; }
+           .lnd-hero1-cta { width: 100% !important; text-align: left !important; }
            .lnd-hero1-btn { width: 100% !important; padding: 14px !important; font-size: 0.95rem !important; border-radius: 12px !important; }
 
           /* Klub */
@@ -350,13 +355,14 @@ export default function Landing() {
           .lnd-feature-circle svg { width: 24px !important; height: 24px !important; }
 
           /* Partner section */
-          .lnd-partner-section { padding: 2.5rem 1.2rem !important; }
-          .lnd-partner-inner { flex-direction: column !important; gap: 1.6rem !important; }
-          .lnd-partner-copy { max-width: 100% !important; }
-          .lnd-partner-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
-          .lnd-partner-btn { width: 100% !important; padding: 14px !important; border-radius: 12px !important; font-size: 0.95rem !important; }
-          .lnd-partner-cards { flex-direction: column !important; gap: 10px !important; width: 100% !important; }
-          .lnd-partner-card { width: 100% !important; font-size: 0.8rem !important; }
+           .lnd-partner-section { padding: 2.5rem 1.2rem !important; }
+           .lnd-partner-inner { flex-direction: column !important; gap: 1.6rem !important; align-items: flex-start !important; }
+           .lnd-partner-copy { max-width: 100% !important; flex: 0 0 100% !important; }
+           .lnd-partner-copy p { max-width: 100% !important; }
+           .lnd-partner-h2 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+           .lnd-partner-btn { width: 100% !important; padding: 14px !important; border-radius: 12px !important; font-size: 0.95rem !important; }
+           .lnd-partner-cards { flex-direction: column !important; gap: 10px !important; width: 100% !important; flex: 0 0 100% !important; }
+           .lnd-partner-card { width: 100% !important; }
 
           /* Footer */
           .lnd-footer { padding: 2rem 1.2rem !important; }
