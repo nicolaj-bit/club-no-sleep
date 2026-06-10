@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.31",
+    "@base44/sdk": "^0.8.32",
     "@base44/vite-plugin": "^1.0.21",
     "@capgo/capacitor-calendar": "^8.0.1",
     "@hello-pangea/dnd": "^17.0.0",
