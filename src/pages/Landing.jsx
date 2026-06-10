@@ -67,8 +67,28 @@ export default function Landing() {
               <strong>CLUB NO SLEEP</strong> er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
             </p>
 
-            <div className="lnd-hero1-cta">
-              <button className="lnd-hero1-btn" onClick={handleLogin} style={btnBrown}>Hent app</button>
+            <div className="lnd-hero1-cta" style={{ display: 'flex', gap: 12, flexDirection: 'column' }}>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 6.5a2.5 2.5 0 0 1 5 0v11a2.5 2.5 0 0 1-5 0v-11zm6-2a2.5 2.5 0 0 1 5 0v13a2.5 2.5 0 0 1-5 0v-13zm6-1a2.5 2.5 0 0 1 5 0v14a2.5 2.5 0 0 1-5 0v-14z" />
+                  </svg>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Google Play</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Download now</div>
+                  </div>
+                </a>
+                <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.05 13.5c-.91 0-1.82-.55-2.25-1.52h-5.6c-.43.97-1.34 1.52-2.25 1.52-1.97 0-3.5-1.6-3.5-3.5s1.53-3.5 3.5-3.5c.91 0 1.82.55 2.25 1.52h5.6c.43-.97 1.34-1.52 2.25-1.52 1.97 0 3.5 1.6 3.5 3.5s-1.53 3.5-3.5 3.5z" />
+                  </svg>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>App Store</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Download now</div>
+                  </div>
+                </a>
+              </div>
+              <button className="lnd-hero1-btn" onClick={handleLogin} style={btnBrown}>Bliv medlem</button>
             </div>
           </div>
 
@@ -338,7 +358,9 @@ export default function Landing() {
            .lnd-hero1-phones { display: none !important; }
            .lnd-hero1-h1 { font-size: 1.85rem !important; line-height: 1.2 !important; margin-bottom: 1rem !important; }
            .lnd-hero1-p { font-size: 0.82rem !important; line-height: 1.7 !important; max-width: 100% !important; }
-           .lnd-hero1-cta { width: 100% !important; text-align: left !important; }
+           .lnd-hero1-cta { width: 100% !important; text-align: left !important; flex-direction: column !important; }
+           .lnd-hero1-cta > div:first-child { flex-direction: column !important; }
+           .lnd-hero1-cta a { flex: 0 0 auto !important; width: 100% !important; }
            .lnd-hero1-btn { width: 100% !important; padding: 14px !important; font-size: 0.95rem !important; border-radius: 12px !important; }
 
           /* Klub */
