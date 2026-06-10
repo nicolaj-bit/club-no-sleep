@@ -70,8 +70,8 @@ export default function Landing() {
             <div className="lnd-hero1-cta" style={{ display: 'flex', gap: 12, flexDirection: 'column' }}>
               <div style={{ display: 'flex', gap: 12 }}>
                 <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 3v18l15-9L3 3zm16 9l5 3.27V8.73L19 12z" />
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.49 1.49 0 0 0-.227.819v20.512c0 .33.094.638.218.9l11.339-11.354L1.337.924zm10.964 11.275L1.164 23.448a1.49 1.49 0 0 0 .56-.109l13.129-7.484-2.552-2.56zm0-1.24l2.555-2.558L1.724.291A1.49 1.49 0 0 0 1.164.18L12.3 10.96z"/>
                   </svg>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Google Play</div>
@@ -79,8 +79,8 @@ export default function Landing() {
                   </div>
                 </a>
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.3-3.14-2.53C4.25 17 2.94 12.14 4.6 9.02c.87-1.63 2.25-2.84 3.56-2.9 1.31-.05 2.56.87 3.83.87 1.27 0 2.26-.87 3.85-.87 1.63 0 2.67 1.12 3.56 2.84.87 1.63.64 4.18-.56 5.92zM12 5.5c1.33-1.23 2.25-2.89 2-4.5-1.16.09-2.42.78-3.2 1.9-.7.84-1.18 1.86-1.06 2.96 1.06.09 2.15-.59 2.26-1.36z" />
+                  <svg width="22" height="22" viewBox="0 0 814 1000" fill="currentColor">
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
                   </svg>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>App Store</div>
