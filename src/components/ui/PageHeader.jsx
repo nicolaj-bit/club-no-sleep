@@ -32,11 +32,11 @@ export default function PageHeader({
             }),
       }}
     >
-      <div className="flex items-center justify-between gap-3 px-4 py-2">
+      <div className="flex items-center justify-between gap-3 px-4 py-1">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <button
             onClick={handleBack}
-            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
+            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
             style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
