@@ -20,7 +20,7 @@ export default function PageHeader({
 
   return (
     <header
-      className={cn('sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300', className)}
+      className={cn('sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300 shadow-sm', className)}
       style={{
         transform: visible ? 'translateY(0)' : 'translateY(-110%)',
         ...(transparent
@@ -32,7 +32,7 @@ export default function PageHeader({
             }),
       }}
     >
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 px-4 py-2">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <button
             onClick={handleBack}
