@@ -7,7 +7,7 @@ import { useTheme } from './ThemeProvider';
 
 export default function PageHeader({
   title,
-  backUrl = '/',
+  backUrl = '/Home',
   onBack,
   rightAction,
   className,
