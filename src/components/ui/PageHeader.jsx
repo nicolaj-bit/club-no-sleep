@@ -32,7 +32,7 @@ export default function PageHeader({
             }),
       }}
     >
-      <div className="flex items-center justify-between gap-2 px-3 py-0.5">
+      <div className="flex items-center justify-between gap-2 px-4 py-1.5">
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <button
           onClick={handleBack}
