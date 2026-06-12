@@ -66,6 +66,11 @@
       "type": "boolean",
       "default": false,
       "description": "Om notifikation 30 min f\u00f8r er sendt"
+    },
+    "notify_same_day_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om notifikation p\u00e5 selve dagen er sendt"
     }
   },
   "required": [
