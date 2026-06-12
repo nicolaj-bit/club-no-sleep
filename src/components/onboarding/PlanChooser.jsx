@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
@@ -25,7 +25,6 @@ export default function PlanChooser({ onChoose }) {
   const handleSubscribe = async () => {
     setLoading(true);
     try {
-      // Check if in iframe
       if (window.self !== window.top) {
         toast.error('Betaling virker kun fra den publicerede app – ikke i preview.');
         setLoading(false);
@@ -64,11 +63,10 @@ export default function PlanChooser({ onChoose }) {
           Anbefalet
         </div>
         <p className="text-white text-xs font-semibold uppercase tracking-widest mb-1 opacity-80">Fuld adgang</p>
-        <div className="flex items-end gap-1 mb-1">
-          <span className="text-4xl font-bold text-white">59 kr.</span>
+        <div className="flex items-end gap-1 mb-4">
+          <span className="text-4xl font-bold text-white">69 kr.</span>
           <span className="text-white opacity-70 mb-1">/ md.</span>
         </div>
-        <p className="text-white text-xs opacity-70 mb-4">Første 30 dage er gratis</p>
 
         <ul className="space-y-1.5 mb-5">
           {PREMIUM_FEATURES.map(f => (
@@ -85,7 +83,7 @@ export default function PlanChooser({ onChoose }) {
           className="w-full py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2"
           style={{ backgroundColor: '#fff', color: '#5B3F2B' }}
         >
-          {loading ? 'Åbner betaling...' : <><Sparkles className="w-4 h-4" /> Start gratis i 30 dage</>}
+          {loading ? 'Åbner betaling...' : <><Sparkles className="w-4 h-4" /> Kom i gang</>}
         </button>
       </div>
 
