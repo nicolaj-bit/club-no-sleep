@@ -21,32 +21,16 @@ function getAgeInDays(dueDateStr) {
   return Math.floor(diffMs / (24 * 60 * 60 * 1000));
 }
 
-// Send OneSignal push to a specific user (Android only)
-async function sendOneSignalToUser(email, title, message) {
-  const appId = Deno.env.get('ONESIGNAL_APP_ID');
-  const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
-
-  const body = {
-    app_id: appId,
-    include_aliases: { external_id: [email] },
-    target_channel: 'push',
-    isIos: false,
-    isAndroid: true,
-    headings: { en: title, da: title },
-    contents: { en: message, da: message },
-    url: 'https://app.lalatoto.dk/Knowledge',
-  };
-
-  const res = await fetch('https://onesignal.com/api/v1/notifications', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${apiKey}`,
-    },
-    body: JSON.stringify(body),
+// Opret in-app notifikation i AppNotification entiteten
+async function createInAppNotification(base44, email, title, message, leap) {
+  await base44.asServiceRole.entities.AppNotification.create({
+    title,
+    message,
+    emoji: '🌟',
+    link: '/Knowledge',
+    target_emails: [email],
+    published_at: new Date().toISOString(),
   });
-
-  return res.ok;
 }
 
 // Send email fallback for iOS users
@@ -79,13 +63,13 @@ Deno.serve(async (req) => {
       const title = `🌟 ${leap.name}`;
       const message = `Dit barn starter på ${leap.name} i morgen! Læs om hvad du kan forvente.`;
 
-      // Forsøg OneSignal push (virker på Android)
-      const pushSent = await sendOneSignalToUser(profile.user_email, title, message);
+      // Opret in-app notifikation (vises i klokken i appen)
+      await createInAppNotification(base44, profile.user_email, title, message, leap);
 
-      // Send altid email som fallback (dækker iOS-brugere)
+      // Send email som backup
       await sendEmailFallback(base44, profile.user_email, leap.name);
 
-      console.log(`Notifikation sendt til ${profile.user_email}: push=${pushSent}, email=true`);
+      console.log(`Notifikation sendt til ${profile.user_email}: in-app=true, email=true`);
       notificationsSent++;
     }
 

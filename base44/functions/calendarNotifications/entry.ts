@@ -1,28 +1,17 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
-const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
-
-async function sendPushToEmails(emails, title, message) {
-  const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
-
-  const body = {
-    app_id: ONESIGNAL_APP_ID,
-    include_aliases: { external_id: emails },
-    target_channel: 'push',
-    headings: { en: title, da: title },
-    contents: { en: message, da: message },
-  };
-
-  const res = await fetch('https://onesignal.com/api/v1/notifications', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${apiKey}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  return res.json();
+// Opret in-app notifikationer for en liste af emails
+async function createInAppNotifications(base44, emails, title, message, emoji, link) {
+  for (const email of emails) {
+    await base44.asServiceRole.entities.AppNotification.create({
+      title,
+      message,
+      emoji: emoji || '🗓️',
+      link: link || '/Calendar',
+      target_emails: [email],
+      published_at: new Date().toISOString(),
+    });
+  }
 }
 
 async function sendEmailFallback(base44, email, eventTitle, eventTime, isReminder30min) {
@@ -163,7 +152,7 @@ Deno.serve(async (req) => {
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
         const title = `🗓️ Husk: ${event.title}`;
         const msg = `Aftale i morgen kl. ${timeStr} — ${dateStr}`;
-        await sendPushToEmails(emailsToNotify, title, msg);
+        await createInAppNotifications(base44, emailsToNotify, title, msg, '🗓️', '/Calendar');
         for (const email of emailsToNotify) {
           await sendEmailFallback(base44, email, event.title, timeStr, false);
         }
@@ -176,7 +165,7 @@ Deno.serve(async (req) => {
         const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
         const title = `⏰ Snart: ${event.title}`;
         const msg = `Starter kl. ${timeStr} — om 30 minutter`;
-        await sendPushToEmails(emailsToNotify, title, msg);
+        await createInAppNotifications(base44, emailsToNotify, title, msg, '⏰', '/Calendar');
         for (const email of emailsToNotify) {
           await sendEmailFallback(base44, email, event.title, timeStr, true);
         }
