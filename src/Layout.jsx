@@ -11,8 +11,6 @@ import NotificationPrompt from '@/components/ui/NotificationPrompt';
 import { ActiveProfileProvider } from '@/components/ui/ActiveProfileContext';
 import { ActiveChildProvider } from '@/components/ui/ActiveChildContext';
 
-const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
-
 // Pages that should NOT show bottom nav
 // AIChat is a full-screen immersive UI — suppress the nav, but it remains accessible via the bottom tab AI button
 const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding', 'Subscription'];
@@ -40,53 +38,7 @@ export default function Layout({ children, currentPageName }) {
     loadUser();
   }, []);
 
-  useEffect(() => {
-    const isCapacitor = !!window.Capacitor;
 
-    const loginUser = async (OneSignalInstance) => {
-      try {
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const u = await base44.auth.me();
-          if (u?.email) {
-            OneSignalInstance.login(u.email);
-          }
-        }
-      } catch (_) {}
-    };
-
-    if (isCapacitor) {
-      // Native iOS/Android via Capacitor — brug den installerede @onesignal/capacitor-plugin
-      import('@onesignal/capacitor-plugin').then(({ OneSignal }) => {
-        OneSignal.initialize(ONESIGNAL_APP_ID);
-        OneSignal.Notifications.requestPermission(true);
-        loginUser(OneSignal);
-      }).catch((err) => {
-        console.warn('OneSignal Capacitor plugin fejl:', err);
-      });
-    } else {
-      // Web / PWA
-      const script = document.createElement('script');
-      script.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
-      script.defer = true;
-      document.head.appendChild(script);
-
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      window.OneSignalDeferred.push(async (OneSignal) => {
-        await OneSignal.init({
-          appId: ONESIGNAL_APP_ID,
-          allowLocalhostAsSecureOrigin: true,
-        });
-        loginUser(OneSignal);
-      });
-
-      return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
-      };
-    }
-  }, []);
 
   return (
     <ThemeProvider>
