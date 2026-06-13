@@ -183,7 +183,7 @@ export default function Landing() {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00'} style={{ width: '100%', backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 600, cursor: 'pointer' }}>
+              <button onClick={() => base44.auth.redirectToLogin('/app')} style={{ width: '100%', backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 600, cursor: 'pointer' }}>
                 Fortsæt med demo →
               </button>
             </div>
