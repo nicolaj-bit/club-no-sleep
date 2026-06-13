@@ -24,6 +24,7 @@ import Practitioners from './pages/Practitioners';
 import Milestones from './pages/Milestones';
 import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
 import AdminSupport from './pages/AdminSupport';
+import AdminLanding from './pages/AdminLanding';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -84,6 +85,7 @@ const AuthenticatedApp = () => {
         <Route path="/Milestones" element={<LayoutWrapper currentPageName="Milestones"><Milestones /></LayoutWrapper>} />
         <Route path="/BabyFriendlyCafes" element={<LayoutWrapper currentPageName="BabyFriendlyCafes"><BabyFriendlyCafes /></LayoutWrapper>} />
         <Route path="/AdminSupport" element={<LayoutWrapper currentPageName="AdminSupport"><AdminSupport /></LayoutWrapper>} />
+        <Route path="/AdminLanding" element={<LayoutWrapper currentPageName="AdminLanding"><AdminLanding /></LayoutWrapper>} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>

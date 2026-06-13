@@ -7,9 +7,30 @@ import FeaturesList from '@/components/landing/FeaturesList';
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
   const [legalModal, setLegalModal] = useState(null);
+  const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
+    
+    // Load phone image URLs from config
+    const loadPhoneUrls = async () => {
+      try {
+        const configs = await base44.entities.AppConfig.list();
+        const landingConfig = configs.find(c => c.key === 'landing_phones');
+        if (landingConfig) {
+          setPhoneUrls({
+            a: landingConfig.phone_a_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',
+            b: landingConfig.phone_b_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png',
+          });
+        }
+      } catch (e) {
+        setPhoneUrls({
+          a: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',
+          b: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png',
+        });
+      }
+    };
+    loadPhoneUrls();
   }, []);
 
   const handleLogin = () => base44.auth.redirectToLogin('/app');
@@ -94,8 +115,8 @@ export default function Landing() {
 
           {/* Right — two iPhones with screenshots */}
            <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
-             <IPhoneMockup imageUrl="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png" width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />
-             <IPhoneMockup imageUrl="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png" width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />
+             {phoneUrls.a && <IPhoneMockup imageUrl={phoneUrls.a} width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />}
+             {phoneUrls.b && <IPhoneMockup imageUrl={phoneUrls.b} width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />}
            </div>
         </div>
       </section>
