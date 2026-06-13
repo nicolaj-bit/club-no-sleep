@@ -2,58 +2,63 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Baby, Award, Zap, Lightbulb, Coffee, Calendar, Moon, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
+const ICON_SIZE = 58;
+const ICON_COLOR = "#5B3A28";
+const ICON_STROKE = 1.5;
+const CIRCLE_SIZE = 100;
+
 const features = [
   {
     key: 'graviditet',
-    icon: <Baby size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Baby size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Graviditeten uge for uge',
     desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til \u201det lille næste skridt\u201d.',
   },
   {
     key: 'milepæle',
-    icon: <Award size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Award size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Milepæle',
     desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.',
   },
   {
     key: 'tigerspring',
-    icon: <Zap size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Zap size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Tigerspring',
     desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.',
   },
   {
     key: 'lys',
-    icon: <Lightbulb size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Lightbulb size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Et lys i mørket',
     desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.',
   },
   {
     key: 'caféer',
-    icon: <Coffee size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Coffee size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Babyvenlige caféer',
     desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.',
   },
   {
     key: 'kalender',
-    icon: <Calendar size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Calendar size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Kalender',
     desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.',
   },
   {
     key: 'søvn',
-    icon: <Moon size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <Moon size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Søvnlog',
     desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.',
   },
   {
     key: 'fællesskab',
-    icon: <MessageCircle size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <MessageCircle size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Fællesskab',
     desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.',
   },
   {
     key: 'valg',
-    icon: <CheckCircle2 size={72} color="#5B3A28" strokeWidth={2} />,
+    icon: <CheckCircle2 size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
     title: 'Din app dine valg',
     desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.',
   },
@@ -62,9 +67,19 @@ const features = [
 function FeatureCard({ f, imageUrl }) {
   return (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-      <div style={{ width: 100, height: 100, borderRadius: '50%', backgroundColor: '#D4B99A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+      <div style={{
+        width: CIRCLE_SIZE,
+        height: CIRCLE_SIZE,
+        borderRadius: '50%',
+        backgroundColor: '#D4B99A',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        overflow: 'hidden',
+      }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: '85%', height: '85%', objectFit: 'contain' }} />
+          <img src={imageUrl} alt={f.title} style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
@@ -88,6 +103,7 @@ export default function FeaturesList() {
       }
     }).catch(() => {});
   }, []);
+
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
 
@@ -116,7 +132,6 @@ export default function FeaturesList() {
 
       {/* Mobile: swipe carousel */}
       <div className="lnd-features-carousel" style={{ display: 'none' }}>
-        {/* Slide */}
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
