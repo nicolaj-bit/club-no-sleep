@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 const ICON_SIZE = 110;
 const ICON_COLOR = "#5B3A28";
 const ICON_STROKE = 1.5;
-const CIRCLE_SIZE = 110;
+const CIRCLE_SIZE = 90;
 
 const features = [
   {
@@ -70,13 +70,16 @@ function FeatureCard({ f, imageUrl }) {
       <div style={{
         width: CIRCLE_SIZE,
         height: CIRCLE_SIZE,
+        borderRadius: '50%',
+        backgroundColor: '#E8D9CC',
         flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        overflow: 'hidden',
       }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE, objectFit: 'contain' }} />
+          <img src={imageUrl} alt={f.title} style={{ width: '70%', height: '70%', objectFit: 'contain' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
