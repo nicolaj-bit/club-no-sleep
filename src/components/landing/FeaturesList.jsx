@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Baby, Award, Zap, Lightbulb, Coffee, Calendar, Moon, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const ICON_SIZE = 100;
+const ICON_SIZE = 110;
 const ICON_COLOR = "#5B3A28";
 const ICON_STROKE = 1.5;
-const CIRCLE_SIZE = 100;
+const CIRCLE_SIZE = 110;
 
 const features = [
   {
