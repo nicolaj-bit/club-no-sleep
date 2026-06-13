@@ -118,6 +118,59 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
+           HERO 2 — "Alt du behøver" (features + pris)
+        ════════════════════════════════ */}
+      <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
+        <div style={{ maxWidth: 1060, margin: '0 auto' }}>
+
+          {/* Headline */}
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.8rem' }}>
+              Alt du behøver som ny forælder
+            </h2>
+            <p style={{ color: '#4A3525', fontSize: '0.9rem', lineHeight: 1.8, maxWidth: 480, margin: '0 auto 1.2rem' }}>
+              Én app. Ét fællesskab. Fuld adgang for kun <strong>59 kr./md.</strong>
+            </p>
+            <svg width="18" height="16" viewBox="0 0 18 16" fill="none" style={{ display: 'inline-block' }}>
+              <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5" />
+            </svg>
+          </div>
+
+          {/* Feature grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
+            {[
+              { emoji: '🌙', title: 'Søvnrådgivning', desc: 'AI-baseret søvnrådgivning tilpasset dit barns alder og rutiner.' },
+              { emoji: '🐯', title: 'Tigerspring', desc: 'Følg barnets udviklingsspring og forstå, hvad der sker i hjernen.' },
+              { emoji: '💬', title: 'Fællesskab', desc: 'Chat med andre forældre, der er vågne samtidig med dig.' },
+              { emoji: '👩‍⚕️', title: 'Ekspert booking', desc: 'Book tid hos jordemoder, osteopat, søvnkonsulent og flere.' },
+              { emoji: '📚', title: '100+ artikler', desc: 'Videnscenter med ekspertartikler om alt fra amning til søvn.' },
+              { emoji: '📅', title: 'Fælles kalender', desc: 'Del kalender og milestene med din partner – gratis.' },
+            ].map(({ emoji, title, desc }) => (
+              <div key={title} style={{ backgroundColor: '#F3E9E1', borderRadius: 16, padding: '1.4rem 1.5rem' }}>
+                <span style={{ fontSize: '1.6rem', display: 'block', marginBottom: 10 }}>{emoji}</span>
+                <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.1rem', fontWeight: 600, color: '#1E140A', margin: '0 0 6px' }}>{title}</p>
+                <p style={{ color: '#4A3525', fontSize: '0.82rem', lineHeight: 1.7, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Price CTA */}
+          <div style={{ textAlign: 'center', backgroundColor: '#3A2416', borderRadius: 20, padding: '2.5rem 2rem', maxWidth: 540, margin: '0 auto' }}>
+            <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.8rem', fontWeight: 400, color: '#F5EFE9', margin: '0 0 0.4rem' }}>Fuld adgang</p>
+            <p style={{ color: '#C8A882', fontSize: '0.85rem', margin: '0 0 1.2rem' }}>Ingen binding — opsig når som helst</p>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '1.6rem' }}>
+              <span style={{ fontSize: '3rem', fontWeight: 700, color: '#F5EFE9' }}>59 kr.</span>
+              <span style={{ color: '#C8A882', fontSize: '0.9rem' }}>/ måned</span>
+            </div>
+            <button onClick={() => window.location.href = '/Onboarding'} style={{ backgroundColor: '#C8A882', color: '#1E140A', border: 'none', borderRadius: 12, padding: '14px 40px', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', width: '100%' }}>
+              Bliv medlem →
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ════════════════════════════════
            "Kom med i klubben"
         ════════════════════════════════ */}
       <section style={{ backgroundColor: '#D9C9AE', position: 'relative', overflow: 'hidden' }}>

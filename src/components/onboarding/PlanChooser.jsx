@@ -64,7 +64,7 @@ export default function PlanChooser({ onChoose }) {
         </div>
         <p className="text-white text-xs font-semibold uppercase tracking-widest mb-1 opacity-80">Fuld adgang</p>
         <div className="flex items-end gap-1 mb-4">
-          <span className="text-4xl font-bold text-white">69 kr.</span>
+          <span className="text-4xl font-bold text-white">59 kr.</span>
           <span className="text-white opacity-70 mb-1">/ md.</span>
         </div>
 
