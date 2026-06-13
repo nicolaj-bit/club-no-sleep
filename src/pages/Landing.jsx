@@ -114,7 +114,7 @@ export default function Landing() {
           </div>
 
           {/* Right — app mockup image */}
-           <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+           <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5EDE0', borderRadius: 24 }}>
              <img
                src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/df2192b66_Skrmbillede2026-06-13094438.png"
                alt="Club No Sleep app"
