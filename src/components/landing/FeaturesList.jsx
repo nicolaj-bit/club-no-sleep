@@ -79,7 +79,7 @@ function FeatureCard({ f, imageUrl }) {
         overflow: 'hidden',
       }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: '70%', height: '70%', objectFit: 'contain' }} />
+          <img src={imageUrl} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
