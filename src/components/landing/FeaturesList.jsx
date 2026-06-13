@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Baby, Award, Zap, Lightbulb, Coffee, Calendar, Moon, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const ICON_SIZE = 58;
+const ICON_SIZE = 100;
 const ICON_COLOR = "#5B3A28";
 const ICON_STROKE = 1.5;
 const CIRCLE_SIZE = 100;
@@ -70,16 +70,13 @@ function FeatureCard({ f, imageUrl }) {
       <div style={{
         width: CIRCLE_SIZE,
         height: CIRCLE_SIZE,
-        borderRadius: '50%',
-        backgroundColor: '#D4B99A',
+        flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flexShrink: 0,
-        overflow: 'hidden',
       }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+          <img src={imageUrl} alt={f.title} style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE, objectFit: 'contain' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
