@@ -73,16 +73,14 @@ function FeatureCard({ f, imageUrl }) {
         borderRadius: '50%',
         backgroundColor: '#E8D9CC',
         flexShrink: 0,
-        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         overflow: 'hidden',
       }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-        ) : (
-          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {f.icon}
-          </div>
-        )}
+          <img src={imageUrl} alt={f.title} style={{ width: '70%', height: '70%', objectFit: 'contain' }} />
+        ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
         <p style={{ color: '#1E140A', fontSize: '0.88rem', fontWeight: 600, margin: '0 0 6px', lineHeight: 1.3 }}>{f.title}</p>
