@@ -105,17 +105,6 @@ export default function Onboarding() {
       accepted_at: new Date().toISOString(),
     });
 
-    // Check for pending family invite
-    const pendingInviteId = sessionStorage.getItem('pending_invite_id');
-    if (pendingInviteId) {
-      sessionStorage.removeItem('pending_invite_id');
-      try {
-        await base44.functions.invoke('acceptFamilyInvite', { invite_id: pendingInviteId });
-      } catch (e) {
-        console.error('Could not accept family invite after onboarding:', e);
-      }
-    }
-
     // Onboarding done — go to home
     window.location.href = '/app';
   };

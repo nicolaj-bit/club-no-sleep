@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const appUrl = `https://lalatoto.dk/AcceptInvite?invite=${invite_id}`;
+    const appUrl = `https://clubnosleep.com/AcceptInvite?invite=${invite_id}`;
 
     await base44.integrations.Core.SendEmail({
       to: invitee_email,
@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
             Acceptér invitation
           </a>
           <p style="color: #9C816A; font-size: 13px; margin-top: 16px;">
-            Du opretter en gratis profil og får automatisk adgang via ${inviter_name}s abonnement — du skal ikke betale noget.
+            Du opretter en konto med blot dit navn og password — og får automatisk adgang via ${inviter_name}s abonnement. Du skal ikke betale noget.
           </p>
           <p style="color: #9C816A; font-size: 13px; margin-top: 32px;">
             Har du spørgsmål? Skriv til hej@lalatoto.dk

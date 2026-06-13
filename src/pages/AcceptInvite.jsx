@@ -7,12 +7,11 @@ import { useNavigate } from 'react-router-dom';
  * URL: /AcceptInvite?invite=<invite_id>
  *
  * Flow:
- * 1. Not logged in → redirect to login, come back here after
- * 2. Logged in, no profile → redirect to Onboarding (with invite param preserved)
- * 3. Logged in, has profile → call acceptFamilyInvite, then go to /app
+ * 1. Not logged in → redirect to signup (not onboarding), come back here after auth
+ * 2. Logged in → call acceptFamilyInvite → create a minimal UserProfile if missing → go to /app
  */
 export default function AcceptInvite() {
-  const [status, setStatus] = useState('loading'); // loading | accepting | done | error
+  const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -29,7 +28,7 @@ export default function AcceptInvite() {
     const run = async () => {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
-        // Save invite id so we can pick it up after login/onboarding
+        // Save invite id and redirect to login/signup
         sessionStorage.setItem('pending_invite_id', inviteId);
         base44.auth.redirectToLogin(`/AcceptInvite?invite=${inviteId}`);
         return;
@@ -37,24 +36,30 @@ export default function AcceptInvite() {
 
       const user = await base44.auth.me();
 
-      // Check if profile exists
+      // Check if profile exists — if not, create a minimal one (skip onboarding)
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
       if (!profiles.length) {
-        // No profile yet — go through onboarding first, then come back
-        sessionStorage.setItem('pending_invite_id', inviteId);
-        navigate(`/Onboarding?invite=${inviteId}`, { replace: true });
-        return;
+        // Create a minimal profile so the user can access the app
+        const username = user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g, '') + '_' + Math.floor(Math.random() * 1000);
+        await base44.entities.UserProfile.create({
+          user_email: user.email,
+          username,
+          display_name: user.full_name || username,
+          profile_label: 'far', // default — they can change in settings
+          subscription_status: 'active',
+        });
       }
 
-      // Has profile — accept the invite
+      // Accept the invite
       setStatus('accepting');
       try {
         await base44.functions.invoke('acceptFamilyInvite', { invite_id: inviteId });
+        sessionStorage.removeItem('pending_invite_id');
         setStatus('done');
         setTimeout(() => navigate('/app', { replace: true }), 2000);
       } catch (e) {
         setStatus('error');
-        setMessage('Noget gik galt. Prøv igen eller kontakt support.');
+        setMessage('Noget gik galt. Prøv igen eller kontakt support på hej@clubnosleep.com');
       }
     };
 
@@ -77,7 +82,7 @@ export default function AcceptInvite() {
           {status === 'loading' || status === 'accepting'
             ? 'Vent venligst et øjeblik…'
             : status === 'done'
-            ? 'Du sender dig videre til appen nu…'
+            ? 'Du sendes videre til appen nu…'
             : message}
         </p>
         {(status === 'loading' || status === 'accepting') && (
