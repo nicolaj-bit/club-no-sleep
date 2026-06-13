@@ -28,6 +28,7 @@ import AdminLanding from './pages/AdminLanding';
 import AcceptInvite from './pages/AcceptInvite';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -92,6 +93,7 @@ const AuthenticatedApp = () => {
         <Route path="/AcceptInvite" element={<AcceptInvite />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/Privacy" element={<Privacy />} />
+        <Route path="/AdminTermsPrivacy" element={<LayoutWrapper currentPageName="AdminTermsPrivacy"><AdminTermsPrivacy /></LayoutWrapper>} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
