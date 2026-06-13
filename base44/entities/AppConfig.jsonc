@@ -39,6 +39,21 @@
       "type": "boolean",
       "default": false,
       "description": "Demo-tilstand: alle brugere f\u00e5r fuld adgang (bruges til App Store/Google Play review)"
+    },
+    "feature_icons": {
+      "type": "array",
+      "description": "Billede-URLs til feature-ikoner p\u00e5 forsiden",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "required": [
