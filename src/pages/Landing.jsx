@@ -113,10 +113,13 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Right — two iPhones with screenshots */}
-           <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', position: 'relative', width: 380, height: 500, flexShrink: 0 }}>
-             {phoneUrls.a && <IPhoneMockup imageUrl={phoneUrls.a} width={220} height={450} style={{ position: 'absolute', left: 0, top: 0, zIndex: 2 }} frameColor="#C8A882" />}
-             {phoneUrls.b && <IPhoneMockup imageUrl={phoneUrls.b} width={200} height={415} style={{ position: 'absolute', right: 0, top: 60, zIndex: 1 }} frameColor="#DDD0BC" />}
+          {/* Right — app mockup image */}
+           <div className="lnd-hero1-phones" style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+             <img
+               src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/df2192b66_Skrmbillede2026-06-13094438.png"
+               alt="Club No Sleep app"
+               style={{ width: 420, maxWidth: '100%', objectFit: 'contain' }}
+             />
            </div>
         </div>
       </section>
