@@ -5,55 +5,55 @@ import { base44 } from '@/api/base44Client';
 const features = [
   {
     key: 'graviditet',
-    icon: <Baby size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Baby size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Graviditeten uge for uge',
     desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til \u201det lille næste skridt\u201d.',
   },
   {
     key: 'milepæle',
-    icon: <Award size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Award size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Milepæle',
     desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.',
   },
   {
     key: 'tigerspring',
-    icon: <Zap size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Zap size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Tigerspring',
     desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.',
   },
   {
     key: 'lys',
-    icon: <Lightbulb size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Lightbulb size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Et lys i mørket',
     desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.',
   },
   {
     key: 'caféer',
-    icon: <Coffee size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Coffee size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Babyvenlige caféer',
     desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.',
   },
   {
     key: 'kalender',
-    icon: <Calendar size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Calendar size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Kalender',
     desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.',
   },
   {
     key: 'søvn',
-    icon: <Moon size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <Moon size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Søvnlog',
     desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.',
   },
   {
     key: 'fællesskab',
-    icon: <MessageCircle size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <MessageCircle size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Fællesskab',
     desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.',
   },
   {
     key: 'valg',
-    icon: <CheckCircle2 size={56} color="#8B6A50" strokeWidth={1.5} />,
+    icon: <CheckCircle2 size={58} color="#5B3A28" strokeWidth={2} />,
     title: 'Din app dine valg',
     desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.',
   },
@@ -62,9 +62,9 @@ const features = [
 function FeatureCard({ f, imageUrl }) {
   return (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-      <div style={{ width: 74, height: 74, borderRadius: '50%', backgroundColor: '#EBD8C4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+      <div style={{ width: 80, height: 80, borderRadius: '50%', backgroundColor: '#D4B99A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: 42, height: 42, objectFit: 'contain' }} />
+          <img src={imageUrl} alt={f.title} style={{ width: '85%', height: '85%', objectFit: 'contain' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
