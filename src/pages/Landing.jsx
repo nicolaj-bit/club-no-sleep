@@ -6,7 +6,6 @@ import FeaturesList from '@/components/landing/FeaturesList';
 
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
-  const [legalModal, setLegalModal] = useState(null);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
 
   useEffect(() => {
@@ -402,8 +401,8 @@ export default function Landing() {
             <div>
               <p style={{ color: '#5A4030', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px' }}>Juridisk</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-                <button onClick={() => setLegalModal('terms')} style={{ background: 'none', border: 'none', color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0 }}>Handelsbetingelser</button>
-                <button onClick={() => setLegalModal('privacy')} style={{ background: 'none', border: 'none', color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0 }}>Privatlivspolitik</button>
+                <a href="/Terms" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>Handelsbetingelser</a>
+                <a href="/Privacy" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>Privatlivspolitik</a>
               </div>
             </div>
             <div>
@@ -430,8 +429,7 @@ export default function Landing() {
         </div>
       </footer>
 
-      {legalModal === 'terms' && <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setLegalModal(null)} />}
-      {legalModal === 'privacy' && <LegalModal type="privacy" title="Privatlivspolitik" onClose={() => setLegalModal(null)} />}
+
 
       {/* Responsive */}
       <style>{`

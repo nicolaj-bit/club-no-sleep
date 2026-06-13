@@ -26,6 +26,8 @@ import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
 import AdminSupport from './pages/AdminSupport';
 import AdminLanding from './pages/AdminLanding';
 import AcceptInvite from './pages/AcceptInvite';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -88,6 +90,8 @@ const AuthenticatedApp = () => {
         <Route path="/AdminSupport" element={<LayoutWrapper currentPageName="AdminSupport"><AdminSupport /></LayoutWrapper>} />
         <Route path="/AdminLanding" element={<LayoutWrapper currentPageName="AdminLanding"><AdminLanding /></LayoutWrapper>} />
         <Route path="/AcceptInvite" element={<AcceptInvite />} />
+        <Route path="/Terms" element={<Terms />} />
+        <Route path="/Privacy" element={<Privacy />} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
