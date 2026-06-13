@@ -1,48 +1,49 @@
 import React, { useState, useRef } from 'react';
+import { Baby, Award, Zap, Lightbulb, Coffee, Calendar, Moon, MessageCircle, CheckCircle2 } from 'lucide-react';
 
 const features = [
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><ellipse cx="24" cy="28" rx="9" ry="11" /><path d="M18 17c0-5 3-9 6-9s6 4 6 9" /><path d="M13 33c-2 1.5-4 4-4 7" /><path d="M35 33c2 1.5 4 4 4 7" /><circle cx="21" cy="26" r="1.5" fill="#8B6A50" stroke="none" /><circle cx="27" cy="26" r="1.5" fill="#8B6A50" stroke="none" /><path d="M21 31 q3 2.5 6 0" /></svg>,
+    icon: <Baby size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Graviditeten uge for uge',
     desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til \u201det lille næste skridt\u201d.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><rect x="10" y="14" width="28" height="22" rx="3" /><path d="M10 21h28" /><path d="M17 10v8M31 10v8" /><path d="M17 28l4 4 10-8" /></svg>,
+    icon: <Award size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Milepæle',
     desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><circle cx="24" cy="27" r="12" /><path d="M20 21 q-5-8 2-13 q1 6 7 6 q4-4 6 0 q-6 2-6 8" /><circle cx="20" cy="28" r="1.5" fill="#8B6A50" stroke="none" /><circle cx="28" cy="28" r="1.5" fill="#8B6A50" stroke="none" /><path d="M20 32 q4 3 8 0" /></svg>,
+    icon: <Zap size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Tigerspring',
     desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><path d="M24 10 C14 10 10 18 10 24 C10 33 17 38 24 42 C31 38 38 33 38 24 C38 18 34 10 24 10Z" /><path d="M19 26 h10M24 21 v10" /></svg>,
+    icon: <Lightbulb size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Et lys i mørket',
     desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><path d="M14 38 C14 30 18 23 24 21 C24 21 22 15 28 13 C26 19 30 21 33 17 C35 23 31 27 28 29 C33 29 38 32 38 38" /><path d="M10 38 h28" /><ellipse cx="24" cy="37" rx="9" ry="3" /></svg>,
+    icon: <Coffee size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Babyvenlige caféer',
     desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><rect x="8" y="12" width="32" height="26" rx="3" /><path d="M8 20h32" /><path d="M16 8v8M32 8v8" /><rect x="14" y="26" width="6" height="6" rx="1" /><rect x="22" y="26" width="6" height="6" rx="1" /><rect x="30" y="26" width="6" height="6" rx="1" /></svg>,
+    icon: <Calendar size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Kalender',
     desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><path d="M32 12 L20 36" /><path d="M16 30 L20 36 L26 34" /><path d="M26 12 C26 12 36 14 34 22" /></svg>,
+    icon: <Moon size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Søvnlog',
     desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><path d="M8 33 C8 21 16 13 28 13 C34 13 39 17 39 23 C39 31 31 37 22 37 L9 42 Z" /><circle cx="19" cy="25" r="1.5" fill="#8B6A50" stroke="none" /><circle cx="26" cy="25" r="1.5" fill="#8B6A50" stroke="none" /><circle cx="33" cy="25" r="1.5" fill="#8B6A50" stroke="none" /></svg>,
+    icon: <MessageCircle size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Fællesskab',
     desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.',
   },
   {
-    icon: <svg viewBox="0 0 48 48" fill="none" stroke="#8B6A50" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ width: 34, height: 34 }}><rect x="8" y="8" width="32" height="32" rx="4" /><path d="M16 24 l6 6 12-12" /></svg>,
+    icon: <CheckCircle2 size={34} color="#8B6A50" strokeWidth={1.5} />,
     title: 'Din app dine valg',
     desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.',
   },
