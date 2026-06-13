@@ -119,6 +119,18 @@
       "type": "string",
       "format": "date-time",
       "description": "Planlagt opsigelsesdato (l\u00f8bende m\u00e5ned + 1 mdr.)"
+    },
+    "family_id": {
+      "type": "string",
+      "description": "F\u00e6lles familie-ID \u2014 deles af prim\u00e6r bruger og inviterede partnere. Kopi af prim\u00e6r brugers UserProfile ID."
+    },
+    "family_role": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "partner"
+      ],
+      "description": "Om brugeren er den prim\u00e6re (betalende) eller inviteret partner"
     }
   },
   "required": [

@@ -99,6 +99,7 @@ export default function FamilyInvite() {
         invitee_email: form.invitee_email,
         invitee_title: form.invitee_title,
         inviter_name: user.full_name || user.email,
+        invite_id: invite.id,
       });
 
       setInvites(prev => [invite, ...prev]);

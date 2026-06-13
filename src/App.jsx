@@ -25,6 +25,7 @@ import Milestones from './pages/Milestones';
 import BabyFriendlyCafes from './pages/BabyFriendlyCafes';
 import AdminSupport from './pages/AdminSupport';
 import AdminLanding from './pages/AdminLanding';
+import AcceptInvite from './pages/AcceptInvite';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -38,7 +39,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const isPublicRoute = location.pathname === '/';
+  const isPublicRoute = location.pathname === '/' || location.pathname === '/AcceptInvite';
 
   if (!isPublicRoute && (isLoadingPublicSettings || isLoadingAuth)) {
     return (
@@ -86,6 +87,7 @@ const AuthenticatedApp = () => {
         <Route path="/BabyFriendlyCafes" element={<LayoutWrapper currentPageName="BabyFriendlyCafes"><BabyFriendlyCafes /></LayoutWrapper>} />
         <Route path="/AdminSupport" element={<LayoutWrapper currentPageName="AdminSupport"><AdminSupport /></LayoutWrapper>} />
         <Route path="/AdminLanding" element={<LayoutWrapper currentPageName="AdminLanding"><AdminLanding /></LayoutWrapper>} />
+        <Route path="/AcceptInvite" element={<AcceptInvite />} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>

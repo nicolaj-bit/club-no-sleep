@@ -8,13 +8,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { invitee_email, invitee_title, inviter_name } = await req.json();
+    const { invitee_email, invitee_title, inviter_name, invite_id } = await req.json();
 
     if (!invitee_email || !invitee_title) {
       return Response.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const appUrl = 'https://lalatoto.dk';
+    const appUrl = `https://lalatoto.dk/AcceptInvite?invite=${invite_id}`;
 
     await base44.integrations.Core.SendEmail({
       to: invitee_email,
@@ -29,8 +29,11 @@ Deno.serve(async (req) => {
             Du får adgang til netop det, ${inviter_name} har valgt at dele med dig — og du kan modtage notifikationer om barnets tigerspring og vigtige aftaler.
           </p>
           <a href="${appUrl}" style="display: inline-block; background: #5C3317; color: #FAF6F1; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-size: 15px; font-weight: 600;">
-            Åbn LALATOTO
+            Acceptér invitation
           </a>
+          <p style="color: #9C816A; font-size: 13px; margin-top: 16px;">
+            Du opretter en gratis profil og får automatisk adgang via ${inviter_name}s abonnement — du skal ikke betale noget.
+          </p>
           <p style="color: #9C816A; font-size: 13px; margin-top: 32px;">
             Har du spørgsmål? Skriv til hej@lalatoto.dk
           </p>
