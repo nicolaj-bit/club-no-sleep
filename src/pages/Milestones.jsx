@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PageHeader from '@/components/ui/PageHeader';
 import MilestoneCamera from '@/components/milestones/MilestoneCamera';
-import BalloonSticker from '@/components/milestones/BalloonSticker';
+import TypeSticker from '@/components/milestones/TypeSticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
 import { Camera } from 'lucide-react';
 
@@ -114,7 +114,7 @@ function MilestoneRow({ frame, onCapture }) {
       >
         {frame.sticker_image
           ? <img src={frame.sticker_image} alt={frame.label} className="w-12 h-12 object-contain" />
-          : <BalloonSticker headline={cleanHeadline(frame.headline)} date={TODAY} size={40} />
+          : <TypeSticker headline={cleanHeadline(frame.headline)} date={TODAY} size={48} />
         }
       </div>
 

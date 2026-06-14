@@ -1,8 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook } from 'lucide-react';
 import { toast } from 'sonner';
-import WobblySticker from './WobblySticker';
-import BalloonSticker from './BalloonSticker';
+import TypeSticker from './TypeSticker';
 
 const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -163,63 +162,48 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, subline, da
 }
 
 function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
-  // Position: bottom-left corner, 6% margin
-  const S = canvasW * 0.44; // sticker diameter
-  const cx = S / 2 + canvasW * 0.05;
-  const cy = canvasH - S / 2 - canvasH * 0.05;
-
-  const outerR = S * 0.44;
-  const innerR = S * 0.365;
-
-  const strokeColor = '#8B6650';
-  const fillColor = '#D4B49A';
-  const textColor = '#6B4430';
-  const strokeW = S * 0.013;
+  const FS = canvasW * 0.042;
+  const DATE_FS = canvasW * 0.034;
+  const LINE_H = FS * 1.4;
+  const PAD_X = canvasW * 0.04;
+  const PAD_Y = canvasW * 0.022;
+  const GAP = canvasW * 0.018;
+  const maxWidth = canvasW * 0.72;
 
   ctx.save();
-
-  // Filled inner circle
-  canvasWobblePath(ctx, cx, cy, innerR, 2.1);
-  ctx.fillStyle = fillColor;
-  ctx.fill();
-
-  // Inner ring
-  canvasWobblePath(ctx, cx, cy, innerR, 2.1);
-  ctx.strokeStyle = strokeColor;
-  ctx.lineWidth = strokeW;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-  ctx.stroke();
-
-  // Outer ring
-  canvasWobblePath(ctx, cx, cy, outerR, 0.7);
-  ctx.strokeStyle = strokeColor;
-  ctx.lineWidth = strokeW * 0.85;
-  ctx.stroke();
-
-  // Text
-  const headlineFontSize = S * 0.118;
-  const dateFontSize = S * 0.093;
-  const lineHeight = headlineFontSize * 1.28;
-  const gap = S * 0.04;
-  const maxTextW = innerR * 1.6;
-
-  ctx.font = `400 ${headlineFontSize}px 'Caveat', cursive`;
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
+  ctx.font = `400 ${FS}px 'Courier New', Courier, monospace`;
   ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'left';
 
-  const lines = wrapTextCanvas(ctx, headline, maxTextW);
-  const blockHeight = lines.length * lineHeight + gap + dateFontSize;
-  const startY = cy - blockHeight / 2 + headlineFontSize * 0.72;
+  // Wrap headline
+  const lines = wrapTextCanvas(ctx, headline, maxWidth);
 
+  const headlineBlockH = lines.length * LINE_H;
+  const totalH = headlineBlockH + GAP + DATE_FS + PAD_Y * 2;
+
+  const x = canvasW * 0.05;
+  const y = canvasH - totalH - canvasH * 0.07;
+
+  // Headline rect
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x - PAD_X, y - PAD_Y, maxWidth + PAD_X * 2, headlineBlockH + PAD_Y * 2);
+
+  // Headline text
+  ctx.fillStyle = '#fff';
   lines.forEach((line, i) => {
-    ctx.font = `400 ${headlineFontSize}px 'Caveat', cursive`;
-    ctx.fillText(line, cx, startY + i * lineHeight);
+    ctx.font = `400 ${FS}px 'Courier New', Courier, monospace`;
+    ctx.fillText(line, x, y + FS + i * LINE_H);
   });
 
-  ctx.font = `400 ${dateFontSize}px 'Caveat', cursive`;
-  ctx.fillText(dateStr + '.', cx, startY + lines.length * lineHeight + gap + dateFontSize * 0.1);
+  // Date rect
+  ctx.font = `400 ${DATE_FS}px 'Courier New', Courier, monospace`;
+  const dateW = ctx.measureText(dateStr).width + PAD_X * 2;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x - PAD_X, y + headlineBlockH + PAD_Y * 2, dateW, DATE_FS + PAD_Y * 2);
+
+  // Date text
+  ctx.fillStyle = '#fff';
+  ctx.fillText(dateStr, x, y + headlineBlockH + PAD_Y * 2 + PAD_Y + DATE_FS);
 
   ctx.restore();
 }
@@ -291,7 +275,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     await loadFont();
     const canvas = canvasRef.current;
     drawSource(canvas);
-    drawBalloonStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, frame.subline || '', dateStr);
+    drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
     setMode('preview');
     sendMilestoneNotification();
@@ -396,8 +380,8 @@ export default function MilestoneCamera({ frame, onClose }) {
           />
 
           {/* Live sticker overlay */}
-          <div className="absolute bottom-28 left-5 pointer-events-none" style={{ filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.35))' }}>
-            <BalloonSticker headline={cleanHeadline} subline={frame.subline} date={dateStr} size={150} />
+          <div className="absolute bottom-28 left-5 pointer-events-none">
+            <TypeSticker headline={cleanHeadline} date={dateStr} size={200} />
           </div>
 
           {/* Top bar */}
