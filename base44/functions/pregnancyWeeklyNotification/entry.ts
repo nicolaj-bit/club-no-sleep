@@ -1,15 +1,15 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
+const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
 const WEEK_TITLES = {
-  4: 'Uge 4 – Det begynder!',
-  5: 'Uge 5 – Hjertet slår',
-  6: 'Uge 6 – Arme og ben spirer',
-  7: 'Uge 7 – Hjernen vokser',
-  8: 'Uge 8 – Alle organer anlagt',
-  9: 'Uge 9 – Barnet bevæger sig',
+  4:  'Uge 4 – Det begynder!',
+  5:  'Uge 5 – Hjertet slår',
+  6:  'Uge 6 – Arme og ben spirer',
+  7:  'Uge 7 – Hjernen vokser',
+  8:  'Uge 8 – Alle organer anlagt',
+  9:  'Uge 9 – Barnet bevæger sig',
   10: 'Uge 10 – Knoglerne hærder',
   11: 'Uge 11 – Næsten ud af første trimester',
   12: 'Uge 12 – Fingeraftryk dannes',
@@ -45,63 +45,87 @@ const WEEK_TITLES = {
   42: 'Uge 42 – Snart tid for igangsætning',
 };
 
+// Beregn graviditetsuge ud fra terminsdato (uge 40 = terminsdagen)
+// Returnerer null hvis ikke gravid (terminsdato passeret > 0 dage eller < uge 4)
+function getPregnancyWeek(dueDateStr) {
+  const due = new Date(dueDateStr);
+  due.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
+  const week = 40 - Math.floor(daysUntilDue / 7);
+  return week;
+}
+
+// Er det præcis første dag i en ny uge? (dage til termin deleligt med 7)
+function isNewWeekToday(dueDateStr) {
+  const due = new Date(dueDateStr);
+  due.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
+  // Ugen skifter hver 7. dag fra terminen tilbage
+  return daysUntilDue % 7 === 0;
+}
+
+async function sendPushNotification(email, title, message) {
+  if (!ONESIGNAL_APP_ID || !REST_API_KEY) return false;
+  const body = {
+    app_id: ONESIGNAL_APP_ID,
+    filters: [{ field: 'tag', key: 'email', relation: '=', value: email }],
+    headings: { da: title, en: title },
+    contents: { da: message, en: message },
+    url: 'https://lalatoto.dk/PregnancyWeeks',
+  };
+  const res = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${REST_API_KEY}`,
+    },
+    body: JSON.stringify(body),
+  });
+  return res.ok;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-
-    // Allow both admin calls and scheduled automation calls
-    let user = null;
-    try {
-      user = await base44.auth.me();
-      if (user && user.role !== 'admin') {
-        return Response.json({ error: 'Forbidden' }, { status: 403 });
-      }
-    } catch {
-      // Called from automation without user context — allowed
-    }
-
-    // Fetch all profiles with a due date set
     const profiles = await base44.asServiceRole.entities.UserProfile.list();
-    const today = new Date();
     let sent = 0;
 
     for (const profile of profiles) {
       if (!profile.child_due_date || !profile.user_email) continue;
 
-      const dueDate = new Date(profile.child_due_date);
-      const daysUntilDue = Math.round((dueDate - today) / (1000 * 60 * 60 * 24));
-      const currentWeek = 40 - Math.round(daysUntilDue / 7);
+      // Kun send notifikation på den dag ugen skifter
+      if (!isNewWeekToday(profile.child_due_date)) continue;
 
-      if (currentWeek < 4 || currentWeek > 42) continue;
+      const week = getPregnancyWeek(profile.child_due_date);
+      if (week < 4 || week > 42) continue;
 
-      const title = WEEK_TITLES[currentWeek] || `Graviditet uge ${currentWeek}`;
+      const title = WEEK_TITLES[week] || `Graviditet uge ${week}`;
+      const message = `🤰 Du er nu i uge ${week}. Åbn appen for at læse om din babys udvikling denne uge.`;
 
-      // Send targeted notification to this user via their email tag
-      const body = {
-        app_id: ONESIGNAL_APP_ID,
-        filters: [{ field: 'tag', key: 'email', relation: '=', value: profile.user_email }],
-        headings: { da: title, en: title },
-        contents: {
-          da: '🤰 Åben appen for at læse om din babys udvikling denne uge.',
-          en: '🤰 Open the app to read about your baby\'s development this week.'
-        },
-        url: 'https://lalatoto.dk/Knowledge',
-      };
-
-      const res = await fetch('https://onesignal.com/api/v1/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${REST_API_KEY}`,
-        },
-        body: JSON.stringify(body),
+      // In-app notifikation
+      await base44.asServiceRole.entities.AppNotification.create({
+        title,
+        message,
+        emoji: '🤰',
+        link: '/PregnancyWeeks',
+        target_emails: [profile.user_email],
+        published_at: new Date().toISOString(),
       });
 
-      if (res.ok) sent++;
+      // Push via OneSignal
+      await sendPushNotification(profile.user_email, title, message);
+
+      console.log(`Graviditetsuge ${week} notifikation sendt til ${profile.user_email}`);
+      sent++;
     }
 
     return Response.json({ success: true, notificationsSent: sent });
   } catch (error) {
+    console.error('pregnancyWeeklyNotification error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
