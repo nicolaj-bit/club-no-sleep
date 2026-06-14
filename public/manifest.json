@@ -2,7 +2,7 @@
   "name": "Club No Sleep",
   "short_name": "Club No Sleep",
   "description": "Din digitale babybog. Søvnlog, tigerspring, kalender og fællesskab for forældre.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
