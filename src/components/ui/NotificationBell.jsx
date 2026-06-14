@@ -6,16 +6,18 @@ import { formatDistanceToNow } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { toast } from 'sonner';
 
-const READ_KEY = 'lalatoto-read-notifications';
-
-function getReadIds() {
-  try { return JSON.parse(localStorage.getItem(READ_KEY) || '[]'); } catch { return []; }
+function getReadKey(email) {
+  return `lalatoto-read-notifications-${email || 'anonymous'}`;
 }
 
-function markAllRead(ids) {
-  const existing = getReadIds();
+function getReadIds(email) {
+  try { return JSON.parse(localStorage.getItem(getReadKey(email)) || '[]'); } catch { return []; }
+}
+
+function markAllRead(ids, email) {
+  const existing = getReadIds(email);
   const merged = [...new Set([...existing, ...ids])];
-  localStorage.setItem(READ_KEY, JSON.stringify(merged));
+  localStorage.setItem(getReadKey(email), JSON.stringify(merged));
 }
 
 function setAppBadge(count) {
@@ -45,7 +47,7 @@ function emitUnreadCount(count) {
 export default function NotificationBell({ userEmail }) {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
-  const [readIds, setReadIds] = useState(getReadIds());
+  const [readIds, setReadIds] = useState(() => getReadIds(userEmail));
   const ref = useRef(null);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function NotificationBell({ userEmail }) {
         !n.target_emails || n.target_emails.length === 0 || n.target_emails.includes(userEmail)
       );
       setNotifications(visible);
-      const unread = visible.filter(n => !getReadIds().includes(n.id)).length;
+      const unread = visible.filter(n => !getReadIds(userEmail).includes(n.id)).length;
       setAppBadge(unread);
       emitUnreadCount(unread);
     };
@@ -72,7 +74,7 @@ export default function NotificationBell({ userEmail }) {
 
       setNotifications(prev => {
         const updated = [n, ...prev];
-        const unread = updated.filter(x => !getReadIds().includes(x.id)).length;
+        const unread = updated.filter(x => !getReadIds(userEmail).includes(x.id)).length;
         setAppBadge(unread);
         emitUnreadCount(unread);
         return updated;
@@ -103,7 +105,7 @@ export default function NotificationBell({ userEmail }) {
   const handleOpen = () => {
     if (!open) {
       const allIds = notifications.map(n => n.id);
-      markAllRead(allIds);
+      markAllRead(allIds, userEmail);
       setReadIds(prev => [...new Set([...prev, ...allIds])]);
       setAppBadge(0);
       emitUnreadCount(0);
