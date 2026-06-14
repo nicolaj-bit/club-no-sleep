@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
 
       const toCreate = [];
 
-      // ── Aldersbaserede milepæle (barn er født) ──
+      // ── Aldersbaserede milepæle (barn er født — har birthdate) ──
       if (child.birthdate) {
         for (const m of AGE_MILESTONES) {
           if (existingIds.has(m.milestone_id)) { skipped++; continue; }
@@ -126,8 +126,9 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── Graviditetsmilepæle (ikke født endnu, har terminsdato) ──
-      if (!child.birthdate && child.due_date) {
+      // ── Graviditetsmilepæle (har terminsdato — uanset om barnet også er født) ──
+      // Gælder både: kun gravid (ingen birthdate), og gravid + allerede har et barn (due_date sat på en ny graviditet)
+      if (child.due_date) {
         for (const m of PREGNANCY_MILESTONES) {
           if (existingIds.has(m.milestone_id)) { skipped++; continue; }
           const eventDate = pregnancyWeekDate(child.due_date, m.weeks);
