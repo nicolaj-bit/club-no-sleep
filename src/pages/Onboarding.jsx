@@ -97,6 +97,23 @@ export default function Onboarding() {
       subscription_started_at: isActive ? new Date().toISOString() : undefined,
       trial_started_at: isActive ? undefined : new Date().toISOString(),
     });
+
+    // Opret barn baseret på onboarding-data
+    if (childMode === 'gravid' && form.child_due_date) {
+      await base44.entities.Child.create({
+        user_email: user.email,
+        name: 'Mit barn',
+        due_date: form.child_due_date,
+      });
+    } else if (childMode === 'fodt' && (form.child_birthdate || form.child_due_date)) {
+      await base44.entities.Child.create({
+        user_email: user.email,
+        name: form.child_name?.trim() || 'Mit barn',
+        birthdate: form.child_birthdate || undefined,
+        due_date: form.child_due_date || undefined,
+      });
+    }
+
     // Gem GDPR consent-log
     await base44.entities.ConsentLog.create({
       user_email: user.email,
