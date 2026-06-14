@@ -82,7 +82,18 @@ Deno.serve(async (req) => {
         children = [];
       }
     } else {
-      children = await base44.asServiceRole.entities.Child.list();
+      // Hent alle børn med paginering (service role)
+      let allChildren = [];
+      let skip = 0;
+      const pageSize = 100;
+      while (true) {
+        const page = await base44.asServiceRole.entities.Child.list(null, pageSize, skip);
+        if (!page || page.length === 0) break;
+        allChildren = allChildren.concat(page);
+        if (page.length < pageSize) break;
+        skip += pageSize;
+      }
+      children = allChildren;
     }
     console.log(`Fandt ${children.length} børn`);
 
