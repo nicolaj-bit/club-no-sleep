@@ -63,7 +63,7 @@ export default function Subscription() {
         : 'Checkout only works from the published app, not the preview.');
       return;
     }
-    window.location.href = 'https://buy.stripe.com/28E4gz10E8HLgWk6m33cc01';
+    window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
   };
 
   const handleRestore = async () => {
