@@ -21,9 +21,9 @@ function getMapsUrl(address) {
   // så iOS spørger brugeren hvis de har Google Maps installeret.
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   if (isIOS) {
-    return `maps://maps.apple.com/?q=${query}`;
+    return `https://maps.apple.com/?q=${query}`;
   }
-  return `geo:0,0?q=${query}`;
+  return `https://maps.google.com/?q=${query}`;
 }
 
 export default function BabyFriendlyCafes() {
