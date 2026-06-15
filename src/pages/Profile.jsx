@@ -8,6 +8,7 @@ import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, G
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { BottomSheet } from '@/components/ui/BottomSheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -39,6 +40,14 @@ export default function Profile() {
   const [helpConfig, setHelpConfig] = useState(null);
   const [addChildOpen, setAddChildOpen] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifPrefs, setNotifPrefs] = useState({
+    wonderweeks_notifications: true,
+    notif_pregnancy_weekly: true,
+    notif_calendar_reminder: true,
+    notif_sleep_encouragement: true,
+    notif_blog_new: true,
+  });
   const { children: myChildren, activeChild, setActiveChildId, refetch: refetchChildren } = useActiveChild();
 
   useEffect(() => {
@@ -46,6 +55,17 @@ export default function Profile() {
       if (results[0]) setHelpConfig(results[0]);
     }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+    setNotifPrefs({
+      wonderweeks_notifications: profile.wonderweeks_notifications !== false,
+      notif_pregnancy_weekly: profile.notif_pregnancy_weekly !== false,
+      notif_calendar_reminder: profile.notif_calendar_reminder !== false,
+      notif_sleep_encouragement: profile.notif_sleep_encouragement !== false,
+      notif_blog_new: profile.notif_blog_new !== false,
+    });
+  }, [profile?.id]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -393,18 +413,13 @@ export default function Profile() {
         <div className="grid grid-cols-2 gap-3">
           {[
             { icon: Bookmark, label: t.favorites, sub: lang === 'da' ? 'Dine gemte øjeblikke' : 'Your saved moments', page: 'Favorites' },
-            { icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', page: 'Settings' },
+            { icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', action: () => setNotifOpen(true) },
             { icon: Settings, label: t.settings, sub: lang === 'da' ? 'Tilpas appen til dig' : 'Customise the app', page: 'Settings' },
             { icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? 'Inviter en du stoler på' : 'Invite someone you trust', page: 'FamilyInvite' },
           ].map((item, i) => {
             const Icon = item.icon;
-            return (
-              <Link
-                key={i}
-                to={createPageUrl(item.page)}
-                className="rounded-2xl p-4 flex flex-col gap-2 cursor-pointer active:opacity-70 transition-opacity"
-                style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
-              >
+            const inner = (
+              <>
                 <div className="flex items-center justify-between">
                   <Icon className="w-5 h-5" style={{ color: '#B08D72' }} />
                   <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
@@ -413,6 +428,25 @@ export default function Profile() {
                   <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--color-text-primary)' }}>{item.label}</p>
                   <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{item.sub}</p>
                 </div>
+              </>
+            );
+            return item.action ? (
+              <button
+                key={i}
+                onClick={item.action}
+                className="rounded-2xl p-4 flex flex-col gap-2 cursor-pointer active:opacity-70 transition-opacity text-left"
+                style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
+              >
+                {inner}
+              </button>
+            ) : (
+              <Link
+                key={i}
+                to={createPageUrl(item.page)}
+                className="rounded-2xl p-4 flex flex-col gap-2 cursor-pointer active:opacity-70 transition-opacity"
+                style={{ background: cardBg, border: `1px solid ${cardBorder}` }}
+              >
+                {inner}
               </Link>
             );
           })}
@@ -543,6 +577,38 @@ export default function Profile() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Notification preferences */}
+      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
+        <div className="px-5 py-4 space-y-5">
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
+          {[
+            { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
+            { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
+            { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
+            { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
+            { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
+          ].map(({ key, label, desc }) => (
+            <div key={key} className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
+              </div>
+              <Switch
+                checked={notifPrefs[key]}
+                onCheckedChange={async (val) => {
+                  const updated = { ...notifPrefs, [key]: val };
+                  setNotifPrefs(updated);
+                  if (profile?.id) {
+                    await base44.entities.UserProfile.update(profile.id, { [key]: val });
+                  }
+                }}
+              />
+            </div>
+          ))}
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
 
       {/* Language picker modal */}
       <AnimatePresence>
