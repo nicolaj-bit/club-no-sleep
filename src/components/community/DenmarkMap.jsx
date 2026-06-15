@@ -1,9 +1,57 @@
-import React, { useMemo, useEffect } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
 const DENMARK_CENTER = [56.0, 10.5];
+
+// Create a gold pin SVG icon — size scales with zoom
+function makePinIcon(size = 22, isMe = false, nightMode = false) {
+  const s = size;
+  const pinH = s * 1.5;
+  const glow = isMe
+    ? (nightMode ? '#818cf8' : '#6366f1')
+    : (nightMode ? '#FFD700' : '#C9AA8F');
+  const inner = isMe
+    ? (nightMode ? '#c7d2fe' : '#e0e7ff')
+    : (nightMode ? '#FFFDE7' : '#FFF8EE');
+  const shadow = isMe ? 'rgba(99,102,241,0.5)' : 'rgba(180,140,80,0.55)';
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${pinH}" viewBox="0 0 ${s} ${pinH}">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="${inner}" stop-opacity="1"/>
+          <stop offset="100%" stop-color="${glow}" stop-opacity="1"/>
+        </radialGradient>
+        <filter id="dropshadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="${shadow}" flood-opacity="0.9"/>
+        </filter>
+        <filter id="glowfilter" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="${s * 0.18}" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Soft glow halo -->
+      <ellipse cx="${s/2}" cy="${s/2 * 0.9}" rx="${s * 0.52}" ry="${s * 0.52}" fill="${glow}" opacity="0.22" filter="url(#glowfilter)"/>
+      <!-- Pin circle -->
+      <circle cx="${s/2}" cy="${s/2 * 0.9}" r="${s * 0.38}" fill="url(#glow)" filter="url(#dropshadow)" stroke="${glow}" stroke-width="${s * 0.07}"/>
+      <!-- Inner shine dot -->
+      <circle cx="${s/2 - s*0.1}" cy="${s/2 * 0.9 - s*0.1}" r="${s * 0.1}" fill="white" opacity="0.65"/>
+      <!-- Pin tail -->
+      <path d="M${s/2} ${s * 0.88} L${s/2 - s*0.09} ${pinH * 0.78} L${s/2} ${pinH * 0.97} L${s/2 + s*0.09} ${pinH * 0.78} Z" fill="${glow}" opacity="0.9"/>
+    </svg>
+  `;
+
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize: [s, pinH],
+    iconAnchor: [s / 2, pinH * 0.97],
+    popupAnchor: [0, -pinH * 0.8],
+  });
+}
 
 function AutoZoom({ location }) {
   const map = useMap();
@@ -17,8 +65,19 @@ function AutoZoom({ location }) {
   return null;
 }
 
+function ZoomTracker({ onZoom }) {
+  const map = useMapEvents({
+    zoomend: () => onZoom(map.getZoom()),
+  });
+  useEffect(() => {
+    onZoom(map.getZoom());
+  }, []);
+  return null;
+}
+
 export default function DenmarkMap({ users = [], currentUserLocation = null, onStartChat }) {
   const mappedUsers = users.filter(u => u.latitude && u.longitude);
+  const [zoom, setZoom] = useState(6);
 
   const isNightMode = useMemo(() => {
     const hour = new Date().getHours();
@@ -29,9 +88,12 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
     ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
     : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
-  const goldColor = isNightMode ? '#FFD700' : '#C8A882';
-  const goldBorder = isNightMode ? '#FFA500' : '#A0785A';
-  const meColor = isNightMode ? '#818cf8' : '#6366f1';
+  // Pin size scales with zoom: small at zoom 6, bigger zoomed in
+  const pinSize = Math.max(10, Math.min(28, (zoom - 5) * 4 + 10));
+  const meSize = Math.max(13, Math.min(32, pinSize + 5));
+
+  const userIcon = useMemo(() => makePinIcon(pinSize, false, isNightMode), [pinSize, isNightMode]);
+  const meIcon = useMemo(() => makePinIcon(meSize, true, isNightMode), [meSize, isNightMode]);
 
   return (
     <div style={{ height: 300, position: 'relative', zIndex: 0 }}>
@@ -42,9 +104,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
           padding: 0;
           overflow: hidden;
         }
-        .leaflet-popup-content {
-          margin: 0;
-        }
+        .leaflet-popup-content { margin: 0; }
         .leaflet-popup-tip-container { display: none; }
       `}</style>
       <MapContainer
@@ -57,35 +117,33 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
       >
         <TileLayer url={tileUrl} />
         <AutoZoom location={currentUserLocation} />
+        <ZoomTracker onZoom={setZoom} />
 
-        {/* Other active users — gold dots */}
         {mappedUsers.map((u, i) => (
-          <CircleMarker
+          <Marker
             key={u.id || i}
-            center={[u.latitude, u.longitude]}
-            radius={7}
-            pathOptions={{
-              fillColor: goldColor,
-              fillOpacity: 1,
-              color: goldBorder,
-              weight: 1.5,
-            }}
+            position={[u.latitude, u.longitude]}
+            icon={userIcon}
           >
             <Popup>
               <div className="p-3 flex flex-col items-center gap-2" style={{ minWidth: 140 }}>
                 {u.profile_image ? (
                   <img src={u.profile_image} alt="" className="w-12 h-12 rounded-full object-cover" />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-lg">
-                    {(u.username || '?')[0].toUpperCase()}
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg"
+                    style={{ background: 'var(--color-accent-warm)', color: 'var(--color-primary)' }}>
+                    {(u.display_name || u.username || '?')[0].toUpperCase()}
                   </div>
                 )}
-                <p className="font-semibold text-slate-800 text-sm">{u.username || 'Anonym'}</p>
-                {u.city && <p className="text-xs text-slate-500">{u.city}</p>}
+                <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                  {u.display_name || u.username || 'Anonym'}
+                </p>
+                {u.city && <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{u.city}</p>}
                 {onStartChat && (
                   <button
                     onClick={() => onStartChat(u)}
-                    className="mt-1 flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+                    className="mt-1 flex items-center gap-1.5 text-white text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+                    style={{ background: 'var(--color-accent)' }}
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     Start chat
@@ -93,27 +151,20 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
                 )}
               </div>
             </Popup>
-          </CircleMarker>
+          </Marker>
         ))}
 
-        {/* Current user */}
         {currentUserLocation && (
-          <CircleMarker
-            center={[currentUserLocation.lat, currentUserLocation.lng]}
-            radius={10}
-            pathOptions={{
-              fillColor: meColor,
-              fillOpacity: 0.95,
-              color: '#fff',
-              weight: 2,
-            }}
+          <Marker
+            position={[currentUserLocation.lat, currentUserLocation.lng]}
+            icon={meIcon}
           >
             <Popup>
-              <div className="p-3 text-center text-sm font-medium text-slate-700">
+              <div className="p-3 text-center text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                 Det er dig 👋
               </div>
             </Popup>
-          </CircleMarker>
+          </Marker>
         )}
       </MapContainer>
     </div>
