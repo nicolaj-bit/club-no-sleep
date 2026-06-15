@@ -73,7 +73,7 @@ export default function WonderWeeksTab() {
             {introConfig?.body || 'Tigerspring er perioder, hvor dit barn udvikler sig særligt meget mentalt. Det kan gøre barnet mere uroligt, mere kontaktsøgende eller påvirke søvnen i en periode.'}
           </p>
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            {introConfig?.footnote || 'Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt — brug springet som en kærlig guide, ikke som en facitliste.'}
+            {introConfig?.footnote || 'Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt, så brug springet som en kærlig guide, ikke som en facitliste.'}
           </p>
           {!hasDueDate && (
             <Link
