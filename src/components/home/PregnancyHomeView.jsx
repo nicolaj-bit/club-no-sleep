@@ -80,7 +80,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
             <div className="flex-1 p-5 flex flex-col justify-between z-10">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
-                  {childName ? childName.toUpperCase() + ' · ' : ''}{lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+                  {childName && activeChild?.birthdate ? childName.toUpperCase() + ' · ' : ''}{lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
                 </p>
                 <div className="flex items-baseline gap-1.5 mb-0.5">
                   <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', lineHeight: 1 }}>
