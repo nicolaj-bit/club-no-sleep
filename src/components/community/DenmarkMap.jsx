@@ -89,11 +89,13 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
     : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
   // Pin size scales with zoom: small at zoom 6, bigger zoomed in
-  const pinSize = Math.max(10, Math.min(28, (zoom - 5) * 4 + 10));
-  const meSize = Math.max(13, Math.min(32, pinSize + 5));
+  const pinSize = Math.max(8, Math.min(20, (zoom - 5) * 3 + 8));
+  const meSize = Math.max(16, Math.min(26, (zoom - 5) * 3 + 16));
 
   const userIcon = useMemo(() => makePinIcon(pinSize, false, isNightMode), [pinSize, isNightMode]);
-  const meIcon = useMemo(() => makePinIcon(meSize, true, isNightMode), [meSize, isNightMode]);
+  // "Mig"-ikonet er altid mindst 20px så det aldrig forsvinder
+  const myPinSize = Math.max(20, meSize);
+  const meIcon = useMemo(() => makePinIcon(myPinSize, true, isNightMode), [myPinSize, isNightMode]);
 
   return (
     <div style={{ height: 300, position: 'relative', zIndex: 0 }}>
@@ -158,6 +160,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
           <Marker
             position={[currentUserLocation.lat, currentUserLocation.lng]}
             icon={meIcon}
+            zIndexOffset={1000}
           >
             <Popup>
               <div className="p-3 text-center text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
