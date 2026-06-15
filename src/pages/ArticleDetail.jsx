@@ -9,6 +9,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import PageHeader from '@/components/ui/PageHeader';
+import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
 
 export default function ArticleDetail() {
   const { theme } = useTheme();
@@ -28,6 +29,29 @@ export default function ArticleDetail() {
         return articles[0];
       }
       if (articleSlug) {
+        // Tjek først om det er et tigerspring-slug
+        const wwMatch = WONDER_WEEKS.find(ww => ww.articleSlug === articleSlug);
+        if (wwMatch) {
+          // Byg en artikel-lignende objekt fra wonderweeksData
+          return {
+            title: `Tigerspring ${wwMatch.number}: ${wwMatch.name}`,
+            category: 'Tigerspring',
+            is_faq: false,
+            content: `
+              <p style="font-size:1.05em; line-height:1.7;">${wwMatch.longDescription}</p>
+              <h2>Nye færdigheder</h2>
+              <ul>${wwMatch.skills.map(s => `<li>${s}</li>`).join('')}</ul>
+              <h2>Tegn på tigerspringet</h2>
+              <ul>${wwMatch.signs.map(s => `<li>${s}</li>`).join('')}</ul>
+              <h2>Til dig som forælder</h2>
+              <p style="font-style:italic; line-height:1.7;">${wwMatch.parentMessage}</p>
+              <h2>Tips til perioden</h2>
+              <ul>${wwMatch.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+            `,
+            tags: [],
+          };
+        }
+        // Ellers søg i databasen
         const articles = await base44.entities.KnowledgeArticle.list();
         return articles.find(a => a.tags?.includes(articleSlug));
       }
