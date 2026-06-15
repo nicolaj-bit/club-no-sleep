@@ -138,6 +138,12 @@ Deno.serve(async (req) => {
       // Tjek om terminen stadig er fremtidig (ingen fødselsdato på profil)
       if (!isStillPregnant(dueDate, profile.child_birthdate)) continue;
 
+      // Respekter brugerens notifikationspræference
+      if (profile.notif_pregnancy_weekly === false) {
+        console.log(`${profile.user_email}: Graviditetsnotifikationer slået fra`);
+        continue;
+      }
+
       // Kun send på den dag ugen skifter
       if (!isNewWeekToday(dueDate)) {
         console.log(`${profile.user_email}: Ikke ny uge i dag (terminsdato: ${dueDate})`);

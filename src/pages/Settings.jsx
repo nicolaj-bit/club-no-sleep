@@ -39,6 +39,15 @@ export default function Settings() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const [termsOpen, setTermsOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifPrefs, setNotifPrefs] = useState({
+    wonderweeks_notifications: true,
+    notif_pregnancy_weekly: true,
+    notif_calendar_reminder: true,
+    notif_sleep_encouragement: true,
+    notif_blog_new: true,
+  });
+  const [notifSaving, setNotifSaving] = useState(false);
 
   const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
   const cardBgSolid = isDark ? CARD_BG_DARK : CARD_BG_LIGHT_SOLID;
@@ -50,7 +59,17 @@ export default function Settings() {
         const u = await base44.auth.me();
         setUser(u);
         const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
-        if (profiles.length) setProfile(profiles[0]);
+        if (profiles.length) {
+          setProfile(profiles[0]);
+          const p = profiles[0];
+          setNotifPrefs({
+            wonderweeks_notifications: p.wonderweeks_notifications !== false,
+            notif_pregnancy_weekly: p.notif_pregnancy_weekly !== false,
+            notif_calendar_reminder: p.notif_calendar_reminder !== false,
+            notif_sleep_encouragement: p.notif_sleep_encouragement !== false,
+            notif_blog_new: p.notif_blog_new !== false,
+          });
+        }
       } catch {
         base44.auth.redirectToLogin();
       }
@@ -91,7 +110,7 @@ export default function Settings() {
   const gridItems = [
     ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
     { icon: Lock,        label: t.password,      action: () => setPasswordOpen(true) },
-    { icon: Bell,        label: t.notifications, toggle: true, defaultChecked: true },
+    { icon: Bell,        label: t.notifications, action: () => setNotifOpen(true) },
     { icon: Shield,      label: t.privacy,       action: openPrivacy },
     { icon: HelpCircle,  label: t.help,          accordion: true },
   ];
@@ -304,6 +323,39 @@ export default function Settings() {
           }}>
             {t.updatePassword}
           </Button>
+          <div className="h-2" />
+        </div>
+      </BottomSheet>
+
+      {/* Notification preferences */}
+      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
+        <div className="px-5 py-4 space-y-5">
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
+
+          {[
+            { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
+            { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
+            { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
+            { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
+            { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
+          ].map(({ key, label, desc }) => (
+            <div key={key} className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
+              </div>
+              <Switch
+                checked={notifPrefs[key]}
+                onCheckedChange={async (val) => {
+                  const updated = { ...notifPrefs, [key]: val };
+                  setNotifPrefs(updated);
+                  if (profile?.id) {
+                    await base44.entities.UserProfile.update(profile.id, { [key]: val });
+                  }
+                }}
+              />
+            </div>
+          ))}
           <div className="h-2" />
         </div>
       </BottomSheet>

@@ -91,6 +91,26 @@
       "default": true,
       "description": "Modtag notifikationer om tigerspring"
     },
+    "notif_pregnancy_weekly": {
+      "type": "boolean",
+      "default": true,
+      "description": "Ugentlig graviditetsopdatering"
+    },
+    "notif_calendar_reminder": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kalender p\u00e5mindelser"
+    },
+    "notif_sleep_encouragement": {
+      "type": "boolean",
+      "default": true,
+      "description": "S\u00f8vnopmuntring notifikationer"
+    },
+    "notif_blog_new": {
+      "type": "boolean",
+      "default": true,
+      "description": "Notifikationer om nyt indhold"
+    },
     "subscription_status": {
       "type": "string",
       "enum": [
