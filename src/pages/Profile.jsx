@@ -50,6 +50,8 @@ export default function Profile() {
   });
   const { children: myChildren, activeChild, setActiveChildId, refetch: refetchChildren } = useActiveChild();
 
+  const profile = activeProfile;
+
   useEffect(() => {
     base44.entities.AppConfig.filter({ key: 'help_modal' }).then(results => {
       if (results[0]) setHelpConfig(results[0]);
@@ -82,8 +84,6 @@ export default function Profile() {
     };
     loadUser();
   }, []);
-
-  const profile = activeProfile;
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
