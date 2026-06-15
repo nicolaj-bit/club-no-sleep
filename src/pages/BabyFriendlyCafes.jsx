@@ -15,12 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 function getMapsUrl(address) {
   const query = encodeURIComponent(address);
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  // På iOS: brug maps:// scheme som åbner Apple Maps direkte
-  // På Android/andre: brug geo: scheme (åbner Google Maps) med Google Maps fallback
-  return isIOS
-    ? `maps://maps.apple.com/?q=${query}`
-    : `geo:0,0?q=${query}`;
+  return `https://maps.google.com/?q=${query}`;
 }
 
 export default function BabyFriendlyCafes() {
