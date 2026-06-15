@@ -15,7 +15,15 @@ import { Textarea } from '@/components/ui/textarea';
 
 function getMapsUrl(address) {
   const query = encodeURIComponent(address);
-  return `https://maps.google.com/?q=${query}`;
+  // "geo:" åbner brugerens valgte kort-app på Android.
+  // På iOS er der ingen universel "vælg kort-app" standard —
+  // Apple Maps er default, men vi bruger maps.apple.com som fallback
+  // så iOS spørger brugeren hvis de har Google Maps installeret.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    return `maps://maps.apple.com/?q=${query}`;
+  }
+  return `geo:0,0?q=${query}`;
 }
 
 export default function BabyFriendlyCafes() {
