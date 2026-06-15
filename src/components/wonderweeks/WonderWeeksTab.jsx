@@ -16,6 +16,14 @@ export default function WonderWeeksTab() {
   const emojiMap = useWonderWeekEmojis();
   const { isActive: hasSubscription } = useSubscription();
 
+  const { data: introConfig } = useQuery({
+    queryKey: ['wwIntroConfig'],
+    queryFn: async () => {
+      const results = await base44.entities.AppConfig.filter({ key: 'wonderweeks_intro' });
+      return results[0] || null;
+    },
+  });
+
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
       if (isAuth) base44.auth.me().then(setUser).catch(() => {});
@@ -50,12 +58,14 @@ export default function WonderWeeksTab() {
         style={{ background: 'linear-gradient(135deg, #2C1A0E 0%, #4A2E1A 100%)' }}
       >
         <div className="relative z-10">
-          <h2 className="text-lg font-semibold text-white mb-1">Tigerspring</h2>
+          <h2 className="text-lg font-semibold text-white mb-1">
+            {introConfig?.title || 'Tigerspring'}
+          </h2>
           <p className="text-sm leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.82)' }}>
-            Tigerspring er perioder, hvor dit barn udvikler sig særligt meget mentalt. Det kan gøre barnet mere uroligt, mere kontaktsøgende eller påvirke søvnen i en periode.
+            {introConfig?.body || 'Tigerspring er perioder, hvor dit barn udvikler sig særligt meget mentalt. Det kan gøre barnet mere uroligt, mere kontaktsøgende eller påvirke søvnen i en periode.'}
           </p>
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt — brug springet som en kærlig guide, ikke som en facitliste.
+            {introConfig?.footnote || 'Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt — brug springet som en kærlig guide, ikke som en facitliste.'}
           </p>
           {!profile?.child_due_date && (
             <Link

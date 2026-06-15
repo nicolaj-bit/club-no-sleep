@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode', 'WonderWeeksIntro'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
@@ -38,6 +38,9 @@ export default function AdminEditor() {
   const [demoConfig, setDemoConfig] = useState(null);
   const [demoMode, setDemoMode] = useState(false);
   const [demoSaving, setDemoSaving] = useState(false);
+  const [wwIntroConfig, setWwIntroConfig] = useState(null);
+  const [wwIntroForm, setWwIntroForm] = useState({});
+  const [wwIntroSaving, setWwIntroSaving] = useState(false);
 
 
   useEffect(() => {
@@ -122,6 +125,27 @@ export default function AdminEditor() {
     mutationFn: (id) => base44.entities.LegalContent.delete(id),
     onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
   });
+
+  useEffect(() => {
+    if (activeTab !== 'WonderWeeksIntro') return;
+    base44.entities.AppConfig.filter({ key: 'wonderweeks_intro' }).then(results => {
+      const config = results[0] || { key: 'wonderweeks_intro', title: '', body: '', footnote: '' };
+      setWwIntroConfig(config);
+      setWwIntroForm({ title: config.title || '', body: config.body || '', footnote: config.footnote || '' });
+    });
+  }, [activeTab]);
+
+  const handleSaveWwIntro = async () => {
+    setWwIntroSaving(true);
+    if (wwIntroConfig?.id) {
+      await base44.entities.AppConfig.update(wwIntroConfig.id, wwIntroForm);
+    } else {
+      const created = await base44.entities.AppConfig.create({ ...wwIntroForm, key: 'wonderweeks_intro' });
+      setWwIntroConfig(created);
+    }
+    setWwIntroSaving(false);
+    toast.success('Gemt!');
+  };
 
   useEffect(() => {
     if (activeTab !== 'DemoMode') return;
@@ -408,7 +432,7 @@ export default function AdminEditor() {
             <Bell className="w-3.5 h-3.5" /> Notifikationer
           </button>
         </Link>
-        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && (
+        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && activeTab !== 'WonderWeeksIntro' && (
           <button
             onClick={handleNew}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
@@ -430,7 +454,7 @@ export default function AdminEditor() {
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
             {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : tab === 'Milestones' ? 'Milepæle' : 'Demo'}
+            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : tab === 'Milestones' ? 'Milepæle' : tab === 'DemoMode' ? 'Demo' : 'Tigerspring intro'}
           </button>
         ))}
       </div>
@@ -514,6 +538,46 @@ export default function AdminEditor() {
       )}
 
 
+      {activeTab === 'WonderWeeksIntro' && (
+        <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Overskrift</Label>
+            <Input
+              value={wwIntroForm.title || ''}
+              onChange={e => setWwIntroForm({ ...wwIntroForm, title: e.target.value })}
+              placeholder="Tigerspring"
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Brødtekst (stor tekst)</Label>
+            <textarea
+              value={wwIntroForm.body || ''}
+              onChange={e => setWwIntroForm({ ...wwIntroForm, body: e.target.value })}
+              rows={4}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              placeholder="Tigerspring er perioder, hvor dit barn..."
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label style={{ color: 'var(--color-text-secondary)' }}>Fodnotetekst (lille tekst)</Label>
+            <textarea
+              value={wwIntroForm.footnote || ''}
+              onChange={e => setWwIntroForm({ ...wwIntroForm, footnote: e.target.value })}
+              rows={3}
+              className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+              placeholder="Ugerne er vejledende og regnes fra terminsdato..."
+              style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+            />
+          </div>
+          <Button onClick={handleSaveWwIntro} disabled={wwIntroSaving} className="w-full"
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
+            {wwIntroSaving ? 'Gemmer...' : 'Gem'}
+          </Button>
+        </div>
+      )}
+
       {activeTab === 'ColorTheme' && <ColorThemeEditor />}
       {activeTab === 'Milestones' && <MilestoneFrameEditor />}
 
@@ -545,7 +609,7 @@ export default function AdminEditor() {
       )}
 
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' || activeTab === 'WonderWeeksIntro' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>
