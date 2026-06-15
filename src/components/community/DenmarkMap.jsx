@@ -108,12 +108,16 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         }
         .leaflet-popup-content { margin: 0; }
         .leaflet-popup-tip-container { display: none; }
+        .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.13) !important; border-radius: 10px !important; overflow: hidden; }
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out { width: 36px !important; height: 36px !important; line-height: 36px !important; font-size: 18px !important; color: var(--color-text-primary) !important; background: var(--color-bg-card) !important; border: none !important; }
+        .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--color-bg-subtle) !important; }
+        .leaflet-bottom.leaflet-right { bottom: 12px; right: 12px; }
       `}</style>
       <MapContainer
         center={DENMARK_CENTER}
         zoom={6}
         style={{ height: '100%', width: '100%' }}
-        zoomControl={false}
+        zoomControl={true}
         scrollWheelZoom={false}
         attributionControl={false}
       >
