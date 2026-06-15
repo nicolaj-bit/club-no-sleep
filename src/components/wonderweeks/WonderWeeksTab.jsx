@@ -8,13 +8,14 @@ import { ChevronRight, Sparkles, Clock } from 'lucide-react';
 import { useWonderWeekEmojis } from './useWonderWeekEmojis';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import { useActiveChild } from '@/components/ui/ActiveChildContext';
 
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeeksTab() {
-  const [user, setUser] = useState(null);
   const emojiMap = useWonderWeekEmojis();
   const { isActive: hasSubscription } = useSubscription();
+  const { activeChild } = useActiveChild();
 
   const { data: introConfig } = useQuery({
     queryKey: ['wwIntroConfig'],
@@ -24,6 +25,8 @@ export default function WonderWeeksTab() {
     },
   });
 
+  // Brug aktivt barns datoer — med fallback til UserProfile hvis intet barn er sat
+  const [user, setUser] = useState(null);
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
       if (isAuth) base44.auth.me().then(setUser).catch(() => {});
@@ -36,10 +39,15 @@ export default function WonderWeeksTab() {
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
       return profiles[0] || null;
     },
-    enabled: !!user?.email,
+    enabled: !!user?.email && !activeChild,
   });
 
-  const ageInWeeks = getAgeInWeeks(profile?.child_due_date, profile?.child_birthdate);
+  // Prioriter aktivt barn, ellers profil
+  const dueDate = activeChild?.due_date || profile?.child_due_date || null;
+  const birthDate = activeChild?.birthdate || profile?.child_birthdate || null;
+  const hasDueDate = !!(activeChild ? activeChild.due_date : profile?.child_due_date);
+
+  const ageInWeeks = getAgeInWeeks(dueDate, birthDate);
   const currentWW = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
   const getStatus = (ww) => {
@@ -67,7 +75,7 @@ export default function WonderWeeksTab() {
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {introConfig?.footnote || 'Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt — brug springet som en kærlig guide, ikke som en facitliste.'}
           </p>
-          {!profile?.child_due_date && (
+          {!hasDueDate && (
             <Link
               to={createPageUrl('Profile')}
               className="inline-flex items-center gap-1.5 mt-3 text-xs font-medium px-3 py-1.5 rounded-full"
