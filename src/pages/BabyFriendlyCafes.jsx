@@ -13,6 +13,14 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
+function getMapsUrl(address) {
+  const query = encodeURIComponent(address);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  return isIOS
+    ? `maps://maps.apple.com/?q=${query}`
+    : `https://maps.google.com/?q=${query}`;
+}
+
 export default function BabyFriendlyCafes() {
   const { t } = useLanguage();
   const [cafeSearchMode, setCafeSearchMode] = useState('all');
@@ -329,7 +337,7 @@ export default function BabyFriendlyCafes() {
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
                             <a
-                              href={`https://maps.google.com/?q=${encodeURIComponent(cafe.address)}`}
+                              href={getMapsUrl(cafe.address)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-1.5 text-xs mt-1 w-fit"
@@ -392,11 +400,11 @@ export default function BabyFriendlyCafes() {
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
                             <a
-                              href={`https://maps.google.com/?q=${encodeURIComponent(cafe.address)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-xs mt-1 w-fit"
-                              style={{ color: 'var(--color-accent)' }}
+                              href={getMapsUrl(cafe.address)}
+                                                             target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center gap-1.5 text-xs mt-1 w-fit"
+                                                            style={{ color: 'var(--color-accent)' }}
                             >
                               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                               {cafe.address}
