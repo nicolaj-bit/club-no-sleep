@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { CalendarDays } from 'lucide-react';
 import { format, isToday, isTomorrow, parseISO } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
+
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function UpcomingEventCard({ userEmail }) {
@@ -39,8 +40,11 @@ export default function UpcomingEventCard({ userEmail }) {
         style={{ backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/8454f2620_3.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
 
-        <div className="mb-3">
+        <div className="flex items-center justify-between mb-3">
           <CalendarDays className="w-5 h-5" style={{ color: '#5C3D2E' }} />
+          <span className="text-[10px] font-medium uppercase tracking-wide" style={{ color: '#7A665A' }}>
+            {format(new Date(), lang === 'en' ? 'EEE d. MMM' : 'EEE d. MMM', { locale: lang === 'en' ? enUS : da })}
+          </span>
         </div>
         <p className="text-xs font-medium mb-1" style={{ color: '#7A665A' }}>
           {lang === 'da' ? 'Næste aftale' : 'Next appointment'}

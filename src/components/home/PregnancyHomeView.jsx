@@ -57,8 +57,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <ChildSwitcher />
-            <p className="text-sm mt-2 mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{todayStr}</p>
-            <h1 className="text-[38px] font-light leading-tight" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            <h1 className="text-[38px] font-light leading-tight mt-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
               {greeting}, {name}
             </h1>
           </div>
