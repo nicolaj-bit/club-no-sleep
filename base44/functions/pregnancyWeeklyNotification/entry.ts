@@ -46,15 +46,13 @@ const WEEK_TITLES = {
 };
 
 // Beregn graviditetsuge ud fra terminsdato (uge 40 = terminsdagen)
-// Returnerer null hvis ikke gravid (terminsdato passeret > 0 dage eller < uge 4)
 function getPregnancyWeek(dueDateStr) {
   const due = new Date(dueDateStr);
   due.setHours(0, 0, 0, 0);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
-  const week = 40 - Math.floor(daysUntilDue / 7);
-  return week;
+  return 40 - Math.floor(daysUntilDue / 7);
 }
 
 // Er det præcis første dag i en ny uge? (dage til termin deleligt med 7)
@@ -64,8 +62,17 @@ function isNewWeekToday(dueDateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
-  // Ugen skifter hver 7. dag fra terminen tilbage
   return daysUntilDue % 7 === 0;
+}
+
+// Er terminsdatoen stadig i fremtiden (barnet ikke født)?
+function isStillPregnant(dueDateStr, birthdateStr) {
+  if (birthdateStr) return false; // Barn er allerede født
+  const due = new Date(dueDateStr);
+  due.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return due >= today;
 }
 
 async function sendPushNotification(email, title, message) {
@@ -85,23 +92,63 @@ async function sendPushNotification(email, title, message) {
     },
     body: JSON.stringify(body),
   });
+  const result = await res.json();
+  if (!res.ok) {
+    console.error(`OneSignal fejl for ${email}:`, JSON.stringify(result));
+  }
   return res.ok;
 }
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const profiles = await base44.asServiceRole.entities.UserProfile.list();
+
+    // Hent alle profiler og alle børn parallelt
+    const [profiles, children] = await Promise.all([
+      base44.asServiceRole.entities.UserProfile.list(),
+      base44.asServiceRole.entities.Child.list(),
+    ]);
+
+    console.log(`Behandler ${profiles.length} profiler og ${children.length} børn`);
+
+    // Byg et map: user_email -> due_date (fra Child-entiteten, prioriter barn uden fødselsdato)
+    const childDueDateByEmail = {};
+    for (const child of children) {
+      if (!child.user_email || !child.due_date) continue;
+      // Kun børn der endnu ikke er født (ingen birthdate)
+      if (!isStillPregnant(child.due_date, child.birthdate)) continue;
+      // Brug den seneste/næste terminsdato pr. email
+      if (!childDueDateByEmail[child.user_email]) {
+        childDueDateByEmail[child.user_email] = child.due_date;
+      }
+    }
+
     let sent = 0;
+    const processed = new Set(); // undgå dubletter pr. email
 
     for (const profile of profiles) {
-      if (!profile.child_due_date || !profile.user_email) continue;
+      if (!profile.user_email) continue;
+      if (processed.has(profile.user_email)) continue;
 
-      // Kun send notifikation på den dag ugen skifter
-      if (!isNewWeekToday(profile.child_due_date)) continue;
+      // Find terminsdato: prioriter Child-entiteten, fald tilbage til profil
+      const dueDate = childDueDateByEmail[profile.user_email] || profile.child_due_date;
 
-      const week = getPregnancyWeek(profile.child_due_date);
-      if (week < 4 || week > 42) continue;
+      if (!dueDate) continue;
+
+      // Tjek om terminen stadig er fremtidig (ingen fødselsdato på profil)
+      if (!isStillPregnant(dueDate, profile.child_birthdate)) continue;
+
+      // Kun send på den dag ugen skifter
+      if (!isNewWeekToday(dueDate)) {
+        console.log(`${profile.user_email}: Ikke ny uge i dag (terminsdato: ${dueDate})`);
+        continue;
+      }
+
+      const week = getPregnancyWeek(dueDate);
+      if (week < 4 || week > 42) {
+        console.log(`${profile.user_email}: Uge ${week} er uden for interval, springer over`);
+        continue;
+      }
 
       const title = WEEK_TITLES[week] || `Graviditet uge ${week}`;
       const message = `🤰 Du er nu i uge ${week}. Åbn appen for at læse om din babys udvikling denne uge.`;
@@ -119,7 +166,8 @@ Deno.serve(async (req) => {
       // Push via OneSignal
       await sendPushNotification(profile.user_email, title, message);
 
-      console.log(`Graviditetsuge ${week} notifikation sendt til ${profile.user_email}`);
+      console.log(`✅ Uge ${week} notifikation sendt til ${profile.user_email} (terminsdato: ${dueDate})`);
+      processed.add(profile.user_email);
       sent++;
     }
 
