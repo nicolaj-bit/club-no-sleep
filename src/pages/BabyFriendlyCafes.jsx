@@ -13,13 +13,14 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-function openMaps(address) {
+function getMapsUrl(address) {
   const query = encodeURIComponent(address);
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const url = isIOS
+  // På iOS: brug maps:// scheme som åbner Apple Maps direkte
+  // På Android/andre: brug geo: scheme (åbner Google Maps) med Google Maps fallback
+  return isIOS
     ? `maps://maps.apple.com/?q=${query}`
-    : `https://maps.google.com/?q=${query}`;
-  window.open(url, '_blank');
+    : `geo:0,0?q=${query}`;
 }
 
 export default function BabyFriendlyCafes() {
@@ -338,8 +339,10 @@ export default function BabyFriendlyCafes() {
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
                             <a
-                              onClick={() => openMaps(cafe.address)}
-                              className="flex items-center gap-1.5 text-xs mt-1 w-fit cursor-pointer"
+                              href={getMapsUrl(cafe.address)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-xs mt-1 w-fit"
                               style={{ color: 'var(--color-accent)' }}
                             >
                               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
@@ -399,9 +402,11 @@ export default function BabyFriendlyCafes() {
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
                             <a
-                              onClick={() => openMaps(cafe.address)}
-                                                             className="flex items-center gap-1.5 text-xs mt-1 w-fit cursor-pointer"
-                                                            style={{ color: 'var(--color-accent)' }}
+                              href={getMapsUrl(cafe.address)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-xs mt-1 w-fit"
+                              style={{ color: 'var(--color-accent)' }}
                             >
                               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                               {cafe.address}
