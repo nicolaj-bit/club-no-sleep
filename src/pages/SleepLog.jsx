@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
-import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, RefreshCw, X } from 'lucide-react';
+import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, RefreshCw, X, Send, ArrowLeft } from 'lucide-react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { Link, useNavigate } from 'react-router-dom';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
@@ -15,6 +15,45 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import ReactMarkdown from 'react-markdown';
+
+// Søvn AI Avatar – same branded style as AIChat
+function SleepAIAvatar({ size = 'sm' }) {
+  const dim = size === 'lg' ? 64 : 28;
+  const r1 = size === 'lg' ? 29 : 12.5;
+  const r2 = size === 'lg' ? 22 : 9.5;
+  const headRx = size === 'lg' ? 10 : 4.5;
+  const headRy = size === 'lg' ? 11 : 4.8;
+  const headCy = size === 'lg' ? 20 : 9;
+  const bodyD = size === 'lg'
+    ? 'M10 58 C10 42 18 36 32 36 C46 36 54 42 54 58'
+    : 'M5 26 C5 20 8 17 14 17 C20 17 23 20 23 26';
+  const leafD = size === 'lg'
+    ? 'M27 25 Q32 19 37 25 Q32 31 27 25Z'
+    : 'M12 11.5 Q14 9 16 11.5 Q14 14 12 11.5Z';
+  return (
+    <div style={{
+      width: dim, height: dim, flexShrink: 0,
+      background: 'linear-gradient(145deg, #F3EDE4 0%, #E8D9C8 100%)',
+      borderRadius: size === 'lg' ? 16 : 10,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      border: '1.5px solid #C8A882',
+      boxShadow: size === 'lg' ? '0 4px 16px rgba(160,120,90,0.18)' : '0 1px 4px rgba(160,120,90,0.15)',
+    }}>
+      <svg viewBox={`0 0 ${dim} ${dim}`} width={dim} height={dim} aria-hidden>
+        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="#C8A882" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
+        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="#C8A882" strokeWidth="0.5" opacity="0.3" />
+        <ellipse cx={dim/2} cy={headCy} rx={headRx} ry={headRy} fill="#A0785A" opacity="0.88" />
+        <path d={bodyD} fill="#A0785A" opacity="0.72" />
+        <path d={leafD} fill="#C8A882" opacity="0.95" />
+        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2 : 1} fill="#C8A882" opacity="0.7" />
+        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.2 : 0.7} fill="#C8A882" opacity="0.5" />
+        {/* Moon accent */}
+        <text x={size === 'lg' ? 26 : 11} y={size === 'lg' ? 52 : 23} fontSize={size === 'lg' ? 10 : 4} opacity="0.6">🌙</text>
+      </svg>
+    </div>
+  );
+}
 
 
 
@@ -100,12 +139,15 @@ export default function SleepLog() {
   const [user, setUser] = useState(null);
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
-  const [aiCard, setAiCard] = useState(null); // null | 'loading' | { title, message, pattern }
+  const [aiCard, setAiCard] = useState(null);
   const [showAiChat, setShowAiChat] = useState(false);
   const [aiConversation, setAiConversation] = useState(null);
   const [aiMessages, setAiMessages] = useState([]);
   const [aiInput, setAiInput] = useState('');
   const [aiSending, setAiSending] = useState(false);
+  const [aiLogsCount, setAiLogsCount] = useState(null); // null = not checked yet
+  const aiBottomRef = useRef(null);
+  const aiTextareaRef = useRef(null);
 
 
   const [form, setForm] = useState({
@@ -217,15 +259,33 @@ export default function SleepLog() {
     setShowAiChat(true);
     if (aiConversation) return;
     try {
+      // Hent brugerens søvnlogs
+      const currentUser = user || await base44.auth.me();
+      const childId = activeChild?.id || null;
+      const logs = await base44.entities.SleepLog.filter({ user_email: currentUser.email, child_id: childId || null }, '-date', 30);
+      const uniqueDays = [...new Set((logs || []).map(l => l.date))];
+      setAiLogsCount(uniqueDays.length);
+
+      if (uniqueDays.length < 5) return; // Ikke nok data – vis besked i stedet
+
       const conv = await base44.agents.createConversation({ agent_name: 'sleep_advisor', metadata: { name: 'Søvnrådgivning' } });
       setAiConversation(conv);
       setAiMessages(conv.messages || []);
+
+      // Send søvnlogdata som kontekst
+      const logsText = JSON.stringify(logs, null, 2);
+      const prompt = `Her er mine søvnlogs fra de seneste dage (${uniqueDays.length} dage med data). Brug dem som grundlag for din rådgivning:\n\n\`\`\`json\n${logsText}\n\`\`\`\n\nGiv mig venligst en kort, personlig analyse og de vigtigste råd baseret på mønstrene du ser.`;
+      setAiSending(true);
+      await base44.agents.addMessage(conv, { role: 'user', content: prompt });
+
       const unsubscribe = base44.agents.subscribeToConversation(conv.id, (data) => {
         setAiMessages([...(data.messages || [])]);
+        setAiSending(false);
       });
       conv._unsubscribe = unsubscribe;
     } catch (e) {
       console.error(e);
+      setAiSending(false);
     }
   };
 
@@ -234,14 +294,21 @@ export default function SleepLog() {
     const text = aiInput.trim();
     setAiInput('');
     setAiSending(true);
-    try {
-      await base44.agents.addMessage(aiConversation, { role: 'user', content: text });
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setAiSending(false);
-    }
+    await base44.agents.addMessage(aiConversation, { role: 'user', content: text });
   };
+
+  // Auto-scroll til bund
+  useEffect(() => {
+    aiBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [aiMessages]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (aiTextareaRef.current) {
+      aiTextareaRef.current.style.height = 'auto';
+      aiTextareaRef.current.style.height = Math.min(aiTextareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [aiInput]);
 
   const calcNightMinutes = () => {
     if (!form.bedtime || !form.wake_time) return null;
@@ -610,76 +677,156 @@ export default function SleepLog() {
 
       {/* AI Chat modal */}
       {showAiChat && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col"
-          style={{ backgroundColor: 'var(--color-bg)' }}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 pt-10 pb-3 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-600" />
-              <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>Søvnrådgiver</span>
-            </div>
-            <button onClick={() => setShowAiChat(false)} style={{ color: 'var(--color-text-muted)' }}>
-              <X className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
+
+          {/* Header – same gradient as AIChat */}
+          <div
+            className="flex items-center gap-3 px-4 py-3"
+            style={{ paddingTop: 'max(40px, env(safe-area-inset-top, 40px))', background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+          >
+            <button onClick={() => setShowAiChat(false)} className="p-1.5 rounded-full" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              <ArrowLeft className="w-5 h-5" />
             </button>
+            <SleepAIAvatar size="sm" />
+            <div className="flex-1">
+              <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>Søvnrådgiver</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block" />
+                <p className="text-xs text-white/70">Online</p>
+              </div>
+            </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-            {aiMessages.length === 0 && (
-              <div className="text-center py-10">
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Stil et spørgsmål om barnets søvn 🌙</p>
+          {/* Not enough data */}
+          {aiLogsCount !== null && aiLogsCount < 5 && (
+            <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5">
+              <SleepAIAvatar size="lg" />
+              <div>
+                <h2 className="text-2xl font-light mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                  Ikke nok data endnu
+                </h2>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                  Søvnrådgiveren har brug for mindst <strong>5 dages søvnlogs</strong> for at give dig præcis og personlig rådgivning.
+                </p>
+                <p className="text-sm mt-3 font-medium" style={{ color: 'var(--color-accent)' }}>
+                  Du har registreret {aiLogsCount} {aiLogsCount === 1 ? 'dag' : 'dage'} — fortsæt med at logge i {5 - aiLogsCount} {5 - aiLogsCount === 1 ? 'dag' : 'dage'} mere.
+                </p>
               </div>
-            )}
-            {aiMessages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
-                  style={msg.role === 'user'
-                    ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
-                    : { backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }
-                  }
-                >
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-            {aiSending && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
-                  <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '0ms' }} />
-                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '150ms' }} />
-                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '300ms' }} />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <div className="px-4 pb-6 pt-2 border-t" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={aiInput}
-                onChange={(e) => setAiInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendAiMessage()}
-                placeholder="Stil et spørgsmål..."
-                className="flex-1 px-4 py-3 rounded-xl border text-sm focus:outline-none"
-                style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-              />
               <button
-                onClick={sendAiMessage}
-                disabled={!aiInput.trim() || aiSending}
-                className="px-4 py-3 rounded-xl text-sm font-semibold disabled:opacity-40"
+                onClick={() => setShowAiChat(false)}
+                className="px-6 py-3 rounded-2xl text-sm font-semibold"
                 style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
               >
-                Send
+                Fortsæt med at logge
               </button>
             </div>
-          </div>
+          )}
+
+          {/* Messages */}
+          {(aiLogsCount === null || aiLogsCount >= 5) && (
+            <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
+
+              {/* Empty / loading state */}
+              {aiMessages.filter(m => m.role !== 'tool').length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
+                  <SleepAIAvatar size="lg" />
+                  <div>
+                    <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                      Analyserer dine søvnlogs…
+                    </h2>
+                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Et øjeblik, jeg kigger dine data igennem 🌙</p>
+                  </div>
+                  {aiSending && (
+                    <div className="rounded-2xl rounded-bl-md border px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                      <div className="flex gap-1 items-center h-4">
+                        <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Messages */}
+              {aiMessages.filter(m => m.role !== 'tool').map((msg, i) => {
+                const isUser = msg.role === 'user';
+                // Skjul den første besked (søvnlog-kontekst upload)
+                if (isUser && msg.content?.startsWith('Her er mine søvnlogs')) return null;
+                return (
+                  <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    {!isUser && <SleepAIAvatar size="sm" />}
+                    <div
+                      className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${isUser ? 'rounded-br-md text-white' : 'rounded-bl-md border'}`}
+                      style={isUser
+                        ? { background: 'linear-gradient(135deg, #A0785A, #6B3F20)' }
+                        : { backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }
+                      }
+                    >
+                      {isUser ? (
+                        <p className="text-sm leading-relaxed">{msg.content}</p>
+                      ) : (
+                        <ReactMarkdown className="text-sm prose prose-sm prose-stone max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                          {msg.content}
+                        </ReactMarkdown>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Loading dots when AI is replying */}
+              {aiSending && aiMessages.filter(m => m.role !== 'tool').some(m => m.role === 'assistant') && (
+                <div className="flex items-end gap-2 justify-start">
+                  <SleepAIAvatar size="sm" />
+                  <div className="rounded-2xl rounded-bl-md border px-4 py-3 shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                    <div className="flex gap-1 items-center h-4">
+                      <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 rounded-full bg-stone-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div ref={aiBottomRef} />
+            </div>
+          )}
+
+          {/* Input bar – only show when enough data */}
+          {(aiLogsCount === null || aiLogsCount >= 5) && (
+            <div
+              className="px-4 pt-3 pb-6 border-t"
+              style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))' }}
+            >
+              <div
+                className="flex items-end gap-2 rounded-2xl px-4 py-3 border transition-colors"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
+              >
+                <textarea
+                  ref={aiTextareaRef}
+                  value={aiInput}
+                  onChange={(e) => setAiInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAiMessage(); } }}
+                  placeholder="Stil et spørgsmål om barnets søvn…"
+                  rows={1}
+                  className="flex-1 bg-transparent text-sm resize-none outline-none"
+                  style={{ color: 'var(--color-text-primary)', lineHeight: '1.6', maxHeight: '120px', caretColor: 'var(--color-accent)' }}
+                />
+                <button
+                  onClick={sendAiMessage}
+                  disabled={!aiInput.trim() || aiSending}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity disabled:opacity-30"
+                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                >
+                  <Send className="w-4 h-4 text-white" />
+                </button>
+              </div>
+              <p className="text-center text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
+                Rådgivningen erstatter ikke sundhedsplejerske eller læge.
+              </p>
+            </div>
+          )}
         </div>
       )}
 
