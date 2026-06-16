@@ -48,8 +48,7 @@ function SleepAIAvatar({ size = 'sm' }) {
         <path d={leafD} fill="#C8A882" opacity="0.95" />
         <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2 : 1} fill="#C8A882" opacity="0.7" />
         <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.2 : 0.7} fill="#C8A882" opacity="0.5" />
-        {/* Moon accent */}
-        <text x={size === 'lg' ? 26 : 11} y={size === 'lg' ? 52 : 23} fontSize={size === 'lg' ? 10 : 4} opacity="0.6">🌙</text>
+        {/* Moon accent - removed emoji */}
       </svg>
     </div>
   );
@@ -122,18 +121,18 @@ export default function SleepLog() {
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
-    { value: 'selv', label: t.sleepMethodSelf, emoji: '🧸' },
-    { value: 'amning', label: t.sleepMethodNursing, emoji: '🤱' },
-    { value: 'flaske', label: t.sleepMethodBottle, emoji: '🍼' },
-    { value: 'vugning', label: t.sleepMethodRocking, emoji: '🎵' },
-    { value: 'barnevogn', label: t.sleepMethodPram, emoji: '🚗' },
-    { value: 'med_forælder', label: t.sleepMethodParent, emoji: '🫶' },
+    { value: 'selv', label: t.sleepMethodSelf },
+    { value: 'amning', label: t.sleepMethodNursing },
+    { value: 'flaske', label: t.sleepMethodBottle },
+    { value: 'vugning', label: t.sleepMethodRocking },
+    { value: 'barnevogn', label: t.sleepMethodPram },
+    { value: 'med_forælder', label: t.sleepMethodParent },
   ];
   const MOODS = [
-    { value: 'frisk', label: t.moodFresh, emoji: '😊' },
-    { value: 'lidt_træt', label: t.moodLittleTired, emoji: '😴' },
-    { value: 'meget_træt', label: t.moodVeryTired, emoji: '😪' },
-    { value: 'overtræt', label: t.moodOvertired, emoji: '😩' },
+    { value: 'frisk', label: t.moodFresh },
+    { value: 'lidt_træt', label: t.moodLittleTired },
+    { value: 'meget_træt', label: t.moodVeryTired },
+    { value: 'overtræt', label: t.moodOvertired },
   ];
   const WAKING_METHODS = [t.wakingMethodNursing, t.wakingMethodBottle, t.wakingMethodRocking, t.wakingMethodSing, t.wakingMethodPram, t.wakingMethodSelf];
   const [user, setUser] = useState(null);
@@ -381,7 +380,7 @@ export default function SleepLog() {
             </p>
             {nightMinutes !== null && (
               <p className="text-white/80 text-sm mt-1 relative z-10">
-                🌙 {Math.floor(nightMinutes / 60)}h {nightMinutes % 60}m {t.nightNap}
+                {Math.floor(nightMinutes / 60)}h {nightMinutes % 60}m {t.nightNap}
               </p>
             )}
           </div>
@@ -424,7 +423,7 @@ export default function SleepLog() {
             {(nightMinutes !== null || fallAsleepMinutes !== null) && (
               <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 {nightMinutes !== null && (
-                  <Chip label={`🌙 ${Math.floor(nightMinutes / 60)}h ${nightMinutes % 60}m`} color="blue" />
+                  <Chip label={`${Math.floor(nightMinutes / 60)}h ${nightMinutes % 60}m`} color="blue" />
                 )}
                 {fallAsleepMinutes !== null && (
                   <Chip
@@ -569,7 +568,7 @@ export default function SleepLog() {
                       ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
                       : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                   >
-                    <span>{m.emoji}</span> {m.label}
+                    {m.label}
                   </button>
                 );
               })}
@@ -578,7 +577,7 @@ export default function SleepLog() {
 
           {/* Mood */}
           <Card>
-            <SectionTitle icon={<span className="text-sm">😊</span>} title={t.moodBeforeBed} />
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.moodBeforeBed} />
             <div className="flex flex-wrap gap-2">
               {MOODS.map(m => {
                 const active = form.bedtime_mood === m.value;
@@ -591,7 +590,7 @@ export default function SleepLog() {
                       ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
                       : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                   >
-                    {m.emoji} {m.label}
+                    {m.label}
                   </button>
                 );
               })}
@@ -600,7 +599,7 @@ export default function SleepLog() {
 
           {/* Notes */}
           <Card>
-            <SectionTitle icon={<span className="text-sm">📝</span>} title={t.notes} />
+            <SectionTitle icon={<BookOpen className="w-4 h-4" />} title={t.notes} />
             <textarea
               value={form.parent_note}
               onChange={(e) => setForm(f => ({ ...f, parent_note: e.target.value }))}
@@ -706,7 +705,7 @@ export default function SleepLog() {
                     <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                       Analyserer dine søvnlogs…
                     </h2>
-                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Et øjeblik, jeg kigger dine data igennem 🌙</p>
+                    <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Et øjeblik, jeg kigger dine data igennem</p>
                   </div>
                   {aiSending && (
                     <div className="rounded-2xl rounded-bl-md border px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -851,7 +850,7 @@ function HistoryView({ history, t, lang, dateLocale, MOODS }) {
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                {mood && <span className="text-lg">{mood.emoji}</span>}
+
                 <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
                   {format(new Date(log.date), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
                 </span>
@@ -861,9 +860,9 @@ function HistoryView({ history, t, lang, dateLocale, MOODS }) {
               )}
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {nightMins !== null && <Chip label={`🌙 ${Math.floor(nightMins / 60)}t ${nightMins % 60}m`} color="blue" />}
+              {nightMins !== null && <Chip label={`${Math.floor(nightMins / 60)}t ${nightMins % 60}m`} color="blue" />}
               {(log.night_wakings?.length || 0) > 0 && <Chip label={`${log.night_wakings.length} ${log.night_wakings.length === 1 ? t.wakings : t.wakingsPlural}`} color="yellow" />}
-              {totalNapMins > 0 && <Chip label={`☀️ ${Math.floor(totalNapMins / 60)}h ${totalNapMins % 60}m ${t.napTotal}`} color="green" />}
+              {totalNapMins > 0 && <Chip label={`${Math.floor(totalNapMins / 60)}h ${totalNapMins % 60}m ${t.napTotal}`} color="green" />}
               {log.minutes_to_sleep != null && <Chip label={`${t.felAsleepIn} ${log.minutes_to_sleep}m`} color={log.minutes_to_sleep > 30 ? 'red' : 'green'} />}
             </div>
             {log.parent_note && (
