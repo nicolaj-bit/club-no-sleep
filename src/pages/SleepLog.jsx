@@ -101,6 +101,11 @@ export default function SleepLog() {
   const today = format(new Date(), 'yyyy-MM-dd');
   const [view, setView] = useState('log');
   const [aiCard, setAiCard] = useState(null); // null | 'loading' | { title, message, pattern }
+  const [showAiChat, setShowAiChat] = useState(false);
+  const [aiConversation, setAiConversation] = useState(null);
+  const [aiMessages, setAiMessages] = useState([]);
+  const [aiInput, setAiInput] = useState('');
+  const [aiSending, setAiSending] = useState(false);
 
 
   const [form, setForm] = useState({
@@ -205,6 +210,36 @@ export default function SleepLog() {
       setAiCard(res.data);
     } catch (e) {
       setAiCard({ title: t.aiErrorTitle, message: t.aiErrorMsg, pattern: null });
+    }
+  };
+
+  const openAiChat = async () => {
+    setShowAiChat(true);
+    if (aiConversation) return;
+    try {
+      const conv = await base44.agents.createConversation({ agent_name: 'sleep_advisor', metadata: { name: 'Søvnrådgivning' } });
+      setAiConversation(conv);
+      setAiMessages(conv.messages || []);
+      const unsubscribe = base44.agents.subscribeToConversation(conv.id, (data) => {
+        setAiMessages([...(data.messages || [])]);
+      });
+      conv._unsubscribe = unsubscribe;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const sendAiMessage = async () => {
+    if (!aiInput.trim() || !aiConversation || aiSending) return;
+    const text = aiInput.trim();
+    setAiInput('');
+    setAiSending(true);
+    try {
+      await base44.agents.addMessage(aiConversation, { role: 'user', content: text });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAiSending(false);
     }
   };
 
@@ -561,18 +596,93 @@ export default function SleepLog() {
             </button>
 
             <button
-              onClick={fetchAiAnalysis}
-              disabled={aiCard === 'loading'}
-              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border disabled:opacity-50"
+              onClick={openAiChat}
+              className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
-              {aiCard && aiCard !== 'loading' ? t.updateAiAdvice : t.getAiAdvice}
+              {t.getAiAdvice}
             </button>
           </div>
           </div>
           </ContentLock>
           )}
+
+      {/* AI Chat modal */}
+      {showAiChat && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col"
+          style={{ backgroundColor: 'var(--color-bg)' }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 pt-10 pb-3 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>Søvnrådgiver</span>
+            </div>
+            <button onClick={() => setShowAiChat(false)} style={{ color: 'var(--color-text-muted)' }}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+            {aiMessages.length === 0 && (
+              <div className="text-center py-10">
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Stil et spørgsmål om barnets søvn 🌙</p>
+              </div>
+            )}
+            {aiMessages.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+                  style={msg.role === 'user'
+                    ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                    : { backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }
+                  }
+                >
+                  {msg.content}
+                </div>
+              </div>
+            ))}
+            {aiSending && (
+              <div className="flex justify-start">
+                <div className="rounded-2xl px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '0ms' }} />
+                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '150ms' }} />
+                    <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ backgroundColor: 'var(--color-text-muted)', animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="px-4 pb-6 pt-2 border-t" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && sendAiMessage()}
+                placeholder="Stil et spørgsmål..."
+                className="flex-1 px-4 py-3 rounded-xl border text-sm focus:outline-none"
+                style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+              />
+              <button
+                onClick={sendAiMessage}
+                disabled={!aiInput.trim() || aiSending}
+                className="px-4 py-3 rounded-xl text-sm font-semibold disabled:opacity-40"
+                style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
           </div>
           </PullToRefresh>
           );

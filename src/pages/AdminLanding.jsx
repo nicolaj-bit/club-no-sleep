@@ -61,9 +61,11 @@ export default function AdminLanding() {
   const [user, setUser] = useState(null);
   const [phonesConfig, setPhonesConfig] = useState(null);
   const [iconsConfig, setIconsConfig] = useState(null);
+  const [sleepAgentConfig, setSleepAgentConfig] = useState(null);
   const [phoneA, setPhoneA] = useState('');
   const [phoneB, setPhoneB] = useState('');
   const [featureIcons, setFeatureIcons] = useState({});
+  const [sleepAgentPrompt, setSleepAgentPrompt] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -87,6 +89,12 @@ export default function AdminLanding() {
           const map = {};
           (iconsConfigRecord.feature_icons || []).forEach(f => { map[f.key] = f.url; });
           setFeatureIcons(map);
+        }
+
+        const sleepAgentRecord = configs.find(c => c.key === 'sleep_agent_prompt');
+        if (sleepAgentRecord) {
+          setSleepAgentConfig(sleepAgentRecord);
+          setSleepAgentPrompt(sleepAgentRecord.help_about_text_da || '');
         }
       } catch (e) {
         console.error(e);
@@ -178,6 +186,42 @@ export default function AdminLanding() {
 
       <button onClick={handleSaveIcons} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>
         {loading ? 'Gemmer...' : 'Gem ikoner'}
+      </button>
+
+      {/* SLEEP AGENT PROMPT */}
+      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>🌙 Søvnrådgiver AI — prompt</h2>
+      <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
+        Dette er instrukserne til den AI søvnrådgiver der vises i Søvnlog. Ændr prompten for at tilpasse rådgivningens tone og fokus.
+      </p>
+      <textarea
+        value={sleepAgentPrompt}
+        onChange={(e) => setSleepAgentPrompt(e.target.value)}
+        rows={12}
+        placeholder="Skriv instrukser til søvnrådgiveren her..."
+        style={{ width: '100%', padding: '0.75rem', borderRadius: 8, border: '1px solid #EDE4DB', fontSize: '0.88rem', lineHeight: 1.6, resize: 'vertical', marginBottom: '0.75rem', fontFamily: 'inherit' }}
+      />
+      <button
+        onClick={async () => {
+          setLoading(true);
+          try {
+            const data = { key: 'sleep_agent_prompt', help_about_text_da: sleepAgentPrompt };
+            if (sleepAgentConfig) {
+              await base44.entities.AppConfig.update(sleepAgentConfig.id, data);
+            } else {
+              const created = await base44.entities.AppConfig.create(data);
+              setSleepAgentConfig(created);
+            }
+            toast.success('Søvnrådgiver prompt gemt');
+          } catch (e) {
+            toast.error('Fejl ved gemning');
+          } finally {
+            setLoading(false);
+          }
+        }}
+        disabled={loading}
+        style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '2rem' }}
+      >
+        {loading ? 'Gemmer...' : 'Gem søvnrådgiver prompt'}
       </button>
     </div>
   );
