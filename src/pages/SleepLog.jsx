@@ -259,14 +259,11 @@ export default function SleepLog() {
     setShowAiChat(true);
     if (aiConversation) return;
     try {
-      // Hent brugerens søvnlogs
       const currentUser = user || await base44.auth.me();
       const childId = activeChild?.id || null;
       const logs = await base44.entities.SleepLog.filter({ user_email: currentUser.email, child_id: childId || null }, '-date', 30);
       const uniqueDays = [...new Set((logs || []).map(l => l.date))];
       setAiLogsCount(uniqueDays.length);
-
-      if (uniqueDays.length < 5) return; // Ikke nok data – vis besked i stedet
 
       const conv = await base44.agents.createConversation({ agent_name: 'sleep_advisor', metadata: { name: 'Søvnrådgivning' } });
       setAiConversation(conv);
@@ -697,33 +694,8 @@ export default function SleepLog() {
             </div>
           </div>
 
-          {/* Not enough data */}
-          {aiLogsCount !== null && aiLogsCount < 5 && (
-            <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5">
-              <SleepAIAvatar size="lg" />
-              <div>
-                <h2 className="text-2xl font-light mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                  Ikke nok data endnu
-                </h2>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                  Søvnrådgiveren har brug for mindst <strong>5 dages søvnlogs</strong> for at give dig præcis og personlig rådgivning.
-                </p>
-                <p className="text-sm mt-3 font-medium" style={{ color: 'var(--color-accent)' }}>
-                  Du har registreret {aiLogsCount} {aiLogsCount === 1 ? 'dag' : 'dage'} — fortsæt med at logge i {5 - aiLogsCount} {5 - aiLogsCount === 1 ? 'dag' : 'dage'} mere.
-                </p>
-              </div>
-              <button
-                onClick={() => setShowAiChat(false)}
-                className="px-6 py-3 rounded-2xl text-sm font-semibold"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
-              >
-                Fortsæt med at logge
-              </button>
-            </div>
-          )}
-
           {/* Messages */}
-          {(aiLogsCount === null || aiLogsCount >= 5) && (
+          {(
             <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
 
               {/* Empty / loading state */}
@@ -793,8 +765,8 @@ export default function SleepLog() {
             </div>
           )}
 
-          {/* Input bar – only show when enough data */}
-          {(aiLogsCount === null || aiLogsCount >= 5) && (
+          {/* Input bar */}
+          {(
             <div
               className="px-4 pt-3 pb-6 border-t"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))' }}
