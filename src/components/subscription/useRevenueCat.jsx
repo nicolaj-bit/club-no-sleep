@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const RC_API_KEY = 'appe968894c01';
+const RC_API_KEY = 'rcb_xEWZIvyWYtatYqkMITsSxzXyYbKp';
 
 let _rcInstance = null;
 let _rcReady = false;
