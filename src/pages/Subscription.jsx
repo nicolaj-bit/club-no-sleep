@@ -205,7 +205,7 @@ export default function Subscription() {
   const iosPrice = iosPkg?.product?.priceString;
   const priceLabel = iosPrice
     ? `${iosPrice} / ${da ? 'måned' : 'month'}`
-    : display.price_label || (da ? '59 kr. / måned' : '59 DKK / month');
+    : display.price_label || '59 kr. / måned';
   const ctaLabel = display.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.');
   const footerNote = display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.');
 
