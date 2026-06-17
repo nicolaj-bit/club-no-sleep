@@ -111,50 +111,71 @@ export default function Landing() {
            HERO 2 — Pris & hvad du får
         ════════════════════════════════ */}
       <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: 520, margin: '0 auto' }}>
 
-          {/* Pris */}
-          <p style={{ color: '#7A665A', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 0.5rem' }}>Medlemskab</p>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.5rem' }}>
-            <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(3.2rem, 8vw, 4.5rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1 }}>59 kr.</span>
-            <span style={{ color: '#7A665A', fontSize: '1rem' }}>/ md.</span>
+          {/* Elegant card */}
+          <div style={{
+            background: 'linear-gradient(160deg, #FDF8F3 0%, #F5EDE0 100%)',
+            borderRadius: 28,
+            border: '1px solid #E2D0BC',
+            boxShadow: '0 8px 48px rgba(90,50,20,0.10)',
+            padding: 'clamp(2rem, 5vw, 3rem)',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+          }}>
+
+            {/* Subtle decorative circle */}
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(200,168,130,0.12)', pointerEvents: 'none' }} />
+
+            {/* Label */}
+            <p style={{ color: '#B08D72', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 1rem' }}>Fuld adgang</p>
+
+            {/* Pris */}
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.4rem' }}>
+              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(3rem, 9vw, 4.2rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1 }}>59 kr.</span>
+              <span style={{ color: '#7A665A', fontSize: '0.95rem' }}>/ md.</span>
+            </div>
+            <p style={{ color: '#9A7A6A', fontSize: '0.78rem', margin: '0 0 2rem' }}>Ingen binding — opsig når som helst</p>
+
+            {/* Divider */}
+            <div style={{ borderTop: '1px solid #E2D0BC', margin: '0 0 1.8rem' }} />
+
+            {/* Features */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.6rem', marginBottom: '2.2rem' }}>
+              {[
+                '🌙 AI søvnrådgivning',
+                '🐯 Tigerspring guide',
+                '💬 Chat med forældre',
+                '📅 Fælles kalender',
+                '📚 100+ artikler',
+                '👩‍⚕️ Ekspert booking',
+                '🔔 Milepæle & notifikationer',
+                '👨‍👩‍👧 Partner inkluderet',
+              ].map(f => (
+                <span key={f} style={{ backgroundColor: 'rgba(255,255,255,0.7)', color: '#3A2416', fontSize: '0.8rem', padding: '6px 13px', borderRadius: 50, border: '1px solid #E2D0BC', whiteSpace: 'nowrap' }}>
+                  {f}
+                </span>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={() => window.location.href = '/Checkout'}
+                style={{ width: '100%', backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 14, padding: '16px', fontSize: '0.97rem', fontWeight: 600, cursor: 'pointer', letterSpacing: '0.02em' }}
+              >
+                Kom i Gang
+              </button>
+              <button
+                onClick={() => window.location.href = '/app'}
+                style={{ width: '100%', backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '14px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}
+              >
+                Jeg vil kigge →
+              </button>
+            </div>
+
           </div>
-          <p style={{ color: '#7A665A', fontSize: '0.82rem', margin: '0 0 2.8rem' }}>Ingen binding — opsig når som helst</p>
-
-          {/* Hvad får du */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.7rem', marginBottom: '3rem' }}>
-            {[
-              '🌙 AI søvnrådgivning',
-              '🐯 Tigerspring guide',
-              '💬 Chat med forældre',
-              '📅 Fælles kalender',
-              '📚 100+ artikler',
-              '👩‍⚕️ Ekspert booking',
-              '🔔 Milepæle & notifikationer',
-              '👨‍👩‍👧 Partner inkluderet',
-            ].map(f => (
-              <span key={f} style={{ backgroundColor: '#F3E9E1', color: '#3A2416', fontSize: '0.82rem', padding: '7px 14px', borderRadius: 50, border: '1px solid #E2D0BC', whiteSpace: 'nowrap' }}>
-                {f}
-              </span>
-            ))}
-          </div>
-
-          {/* CTAs */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-            <button
-              onClick={() => window.location.href = '/Checkout'}
-              style={{ width: '100%', maxWidth: 360, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 14, padding: '16px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}
-            >
-              Kom i Gang
-            </button>
-            <button
-              onClick={() => window.location.href = '/app'}
-              style={{ width: '100%', maxWidth: 360, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '15px', fontSize: '0.93rem', fontWeight: 500, cursor: 'pointer' }}
-            >
-              Jeg vil kigge →
-            </button>
-          </div>
-
         </div>
       </section>
 
