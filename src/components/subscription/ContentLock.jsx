@@ -2,7 +2,7 @@ import React from 'react';
 import { Lock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const MEMBERSHIP_URL = 'https://www.lalatoto.dk/pages/abonnement';
+const MEMBERSHIP_URL = '/Checkout';
 
 /**
  * ContentLock – wraps premium content.
@@ -77,12 +77,10 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
 
         <a
           href={MEMBERSHIP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
           className="w-full py-3.5 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', textDecoration: 'none' }}
         >
-          Læs mere
+          Bliv medlem ✨
         </a>
       </motion.div>
     </div>
