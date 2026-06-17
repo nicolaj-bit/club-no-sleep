@@ -14,7 +14,7 @@ export default function Checkout() {
   };
 
   const handleAppStore = () => {
-    base44.auth.redirectToLogin('/Subscription');
+    window.location.href = '/Subscription';
   };
 
   return (
