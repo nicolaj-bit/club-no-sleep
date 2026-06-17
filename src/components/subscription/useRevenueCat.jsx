@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const RC_API_KEY = 'rcb_xEWZIvyWYtatYqkMITsSxzXyYbKp';
+const RC_URL_SCHEME = 'rc-13a058a659';
 
 let _rcInstance = null;
 let _rcReady = false;
@@ -50,7 +51,8 @@ export function useRevenueCat(userId) {
 
   const purchase = async (packageToPurchase) => {
     if (!_rcInstance) throw new Error('RevenueCat ikke initialiseret');
-    const result = await _rcInstance.purchase({ rcPackage: packageToPurchase });
+    const redirectURL = `${RC_URL_SCHEME}://`;
+    const result = await _rcInstance.purchase({ rcPackage: packageToPurchase, redirectURL });
     setCustomerInfo(result.customerInfo);
     return result;
   };
