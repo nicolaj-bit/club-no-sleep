@@ -69,21 +69,30 @@ export default function Subscription() {
     }
   }, []);
 
-  // iOS IAP køb via RevenueCat
+  // Køb via RevenueCat (iOS) eller Stripe (web)
   const handleIAPSubscribe = async () => {
+    const pkg = rc.offerings?.current?.availablePackages?.[0];
+
+    // Hvis ingen RevenueCat pakker tilgængelige — brug Stripe
+    if (!pkg) {
+      if (window.self !== window.top) {
+        alert(da
+          ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
+          : 'Checkout only works from the published app, not the preview.');
+        return;
+      }
+      window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const pkg = rc.offerings?.current?.availablePackages?.[0];
-      if (!pkg) throw new Error(da ? 'Ingen pakker tilgængelige' : 'No packages available');
       await rc.purchase(pkg);
       setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription aktiveret!');
-      // Sync til backend
-      await base44.functions.invoke('verifySubscription', {});
+      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
     } catch (e) {
-      if (e.message?.includes('cancel') || e.code === 'PURCHASE_CANCELLED') {
-        // Bruger annullerede — ingen fejl
-      } else {
+      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
         setError(e.message || (da ? 'Køb fejlede. Prøv igen.' : 'Purchase failed. Please try again.'));
       }
     } finally {
