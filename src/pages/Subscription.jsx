@@ -38,8 +38,8 @@ export default function Subscription() {
   const da = lang === 'da';
   const onIOS = isIOS();
 
-  // RevenueCat — kun aktiv på iOS
-  const rc = useRevenueCat(onIOS ? userId : null);
+  // RevenueCat — aktiv med web billing key (virker på alle platforme)
+  const rc = useRevenueCat(userId || 'guest');
 
   useEffect(() => {
     const load = async () => {
@@ -107,8 +107,8 @@ export default function Subscription() {
     setError(null);
     setRestoreMessage(null);
     try {
-      if (onIOS && rc.restorePurchases) {
-        // iOS: gendan via RevenueCat
+      if (rc.restorePurchases) {
+        // Gendan via RevenueCat
         const info = await rc.restorePurchases();
         const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
         if (hasActive) {
@@ -195,13 +195,13 @@ export default function Subscription() {
   const addFeature = () => setDraft(d => ({ ...d, features: [...d.features, { emoji: '✨', text: '' }] }));
   const removeFeature = (i) => setDraft(d => ({ ...d, features: d.features.filter((_, idx) => idx !== i) }));
 
-  const isActive = profile?.subscription_status === 'active' || (onIOS && rc.isSubscribed);
+  const isActive = profile?.subscription_status === 'active' || rc.isSubscribed;
   const display = content || {};
   const features = display.features?.length ? display.features : DEFAULT_FEATURES_DA;
   const headline = display.headline || 'LALATOTO';
   const subline = display.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent');
-  // Brug App Store pris fra RevenueCat på iOS, ellers vis cms-pris
-  const iosPkg = onIOS ? rc.offerings?.current?.availablePackages?.[0] : null;
+  // Brug pris fra RevenueCat, ellers vis cms-pris
+  const iosPkg = rc.offerings?.current?.availablePackages?.[0];
   const iosPrice = iosPkg?.product?.priceString;
   const priceLabel = iosPrice
     ? `${iosPrice} / ${da ? 'måned' : 'month'}`
@@ -345,7 +345,7 @@ export default function Subscription() {
         </motion.div>
 
         {/* Error / restore message */}
-        {(error || (onIOS && rc.error)) && (
+        {(error || rc.error) && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -380,12 +380,12 @@ export default function Subscription() {
             initial={{ y: 16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.45, duration: 0.4 }}
-            onClick={onIOS ? handleIAPSubscribe : handleSubscribe}
-            disabled={loading || restoring || (onIOS && rc.loading)}
+            onClick={handleIAPSubscribe}
+            disabled={loading || restoring || rc.loading}
             className="w-full py-4 rounded-2xl text-base font-semibold mb-3 flex items-center justify-center gap-2 disabled:opacity-60"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
-            {loading || (onIOS && rc.loading)
+            {loading || rc.loading
               ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
               : ctaLabel}
           </motion.button>
