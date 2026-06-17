@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Smartphone, CreditCard, Check, ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 
 export default function Checkout() {
   const [selected, setSelected] = useState(null);
@@ -14,7 +13,7 @@ export default function Checkout() {
   };
 
   const handleAppStore = () => {
-    base44.auth.redirectToLogin('/Subscription');
+    window.location.href = 'https://apps.apple.com/app/id6744278703';
   };
 
   return (
