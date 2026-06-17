@@ -18,7 +18,7 @@ export default function Checkout() {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    window.location.href = 'https://pay.rev.cat/sugwsgqahvhlwgat/';
+    window.location.href = 'https://pay.rev.cat/sugwsgqahvhlwgat/rc-d2291fc209';
   };
 
   return (
