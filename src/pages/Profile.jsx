@@ -73,11 +73,12 @@ export default function Profile() {
     const loadUser = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
-        if (!isAuth) { base44.auth.redirectToLogin(); return; }
-        const u = await base44.auth.me();
-        setUser(u);
+        if (isAuth) {
+          const u = await base44.auth.me();
+          setUser(u);
+        }
       } catch {
-        base44.auth.redirectToLogin();
+        // Gæst — ingen redirect
       } finally {
         setLoading(false);
       }
@@ -112,6 +113,41 @@ export default function Profile() {
       <div className="min-h-screen flex flex-col items-center pt-24 gap-4 px-4" style={{ background: 'var(--color-bg)' }}>
         <Skeleton className="w-24 h-24 rounded-full" />
         <Skeleton className="h-5 w-40" />
+      </div>
+    );
+  }
+
+  // Gæst: ikke logget ind
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 pb-20" style={{ background: 'var(--color-bg)' }}>
+        <img
+          src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4d581f250_Ikon.png"
+          alt="LALATOTO"
+          className="w-20 h-20 rounded-3xl mb-6 object-contain"
+        />
+        <h1 className="text-3xl font-light mb-2 text-center" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          {lang === 'da' ? 'Opret din profil' : 'Create your profile'}
+        </h1>
+        <p className="text-sm text-center mb-8" style={{ color: 'var(--color-text-muted)' }}>
+          {lang === 'da'
+            ? 'Log ind eller opret en konto for at gemme dine data og blive medlem.'
+            : 'Log in or create an account to save your data and become a member.'}
+        </p>
+        <button
+          onClick={() => base44.auth.redirectToLogin('/Profile')}
+          className="w-full max-w-xs py-4 rounded-2xl text-base font-semibold mb-3"
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+        >
+          {lang === 'da' ? 'Log ind / Opret konto' : 'Log in / Sign up'}
+        </button>
+        <button
+          onClick={() => base44.auth.redirectToLogin('/Subscription')}
+          className="w-full max-w-xs py-3 rounded-2xl text-sm"
+          style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}
+        >
+          {lang === 'da' ? 'Bliv medlem →' : 'Become a member →'}
+        </button>
       </div>
     );
   }

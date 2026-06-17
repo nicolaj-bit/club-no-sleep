@@ -71,13 +71,19 @@ export default function Subscription() {
 
   // iOS IAP køb via RevenueCat
   const handleIAPSubscribe = async () => {
+    // Kræver login for at købe
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) {
+      base44.auth.redirectToLogin('/Subscription');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
       const pkg = rc.offerings?.current?.availablePackages?.[0];
       if (!pkg) throw new Error(da ? 'Ingen pakker tilgængelige' : 'No packages available');
       await rc.purchase(pkg);
-      setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription activated!');
+      setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription aktiveret!');
       // Sync til backend
       await base44.functions.invoke('verifySubscription', {});
     } catch (e) {
@@ -92,7 +98,12 @@ export default function Subscription() {
   };
 
   // Stripe web checkout
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) {
+      base44.auth.redirectToLogin('/Subscription');
+      return;
+    }
     if (window.self !== window.top) {
       alert(da
         ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'

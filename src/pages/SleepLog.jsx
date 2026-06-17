@@ -163,9 +163,11 @@ export default function SleepLog() {
   });
 
   useEffect(() => {
-    base44.auth.me().then(u => {
-      setUser(u);
-    }).catch(() => base44.auth.redirectToLogin());
+    base44.auth.isAuthenticated().then(isAuth => {
+      if (isAuth) return base44.auth.me();
+    }).then(u => {
+      if (u) setUser(u);
+    }).catch(() => {});
   }, []);
 
   // Auto-beregn barnets alder fra aktivt barn

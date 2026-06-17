@@ -56,10 +56,9 @@ const AuthenticatedApp = () => {
   if (!isPublicRoute && authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
     }
+    // auth_required og andre fejl: lad brugeren se appen som gæst (demo)
+    // Login kræves kun når de vil købe abonnement
   }
 
   return (

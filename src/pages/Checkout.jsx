@@ -5,7 +5,12 @@ import { base44 } from '@/api/base44Client';
 export default function Checkout() {
   const [selected, setSelected] = useState(null);
 
-  const handleStripe = () => {
+  const handleStripe = async () => {
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) {
+      base44.auth.redirectToLogin('/Checkout');
+      return;
+    }
     if (window.self !== window.top) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
