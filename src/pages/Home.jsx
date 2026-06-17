@@ -132,6 +132,11 @@ export default function Home() {
             <h1 className="text-[38px] font-light leading-tight mt-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
           </div>
           <div className="flex items-center gap-2 mt-1">
+            {!user && (
+              <Link to="/Checkout" className="px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: 'linear-gradient(135deg, #C8A882, #A07850)' }}>
+                Bliv medlem
+              </Link>
+            )}
             {user && <NotificationBell userEmail={user.email} />}
           </div>
         </div>
