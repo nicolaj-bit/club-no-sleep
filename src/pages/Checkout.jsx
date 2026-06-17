@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Smartphone, CreditCard, Check, ArrowLeft } from 'lucide-react';
+import { Smartphone, CreditCard, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+const RC_API_KEY = 'rcb_xEWZIvyWYtatYqkMITsSxzXyYbKp';
 
 export default function Checkout() {
   const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleStripe = async () => {
     if (window.self !== window.top) {
@@ -13,8 +16,38 @@ export default function Checkout() {
     window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
   };
 
-  const handleAppStore = () => {
-    window.location.href = '/Subscription';
+  const handleAppStore = async () => {
+    if (window.self !== window.top) {
+      alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-js');
+      let userId = 'guest';
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const user = await base44.auth.me();
+          userId = user.id || user.email;
+        }
+      } catch {}
+      const rc = Purchases.configure(RC_API_KEY, userId);
+      const offerings = await rc.getOfferings();
+      const pkg = offerings?.current?.availablePackages?.[0];
+      if (!pkg) {
+        alert('Ingen abonnementspakke fundet. Prøv igen.');
+        return;
+      }
+      const redirectURL = `${window.location.origin}/CheckoutSuccess?subscription=success`;
+      await rc.purchase({ rcPackage: pkg, redirectURL });
+    } catch (e) {
+      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
+        alert('Køb fejlede: ' + (e.message || 'Ukendt fejl'));
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -150,7 +183,7 @@ export default function Checkout() {
       <div style={{ width: '100%', maxWidth: 480 }}>
         <button
           onClick={selected === 'stripe' ? handleStripe : selected === 'appstore' ? handleAppStore : undefined}
-          disabled={!selected}
+          disabled={!selected || loading}
           style={{
             width: '100%',
             backgroundColor: selected ? '#3A2416' : '#C8B8A8',
@@ -162,9 +195,13 @@ export default function Checkout() {
             fontWeight: 600,
             cursor: selected ? 'pointer' : 'default',
             transition: 'background-color 0.2s',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
         >
-          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Fortsæt til betaling →' : 'Fortsæt til App Store →'}
+          {loading
+            ? <><Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> Indlæser…</>
+            : !selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Fortsæt til betaling →' : 'Fortsæt til App Store →'
+          }
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
