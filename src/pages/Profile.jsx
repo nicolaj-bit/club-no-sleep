@@ -208,6 +208,9 @@ export default function Profile() {
                 <p style={{ color: '#3A2B1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.75rem', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
                   {displayName}
                 </p>
+                <p className="mt-1.5" style={{ color: '#9A7A62', fontSize: '0.72rem', letterSpacing: '0.03em', fontStyle: 'italic' }}>
+                  {lang === 'da' ? 'Dit rum, kun for dig' : 'Your space, just for you'}
+                </p>
 
               </div>
 
