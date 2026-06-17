@@ -108,69 +108,73 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-           HERO 2 — Pris & hvad du får
+           HERO 2 — Plan chooser
         ════════════════════════════════ */}
       <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
-          {/* Elegant card */}
-          <div style={{
-            background: 'linear-gradient(160deg, #FDF8F3 0%, #F5EDE0 100%)',
-            borderRadius: 28,
-            border: '1px solid #E2D0BC',
-            boxShadow: '0 8px 48px rgba(90,50,20,0.10)',
-            padding: 'clamp(2rem, 5vw, 3rem)',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.6rem' }}>
+              Vælg dit medlemskab
+            </h2>
+            <p style={{ color: '#4A3525', fontSize: '0.88rem', lineHeight: 1.8, margin: 0 }}>Ingen binding — opsig når som helst</p>
+          </div>
 
-            {/* Subtle decorative circle */}
-            <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(200,168,130,0.12)', pointerEvents: 'none' }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
 
-            {/* Label */}
-            <p style={{ color: '#B08D72', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 1rem' }}>Fuld adgang</p>
-
-            {/* Pris */}
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.4rem' }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(3rem, 9vw, 4.2rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1 }}>59 kr.</span>
-              <span style={{ color: '#7A665A', fontSize: '0.95rem' }}>/ md.</span>
-            </div>
-            <p style={{ color: '#9A7A6A', fontSize: '0.78rem', margin: '0 0 2rem' }}>Ingen binding — opsig når som helst</p>
-
-            {/* Divider */}
-            <div style={{ borderTop: '1px solid #E2D0BC', margin: '0 0 1.8rem' }} />
-
-            {/* Features */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.6rem', marginBottom: '2.2rem' }}>
-              {[
-                '🌙 AI søvnrådgivning',
-                '🐯 Tigerspring guide',
-                '💬 Chat med forældre',
-                '📅 Fælles kalender',
-                '📚 100+ artikler',
-                '👩‍⚕️ Ekspert booking',
-                '🔔 Milepæle & notifikationer',
-                '👨‍👩‍👧 Partner inkluderet',
-              ].map(f => (
-                <span key={f} style={{ backgroundColor: 'rgba(255,255,255,0.7)', color: '#3A2416', fontSize: '0.8rem', padding: '6px 13px', borderRadius: 50, border: '1px solid #E2D0BC', whiteSpace: 'nowrap' }}>
-                  {f}
-                </span>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button
-                onClick={() => window.location.href = '/Checkout'}
-                style={{ width: '100%', backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 14, padding: '16px', fontSize: '0.97rem', fontWeight: 600, cursor: 'pointer', letterSpacing: '0.02em' }}
-              >
-                Kom i Gang
+            {/* Premium card */}
+            <div style={{ background: 'linear-gradient(160deg, #DCC1B0, #C8A882)', borderRadius: 24, padding: '2rem', border: '2px solid #B08D72', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 14, right: 14, backgroundColor: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', padding: '3px 10px', borderRadius: 20 }}>
+                ANBEFALET
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>Fuld adgang</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: '1.4rem' }}>
+                <span style={{ fontSize: '2.8rem', fontWeight: 700, color: '#fff' }}>59 kr.</span>
+                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>/ md.</span>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.6rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  'AI søvnrådgivning',
+                  'Tigerspring & udviklingsguide',
+                  'Chat med andre forældre',
+                  'Ekspert booking',
+                  '100+ vidensartikler',
+                  'Fælles kalender med partner',
+                  'Notifikationer & milestene',
+                ].map(f => (
+                  <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: '0.88rem' }}>
+                    <span style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.65rem' }}>✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => window.location.href = '/Checkout'} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
+                Kom i Gang ✨
               </button>
-              <button
-                onClick={() => window.location.href = '/app'}
-                style={{ width: '100%', backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '14px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}
-              >
+            </div>
+
+            {/* Demo card */}
+            <div style={{ backgroundColor: '#F3E9E1', borderRadius: 24, padding: '2rem', border: '1px solid #E2D0BC' }}>
+              <p style={{ color: '#7A665A', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>Demo</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: '1.4rem' }}>
+                <span style={{ fontSize: '2.8rem', fontWeight: 700, color: '#1E140A' }}>Gratis</span>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.6rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  { text: 'Begrænset søvnrådgivning', included: true },
+                  { text: 'Basis kalender', included: true },
+                  { text: 'Fællesskab (kun læseadgang)', included: true },
+                  { text: 'Ekspert booking', included: false },
+                  { text: 'Tigerspring guide', included: false },
+                  { text: 'AI rådgivning', included: false },
+                ].map(({ text, included }) => (
+                  <li key={text} style={{ display: 'flex', alignItems: 'center', gap: 10, color: included ? '#3A2416' : '#B0A090', fontSize: '0.88rem', textDecoration: included ? 'none' : 'line-through' }}>
+                    <span style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: included ? '#C8A882' : '#DDD0C4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.65rem', color: included ? '#fff' : '#B0A090' }}>{included ? '✓' : '×'}</span>
+                    {text}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 600, cursor: 'pointer' }}>
                 Jeg vil kigge →
               </button>
             </div>
