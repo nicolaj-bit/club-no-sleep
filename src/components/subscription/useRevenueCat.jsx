@@ -51,7 +51,7 @@ export function useRevenueCat(userId) {
 
   const purchase = async (packageToPurchase) => {
     if (!_rcInstance) throw new Error('RevenueCat ikke initialiseret');
-    const redirectURL = `${RC_URL_SCHEME}://`;
+    const redirectURL = `${window.location.origin}/CheckoutSuccess?subscription=success`;
     const result = await _rcInstance.purchase({ rcPackage: packageToPurchase, redirectURL });
     setCustomerInfo(result.customerInfo);
     return result;
