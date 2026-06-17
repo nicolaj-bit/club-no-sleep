@@ -46,7 +46,7 @@ export default function Landing() {
             <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
             <>
                 <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
-                <button onClick={handleLogin} style={btnDark}>Bliv medlem</button>
+                <button onClick={() => window.location.href = '/Checkout'} style={btnDark}>Bliv medlem</button>
               </>
             }
           </div>
@@ -99,7 +99,7 @@ export default function Landing() {
                   </div>
                 </a>
               </div>
-              <button className="lnd-hero1-btn" onClick={handleLogin} style={btnBrown}>Bliv medlem</button>
+              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/Checkout'} style={btnBrown}>Bliv medlem</button>
             </div>
           </div>
 
@@ -148,7 +148,7 @@ export default function Landing() {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => base44.auth.redirectToLogin('/Onboarding')} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
+              <button onClick={() => window.location.href = '/Checkout'} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
                 Kom i gang ✨
               </button>
             </div>
@@ -275,7 +275,7 @@ export default function Landing() {
                   </div>
                 </a>
               </div>
-              <button className="lnd-partner-btn" onClick={handleLogin} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
+              <button className="lnd-partner-btn" onClick={() => window.location.href = '/Checkout'} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
                 Bliv medlem
               </button>
             </div>
