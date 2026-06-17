@@ -100,6 +100,7 @@ export default function Landing() {
                 </a>
               </div>
               <button className="lnd-hero1-btn" onClick={() => window.location.href = '/Checkout'} style={btnBrown}>Bliv medlem</button>
+              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>Jeg vil kigge →</button>
             </div>
           </div>
 
