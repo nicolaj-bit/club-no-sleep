@@ -71,12 +71,6 @@ export default function Subscription() {
 
   // iOS IAP køb via RevenueCat
   const handleIAPSubscribe = async () => {
-    // Kræver login for at købe
-    const isAuth = await base44.auth.isAuthenticated();
-    if (!isAuth) {
-      base44.auth.redirectToLogin('/Subscription');
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
