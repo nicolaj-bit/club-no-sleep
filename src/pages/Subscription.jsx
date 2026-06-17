@@ -4,6 +4,13 @@ import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { motion } from 'framer-motion';
+import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+
+// Detect iOS native app (Capacitor webview)
+const isIOS = () => {
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/.test(ua) && !window.MSStream;
+};
 
 const DEFAULT_FEATURES_DA = [
   { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
@@ -20,6 +27,7 @@ export default function Subscription() {
   const [error, setError] = useState(null);
   const [restoreMessage, setRestoreMessage] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [content, setContent] = useState(null);
   const [contentId, setContentId] = useState(null);
@@ -28,6 +36,10 @@ export default function Subscription() {
   const [saving, setSaving] = useState(false);
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const da = lang === 'da';
+  const onIOS = isIOS();
+
+  // RevenueCat — kun aktiv på iOS
+  const rc = useRevenueCat(onIOS ? userId : null);
 
   useEffect(() => {
     const load = async () => {
@@ -35,6 +47,7 @@ export default function Subscription() {
         const user = await base44.auth.me();
         if (user) {
           if (user.role === 'admin') setIsAdmin(true);
+          setUserId(user.id || user.email);
           const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
           if (profiles.length) setProfile(profiles[0]);
         }
@@ -56,6 +69,29 @@ export default function Subscription() {
     }
   }, []);
 
+  // iOS IAP køb via RevenueCat
+  const handleIAPSubscribe = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const pkg = rc.offerings?.current?.availablePackages?.[0];
+      if (!pkg) throw new Error(da ? 'Ingen pakker tilgængelige' : 'No packages available');
+      await rc.purchase(pkg);
+      setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription activated!');
+      // Sync til backend
+      await base44.functions.invoke('verifySubscription', {});
+    } catch (e) {
+      if (e.message?.includes('cancel') || e.code === 'PURCHASE_CANCELLED') {
+        // Bruger annullerede — ingen fejl
+      } else {
+        setError(e.message || (da ? 'Køb fejlede. Prøv igen.' : 'Purchase failed. Please try again.'));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Stripe web checkout
   const handleSubscribe = () => {
     if (window.self !== window.top) {
       alert(da
@@ -71,13 +107,26 @@ export default function Subscription() {
     setError(null);
     setRestoreMessage(null);
     try {
-      const response = await base44.functions.invoke('verifySubscription', {});
-      if (response.data?.active) {
-        setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+      if (onIOS && rc.restorePurchases) {
+        // iOS: gendan via RevenueCat
+        const info = await rc.restorePurchases();
+        const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
+        if (hasActive) {
+          await base44.functions.invoke('verifySubscription', {});
+          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+        } else {
+          setRestoreMessage(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
+        }
       } else {
-        setRestoreMessage(da
-          ? 'Intet aktivt abonnement fundet på denne konto.'
-          : 'No active subscription found on this account.');
+        // Web/Android: tjek via Stripe backend
+        const response = await base44.functions.invoke('verifySubscription', {});
+        if (response.data?.active) {
+          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+        } else {
+          setRestoreMessage(da
+            ? 'Intet aktivt abonnement fundet på denne konto.'
+            : 'No active subscription found on this account.');
+        }
       }
     } catch (e) {
       setError(da ? 'Kunne ikke tjekke abonnement. Prøv igen.' : 'Could not verify subscription. Please try again.');
@@ -146,12 +195,17 @@ export default function Subscription() {
   const addFeature = () => setDraft(d => ({ ...d, features: [...d.features, { emoji: '✨', text: '' }] }));
   const removeFeature = (i) => setDraft(d => ({ ...d, features: d.features.filter((_, idx) => idx !== i) }));
 
-  const isActive = profile?.subscription_status === 'active';
+  const isActive = profile?.subscription_status === 'active' || (onIOS && rc.isSubscribed);
   const display = content || {};
   const features = display.features?.length ? display.features : DEFAULT_FEATURES_DA;
   const headline = display.headline || 'LALATOTO';
   const subline = display.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent');
-  const priceLabel = display.price_label || (da ? '59 kr. / måned' : '59 DKK / month');
+  // Brug App Store pris fra RevenueCat på iOS, ellers vis cms-pris
+  const iosPkg = onIOS ? rc.offerings?.current?.availablePackages?.[0] : null;
+  const iosPrice = iosPkg?.product?.priceString;
+  const priceLabel = iosPrice
+    ? `${iosPrice} / ${da ? 'måned' : 'month'}`
+    : display.price_label || (da ? '59 kr. / måned' : '59 DKK / month');
   const ctaLabel = display.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.');
   const footerNote = display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.');
 
@@ -291,7 +345,7 @@ export default function Subscription() {
         </motion.div>
 
         {/* Error / restore message */}
-        {error && (
+        {(error || (onIOS && rc.error)) && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -299,7 +353,7 @@ export default function Subscription() {
             style={{ background: 'rgba(220,60,40,0.08)', border: '1px solid rgba(220,60,40,0.2)' }}
           >
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-red-500" />
-            <p className="text-xs text-red-600">{error}</p>
+            <p className="text-xs text-red-600">{error || rc.error}</p>
           </motion.div>
         )}
         {restoreMessage && (
@@ -326,12 +380,12 @@ export default function Subscription() {
             initial={{ y: 16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.45, duration: 0.4 }}
-            onClick={handleSubscribe}
-            disabled={loading || restoring}
+            onClick={onIOS ? handleIAPSubscribe : handleSubscribe}
+            disabled={loading || restoring || (onIOS && rc.loading)}
             className="w-full py-4 rounded-2xl text-base font-semibold mb-3 flex items-center justify-center gap-2 disabled:opacity-60"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
-            {loading
+            {loading || (onIOS && rc.loading)
               ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
               : ctaLabel}
           </motion.button>
