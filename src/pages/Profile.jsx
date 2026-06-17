@@ -208,13 +208,7 @@ export default function Profile() {
                 <p style={{ color: '#3A2B1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.75rem', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
                   {displayName}
                 </p>
-                <p className="mt-1.5 flex items-center gap-1.5" style={{ color: '#7A5C44', fontSize: '0.72rem', letterSpacing: '0.03em' }}>
-                  <span style={{ fontSize: '0.65rem' }}>🤍</span>
-                  <span style={{ fontStyle: 'italic' }}>{lang === 'da' ? 'Dit rolige rum' : 'Your calm space'}</span>
-                </p>
-                <p className="mt-0.5" style={{ color: '#9A7A62', fontSize: '0.7rem', letterSpacing: '0.04em' }}>
-                  {lang === 'da' ? 'Et sted kun for dig.' : 'A place just for you.'}
-                </p>
+
               </div>
 
               {/* Rediger-knap – absolut placeret i nederste højre hjørne */}
