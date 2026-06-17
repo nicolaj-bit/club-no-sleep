@@ -19,6 +19,16 @@ Deno.serve(async (req) => {
     const profile = profiles[0];
 
     if (!profile) {
+      // Ny bruger — søg i Stripe om de har betalt med denne email
+      const customers = await stripe.customers.list({ email: user.email, limit: 5 });
+      for (const customer of customers.data) {
+        const subscriptions = await stripe.subscriptions.list({ customer: customer.id, status: 'active', limit: 5 });
+        if (subscriptions.data.length > 0) {
+          const sub = subscriptions.data[0];
+          console.log(`New user ${user.email} has paid — marking pending activation`);
+          return Response.json({ active: true, status: 'active', new_user: true, subscription_id: sub.id });
+        }
+      }
       return Response.json({ active: false, reason: 'no_profile' });
     }
 

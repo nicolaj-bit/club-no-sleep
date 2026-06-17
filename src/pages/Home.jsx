@@ -55,9 +55,7 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('subscription') === 'success') {
-      // Clean URL
-      window.history.replaceState({}, '', '/');
-      // Trigger subscription verify in background so SubscriptionGate re-checks
+      window.history.replaceState({}, '', '/app');
       base44.functions.invoke('verifySubscription', {}).catch(() => {});
     }
   }, []);
