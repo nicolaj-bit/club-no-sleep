@@ -216,6 +216,13 @@ export default function AboutUs() {
         <section>
           <div className="rounded-2xl p-6 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
             <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{storyTitle}</h2>
+            <div className="mb-5 rounded-xl overflow-hidden">
+              <img
+                src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/172953752_Designudennavn152.png"
+                alt="Sara og Nicolaj"
+                className="w-full object-cover"
+              />
+            </div>
             <EditableBlock
               label="historietekst"
               section="story"
