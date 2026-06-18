@@ -420,7 +420,7 @@ export default function Landing() {
            /* Navbar */
            .lnd-nav-inner { padding: 0 1.2rem !important; height: 56px !important; }
            .lnd-nav-title { font-size: 0.95rem !important; }
-           .lnd-nav-btn-text { display: none !important; }
+           .lnd-nav-btn-text { font-size: 0.8rem !important; }
 
            /* Hero 1 */
            .lnd-hero1-section { padding: 2.5rem 1.2rem 3rem !important; }
