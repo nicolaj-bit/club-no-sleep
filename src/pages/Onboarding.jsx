@@ -295,7 +295,12 @@ export default function Onboarding() {
                     placeholder={t.namePlaceholder}
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: errors.display_name ? '#ef4444' : 'var(--color-border)' }}
                   />
-                  {errors.display_name && <p className="text-xs text-red-500">{errors.display_name}</p>}
+                  {errors.display_name
+                    ? <p className="text-xs text-red-500">{errors.display_name}</p>
+                    : user?.full_name
+                      ? <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>✓ Hentet fra din login</p>
+                      : null
+                  }
                 </div>
 
                 {/* Brugernavn */}
