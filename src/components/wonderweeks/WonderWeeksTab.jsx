@@ -10,12 +10,30 @@ import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 
+// Byg et map fra slug → KnowledgeArticle for hurtig opslag
+function useWonderWeekArticles() {
+  return useQuery({
+    queryKey: ['wwArticles'],
+    queryFn: async () => {
+      const articles = await base44.entities.KnowledgeArticle.list();
+      const map = {};
+      articles.forEach(a => {
+        (a.tags || []).forEach(tag => {
+          if (tag.startsWith('tigerspring-')) map[tag] = a;
+        });
+      });
+      return map;
+    },
+  });
+}
+
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeeksTab() {
   const emojiMap = useWonderWeekEmojis();
   const { isActive: hasSubscription } = useSubscription();
   const { activeChild } = useActiveChild();
+  const { data: wwArticles = {} } = useWonderWeekArticles();
 
   const { data: introConfig } = useQuery({
     queryKey: ['wwIntroConfig'],
@@ -145,10 +163,10 @@ export default function WonderWeeksTab() {
                   )}
                 </div>
                 <p className="font-medium text-sm leading-snug truncate" style={{ color: 'var(--color-text-primary)' }}>
-                  {ww.name}
+                  {wwArticles[ww.articleSlug]?.title || ww.name}
                 </p>
                 <p className="text-xs mt-0.5 line-clamp-1" style={{ color: 'var(--color-text-muted)' }}>
-                  {ww.shortDescription}
+                  {wwArticles[ww.articleSlug]?.excerpt || ww.shortDescription}
                 </p>
               </div>
 
