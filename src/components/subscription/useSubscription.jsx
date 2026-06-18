@@ -33,15 +33,12 @@ export function useSubscription() {
         const isDemoMode = configs.length > 0 && configs[0].demo_mode === true;
 
         if (isDemoMode) {
-          // In demo mode: regular users get full access, admins see locked view to verify paywall
-          if (user.role !== 'admin') {
-            const result = { isActive: true, isTrial: false, demoMode: true };
-            _cache = result;
-            _cacheTime = Date.now();
-            setState({ loading: false, ...result });
-            return;
-          }
-          // Admin in demo mode → fall through to profile check (sees paywall like a real user)
+          // In demo mode: all users (incl. admin) see the app as a locked/expired user → paywall visible
+          const result = { isActive: false, isTrial: false, demoMode: true };
+          _cache = result;
+          _cacheTime = Date.now();
+          setState({ loading: false, ...result });
+          return;
         }
 
         // Specific demo users always get full access
