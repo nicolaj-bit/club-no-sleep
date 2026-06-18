@@ -169,6 +169,12 @@ export default function BabyFriendlyCafes() {
         <PageHeader title="Babyvenlige caféer" />
 
         <div className="p-4 space-y-4">
+          {/* Intro tekst */}
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Nogle dage har man bare brug for at komme væk hjemmefra og drikke en kop kaffe, man ikke selv har lavet.
+            Vi har samlet en række babyvenlige caféer, som alle er anbefalet af mødre selv. Steder hvor der er plads til babylyde, amning, krummer på gulvet og alt hvad der ellers følger med livet med en baby.
+          </p>
+
           {/* Tip os om en café */}
           <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
             <button
