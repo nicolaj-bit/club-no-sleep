@@ -102,10 +102,10 @@ export default function PlanChooser({ onChoose }) {
             </div>
             <div style={{ flex: 1 }}>
               <p style={{ color: selected === 'appstore' ? '#fff' : 'var(--color-text-primary)', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 3px' }}>
-                In-App Purchase (App Store)
+                Abonnement via App Store
               </p>
               <p style={{ color: selected === 'appstore' ? 'rgba(255,255,255,0.7)' : 'var(--color-text-muted)', fontSize: '0.78rem', margin: 0 }}>
-                Betal via din Apple-konto · Bedst til iPhone
+                Betal via din App Store-konto · Bedst til iPhone
               </p>
             </div>
             {selected === 'appstore' && (
