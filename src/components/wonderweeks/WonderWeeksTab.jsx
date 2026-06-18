@@ -11,6 +11,7 @@ import { useSubscription } from '@/components/subscription/useSubscription';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 
 // Byg et map fra slug → KnowledgeArticle for hurtig opslag
+// Understøtter både "tigerspring-1" og "tigerspring" + "uge X" tag-formater
 function useWonderWeekArticles() {
   return useQuery({
     queryKey: ['wwArticles'],
@@ -18,9 +19,28 @@ function useWonderWeekArticles() {
       const articles = await base44.entities.KnowledgeArticle.list();
       const map = {};
       articles.forEach(a => {
-        (a.tags || []).forEach(tag => {
+        const tags = a.tags || [];
+        // Format 1: eksakt tag "tigerspring-1", "tigerspring-2" osv.
+        tags.forEach(tag => {
           if (tag.startsWith('tigerspring-')) map[tag] = a;
         });
+        // Format 2: kombination af "tigerspring" + "uge X" tag
+        if (tags.includes('tigerspring')) {
+          const ugeTag = tags.find(t => /^uge\s*\d+/i.test(t));
+          if (ugeTag) {
+            const ugeNum = ugeTag.match(/\d+/)?.[0];
+            // Find det tigerspring der starter ved denne uge
+            if (ugeNum) {
+              // Match tigerspring-nummer baseret på uge-tag
+              // Vi gemmer artiklen med alle slugs der har weekStart = ugeNum
+              // Men da vi ikke har wonderweeksData her, bruger vi titel-parsing
+              const titleMatch = a.title?.match(/tigerspring\s*(\d+)/i);
+              if (titleMatch) {
+                map[`tigerspring-${titleMatch[1]}`] = a;
+              }
+            }
+          }
+        }
       });
       return map;
     },

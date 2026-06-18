@@ -31,7 +31,17 @@ export default function ArticleDetail() {
       if (articleSlug) {
         // Søg altid i databasen først (tags matcher slug)
         const articles = await base44.entities.KnowledgeArticle.list();
-        const dbArticle = articles.find(a => a.tags?.includes(articleSlug));
+        // Format 1: eksakt tag match (tigerspring-1)
+        // Format 2: "tigerspring" + titel indeholder nummeret
+        const slugNum = articleSlug.match(/tigerspring-(\d+)/)?.[1];
+        const dbArticle = articles.find(a => {
+          if (a.tags?.includes(articleSlug)) return true;
+          if (slugNum && a.tags?.includes('tigerspring')) {
+            const titleMatch = a.title?.match(/tigerspring\s*(\d+)/i);
+            if (titleMatch && titleMatch[1] === slugNum) return true;
+          }
+          return false;
+        });
         if (dbArticle) return dbArticle;
 
         // Fallback: brug hardcoded wonderweeks-data hvis ingen artikel i databasen
