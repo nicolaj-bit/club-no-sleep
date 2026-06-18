@@ -9,7 +9,8 @@ let _configured = false;
 async function configure(userId) {
   if (_configured) return;
   await Purchases.setLogLevel({ level: LOG_LEVEL.ERROR });
-  await Purchases.configure({ apiKey: RC_API_KEY, appUserID: userId });
+  // appUserID is optional — pass null to let RevenueCat generate an anonymous ID
+  await Purchases.configure({ apiKey: RC_API_KEY, appUserID: userId ?? null });
   _configured = true;
 }
 
@@ -21,8 +22,15 @@ export function useRevenueCat() {
   useEffect(() => {
     const init = async () => {
       try {
-        const user = await base44.auth.me();
-        await configure(user?.id || null);
+        // Try to get user ID — fall back to anonymous if not logged in
+        let userId = null;
+        try {
+          const user = await base44.auth.me();
+          userId = user?.id || null;
+        } catch (_) {
+          // Not logged in — use anonymous RevenueCat ID
+        }
+        await configure(userId);
         const result = await Purchases.getOfferings();
         setOfferings(result.offerings);
       } catch (err) {
