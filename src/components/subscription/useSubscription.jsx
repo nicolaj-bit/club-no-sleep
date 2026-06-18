@@ -44,6 +44,16 @@ export function useSubscription() {
           // Admin in demo mode → fall through to profile check (sees paywall like a real user)
         }
 
+        // Specific demo users always get full access
+        const DEMO_EMAILS = ['marketing@lalatoto.dk'];
+        if (DEMO_EMAILS.includes(user.email)) {
+          const result = { isActive: true, isTrial: false, demoMode: true };
+          _cache = result;
+          _cacheTime = Date.now();
+          setState({ loading: false, ...result });
+          return;
+        }
+
         // Admin always gets full access (when NOT in demo mode)
         if (!isDemoMode && user.role === 'admin') {
           const result = { isActive: true, isTrial: false };
