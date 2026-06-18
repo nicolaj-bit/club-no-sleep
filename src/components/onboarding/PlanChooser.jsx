@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CreditCard, Check } from 'lucide-react';
+import { CreditCard, Check, Loader2 } from 'lucide-react';
+import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+import { toast } from 'sonner';
 
 export default function PlanChooser({ onChoose }) {
   const [selected, setSelected] = useState(null);
+  const [loadingPurchase, setLoadingPurchase] = useState(false);
+  const { offerings, purchase } = useRevenueCat();
 
   const handleStripe = () => {
     if (window.self !== window.top) {
@@ -13,12 +17,27 @@ export default function PlanChooser({ onChoose }) {
     window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
   };
 
-  const handleAppStore = () => {
+  const handleAppStore = async () => {
     if (window.self !== window.top) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    window.location.href = 'https://pay.rev.cat/sugwsgqahvhlwgat/rc-d2291fc209';
+    const pkg = offerings?.current?.availablePackages?.[0];
+    if (!pkg) {
+      toast.error('Ingen tilgængelige pakker fundet. Prøv igen.');
+      return;
+    }
+    setLoadingPurchase(true);
+    try {
+      await purchase(pkg);
+      if (onChoose) onChoose('appstore');
+    } catch (err) {
+      if (!err.message?.includes('cancelled') && !err.message?.includes('userCancelled')) {
+        toast.error('Købet mislykkedes. Prøv igen.');
+      }
+    } finally {
+      setLoadingPurchase(false);
+    }
   };
 
   return (
@@ -132,21 +151,29 @@ export default function PlanChooser({ onChoose }) {
       {/* CTA */}
       <button
         onClick={selected === 'stripe' ? handleStripe : selected === 'appstore' ? handleAppStore : undefined}
-        disabled={!selected}
+        disabled={!selected || loadingPurchase}
         style={{
           width: '100%',
-          backgroundColor: selected ? '#3A2416' : '#C8B8A8',
+          backgroundColor: selected && !loadingPurchase ? '#3A2416' : '#C8B8A8',
           color: '#fff',
           border: 'none',
           borderRadius: 14,
           padding: '16px',
           fontSize: '1rem',
           fontWeight: 600,
-          cursor: selected ? 'pointer' : 'default',
+          cursor: selected && !loadingPurchase ? 'pointer' : 'default',
           transition: 'background-color 0.2s',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
         }}
       >
-        {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Fortsæt til betaling →' : 'Fortsæt til App Store →'}
+        {loadingPurchase
+          ? <><Loader2 size={18} className="animate-spin" /> Behandler køb…</>
+          : !selected ? 'Vælg en betalingsmetode'
+          : selected === 'stripe' ? 'Fortsæt til betaling →'
+          : 'Køb via App Store →'}
       </button>
 
       <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>

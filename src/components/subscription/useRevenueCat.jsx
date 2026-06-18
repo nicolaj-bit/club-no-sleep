@@ -1,43 +1,30 @@
 import { useState, useEffect } from 'react';
+import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
+import { base44 } from '@/api/base44Client';
 
-const RC_API_KEY = 'rcb_xEWZIvyWYtatYqkMITsSxzXyYbKp';
-const RC_URL_SCHEME = 'rc-13a058a659';
+const RC_API_KEY = 'appl_HRVKJBrZxeKAymzJqAFhUXmcCGd'; // iOS key
 
-let _rcInstance = null;
-let _rcReady = false;
+let _configured = false;
 
-/**
- * RevenueCat Web SDK hook — bruges til iOS IAP via App Store.
- * Initialiseres kun når Purchases-js er tilgængeligt og brugeren er logget ind.
- */
-export function useRevenueCat(userId) {
+async function configure(userId) {
+  if (_configured) return;
+  await Purchases.setLogLevel({ level: LOG_LEVEL.ERROR });
+  await Purchases.configure({ apiKey: RC_API_KEY, appUserID: userId });
+  _configured = true;
+}
+
+export function useRevenueCat() {
   const [loading, setLoading] = useState(true);
   const [offerings, setOfferings] = useState(null);
-  const [customerInfo, setCustomerInfo] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
-
     const init = async () => {
       try {
-        const { Purchases } = await import('@revenuecat/purchases-js');
-
-        if (!_rcReady) {
-          _rcInstance = Purchases.configure(RC_API_KEY, userId);
-          _rcReady = true;
-        }
-
-        const [offeringsResult, customerInfoResult] = await Promise.all([
-          _rcInstance.getOfferings(),
-          _rcInstance.getCustomerInfo(),
-        ]);
-
-        setOfferings(offeringsResult);
-        setCustomerInfo(customerInfoResult);
+        const user = await base44.auth.me();
+        await configure(user?.id || null);
+        const result = await Purchases.getOfferings();
+        setOfferings(result.offerings);
       } catch (err) {
         console.error('[RevenueCat] init error:', err);
         setError(err.message || 'RevenueCat fejl');
@@ -45,33 +32,22 @@ export function useRevenueCat(userId) {
         setLoading(false);
       }
     };
-
     init();
-  }, [userId]);
+  }, []);
 
   const purchase = async (packageToPurchase) => {
-    if (!_rcInstance) throw new Error('RevenueCat ikke initialiseret');
-    const redirectURL = `${window.location.origin}/CheckoutSuccess?subscription=success`;
-    const result = await _rcInstance.purchase({ rcPackage: packageToPurchase, redirectURL });
-    setCustomerInfo(result.customerInfo);
+    const result = await Purchases.purchasePackage({ aPackage: packageToPurchase });
     return result;
   };
 
   const restorePurchases = async () => {
-    if (!_rcInstance) throw new Error('RevenueCat ikke initialiseret');
-    const info = await _rcInstance.restorePurchases();
-    setCustomerInfo(info);
-    return info;
+    const result = await Purchases.restorePurchases();
+    return result.customerInfo;
   };
 
-  const isSubscribed = customerInfo?.entitlements?.active
-    ? Object.keys(customerInfo.entitlements.active).length > 0
-    : false;
-
-  return { loading, offerings, customerInfo, isSubscribed, error, purchase, restorePurchases };
+  return { loading, offerings, error, purchase, restorePurchases };
 }
 
 export function resetRevenueCat() {
-  _rcInstance = null;
-  _rcReady = false;
+  _configured = false;
 }
