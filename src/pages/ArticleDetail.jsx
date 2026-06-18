@@ -24,27 +24,19 @@ export default function ArticleDetail() {
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', articleId, articleSlug],
     queryFn: async () => {
+      // Hent alle artikler og find den rette
+      const articles = await base44.entities.KnowledgeArticle.list();
+
       if (articleId) {
-        const articles = await base44.entities.KnowledgeArticle.filter({ id: articleId });
-        return articles[0];
+        return articles.find(a => a.id === articleId) || null;
       }
+
       if (articleSlug) {
-        // Søg altid i databasen først (tags matcher slug)
-        const articles = await base44.entities.KnowledgeArticle.list();
-        // Format 1: eksakt tag match (tigerspring-1)
-        // Format 2: "tigerspring" + titel indeholder nummeret
-        const slugNum = articleSlug.match(/tigerspring-(\d+)/)?.[1];
-        const dbArticle = articles.find(a => {
-          if (a.tags?.includes(articleSlug)) return true;
-          if (slugNum && a.tags?.includes('tigerspring')) {
-            const titleMatch = a.title?.match(/tigerspring\s*(\d+)/i);
-            if (titleMatch && titleMatch[1] === slugNum) return true;
-          }
-          return false;
-        });
+        // Eksakt tag match (tigerspring-1)
+        const dbArticle = articles.find(a => a.tags?.includes(articleSlug));
         if (dbArticle) return dbArticle;
 
-        // Fallback: brug hardcoded wonderweeks-data hvis ingen artikel i databasen
+        // Fallback: brug hardcoded wonderweeks-data
         const wwMatch = WONDER_WEEKS.find(ww => ww.articleSlug === articleSlug);
         if (wwMatch) {
           return {
@@ -52,13 +44,13 @@ export default function ArticleDetail() {
             category: 'Tigerspring',
             is_faq: false,
             content: `
-              <p style="font-size:1.05em; line-height:1.7;">${wwMatch.longDescription}</p>
+              <p>${wwMatch.longDescription}</p>
               <h2>Nye færdigheder</h2>
               <ul>${wwMatch.skills.map(s => `<li>${s}</li>`).join('')}</ul>
               <h2>Tegn på tigerspringet</h2>
               <ul>${wwMatch.signs.map(s => `<li>${s}</li>`).join('')}</ul>
               <h2>Til dig som forælder</h2>
-              <p style="font-style:italic; line-height:1.7;">${wwMatch.parentMessage}</p>
+              <p><em>${wwMatch.parentMessage}</em></p>
               <h2>Tips til perioden</h2>
               <ul>${wwMatch.tips.map(t => `<li>${t}</li>`).join('')}</ul>
             `,
@@ -66,6 +58,7 @@ export default function ArticleDetail() {
           };
         }
       }
+      return null;
     },
     enabled: !!(articleId || articleSlug),
   });
