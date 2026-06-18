@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { Share2, FileText, HelpCircle } from 'lucide-react';
@@ -15,7 +16,8 @@ export default function ArticleDetail() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { lang } = useLanguage();
-  const urlParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
   const articleId = urlParams.get('id');
   const articleSlug = urlParams.get('slug');
 
