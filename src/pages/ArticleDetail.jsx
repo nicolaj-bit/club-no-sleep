@@ -29,10 +29,14 @@ export default function ArticleDetail() {
         return articles[0];
       }
       if (articleSlug) {
-        // Tjek først om det er et tigerspring-slug
+        // Søg altid i databasen først (tags matcher slug)
+        const articles = await base44.entities.KnowledgeArticle.list();
+        const dbArticle = articles.find(a => a.tags?.includes(articleSlug));
+        if (dbArticle) return dbArticle;
+
+        // Fallback: brug hardcoded wonderweeks-data hvis ingen artikel i databasen
         const wwMatch = WONDER_WEEKS.find(ww => ww.articleSlug === articleSlug);
         if (wwMatch) {
-          // Byg en artikel-lignende objekt fra wonderweeksData
           return {
             title: `Tigerspring ${wwMatch.number}: ${wwMatch.name}`,
             category: 'Tigerspring',
@@ -51,9 +55,6 @@ export default function ArticleDetail() {
             tags: [],
           };
         }
-        // Ellers søg i databasen
-        const articles = await base44.entities.KnowledgeArticle.list();
-        return articles.find(a => a.tags?.includes(articleSlug));
       }
     },
     enabled: !!(articleId || articleSlug),
