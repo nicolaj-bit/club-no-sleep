@@ -83,33 +83,13 @@ export default function PlanChooser({ onChoose }) {
           className="w-full py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2"
           style={{ backgroundColor: '#fff', color: '#5B3F2B' }}
         >
-          {loading ? 'Åbner betaling...' : <><Sparkles className="w-4 h-4" /> Kom i gang</>}
+          {loading ? 'Åbner betaling...' : <><Sparkles className="w-4 h-4" /> Gå til betaling</>}
         </button>
       </div>
 
-      {/* Free / demo */}
-      <div
-        className="rounded-3xl p-5"
-        style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}
-      >
-        <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-text-primary)' }}>Demo — gratis</p>
-        <p className="text-xs mb-3" style={{ color: 'var(--color-text-muted)' }}>Begrænset adgang, ingen betaling</p>
-        <ul className="space-y-1.5 mb-4">
-          {FREE_FEATURES.map(f => (
-            <li key={f} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              <Check className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
-              {f}
-            </li>
-          ))}
-        </ul>
-        <button
-          onClick={() => onChoose('demo')}
-          className="w-full py-3 rounded-2xl font-medium text-sm"
-          style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)', backgroundColor: 'transparent' }}
-        >
-          Fortsæt med demo →
-        </button>
-      </div>
+      <p className="text-xs text-center" style={{ color: 'var(--color-text-muted)' }}>
+        Du vælger din betalingsmetode på næste side.
+      </p>
     </motion.div>
   );
 }
