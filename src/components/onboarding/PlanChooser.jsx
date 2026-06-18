@@ -22,7 +22,9 @@ export default function PlanChooser({ onChoose }) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    const pkg = offerings?.current?.availablePackages?.[0];
+    // Try 'current' (default offering) first, then fall back to any available offering
+    const offering = offerings?.current || Object.values(offerings?.all || {})[0];
+    const pkg = offering?.availablePackages?.[0];
     if (!pkg) {
       toast.error('Ingen tilgængelige pakker fundet. Prøv igen.');
       return;
