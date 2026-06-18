@@ -180,15 +180,16 @@ export default function BabyFriendlyCafes() {
             <button
               className="w-full flex items-center justify-between p-4"
               onClick={() => setShowTipForm(!showTipForm)}
+              style={{ backgroundColor: 'var(--color-primary)', borderRadius: '1rem' }}
             >
               <div className="flex items-center gap-2">
-                <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Kender du en god café?</span>
+                <Lightbulb className="w-4 h-4" style={{ color: '#fff' }} />
+                <span className="font-medium text-sm" style={{ color: '#fff' }}>Kender du en god café?</span>
               </div>
               {showTipForm ? (
-                <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                <ChevronUp className="w-4 h-4" style={{ color: '#fff' }} />
               ) : (
-                <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                <ChevronDown className="w-4 h-4" style={{ color: '#fff' }} />
               )}
             </button>
 
@@ -223,14 +224,13 @@ export default function BabyFriendlyCafes() {
 
           {/* Admin add button */}
           {isAdmin && (
-            <Button
+            <button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="w-full gap-2"
-              style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+              className="w-full gap-2 text-sm font-medium underline py-1"
+              style={{ color: 'var(--color-text-muted)' }}
             >
-              <Plus className="w-4 h-4" />
-              Tilføj café
-            </Button>
+              {showAddForm ? 'Skjul formular' : '+ Tilføj café (admin)'}
+            </button>
           )}
 
           {/* Add cafe form */}
