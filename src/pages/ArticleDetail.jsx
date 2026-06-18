@@ -29,9 +29,14 @@ export default function ArticleDetail() {
   const isDark = theme === 'dark';
   const { lang } = useLanguage();
   const location = useLocation();
-  const urlParams = new URLSearchParams(location.search);
+  // Brug både location.search (React Router) og window.location.search som fallback
+  const searchStr = location.search || window.location.search;
+  const urlParams = new URLSearchParams(searchStr);
   const articleId = urlParams.get('id');
   const articleSlug = urlParams.get('slug');
+
+  // Debug: log hvad vi ser
+  console.log('[ArticleDetail] location.search:', location.search, '| window.search:', window.location.search, '| slug:', articleSlug, '| id:', articleId);
 
   const [translatedArticle, setTranslatedArticle] = useState(null);
 
@@ -75,7 +80,11 @@ export default function ArticleDetail() {
       return null;
     },
     enabled: !!(articleId || articleSlug),
+    staleTime: 0,
   });
+
+  // Debug
+  console.log('[ArticleDetail] isLoading:', isLoading, '| article:', article?.title, '| enabled:', !!(articleId || articleSlug));
 
   // Translate article when language = English
   useEffect(() => {
