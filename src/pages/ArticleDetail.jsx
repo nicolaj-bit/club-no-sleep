@@ -12,6 +12,18 @@ import { useTranslation } from '@/components/hooks/useTranslation';
 import PageHeader from '@/components/ui/PageHeader';
 import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
 
+// Konverterer plain text (linjeskift) til HTML <p>-tags hvis der ikke er HTML i forvejen
+function formatContent(content) {
+  if (!content) return '';
+  // Hvis indholdet allerede indeholder HTML-tags, brug det direkte
+  if (/<[a-z][\s\S]*>/i.test(content)) return content;
+  // Ellers: split på dobbelt-linjeskift → afsnit, enkelt linjeskift → <br>
+  return content
+    .split(/\n{2,}/)
+    .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+    .join('');
+}
+
 export default function ArticleDetail() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -168,11 +180,11 @@ Return format:
         {/* Divider */}
         <div className="w-10 h-0.5 mb-8 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
 
-        {/* HTML content from Quill editor */}
+        {/* Article content */}
         <div
-          className="article-content prose-content"
+          className="article-content"
           style={{ color: 'var(--color-text-secondary)' }}
-          dangerouslySetInnerHTML={{ __html: translatedArticle?.content || article.content }}
+          dangerouslySetInnerHTML={{ __html: formatContent(translatedArticle?.content || article.content) }}
         />
 
         {/* Tags */}
