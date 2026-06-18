@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { CreditCard, Check, Loader2 } from 'lucide-react';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
+import { Capacitor } from '@capacitor/core';
 
 export default function PlanChooser({ onChoose }) {
   const [selected, setSelected] = useState(null);
@@ -20,6 +21,11 @@ export default function PlanChooser({ onChoose }) {
   const handleAppStore = async () => {
     if (window.self !== window.top) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
+      return;
+    }
+    // Must run in native Capacitor environment (iOS app)
+    if (!Capacitor.isNativePlatform()) {
+      toast.error('App Store køb virker kun i iOS-appen. Brug Kort/MobilePay i browseren.');
       return;
     }
     // Try 'current' (default offering) first, then fall back to any available offering
