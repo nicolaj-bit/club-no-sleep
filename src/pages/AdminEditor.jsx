@@ -19,7 +19,7 @@ import 'react-quill/dist/quill.snow.css';
 const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode', 'WonderWeeksIntro'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
-const emptyArticle = { title: '', content: '', category: '', is_faq: false, order: 0 };
+const emptyArticle = { title: '', content: '', category: '', tags: [], is_faq: false, order: 0 };
 const emptyLegal = { type: 'faq', title: '', content: '' };
 
 export default function AdminEditor() {
@@ -346,15 +346,40 @@ export default function AdminEditor() {
           </div>
 
           {!isBlog && !isLegal && (
-            <div className="space-y-1.5">
-              <Label style={{ color: 'var(--color-text-secondary)' }}>Sorteringsrækkefølge</Label>
-              <Input
-                type="number"
-                value={editing.order ?? 0}
-                onChange={e => setEditing({ ...editing, order: Number(e.target.value) })}
-                style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
-              />
-            </div>
+            <>
+              <div className="space-y-1.5">
+                <Label style={{ color: 'var(--color-text-secondary)' }}>Tags (kommasepareret — fx <strong>tigerspring-1</strong>, tigerspring-2)</Label>
+                <Input
+                  value={(editing.tags || []).join(', ')}
+                  onChange={e => setEditing({ ...editing, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                  placeholder="tigerspring-1, søvn, baby"
+                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                />
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                  For at artiklen vises under Tigerspring nr. 1 skal den have tagget <code>tigerspring-1</code> (nr. 1–10).
+                </p>
+              </div>
+              <div className="space-y-1.5">
+                <Label style={{ color: 'var(--color-text-secondary)' }}>Uddrag (vises i listen)</Label>
+                <textarea
+                  value={editing.excerpt || ''}
+                  onChange={e => setEditing({ ...editing, excerpt: e.target.value })}
+                  placeholder="Kort beskrivelse der vises i tigerspring-listen..."
+                  rows={2}
+                  className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label style={{ color: 'var(--color-text-secondary)' }}>Sorteringsrækkefølge</Label>
+                <Input
+                  type="number"
+                  value={editing.order ?? 0}
+                  onChange={e => setEditing({ ...editing, order: Number(e.target.value) })}
+                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
+                />
+              </div>
+            </>
           )}
 
           {isLegal && (

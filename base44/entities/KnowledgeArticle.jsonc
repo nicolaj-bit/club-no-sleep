@@ -6,9 +6,13 @@
       "type": "string",
       "description": "Artikeltitel"
     },
+    "excerpt": {
+      "type": "string",
+      "description": "Kort beskrivelse (vises i lister)"
+    },
     "content": {
       "type": "string",
-      "description": "Indhold (markdown)"
+      "description": "Indhold (HTML)"
     },
     "category": {
       "type": "string",
@@ -18,7 +22,8 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "Tags \u2014 fx tigerspring-1 for at knytte til tigerspring nr. 1"
     },
     "is_faq": {
       "type": "boolean",
