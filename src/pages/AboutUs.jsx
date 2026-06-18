@@ -215,7 +215,6 @@ export default function AboutUs() {
         {/* Story */}
         <section>
           <div className="rounded-2xl p-6 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-            <div className="w-10 h-10 rounded-2xl mb-4 flex items-center justify-center text-2xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>🧡</div>
             <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{storyTitle}</h2>
             <EditableBlock
               label="historietekst"
