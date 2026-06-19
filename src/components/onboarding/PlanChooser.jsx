@@ -24,8 +24,11 @@ export default function PlanChooser({ onChoose }) {
       return;
     }
     // Must run in native Capacitor environment (iOS app)
-    if (!Capacitor.isNativePlatform()) {
-      toast.error('App Store køb virker kun i iOS-appen. Brug Kort/MobilePay i browseren.');
+    const isNative = Capacitor.isNativePlatform();
+    const platform = Capacitor.getPlatform();
+    console.log('[IAP] isNativePlatform:', isNative, '| platform:', platform);
+    if (!isNative) {
+      toast.error(`App Store køb virker kun i iOS-appen. Platform: ${platform}`);
       return;
     }
     // Try 'current' (default offering) first, then fall back to any available offering
