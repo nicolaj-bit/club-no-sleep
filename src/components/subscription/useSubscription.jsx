@@ -77,16 +77,13 @@ export function useSubscription() {
           return;
         }
 
+        // trial = kun demo-adgang (ikke fuld adgang)
         if (sub === 'trial') {
-          const trialStart = new Date(profile.trial_started_at || profile.created_date);
-          const daysDiff = (Date.now() - trialStart.getTime()) / (1000 * 60 * 60 * 24);
-          if (daysDiff <= 30) {
-            const result = { isActive: true, isTrial: true };
-            _cache = result;
-            _cacheTime = Date.now();
-            setState({ loading: false, ...result });
-            return;
-          }
+          const result = { isActive: false, isTrial: true };
+          _cache = result;
+          _cacheTime = Date.now();
+          setState({ loading: false, ...result });
+          return;
         }
 
         const result = { isActive: false, isTrial: false };

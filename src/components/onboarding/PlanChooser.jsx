@@ -190,6 +190,26 @@ export default function PlanChooser({ onChoose }) {
       <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
         🔒 Sikker betaling · Ingen binding · Annuller når som helst
       </p>
+
+      {/* Skip-knap — giver kun adgang til demo */}
+      <button
+        onClick={() => onChoose && onChoose('demo')}
+        style={{
+          width: '100%',
+          background: 'none',
+          border: 'none',
+          color: 'var(--color-text-muted)',
+          fontSize: '0.82rem',
+          marginTop: '1.2rem',
+          padding: '8px',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          textDecorationColor: 'var(--color-border)',
+          textUnderlineOffset: 3,
+        }}
+      >
+        Spring over — fortsæt med begrænset adgang
+      </button>
     </motion.div>
   );
 }
