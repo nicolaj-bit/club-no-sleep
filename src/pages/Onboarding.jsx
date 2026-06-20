@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { redirectToLogin } from '@/lib/nativeAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,7 +48,7 @@ export default function Onboarding() {
           username: (u.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, ''),
         }));
       })
-      .catch(() => base44.auth.redirectToLogin());
+      .catch(() => redirectToLogin('/Onboarding'));
 
     base44.entities.LegalContent.list().then(items => {
       const terms = items.find(i => i.type === 'terms');

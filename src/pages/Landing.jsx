@@ -32,7 +32,10 @@ export default function Landing() {
     loadPhoneUrls();
   }, []);
 
-  const handleLogin = () => base44.auth.redirectToLogin('/app');
+  const handleLogin = async () => {
+    const { redirectToLogin } = await import('@/lib/nativeAuth');
+    redirectToLogin('/app');
+  };
 
   return (
     <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", backgroundColor: '#F5EDE0', overflowX: 'hidden', minHeight: '100dvh' }}>

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { redirectToLogin as nativeRedirectToLogin } from '@/lib/nativeAuth';
 
 const AuthContext = createContext();
 
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    base44.auth.redirectToLogin(window.location.href);
+    nativeRedirectToLogin(window.location.href);
   };
 
   return (
