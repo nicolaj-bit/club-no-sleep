@@ -17,6 +17,7 @@ import AboutUs from './pages/AboutUs';
 import FamilyInvite from './pages/FamilyInvite';
 import Subscription from './pages/Subscription.jsx';
 import AdminNotifications from './pages/AdminNotifications';
+import AdminUsers from './pages/AdminUsers';
 import PregnancyWeekDetail from './pages/PregnancyWeekDetail';
 import Calendar from './pages/Calendar';
 import PregnancyWeeks from './pages/PregnancyWeeks';
@@ -90,6 +91,7 @@ const AuthenticatedApp = () => {
         <Route path="/Milestones" element={<LayoutWrapper currentPageName="Milestones"><Milestones /></LayoutWrapper>} />
         <Route path="/BabyFriendlyCafes" element={<LayoutWrapper currentPageName="BabyFriendlyCafes"><BabyFriendlyCafes /></LayoutWrapper>} />
         <Route path="/AdminSupport" element={<LayoutWrapper currentPageName="AdminSupport"><AdminSupport /></LayoutWrapper>} />
+        <Route path="/AdminUsers" element={<LayoutWrapper currentPageName="AdminUsers"><AdminUsers /></LayoutWrapper>} />
         <Route path="/AdminLanding" element={<LayoutWrapper currentPageName="AdminLanding"><AdminLanding /></LayoutWrapper>} />
         <Route path="/AcceptInvite" element={<AcceptInvite />} />
         <Route path="/Terms" element={<Terms />} />
