@@ -18,21 +18,31 @@ export default function Checkout() {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    // Kun tilgængelig i native Capacitor-app
-    if (!window.Capacitor?.isNativePlatform?.()) {
-      alert('In-App Purchase er kun tilgængelig i iPhone-appen. Download appen fra App Store.');
-      return;
-    }
     try {
-      const { Purchases } = await import('@revenuecat/purchases-capacitor');
-      const offerings = await Purchases.getOfferings();
-      const pkg = offerings?.current?.monthly ?? offerings?.current?.availablePackages?.[0];
+      const { Purchases, LOG_LEVEL } = await import('@revenuecat/purchases-capacitor');
+      const { Capacitor } = await import('@capacitor/core');
+
+      if (!Capacitor.isNativePlatform()) {
+        alert('In-App Purchase er kun tilgængelig i iPhone-appen. Download appen fra App Store.');
+        return;
+      }
+
+      // Konfigurer RevenueCat hvis nødvendigt
+      try {
+        await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+        await Purchases.configure({ apiKey: 'appl_XoFbAdlcXQRXrIBPVCknJnlcjkc' });
+      } catch (_) {
+        // Allerede konfigureret — ignorer
+      }
+
+      const result = await Purchases.getOfferings();
+      const pkg = result?.current?.monthly ?? result?.current?.availablePackages?.[0];
       if (!pkg) { alert('Ingen abonnementer tilgængelige.'); return; }
       await Purchases.purchasePackage({ aPackage: pkg });
     } catch (e) {
       if (e?.userCancelled) return;
       console.error('IAP fejl:', e);
-      alert('Noget gik galt. Prøv igen.');
+      alert('Noget gik galt. Prøv igen eller vælg kortbetaling.');
     }
   };
 
