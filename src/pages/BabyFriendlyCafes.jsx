@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
 import { base44 } from '@/api/base44Client';
-import { MapPin, Plus, Instagram, Facebook, Lightbulb, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, Plus, Instagram, Facebook, Lightbulb, ChevronDown, ChevronUp, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -386,6 +386,18 @@ export default function BabyFriendlyCafes() {
                                   Facebook
                                 </a>
                               )}
+                              {cafe.website && (
+                                <a
+                                  href={cafe.website.startsWith('http') ? cafe.website : `https://${cafe.website}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1.5 text-xs font-medium"
+                                  style={{ color: 'var(--color-accent)' }}
+                                >
+                                  <Globe className="w-4 h-4" />
+                                  Webside
+                                </a>
+                              )}
                             </div>
                           )}
                         </div>
@@ -422,6 +434,25 @@ export default function BabyFriendlyCafes() {
                             </a>
                           )}
                           {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
+                          {(cafe.instagram || cafe.facebook || cafe.website) && (
+                            <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                              {cafe.instagram && (
+                                <a href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#E1306C' }}>
+                                  <Instagram className="w-4 h-4" /> Instagram
+                                </a>
+                              )}
+                              {cafe.facebook && (
+                                <a href={cafe.facebook.startsWith('http') ? cafe.facebook : `https://facebook.com/${cafe.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#1877F2' }}>
+                                  <Facebook className="w-4 h-4" /> Facebook
+                                </a>
+                              )}
+                              {cafe.website && (
+                                <a href={cafe.website.startsWith('http') ? cafe.website : `https://${cafe.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--color-accent)' }}>
+                                  <Globe className="w-4 h-4" /> Webside
+                                </a>
+                              )}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
