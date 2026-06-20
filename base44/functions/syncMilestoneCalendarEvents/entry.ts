@@ -158,10 +158,11 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Opret én ad gangen (service role)
+      // Opret én ad gangen med lille forsinkelse for at undgå rate limit
       for (const event of toCreate) {
         await base44.asServiceRole.entities.CalendarEvent.create(event);
         created++;
+        await new Promise(resolve => setTimeout(resolve, 150));
       }
       if (toCreate.length > 0) {
         console.log(`Oprettet ${toCreate.length} milepæle for ${email} (barn: ${child.name})`);
