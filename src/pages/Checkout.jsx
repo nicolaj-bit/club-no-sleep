@@ -30,7 +30,7 @@ export default function Checkout() {
       // Konfigurer RevenueCat hvis nødvendigt
       try {
         await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
-        await Purchases.configure({ apiKey: 'appl_XoFbAdlcXQRXrIBPVCknJnlcjkc' });
+        await Purchases.configure({ apiKey: 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ' });
       } catch (_) {
         // Allerede konfigureret — ignorer
       }

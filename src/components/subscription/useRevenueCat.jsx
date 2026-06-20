@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import { base44 } from '@/api/base44Client';
 
-const RC_API_KEY = 'test_vMlpolInBlgQFpFXSmLRXlYJzoP'; // iOS sandbox/test key
+const RC_API_KEY = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 
 let _configured = false;
 
