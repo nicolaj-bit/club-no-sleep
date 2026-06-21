@@ -135,7 +135,7 @@ export default function Checkout() {
           </div>
         </button>
 
-        {/* Stripe */}
+        {/* Stripe — skjult midlertidigt indtil Apple-godkendelse
         <button
           onClick={() => setSelected('stripe')}
           style={{
@@ -170,6 +170,8 @@ export default function Checkout() {
             )}
           </div>
         </button>
+        */}
+
       </div>
 
       {/* CTA */}
@@ -190,7 +192,7 @@ export default function Checkout() {
             transition: 'background-color 0.2s',
           }}
         >
-          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Fortsæt til betaling →' : 'Fortsæt til App Store →'}
+          {!selected ? 'Vælg en betalingsmetode' : 'Fortsæt til App Store →'}
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
