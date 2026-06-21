@@ -67,7 +67,6 @@ export default function Onboarding() {
 
   const validateStep1 = () => {
     const newErrors = {};
-    if (!form.display_name.trim()) newErrors.display_name = t.errorEnterName;
     if (!form.username.trim()) newErrors.username = t.errorChooseUsername;
     else if (form.username.length < 3) newErrors.username = t.errorUsernameMin;
     if (!form.accept_terms) newErrors.accept_terms = t.errorAcceptTerms;
@@ -90,6 +89,8 @@ export default function Onboarding() {
 
     const isActive = hasPaid || plan === 'paid';
     const { accept_terms, accept_privacy, ...profileData } = form;
+    // Brugernavn bruges også som visningsnavn
+    if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
     await base44.entities.UserProfile.create({
       ...profileData,
       gender: form.profile_label === 'mor' ? 'female' : 'male',
@@ -285,23 +286,6 @@ export default function Onboarding() {
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     {uploading ? t.uploadingLabel : t.addProfilePic}
                   </span>
-                </div>
-
-                {/* Navn */}
-                <div className="space-y-1.5">
-                  <Label>{t.yourName}</Label>
-                  <Input
-                    value={form.display_name}
-                    onChange={e => setField('display_name', e.target.value)}
-                    placeholder={t.namePlaceholder}
-                    style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: errors.display_name ? '#ef4444' : 'var(--color-border)' }}
-                  />
-                  {errors.display_name
-                    ? <p className="text-xs text-red-500">{errors.display_name}</p>
-                    : user?.full_name
-                      ? <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>✓ Hentet fra din login</p>
-                      : null
-                  }
                 </div>
 
                 {/* Brugernavn */}
