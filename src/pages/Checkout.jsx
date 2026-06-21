@@ -159,11 +159,8 @@ export default function Checkout() {
               <CreditCard size={24} color={selected === 'stripe' ? '#fff' : '#5B3F2B'} />
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ color: selected === 'stripe' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 3px' }}>
-                Kort / MobilePay (Stripe)
-              </p>
-              <p style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.7)' : '#7A665A', fontSize: '0.78rem', margin: 0 }}>
-                Betal med kort, MobilePay el. anden metode
+              <p style={{ color: selected === 'stripe' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>
+                Betal med kort
               </p>
             </div>
             {selected === 'stripe' && (
@@ -193,7 +190,7 @@ export default function Checkout() {
             transition: 'background-color 0.2s',
           }}
         >
-          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Betal med kort' : 'Fortsæt til App Store →'}
+          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Fortsæt til betaling →' : 'Fortsæt til App Store →'}
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
