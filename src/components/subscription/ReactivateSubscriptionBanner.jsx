@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSubscription } from '@/components/subscription/useSubscription';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { RefreshCw } from 'lucide-react';
 
 export default function ReactivateSubscriptionBanner() {
-  const { loading, isActive, isTrial } = useSubscription();
+  const { activeProfile, loading } = useActiveProfile();
 
-  // Vis kun hvis abonnement er udløbet (ikke aktiv, ikke trial, ikke loading)
-  if (loading || isActive || isTrial) return null;
+  if (loading || !activeProfile) return null;
+  if (activeProfile.subscription_status !== 'expired') return null;
 
   return (
     <Link
