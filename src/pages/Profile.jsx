@@ -24,6 +24,7 @@ import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
 import AddChildSheet from '@/components/children/AddChildSheet';
 import { Baby, Pencil } from 'lucide-react';
+import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -176,6 +177,9 @@ export default function Profile() {
       </div>
 
       <div className="px-4 space-y-3">
+
+        {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
+        <ReactivateSubscriptionBanner />
 
         {/* Færdiggør profil — vis kun hvis ingen profil */}
         {!profile && (

@@ -22,6 +22,7 @@ import ChildSwitcher from '@/components/children/ChildSwitcher';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useAuth } from '@/lib/AuthContext';
+import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -139,6 +140,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
+      {user && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
 
       {/* Færdiggør profil banner — kun hvis ingen profil */}
       {!profile && (
