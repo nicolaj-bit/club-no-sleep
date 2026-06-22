@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import { base44 } from '@/api/base44Client';
-import { ChevronDown, Plus, Baby } from 'lucide-react';
+import { ChevronDown, Plus, Baby, LogIn } from 'lucide-react';
 import AddChildSheet from './AddChildSheet';
 
 export default function ChildSwitcher({ compact = false }) {
@@ -24,6 +24,22 @@ export default function ChildSwitcher({ compact = false }) {
   }, [open]);
 
   if (!activeChild && children.length === 0) {
+    // Demo-tilstand: vis "Log ind" i stedet for "Tilføj barn"
+    if (localStorage.getItem('demo_mode') === 'true') {
+      return (
+        <button
+          onClick={() => {
+            localStorage.removeItem('demo_mode');
+            window.location.reload();
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+          style={{ background: 'var(--color-primary)', color: 'var(--color-bg)' }}
+        >
+          <LogIn className="w-3.5 h-3.5" />
+          Log ind
+        </button>
+      );
+    }
     return (
       <>
         <button
