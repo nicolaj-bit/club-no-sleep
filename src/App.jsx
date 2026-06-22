@@ -49,7 +49,9 @@ function RootRoute() {
     const check = async () => {
       try {
         await Promise.race([Capacitor.ready, new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))]);
-        setIsNative(Capacitor.isNativePlatform());
+        const native = Capacitor.isNativePlatform();
+        console.log('[RootRoute] Native platform detected:', native);
+        setIsNative(native);
       } catch (e) {
         console.log('[RootRoute] Native check failed, treating as web:', e);
         setIsNative(false);
@@ -60,7 +62,13 @@ function RootRoute() {
   }, []);
 
   if (!ready) return <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)' }} />;
-  if (isNative) return <Navigate to="/AuthNative" replace />;
+  
+  if (isNative) {
+    console.log('[RootRoute] Redirecting to /AuthNative');
+    return <Navigate to="/AuthNative" replace />;
+  }
+  
+  console.log('[RootRoute] Showing /Landing');
   return <Landing />;
 }
 
