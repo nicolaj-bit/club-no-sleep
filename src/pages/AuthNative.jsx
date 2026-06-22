@@ -22,18 +22,25 @@ export default function AuthNative() {
 
     const checkAndRedirect = async () => {
       try {
+        // Tjek om token lige er kommet via URL (efter login redirect)
+        const urlToken = new URLSearchParams(window.location.search).get('access_token');
+        if (urlToken) {
+          localStorage.setItem('base44_access_token', urlToken);
+        }
+
+        // Tjek flere mulige localStorage-nøgler
+        const token = urlToken
+          || localStorage.getItem('base44_access_token')
+          || localStorage.getItem('token');
+
         const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          // Læs token — app-params.js gemmer det som 'base44_access_token' i localStorage
-          const token = localStorage.getItem('base44_access_token');
-          if (token) {
-            setStatus('redirecting');
-            const deepLink = buildAppDeepLink({ access_token: token });
-            window.location.href = deepLink;
-            // Fallback: hvis appen ikke åbner efter 2.5s, vis manuel knap
-            setTimeout(() => setStatus('fallback'), 2500);
-            return;
-          }
+        if (isAuth && token) {
+          setStatus('redirecting');
+          const deepLink = buildAppDeepLink({ access_token: token });
+          window.location.href = deepLink;
+          // Fallback: hvis appen ikke åbner efter 2.5s, vis manuel knap
+          setTimeout(() => setStatus('fallback'), 2500);
+          return;
         }
       } catch (e) {
         console.error('[AuthNative] Auth check failed:', e);
@@ -100,7 +107,8 @@ export default function AuthNative() {
           </p>
           <button
             onClick={() => {
-              const token = localStorage.getItem('base44_access_token');
+              const token = localStorage.getItem('base44_access_token')
+                || localStorage.getItem('token');
               if (token) {
                 window.location.href = buildAppDeepLink({ access_token: token });
               }
