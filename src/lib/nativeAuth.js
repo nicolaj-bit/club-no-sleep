@@ -90,26 +90,12 @@ export async function openExternalUrl(url) {
 }
 
 /**
- * Redirect til web for abonnement/betaling.
- * Sender access_token med så brugeren er logget ind på web.
+ * Redirect til betaling — åbner Stripe checkout i systembrowseren.
+ * Bruger Stripe Payment Link (absolut URL) så det altid virker,
+ * også på native hvor appBaseUrl ikke er tilgængelig.
  */
 export async function redirectToWebSubscription(accessToken) {
-  const isNative = Capacitor.isNativePlatform();
-  const { appParams } = await import('@/lib/app-params');
-  const appBaseUrl = appParams.appBaseUrl || '';
-  const url = accessToken
-    ? `${appBaseUrl}/Checkout?access_token=${encodeURIComponent(accessToken)}`
-    : `${appBaseUrl}/Checkout`;
-
-  if (isNative) {
-    try {
-      const { Browser } = await import('@capacitor/browser');
-      await Browser.open({ url, presentationStyle: 'popover' });
-      return;
-    } catch (e) {
-      console.warn('[nativeAuth] Browser not available, falling back:', e.message);
-    }
-  }
-
-  window.location.href = url;
+  // Stripe Payment Link — håndterer hele betalingsflowet
+  const stripeCheckoutUrl = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+  await openExternalUrl(stripeCheckoutUrl);
 }
