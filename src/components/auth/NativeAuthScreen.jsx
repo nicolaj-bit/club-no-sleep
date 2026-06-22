@@ -60,6 +60,11 @@ export default function NativeAuthScreen() {
     await redirectToLogin('/app');
   };
 
+  const handleDemo = () => {
+    localStorage.setItem('demo_mode', 'true');
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Hero gradient */}
@@ -212,6 +217,19 @@ export default function NativeAuthScreen() {
               >
                 Har du ikke en konto?{' '}
                 <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Opret bruger</span>
+              </button>
+
+              {/* Demo mode */}
+              <button
+                onClick={handleDemo}
+                className="w-full py-3.5 rounded-2xl text-sm font-medium mt-5 border transition-colors"
+                style={{
+                  borderColor: 'var(--color-border)',
+                  color: 'var(--color-text-secondary)',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                Jeg vil kigge
               </button>
             </motion.div>
           ) : (

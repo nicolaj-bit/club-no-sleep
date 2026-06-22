@@ -37,6 +37,11 @@ export default function NativeAuthGate({ children }) {
   };
 
   const checkAuth = async () => {
+    // Demo mode — lad brugeren se appen uden login
+    if (localStorage.getItem('demo_mode') === 'true') {
+      setStatus('authed');
+      return;
+    }
     try {
       const user = await base44.auth.me();
       if (!user) {
