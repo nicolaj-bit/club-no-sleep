@@ -61,9 +61,7 @@ export default function NativeAuthScreen() {
   };
 
   const handleSignupRedirect = async () => {
-    const { appParams } = await import('@/lib/app-params');
-    const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
-    await openExternalUrl(baseUrl);
+    await openExternalUrl('https://clubnosleep.com');
   };
 
   return (
