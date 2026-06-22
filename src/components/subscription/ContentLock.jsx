@@ -1,12 +1,12 @@
 import React from 'react';
 import { Lock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const MEMBERSHIP_URL = '/Checkout';
+import { redirectToWebSubscription } from '@/lib/nativeAuth';
 
 /**
  * ContentLock – wraps premium content.
  * Shows a blurred preview with a membership lock overlay for non-subscribers.
+ * "Bliv medlem" opens the web Checkout in the system browser (not in-app).
  *
  * Props:
  *   locked: boolean   — whether to show the lock
@@ -31,6 +31,11 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
   }
 
   if (!locked) return children;
+
+  const handleSubscribe = () => {
+    const token = localStorage.getItem('base44_access_token');
+    redirectToWebSubscription(token);
+  };
 
   return (
     <div className="relative">
@@ -75,13 +80,13 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
           Bliv medlem og få adgang til alle funktioner i appen
         </p>
 
-        <a
-          href={MEMBERSHIP_URL}
+        <button
+          onClick={handleSubscribe}
           className="w-full py-3.5 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
-          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)', textDecoration: 'none' }}
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           Bliv medlem ✨
-        </a>
+        </button>
       </motion.div>
     </div>
   );

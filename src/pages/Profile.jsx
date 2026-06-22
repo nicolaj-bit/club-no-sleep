@@ -25,6 +25,7 @@ import ChildSwitcher from '@/components/children/ChildSwitcher';
 import AddChildSheet from '@/components/children/AddChildSheet';
 import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
+import { redirectToWebSubscription } from '@/lib/nativeAuth';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -143,7 +144,7 @@ export default function Profile() {
           {lang === 'da' ? 'Log ind / Opret konto' : 'Log in / Sign up'}
         </button>
         <button
-          onClick={() => base44.auth.redirectToLogin('/Subscription')}
+          onClick={() => redirectToWebSubscription()}
           className="w-full max-w-xs py-3 rounded-2xl text-sm"
           style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}
         >
