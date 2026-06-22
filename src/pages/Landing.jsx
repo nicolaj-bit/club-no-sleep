@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { openExternalUrl } from '@/lib/nativeAuth';
 import LegalModal from '@/components/landing/LegalModal';
 import IPhoneMockup from '@/components/landing/IPhoneMockup';
 import FeaturesList from '@/components/landing/FeaturesList';
 
+const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
+
+  const handleBecomeMember = () => {
+    if (window.self !== window.top) {
+      alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
+      return;
+    }
+    openExternalUrl(STRIPE_CHECKOUT_URL);
+  };
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
@@ -49,7 +60,7 @@ export default function Landing() {
             <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
             <>
                 <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
-                <button onClick={() => window.location.href = '/Checkout'} style={btnDark}>Bliv medlem</button>
+                <button onClick={handleBecomeMember} style={btnDark}>Bliv medlem</button>
               </>
             }
           </div>
@@ -102,7 +113,7 @@ export default function Landing() {
                   </div>
                 </a>
               </div>
-              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/Checkout'} style={btnBrown}>Bliv medlem</button>
+              <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>Bliv medlem</button>
               <button className="lnd-hero1-btn" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>Jeg vil kigge →</button>
             </div>
           </div>
@@ -146,7 +157,7 @@ export default function Landing() {
             </ul>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button onClick={() => window.location.href = '/Checkout'} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
+              <button onClick={handleBecomeMember} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
                 Kom i Gang ✨
               </button>
               <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 14, padding: '13px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
@@ -250,7 +261,7 @@ export default function Landing() {
                   </div>
                 </a>
               </div>
-              <button className="lnd-partner-btn" onClick={() => window.location.href = '/Checkout'} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
+              <button className="lnd-partner-btn" onClick={handleBecomeMember} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
                 Bliv medlem
               </button>
             </div>
