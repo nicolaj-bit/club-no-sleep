@@ -21,31 +21,33 @@ export default function AuthNative() {
     const action = urlParams.get('action') || 'login';
 
     const checkAndRedirect = async () => {
-      try {
-        // Tjek om token lige er kommet via URL (efter login redirect)
-        const urlToken = new URLSearchParams(window.location.search).get('access_token');
-        if (urlToken) {
-          localStorage.setItem('base44_access_token', urlToken);
-        }
+      // Læs token fra URL (Base44 SDK sætter det der efter login) eller localStorage
+      const urlToken = new URLSearchParams(window.location.search).get('access_token');
+      if (urlToken) {
+        localStorage.setItem('base44_access_token', urlToken);
+      }
 
-        // Tjek flere mulige localStorage-nøgler
-        const token = urlToken
-          || localStorage.getItem('base44_access_token')
-          || localStorage.getItem('token');
+      const token = urlToken
+        || localStorage.getItem('base44_access_token')
+        || localStorage.getItem('token');
 
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth && token) {
-          setStatus('redirecting');
-          const deepLink = buildAppDeepLink({ access_token: token });
-          window.location.href = deepLink;
-          // Fallback: hvis appen ikke åbner efter 2.5s, vis manuel knap
-          setTimeout(() => setStatus('fallback'), 2500);
+      if (token) {
+        // Vi har et token — bekræft at brugeren faktisk er logget ind
+        try {
+          await base44.auth.me();
+        } catch {
+          // Token er ugyldig — redirect til login
+          base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
           return;
         }
-      } catch (e) {
-        console.error('[AuthNative] Auth check failed:', e);
+        setStatus('redirecting');
+        const deepLink = buildAppDeepLink({ access_token: token });
+        window.location.href = deepLink;
+        setTimeout(() => setStatus('fallback'), 2500);
+        return;
       }
-      // Ikke logget ind — redirect til login, vend tilbage til denne side efterført
+
+      // Intet token — redirect til login
       base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
     };
 
