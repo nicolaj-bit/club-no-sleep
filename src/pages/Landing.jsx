@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import LegalModal from '@/components/landing/LegalModal';
 import IPhoneMockup from '@/components/landing/IPhoneMockup';
@@ -9,10 +7,8 @@ import FeaturesList from '@/components/landing/FeaturesList';
 export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
-  const isNative = Capacitor.isNativePlatform();
 
   useEffect(() => {
-    if (isNative) return;
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
     
     // Load phone image URLs from config
@@ -35,11 +31,6 @@ export default function Landing() {
     };
     loadPhoneUrls();
   }, []);
-
-  // På native (iOS/Android): redirect til /app — Landing er kun til web
-  if (isNative) {
-    return <Navigate to="/app" replace />;
-  }
 
   const handleLogin = async () => {
     const { redirectToLogin } = await import('@/lib/nativeAuth');

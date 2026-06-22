@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
+import { Capacitor } from '@capacitor/core';
 
 import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
@@ -69,8 +70,8 @@ const AuthenticatedApp = () => {
     <NativeAuthGate>
     <SubscriptionGate>
       <Routes>
-        {/* Public landing page — ingen auth, ingen layout */}
-        <Route path="/" element={<Landing />} />
+        {/* Public landing page — på native redirectes til /app (NativeAuthGate håndterer login) */}
+        <Route path="/" element={Capacitor.isNativePlatform() ? <Navigate to="/app" replace /> : <Landing />} />
         <Route path="/AuthNative" element={<AuthNative />} />
 
         {/* Onboarding — ingen bottom nav */}

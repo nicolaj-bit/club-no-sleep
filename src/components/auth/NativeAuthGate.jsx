@@ -22,8 +22,9 @@ export default function NativeAuthGate({ children }) {
 
   const checkAuth = async () => {
     try {
-      const isAuth = await base44.auth.isAuthenticated();
-      setStatus(isAuth ? 'authed' : 'unauthed');
+      // Brug me() i stedet for isAuthenticated() — public apps kan have anonym session
+      const user = await base44.auth.me();
+      setStatus(user ? 'authed' : 'unauthed');
     } catch {
       setStatus('unauthed');
     }
