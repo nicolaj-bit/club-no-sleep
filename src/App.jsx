@@ -42,7 +42,7 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
-  const isNative = Capacitor.isNativePlatform() || /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase());
+  const isNative = Capacitor.isNativePlatform();
   if (isNative) {
     return <Navigate to="/AuthNative" replace />;
   }
