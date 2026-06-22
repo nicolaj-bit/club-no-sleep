@@ -3,11 +3,12 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
+import { Capacitor } from '@capacitor/core';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
 
 import Onboarding from './pages/Onboarding';
@@ -37,8 +38,45 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
+// Robust native app detection — Base44's native app uses a web view wrapper,
+// so Capacitor.isNativePlatform() alone may return false. We also check the
+// user agent for web view indicators.
+function isNativeApp() {
+  // 1. Capacitor bridge (if app is built with Capacitor)
+  try {
+    if (Capacitor.isNativePlatform()) return true;
+  } catch {}
+
+  const ua = navigator.userAgent || '';
+
+  // 2. Android WebView — has "wv" in user agent
+  if (/; wv\)/.test(ua) || /; wv;/.test(ua)) return true;
+
+  // 3. iOS WKWebView (native app) — window.safari object only exists in real Safari,
+  //    not in WKWebView. Exclude Chrome (CriOS) and Firefox (FxiOS) which also use WKWebView.
+  if (/iPhone|iPad|iPod/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua) && typeof window.safari === 'undefined') return true;
+
+  // 4. iOS PWA / Add to Home Screen
+  if (window.navigator.standalone === true) return true;
+
+  return false;
+}
+
 function RootRoute() {
-  return <Landing />;
+  // Native app (App Store / Google Play) → go directly to app (sign-up page shown by NativeAuthGate)
+  if (isNativeApp()) {
+    return <Navigate to="/app" replace />;
+  }
+
+  const hostname = window.location.hostname || '';
+
+  // clubnosleep.com → Landing page (marketing site)
+  if (hostname.includes('clubnosleep')) {
+    return <Landing />;
+  }
+
+  // lalatoto.base44.app and others → go directly to app (sign-up page shown by NativeAuthGate)
+  return <Navigate to="/app" replace />;
 }
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
@@ -72,7 +110,7 @@ const AuthenticatedApp = () => {
       <Routes>
         {/* Web: /Landing er default. Native: /app er default */}
         <Route path="/" element={<RootRoute />} />
-        <Route path="/Landing" element={<Landing />} />
+        <Route path="/Landing" element={isNativeApp() ? <Navigate to="/app" replace /> : <Landing />} />
 
         {/* Onboarding — ingen bottom nav */}
         <Route path="/Onboarding" element={<Onboarding />} />
