@@ -61,14 +61,9 @@ export default function NativeAuthScreen() {
   };
 
   const handleSignupRedirect = async () => {
-    const isNative = Capacitor.isNativePlatform();
-    if (isNative) {
-      const { appParams } = await import('@/lib/app-params');
-      const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
-      await openExternalUrl(baseUrl);
-    } else {
-      window.location.href = '/Landing';
-    }
+    const { appParams } = await import('@/lib/app-params');
+    const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
+    await openExternalUrl(baseUrl);
   };
 
   return (
