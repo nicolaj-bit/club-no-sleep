@@ -42,10 +42,11 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
-  // Check if running in native app (Capacitor)
+  // Check if running in native app (Capacitor) AND not in Safari browser
   const isNative = Capacitor.isNativePlatform();
+  const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
   
-  if (isNative) {
+  if (isNative && !isSafari) {
     return <Navigate to="/AuthNative" replace />;
   }
   return <Landing />;
