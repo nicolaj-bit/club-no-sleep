@@ -49,7 +49,10 @@ function RootRoute() {
     // Check native platform after Capacitor is ready
     const checkNative = async () => {
       const nativeCheck = Capacitor.isNativePlatform();
-      setIsNative(nativeCheck);
+      const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+      
+      // Hvis Safari, treat som web (Landing page)
+      setIsNative(nativeCheck && !isSafari);
       setLoaded(true);
     };
     checkNative();
