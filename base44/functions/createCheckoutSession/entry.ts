@@ -16,8 +16,8 @@ Deno.serve(async (req) => {
 
     // Build success/cancel URLs from the request origin
     const origin = req.headers.get('origin') || 'https://app.base44.com';
-    const successUrl = `${origin}/?subscription=success`;
-    const cancelUrl = `${origin}/Subscription`;
+    const successUrl = `${origin}/CheckoutSuccess`;
+    const cancelUrl = `${origin}/Checkout`;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',

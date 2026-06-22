@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, ArrowLeft } from 'lucide-react';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { CreditCard, Check, ArrowLeft, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function Checkout() {
   const [selected, setSelected] = useState(null);
+
+  const [stripeLoading, setStripeLoading] = useState(false);
 
   const handleStripe = async () => {
     if (window.self !== window.top) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
+    setStripeLoading(true);
+    try {
+      const res = await base44.functions.invoke('createCheckoutSession', {});
+      if (res?.data?.url) {
+        window.location.href = res.data.url;
+      } else {
+        alert('Kunne ikke starte betaling. Prøv igen.');
+        setStripeLoading(false);
+      }
+    } catch (e) {
+      console.error('Checkout error:', e);
+      alert('Noget gik galt. Prøv igen.');
+      setStripeLoading(false);
+    }
   };
 
   const handleAppStore = async () => {
@@ -217,7 +232,7 @@ export default function Checkout() {
       <div style={{ width: '100%', maxWidth: 480 }}>
         <button
           onClick={selected === 'stripe' ? handleStripe : selected === 'appstore' ? handleAppStore : undefined}
-          disabled={!selected}
+          disabled={!selected || stripeLoading}
           style={{
             width: '100%',
             backgroundColor: selected ? '#3A2416' : '#C8B8A8',
@@ -231,7 +246,7 @@ export default function Checkout() {
             transition: 'background-color 0.2s',
           }}
         >
-          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Betal med kort →' : 'Fortsæt til App Store →'}
+{stripeLoading ? (<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><Loader2 size={18} className="animate-spin" /> Opretter betaling...</span>) : !selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Betal med kort →' : 'Fortsæt til App Store →'}
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>

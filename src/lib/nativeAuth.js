@@ -13,11 +13,10 @@ export async function redirectToLogin(nextUrl) {
   if (isNative) {
     try {
       const { Browser } = await import('@capacitor/browser');
-      // Byg login-URL manuelt — samme som base44 SDK ville bruge
       const { appParams } = await import('@/lib/app-params');
-      const appBaseUrl = appParams.appBaseUrl || '';
-      const redirectBack = nextUrl || window.location.href;
-      const loginUrl = `${appBaseUrl}/auth/login?next=${encodeURIComponent(redirectBack)}`;
+      const webAppUrl = getWebAppUrl(appParams);
+      const redirectBack = nextUrl || `${webAppUrl}/app`;
+      const loginUrl = `${webAppUrl}/auth/login?next=${encodeURIComponent(redirectBack)}`;
       await Browser.open({ url: loginUrl, presentationStyle: 'popover' });
       return;
     } catch (e) {
@@ -27,6 +26,16 @@ export async function redirectToLogin(nextUrl) {
 
   // Web fallback
   base44.auth.redirectToLogin(nextUrl || '/app');
+}
+
+/**
+ * Returnerer den publicerede web-URL for appen.
+ * Bruger appBaseUrl hvis sat (via VITE_BASE44_APP_BASE_URL),
+ * ellers konstrueres URL fra appId: https://app.base44.com/apps/{appId}
+ */
+function getWebAppUrl(appParams) {
+  if (appParams.appBaseUrl) return appParams.appBaseUrl.replace(/\/$/, '');
+  return `https://app.base44.com/apps/${appParams.appId}`;
 }
 
 /**
@@ -51,8 +60,8 @@ export async function redirectToWebAuth(action = 'login') {
   const isNative = Capacitor.isNativePlatform();
 
   const { appParams } = await import('@/lib/app-params');
-  const appBaseUrl = appParams.appBaseUrl || '';
-  const url = `${appBaseUrl}/AuthNative?action=${action}`;
+  const webAppUrl = getWebAppUrl(appParams);
+  const url = `${webAppUrl}/AuthNative?action=${action}`;
 
   if (isNative) {
     try {
