@@ -34,8 +34,14 @@ export default function AuthNative() {
         || localStorage.getItem('token');
 
       if (!foundToken) {
-        // Intet token — redirect til Base44 login/signup
-        base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
+        // Intet token — hvis action=signup, åbn signup på clubnosleep.com i nyt vindue
+        if (action === 'signup') {
+          window.open('https://clubnosleep.com', '_blank');
+          setStatus('error');
+          return;
+        }
+        // Ellers redirect til Base44 login
+        base44.auth.redirectToLogin(`/AuthNative?action=login`);
         return;
       }
 
@@ -163,24 +169,40 @@ export default function AuthNative() {
       )}
 
       {status === 'error' && (
-        <div className="flex flex-col items-center gap-3 text-center">
-          <p style={{ color: '#dc2626', fontSize: '0.9rem' }}>Noget gik galt. Prøv igen.</p>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center gap-4 text-center"
+        >
+          <h1
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: '1.5rem',
+              color: '#2B1F16',
+              margin: 0,
+            }}
+          >
+            Opret dig på clubnosleep.com
+          </h1>
+          <p style={{ color: '#7A665A', fontSize: '0.9rem', maxWidth: 300, lineHeight: 1.6 }}>
+            Du kan oprette dig og betale på vores website. Vinduet skulle åbne nu.
+          </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => window.open('https://clubnosleep.com', '_blank')}
             style={{
               backgroundColor: '#3A2416',
               color: '#fff',
               border: 'none',
               borderRadius: 14,
-              padding: '12px 28px',
-              fontSize: '0.95rem',
+              padding: '14px 32px',
+              fontSize: '1rem',
               fontWeight: 600,
               cursor: 'pointer',
             }}
           >
-            Prøv igen
+            Gå til clubnosleep.com
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
