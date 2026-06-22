@@ -61,7 +61,7 @@ export default function NativeAuthScreen() {
   };
 
   const handleSignupRedirect = async () => {
-    await openExternalUrl('https://clubnosleep.com');
+    await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
   };
 
   return (
