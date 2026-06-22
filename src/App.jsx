@@ -46,10 +46,17 @@ function RootRoute() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Check native platform after Capacitor is ready
+    // Check native platform - wait for Capacitor to be ready
     const checkNative = async () => {
-      const nativeCheck = Capacitor.isNativePlatform();
-      setIsNative(nativeCheck);
+      try {
+        // Try to ready Capacitor first
+        await Capacitor.ready;
+        const nativeCheck = Capacitor.isNativePlatform();
+        setIsNative(nativeCheck);
+      } catch (e) {
+        console.log('Capacitor not ready, treating as web');
+        setIsNative(false);
+      }
       setLoaded(true);
     };
     checkNative();
