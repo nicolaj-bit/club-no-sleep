@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/nativeAuth';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -70,19 +69,18 @@ export default function Subscription() {
     }
   }, []);
 
-  // Køb via RevenueCat (iOS) eller Stripe (web)
+  // Køb via RevenueCat IAP (kun native)
   const handleIAPSubscribe = async () => {
-    const pkg = rc.offerings?.current?.availablePackages?.[0];
+    if (!rc.isNative) {
+      alert(da
+        ? 'Abonnement købes via App Store i iPhone-appen. Download appen for at abonnere.'
+        : 'Subscription is via App Store in the iPhone app. Download the app to subscribe.');
+      return;
+    }
 
-    // Hvis ingen RevenueCat pakker tilgængelige — brug Stripe
+    const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      if (window.self !== window.top) {
-        alert(da
-          ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
-          : 'Checkout only works from the published app, not the preview.');
-        return;
-      }
-      await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
+      setError(da ? 'Ingen abonnementer tilgængelige lige nu. Prøv igen senere.' : 'No subscriptions available right now. Try again later.');
       return;
     }
 
@@ -99,22 +97,6 @@ export default function Subscription() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Stripe web checkout
-  const handleSubscribe = async () => {
-    const isAuth = await base44.auth.isAuthenticated();
-    if (!isAuth) {
-      base44.auth.redirectToLogin('/Subscription');
-      return;
-    }
-    if (window.self !== window.top) {
-      alert(da
-        ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
-        : 'Checkout only works from the published app, not the preview.');
-      return;
-    }
-    await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
   };
 
   const handleRestore = async () => {
