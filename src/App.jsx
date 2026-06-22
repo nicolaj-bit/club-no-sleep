@@ -41,6 +41,11 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
+function RootRoute() {
+  const isNative = Capacitor.isNativePlatform();
+  return isNative ? <Navigate to="/app" replace /> : <Landing />;
+}
+
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
@@ -70,8 +75,8 @@ const AuthenticatedApp = () => {
     <NativeAuthGate>
     <SubscriptionGate>
       <Routes>
-        {/* Appen åbner altid på /app — NativeAuthGate håndterer login på native */}
-        <Route path="/" element={<Navigate to="/app" replace />} />
+        {/* Web: /Landing er default. Native: /app er default */}
+        <Route path="/" element={<RootRoute />} />
         <Route path="/Landing" element={<Landing />} />
         <Route path="/AuthNative" element={<AuthNative />} />
 
