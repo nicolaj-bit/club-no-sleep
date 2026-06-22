@@ -9,6 +9,18 @@ export default function Landing() {
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
 
   useEffect(() => {
+    // På native (iOS/Android): redirect til /app — Landing er kun til web
+    const checkNative = async () => {
+      try {
+        const { Capacitor } = await import('@capacitor/core');
+        if (Capacitor.isNativePlatform()) {
+          window.location.href = '/app';
+          return;
+        }
+      } catch (_) {}
+    };
+    checkNative();
+
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
     
     // Load phone image URLs from config
