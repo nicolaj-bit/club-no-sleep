@@ -92,7 +92,7 @@ export default function NativeAuthScreen() {
             className="text-3xl font-light text-white mb-2"
             style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '-0.01em' }}
           >
-            LALATOTO
+            Club No Sleep
           </motion.h1>
 
           <motion.p
@@ -257,10 +257,6 @@ export default function NativeAuthScreen() {
         </AnimatePresence>
 
         <div className="flex-1" />
-
-        <p className="text-xs text-center mt-6" style={{ color: 'var(--color-text-muted)' }}>
-          Betaling sker sikkert via vores hjemmeside
-        </p>
       </div>
     </div>
   );
