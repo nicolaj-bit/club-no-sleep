@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -42,13 +42,27 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
-  // Check if running in native app (Capacitor) AND not in Safari browser
-  const isNative = Capacitor.isNativePlatform();
-  const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-  
-  if (isNative && !isSafari) {
+  const [isNative, setIsNative] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    // Check native platform after Capacitor is ready
+    const checkNative = async () => {
+      const nativeCheck = Capacitor.isNativePlatform();
+      setIsNative(nativeCheck);
+      setLoaded(true);
+    };
+    checkNative();
+  }, []);
+
+  if (!loaded) {
+    return <div style={{ minHeight: '100vh' }} />;
+  }
+
+  if (isNative) {
     return <Navigate to="/AuthNative" replace />;
   }
+  
   return <Landing />;
 }
 
