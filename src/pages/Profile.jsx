@@ -144,7 +144,7 @@ export default function Profile() {
           {lang === 'da' ? 'Log ind / Opret konto' : 'Log in / Sign up'}
         </button>
         <button
-          onClick={() => redirectToWebSubscription()}
+          onClick={() => navigate('/Checkout')}
           className="w-full max-w-xs py-3 rounded-2xl text-sm"
           style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}
         >
