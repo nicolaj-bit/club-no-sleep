@@ -20,9 +20,24 @@ export default function NativeAuthGate({ children }) {
   // Offentlige routes der ikke kræver auth
   const isPublicRoute = location.pathname === '/AcceptInvite';
 
+  const processDeepLink = async (url) => {
+    try {
+      const urlObj = new URL(url);
+      const token = urlObj.searchParams.get('access_token');
+      if (token) {
+        localStorage.setItem('base44_access_token', token);
+        // Reload for at lade SDK geninitialisere med den nye token
+        window.location.reload();
+        return true;
+      }
+    } catch (e) {
+      console.error('[NativeAuthGate] Deep link parse error:', e);
+    }
+    return false;
+  };
+
   const checkAuth = async () => {
     try {
-      // Brug me() i stedet for isAuthenticated() — public apps kan have anonym session
       const user = await base44.auth.me();
       setStatus(user ? 'authed' : 'unauthed');
     } catch {
@@ -33,22 +48,22 @@ export default function NativeAuthGate({ children }) {
   useEffect(() => {
     if (!isNative) return;
 
-    checkAuth();
+    // Cold start: tjek om appen blev åbnet via deep link
+    App.getLaunchUrl().then(({ url }) => {
+      if (url && url.includes('access_token')) {
+        processDeepLink(url);
+      } else {
+        checkAuth();
+      }
+    }).catch(() => {
+      checkAuth();
+    });
 
     let listeners = [];
 
-    // Deep link listener — fanger token fra web auth
+    // Deep link listener — fanger token fra web auth (warm start)
     App.addListener('appUrlOpen', ({ url }) => {
-      try {
-        const urlObj = new URL(url);
-        const token = urlObj.searchParams.get('access_token');
-        if (token) {
-          localStorage.setItem('base44_access_token', token);
-          window.location.reload();
-        }
-      } catch (e) {
-        console.error('[NativeAuthGate] Deep link parse error:', e);
-      }
+      processDeepLink(url);
     }).then((l) => listeners.push(l));
 
     // App state listener — re-check auth når appen kommer til forgrunden

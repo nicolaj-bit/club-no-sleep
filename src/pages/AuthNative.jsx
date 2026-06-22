@@ -34,18 +34,8 @@ export default function AuthNative() {
 
       if (foundToken) {
         setToken(foundToken);
-        // Bekræft at brugeren faktisk er logget ind
-        try {
-          await base44.auth.me();
-        } catch {
-          // Token er ugyldig — redirect til login
-          base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
-          return;
-        }
-        setStatus('redirecting');
-        const deepLink = buildAppDeepLink({ access_token: foundToken });
-        window.location.href = deepLink;
-        setTimeout(() => setStatus('fallback'), 2500);
+        // Vis knappen med det samme — iOS kræver bruger-klik på <a> for deep links
+        setStatus('ready');
         return;
       }
 
@@ -90,7 +80,7 @@ export default function AuthNative() {
         </div>
       )}
 
-      {status === 'fallback' && (
+      {(status === 'ready' || status === 'fallback') && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -109,14 +99,10 @@ export default function AuthNative() {
           <p style={{ color: '#7A665A', fontSize: '0.9rem', maxWidth: 300, lineHeight: 1.6 }}>
             Klik herunder for at vende tilbage til appen.
           </p>
-          <button
-            onClick={() => {
-              // Åbn appen — med token hvis vi har et, ellers bare åbn appen
-              const deepLink = token
-                ? buildAppDeepLink({ access_token: token })
-                : `${APP_DEEP_LINK_SCHEME}://auth`;
-              window.location.href = deepLink;
-            }}
+          <a
+            href={token
+              ? buildAppDeepLink({ access_token: token })
+              : `${APP_DEEP_LINK_SCHEME}://auth`}
             style={{
               backgroundColor: '#3A2416',
               color: '#fff',
@@ -129,10 +115,12 @@ export default function AuthNative() {
               display: 'flex',
               alignItems: 'center',
               gap: 8,
+              textDecoration: 'none',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             Åbn appen <ArrowRight size={18} />
-          </button>
+          </a>
         </motion.div>
       )}
     </div>
