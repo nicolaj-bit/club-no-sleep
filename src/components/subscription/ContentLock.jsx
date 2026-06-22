@@ -1,7 +1,7 @@
 import React from 'react';
 import { Lock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { redirectToWebSubscription } from '@/lib/nativeAuth';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * ContentLock – wraps premium content.
@@ -15,6 +15,7 @@ import { redirectToWebSubscription } from '@/lib/nativeAuth';
  *   blurHeight: string — height of the blurred preview area (default '200px')
  */
 export default function ContentLock({ locked, loading: subscriptionLoading, children, blurHeight = '200px' }) {
+  const navigate = useNavigate();
 
   // While subscription is still loading, show a full-height spinner overlay so nothing is clickable
   if (subscriptionLoading) {
@@ -33,8 +34,7 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
   if (!locked) return children;
 
   const handleSubscribe = () => {
-    const token = localStorage.getItem('base44_access_token');
-    redirectToWebSubscription(token);
+    navigate('/Checkout');
   };
 
   return (

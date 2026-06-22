@@ -1,17 +1,17 @@
 import React from 'react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
-import { redirectToWebSubscription } from '@/lib/nativeAuth';
+import { useNavigate } from 'react-router-dom';
 import { RefreshCw } from 'lucide-react';
 
 export default function ReactivateSubscriptionBanner() {
   const { activeProfile, loading } = useActiveProfile();
+  const navigate = useNavigate();
 
   if (loading || !activeProfile) return null;
   if (activeProfile.subscription_status !== 'expired') return null;
 
   const handleClick = () => {
-    const token = localStorage.getItem('base44_access_token');
-    redirectToWebSubscription(token);
+    navigate('/Checkout');
   };
 
   return (
