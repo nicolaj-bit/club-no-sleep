@@ -42,30 +42,8 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
-  const [isNative, setIsNative] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    // Check native platform - wait for Capacitor to be ready
-    const checkNative = async () => {
-      try {
-        // Try to ready Capacitor first
-        await Capacitor.ready;
-        const nativeCheck = Capacitor.isNativePlatform();
-        setIsNative(nativeCheck);
-      } catch (e) {
-        console.log('Capacitor not ready, treating as web');
-        setIsNative(false);
-      }
-      setLoaded(true);
-    };
-    checkNative();
-  }, []);
-
-  if (!loaded) {
-    return <div style={{ minHeight: '100vh' }} />;
-  }
-
+  const isNative = Capacitor.isNativePlatform();
+  
   if (isNative) {
     return <Navigate to="/AuthNative" replace />;
   }
