@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CreditCard, Check, Loader2 } from 'lucide-react';
+import { Check, Loader2 } from 'lucide-react';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
@@ -9,14 +9,6 @@ export default function PlanChooser({ onChoose }) {
   const [selected, setSelected] = useState(null);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
   const { offerings, purchase } = useRevenueCat();
-
-  const handleStripe = () => {
-    if (window.self !== window.top) {
-      alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
-      return;
-    }
-    window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
-  };
 
   const handleAppStore = async () => {
     if (window.self !== window.top) {
@@ -119,49 +111,11 @@ export default function PlanChooser({ onChoose }) {
           </div>
         </button>
 
-        {/* Stripe */}
-        <button
-          onClick={() => setSelected('stripe')}
-          style={{
-            width: '100%',
-            background: selected === 'stripe' ? 'linear-gradient(135deg, #3A2416, #5B3F2B)' : 'var(--color-bg-card)',
-            border: selected === 'stripe' ? '2px solid #3A2416' : '2px solid var(--color-border)',
-            borderRadius: 18,
-            padding: '1.4rem 1.5rem',
-            cursor: 'pointer',
-            textAlign: 'left',
-            transition: 'all 0.2s',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{
-              width: 48, height: 48,
-              borderRadius: 12,
-              backgroundColor: selected === 'stripe' ? 'rgba(255,255,255,0.15)' : 'var(--color-bg-subtle)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              <CreditCard size={24} color={selected === 'stripe' ? '#fff' : '#5B3F2B'} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ color: selected === 'stripe' ? '#fff' : 'var(--color-text-primary)', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 3px' }}>
-                Kort / MobilePay (Stripe)
-              </p>
-              <p style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.7)' : 'var(--color-text-muted)', fontSize: '0.78rem', margin: 0 }}>
-                Betal med kort, MobilePay el. anden metode
-              </p>
-            </div>
-            {selected === 'stripe' && (
-              <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Check size={13} color="#fff" />
-              </div>
-            )}
-          </div>
-        </button>
       </div>
 
       {/* CTA */}
       <button
-        onClick={selected === 'stripe' ? handleStripe : selected === 'appstore' ? handleAppStore : undefined}
+        onClick={selected === 'appstore' ? handleAppStore : undefined}
         disabled={!selected || loadingPurchase}
         style={{
           width: '100%',
@@ -183,7 +137,6 @@ export default function PlanChooser({ onChoose }) {
         {loadingPurchase
           ? <><Loader2 size={18} className="animate-spin" /> Behandler køb…</>
           : !selected ? 'Vælg en betalingsmetode'
-          : selected === 'stripe' ? 'Fortsæt til betaling →'
           : 'Køb via App Store →'}
       </button>
 
