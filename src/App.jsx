@@ -32,6 +32,8 @@ import Privacy from './pages/Privacy';
 import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
+import AuthNative from './pages/AuthNative';
+import NativeAuthGate from './components/auth/NativeAuthGate';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -64,10 +66,12 @@ const AuthenticatedApp = () => {
   }
 
   return (
+    <NativeAuthGate>
     <SubscriptionGate>
       <Routes>
         {/* Public landing page — ingen auth, ingen layout */}
         <Route path="/" element={<Landing />} />
+        <Route path="/AuthNative" element={<AuthNative />} />
 
         {/* Onboarding — ingen bottom nav */}
         <Route path="/Onboarding" element={<Onboarding />} />
@@ -103,6 +107,7 @@ const AuthenticatedApp = () => {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>
+    </NativeAuthGate>
   );
 };
 
