@@ -8,15 +8,16 @@ import { base44 } from '@/api/base44Client';
  * - Web: bruger normal redirect via base44.auth.redirectToLogin()
  */
 export async function redirectToLogin(nextUrl) {
+  const { appParams } = await import('@/lib/app-params');
+  const webAppUrl = getWebAppUrl(appParams);
+  const redirectBack = nextUrl || `${webAppUrl}/app`;
+  const loginUrl = `${webAppUrl}/auth/login?next=${encodeURIComponent(redirectBack)}`;
+
   const isNative = Capacitor.isNativePlatform();
 
   if (isNative) {
     try {
       const { Browser } = await import('@capacitor/browser');
-      const { appParams } = await import('@/lib/app-params');
-      const webAppUrl = getWebAppUrl(appParams);
-      const redirectBack = nextUrl || `${webAppUrl}/app`;
-      const loginUrl = `${webAppUrl}/auth/login?next=${encodeURIComponent(redirectBack)}`;
       await Browser.open({ url: loginUrl, presentationStyle: 'popover' });
       return;
     } catch (e) {
@@ -24,8 +25,8 @@ export async function redirectToLogin(nextUrl) {
     }
   }
 
-  // Web fallback
-  base44.auth.redirectToLogin(nextUrl || '/app');
+  // Web / web-view fallback — navigate directly to the login URL
+  window.location.href = loginUrl;
 }
 
 /**
