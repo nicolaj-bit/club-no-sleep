@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { buildAppDeepLink } from '@/lib/nativeAuth';
+import { buildAppDeepLink, APP_DEEP_LINK_SCHEME } from '@/lib/nativeAuth';
 import { Loader2, ArrowRight, Moon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
  */
 export default function AuthNative() {
   const [status, setStatus] = useState('checking'); // checking | redirecting | fallback
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -27,12 +28,13 @@ export default function AuthNative() {
         localStorage.setItem('base44_access_token', urlToken);
       }
 
-      const token = urlToken
+      const foundToken = urlToken
         || localStorage.getItem('base44_access_token')
         || localStorage.getItem('token');
 
-      if (token) {
-        // Vi har et token — bekræft at brugeren faktisk er logget ind
+      if (foundToken) {
+        setToken(foundToken);
+        // Bekræft at brugeren faktisk er logget ind
         try {
           await base44.auth.me();
         } catch {
@@ -41,7 +43,7 @@ export default function AuthNative() {
           return;
         }
         setStatus('redirecting');
-        const deepLink = buildAppDeepLink({ access_token: token });
+        const deepLink = buildAppDeepLink({ access_token: foundToken });
         window.location.href = deepLink;
         setTimeout(() => setStatus('fallback'), 2500);
         return;
@@ -109,11 +111,11 @@ export default function AuthNative() {
           </p>
           <button
             onClick={() => {
-              const token = localStorage.getItem('base44_access_token')
-                || localStorage.getItem('token');
-              if (token) {
-                window.location.href = buildAppDeepLink({ access_token: token });
-              }
+              // Åbn appen — med token hvis vi har et, ellers bare åbn appen
+              const deepLink = token
+                ? buildAppDeepLink({ access_token: token })
+                : `${APP_DEEP_LINK_SCHEME}://auth`;
+              window.location.href = deepLink;
             }}
             style={{
               backgroundColor: '#3A2416',
