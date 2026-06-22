@@ -70,8 +70,9 @@ const AuthenticatedApp = () => {
     <NativeAuthGate>
     <SubscriptionGate>
       <Routes>
-        {/* Public landing page — på native redirectes til /app (NativeAuthGate håndterer login) */}
-        <Route path="/" element={Capacitor.isNativePlatform() ? <Navigate to="/app" replace /> : <Landing />} />
+        {/* Appen åbner altid på /app — NativeAuthGate håndterer login på native */}
+        <Route path="/" element={<Navigate to="/app" replace />} />
+        <Route path="/Landing" element={<Landing />} />
         <Route path="/AuthNative" element={<AuthNative />} />
 
         {/* Onboarding — ingen bottom nav */}
