@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearSubscriptionCache } from './useSubscription';
@@ -14,6 +15,12 @@ export default function SubscriptionGate({ children }) {
   const navigate = useNavigate();
 
   const checkAccess = useCallback(async () => {
+    // På native håndterer NativeAuthGate alt — passthrough
+    if (Capacitor.isNativePlatform()) {
+      setStatus('ok');
+      return;
+    }
+
     // Public routes — ingen auth krævet
     if (location.pathname === '/' || location.pathname === '/Onboarding' || location.pathname === '/AcceptInvite' || location.pathname === '/AuthNative' || location.pathname === '/Checkout' || location.pathname === '/CheckoutSuccess' || location.pathname === '/Terms' || location.pathname === '/Privacy') {
       setStatus('ok');

@@ -39,7 +39,18 @@ export default function NativeAuthGate({ children }) {
   const checkAuth = async () => {
     try {
       const user = await base44.auth.me();
-      setStatus(user ? 'authed' : 'unauthed');
+      if (!user) {
+        setStatus('unauthed');
+        return;
+      }
+      // Tjek abonnementsstatus — kun active/trial får adgang
+      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+      const sub = profiles[0]?.subscription_status;
+      if (sub === 'active' || sub === 'trial') {
+        setStatus('authed');
+      } else {
+        setStatus('unauthed');
+      }
     } catch {
       setStatus('unauthed');
     }
