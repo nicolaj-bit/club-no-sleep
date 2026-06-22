@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
+import NativeAuthScreen from './components/auth/NativeAuthScreen';
 import { Capacitor } from '@capacitor/core';
 
 import { Navigate } from 'react-router-dom';
@@ -43,7 +44,10 @@ const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
   const isNative = Capacitor.isNativePlatform();
-  return isNative ? <Navigate to="/app" replace /> : <Navigate to="/Landing" replace />;
+  if (isNative) {
+    return <NativeAuthScreen />;
+  }
+  return <Landing />;
 }
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
