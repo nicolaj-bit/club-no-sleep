@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -8,9 +8,6 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
-import { Capacitor } from '@capacitor/core';
-
-import { Navigate } from 'react-router-dom';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
 
 import Onboarding from './pages/Onboarding';
@@ -33,7 +30,6 @@ import Privacy from './pages/Privacy';
 import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
-import AuthNative from './pages/AuthNative';
 import NativeAuthGate from './components/auth/NativeAuthGate';
 
 
@@ -42,33 +38,6 @@ const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
-  const [ready, setReady] = useState(false);
-  const [isNative, setIsNative] = useState(false);
-
-  useEffect(() => {
-    const check = async () => {
-      try {
-        await Promise.race([Capacitor.ready, new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))]);
-        const native = Capacitor.isNativePlatform();
-        console.log('[RootRoute] Native platform detected:', native);
-        setIsNative(native);
-      } catch (e) {
-        console.log('[RootRoute] Native check failed, treating as web:', e);
-        setIsNative(false);
-      }
-      setReady(true);
-    };
-    check();
-  }, []);
-
-  if (!ready) return <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)' }} />;
-  
-  if (isNative) {
-    console.log('[RootRoute] Redirecting to /AuthNative');
-    return <Navigate to="/AuthNative" replace />;
-  }
-  
-  console.log('[RootRoute] Showing /Landing');
   return <Landing />;
 }
 
@@ -104,7 +73,6 @@ const AuthenticatedApp = () => {
         {/* Web: /Landing er default. Native: /app er default */}
         <Route path="/" element={<RootRoute />} />
         <Route path="/Landing" element={<Landing />} />
-        <Route path="/AuthNative" element={<AuthNative />} />
 
         {/* Onboarding — ingen bottom nav */}
         <Route path="/Onboarding" element={<Onboarding />} />

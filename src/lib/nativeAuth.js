@@ -52,32 +52,6 @@ export function buildAppDeepLink(params = {}) {
 }
 
 /**
- * Åbner web-appen i systembrowseren for login/oprettelse.
- * På native: bruger @capacitor/browser (SFSafariViewController / Chrome Custom Tab)
- * På web: almindelig redirect
- */
-export async function redirectToWebAuth(action = 'login') {
-  const isNative = Capacitor.isNativePlatform();
-
-  const { appParams } = await import('@/lib/app-params');
-  const webAppUrl = getWebAppUrl(appParams);
-  const url = `${webAppUrl}/AuthNative?action=${action}`;
-
-  if (isNative) {
-    try {
-      const { Browser } = await import('@capacitor/browser');
-      await Browser.open({ url, presentationStyle: 'popover' });
-      return;
-    } catch (e) {
-      console.warn('[nativeAuth] Browser not available, falling back:', e.message);
-    }
-  }
-
-  // Web fallback
-  window.location.href = url;
-}
-
-/**
  * Åbner en ekstern URL i systembrowseren på native (SFSafariViewController / Chrome Custom Tab).
  * På web: almindelig window.location.href.
  * Brug dette til Stripe checkout URLs og andre eksterne betalingssider.

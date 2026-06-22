@@ -3,7 +3,7 @@ import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { redirectToWebAuth, redirectToWebSubscription, openExternalUrl } from '@/lib/nativeAuth';
+import { redirectToWebSubscription, openExternalUrl } from '@/lib/nativeAuth';
 
 export default function NativeAuthScreen() {
   const [mode, setMode] = useState('login'); // login | signup
