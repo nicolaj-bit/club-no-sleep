@@ -3,7 +3,7 @@ import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { redirectToWebSubscription, openExternalUrl } from '@/lib/nativeAuth';
+import { redirectToWebSubscription, openExternalUrl, redirectToLogin } from '@/lib/nativeAuth';
 
 export default function NativeAuthScreen() {
   const [mode, setMode] = useState('login'); // login | signup
@@ -56,12 +56,8 @@ export default function NativeAuthScreen() {
     }
   };
 
-  const handleSignup = () => {
-    setMode('signup');
-  };
-
-  const handleSignupRedirect = async () => {
-    await openExternalUrl('https://clubnosleep.com');
+  const handleSignup = async () => {
+    await redirectToLogin('/app');
   };
 
   return (
@@ -239,7 +235,7 @@ export default function NativeAuthScreen() {
               </p>
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={handleSignupRedirect}
+                onClick={handleSignup}
                 className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2"
                 style={{
                   backgroundColor: 'var(--color-primary)',
