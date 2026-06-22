@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
+import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 
 const RC_API_KEY = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
@@ -9,7 +10,6 @@ let _configured = false;
 async function configure(userId) {
   if (_configured) return;
   await Purchases.setLogLevel({ level: LOG_LEVEL.ERROR });
-  // appUserID is optional — pass null to let RevenueCat generate an anonymous ID
   await Purchases.configure({ apiKey: RC_API_KEY, appUserID: userId ?? null });
   _configured = true;
 }
@@ -18,11 +18,20 @@ export function useRevenueCat() {
   const [loading, setLoading] = useState(true);
   const [offerings, setOfferings] = useState(null);
   const [error, setError] = useState(null);
+  const [isNative, setIsNative] = useState(false);
 
   useEffect(() => {
     const init = async () => {
+      const native = Capacitor.isNativePlatform();
+      setIsNative(native);
+
+      // RevenueCat virker kun på native (iOS/Android) — spring over på web
+      if (!native) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        // Try to get user ID — fall back to anonymous if not logged in
         let userId = null;
         try {
           const user = await base44.auth.me();
@@ -53,7 +62,7 @@ export function useRevenueCat() {
     return result.customerInfo;
   };
 
-  return { loading, offerings, error, purchase, restorePurchases };
+  return { loading, offerings, error, purchase, restorePurchases, isNative };
 }
 
 export function resetRevenueCat() {
