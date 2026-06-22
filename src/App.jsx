@@ -47,14 +47,19 @@ function RootRoute() {
 
   useEffect(() => {
     const check = async () => {
-      await Capacitor.ready;
-      setIsNative(Capacitor.isNativePlatform());
+      try {
+        await Promise.race([Capacitor.ready, new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))]);
+        setIsNative(Capacitor.isNativePlatform());
+      } catch (e) {
+        console.log('[RootRoute] Native check failed, treating as web:', e);
+        setIsNative(false);
+      }
       setReady(true);
     };
     check();
   }, []);
 
-  if (!ready) return null;
+  if (!ready) return <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)' }} />;
   if (isNative) return <Navigate to="/AuthNative" replace />;
   return <Landing />;
 }
