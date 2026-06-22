@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { redirectToWebAuth, redirectToWebSubscription } from '@/lib/nativeAuth';
+import { redirectToWebAuth, redirectToWebSubscription, openExternalUrl } from '@/lib/nativeAuth';
 
 export default function NativeAuthScreen() {
   const [mode, setMode] = useState('login'); // login | signup
@@ -59,8 +59,10 @@ export default function NativeAuthScreen() {
     setMode('signup');
   };
 
-  const handleSignupRedirect = () => {
-    redirectToWebAuth('signup');
+  const handleSignupRedirect = async () => {
+    const { appParams } = await import('@/lib/app-params');
+    const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
+    await openExternalUrl(baseUrl);
   };
 
   return (
