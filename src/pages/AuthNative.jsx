@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { buildAppDeepLink, APP_DEEP_LINK_SCHEME } from '@/lib/nativeAuth';
-import { Loader2, ArrowRight, Moon } from 'lucide-react';
+import { Loader2, ArrowRight, Moon, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 /**
  * AuthNative — webside der håndterer login/oprettelse og sender brugeren tilbage til appen.
  *
  * Flow:
- * 1. NativeAuthGate åbner denne side i systembrowseren
+ * 1. NativeAuthGate åbner denne side i systembrowseren (for signup eller når brugeren ikke har aktivt abonnement)
  * 2. Hvis ikke logget ind: redirect til Base44 auth login
- * 3. Efter login: læs token fra localStorage og redirect til deep link (clubnosleep://auth?access_token=TOKEN)
- * 4. Appen fanger deep linket, gemmer token og genindlæser
+ * 3. Efter login: tjek abonnementsstatus
+ * 4. Hvis aktivt abonnement: vis "Åbn app" med deep link (token)
+ * 5. Hvis ikke aktivt: redirect til /Checkout for betaling
  */
 export default function AuthNative() {
-  const [status, setStatus] = useState('checking'); // checking | redirecting | fallback
+  const [status, setStatus] = useState('checking'); // checking | ready | no_subscription | error
   const [token, setToken] = useState(null);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function AuthNative() {
 
     const checkAndRedirect = async () => {
       // Læs token fra URL (Base44 SDK sætter det der efter login) eller localStorage
-      const urlToken = new URLSearchParams(window.location.search).get('access_token');
+      const urlToken = urlParams.get('access_token');
       if (urlToken) {
         localStorage.setItem('base44_access_token', urlToken);
       }
@@ -32,15 +33,35 @@ export default function AuthNative() {
         || localStorage.getItem('base44_access_token')
         || localStorage.getItem('token');
 
-      if (foundToken) {
-        setToken(foundToken);
-        // Vis knappen med det samme — iOS kræver bruger-klik på <a> for deep links
-        setStatus('ready');
+      if (!foundToken) {
+        // Intet token — redirect til Base44 login/signup
+        base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
         return;
       }
 
-      // Intet token — redirect til login
-      base44.auth.redirectToLogin(`/AuthNative?action=${action}`);
+      setToken(foundToken);
+
+      try {
+        // Tjek om brugeren har et aktivt abonnement
+        const user = await base44.auth.me();
+        if (user) {
+          const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
+          if (profiles.length > 0 && profiles[0].subscription_status === 'active') {
+            // Aktivt abonnement → vis "Åbn app" knap
+            setStatus('ready');
+            return;
+          }
+        }
+        // Intet aktivt abonnement → redirect til Checkout efter kort delay
+        setStatus('no_subscription');
+        setTimeout(() => {
+          window.location.href = `/Checkout?access_token=${encodeURIComponent(foundToken)}`;
+        }, 2500);
+      } catch (e) {
+        console.error('[AuthNative] Subscription check error:', e);
+        // Ved fejl: vis alligevel "Åbn app" knap
+        setStatus('ready');
+      }
     };
 
     checkAndRedirect();
@@ -73,19 +94,36 @@ export default function AuthNative() {
         </div>
       )}
 
-      {status === 'redirecting' && (
-        <div className="flex flex-col items-center gap-3">
+      {status === 'no_subscription' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center gap-3 text-center"
+        >
           <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#5B3F2B' }} />
-          <p style={{ color: '#7A665A', fontSize: '0.9rem' }}>Åbner appen...</p>
-        </div>
+          <h1
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: '1.5rem',
+              color: '#2B1F16',
+              margin: 0,
+            }}
+          >
+            Du har ikke et aktivt abonnement
+          </h1>
+          <p style={{ color: '#7A665A', fontSize: '0.9rem', maxWidth: 300, lineHeight: 1.6 }}>
+            Du videresendes til betaling om et øjeblik...
+          </p>
+        </motion.div>
       )}
 
-      {(status === 'ready' || status === 'fallback') && (
+      {status === 'ready' && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center gap-4 text-center"
         >
+          <CheckCircle2 className="w-12 h-12" style={{ color: '#5B3F2B' }} />
           <h1
             style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
@@ -122,6 +160,27 @@ export default function AuthNative() {
             Åbn appen <ArrowRight size={18} />
           </a>
         </motion.div>
+      )}
+
+      {status === 'error' && (
+        <div className="flex flex-col items-center gap-3 text-center">
+          <p style={{ color: '#dc2626', fontSize: '0.9rem' }}>Noget gik galt. Prøv igen.</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              backgroundColor: '#3A2416',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 14,
+              padding: '12px 28px',
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Prøv igen
+          </button>
+        </div>
       )}
     </div>
   );

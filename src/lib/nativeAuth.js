@@ -67,3 +67,28 @@ export async function redirectToWebAuth(action = 'login') {
   // Web fallback
   window.location.href = url;
 }
+
+/**
+ * Redirect til web for abonnement/betaling.
+ * Sender access_token med så brugeren er logget ind på web.
+ */
+export async function redirectToWebSubscription(accessToken) {
+  const isNative = Capacitor.isNativePlatform();
+  const { appParams } = await import('@/lib/app-params');
+  const appBaseUrl = appParams.appBaseUrl || '';
+  const url = accessToken
+    ? `${appBaseUrl}/Checkout?access_token=${encodeURIComponent(accessToken)}`
+    : `${appBaseUrl}/Checkout`;
+
+  if (isNative) {
+    try {
+      const { Browser } = await import('@capacitor/browser');
+      await Browser.open({ url, presentationStyle: 'popover' });
+      return;
+    } catch (e) {
+      console.warn('[nativeAuth] Browser not available, falling back:', e.message);
+    }
+  }
+
+  window.location.href = url;
+}

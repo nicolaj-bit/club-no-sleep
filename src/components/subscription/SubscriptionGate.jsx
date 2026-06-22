@@ -15,7 +15,7 @@ export default function SubscriptionGate({ children }) {
 
   const checkAccess = useCallback(async () => {
     // Public routes — ingen auth krævet
-    if (location.pathname === '/' || location.pathname === '/Onboarding' || location.pathname === '/AcceptInvite' || location.pathname === '/AuthNative') {
+    if (location.pathname === '/' || location.pathname === '/Onboarding' || location.pathname === '/AcceptInvite' || location.pathname === '/AuthNative' || location.pathname === '/Checkout' || location.pathname === '/CheckoutSuccess' || location.pathname === '/Terms' || location.pathname === '/Privacy') {
       setStatus('ok');
       return;
     }

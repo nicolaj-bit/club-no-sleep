@@ -94,6 +94,45 @@ export default function Checkout() {
       {/* Options */}
       <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
 
+        {/* Stripe — kortbetaling */}
+        <button
+          onClick={() => setSelected('stripe')}
+          style={{
+            width: '100%',
+            background: selected === 'stripe' ? 'linear-gradient(135deg, #3A2416, #5B3F2B)' : '#FFFDF9',
+            border: selected === 'stripe' ? '2px solid #3A2416' : '2px solid #E2D0BC',
+            borderRadius: 18,
+            padding: '1.4rem 1.5rem',
+            cursor: 'pointer',
+            textAlign: 'left',
+            transition: 'all 0.2s',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              width: 48, height: 48,
+              borderRadius: 12,
+              backgroundColor: selected === 'stripe' ? 'rgba(255,255,255,0.15)' : '#F3E9E1',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <CreditCard size={24} color={selected === 'stripe' ? '#fff' : '#5B3F2B'} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ color: selected === 'stripe' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>
+                Betal med kort
+              </p>
+              <p style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.7)' : '#7A665A', fontSize: '0.78rem', margin: 0 }}>
+                Visa, Mastercard, MobilePay · Sikker betaling
+              </p>
+            </div>
+            {selected === 'stripe' && (
+              <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Check size={13} color="#fff" />
+              </div>
+            )}
+          </div>
+        </button>
+
         {/* App Store */}
         <button
           onClick={() => setSelected('appstore')}
@@ -192,7 +231,7 @@ export default function Checkout() {
             transition: 'background-color 0.2s',
           }}
         >
-          {!selected ? 'Vælg en betalingsmetode' : 'Fortsæt til App Store →'}
+          {!selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Betal med kort →' : 'Fortsæt til App Store →'}
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>

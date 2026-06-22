@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Smartphone } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { buildAppDeepLink } from '@/lib/nativeAuth';
+import { Capacitor } from '@capacitor/core';
 
 export default function CheckoutSuccess() {
   const [isAuth, setIsAuth] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
+    // Læs token fra URL eller localStorage (brugeren kom muligvis fra native app)
+    const urlToken = new URLSearchParams(window.location.search).get('access_token');
+    if (urlToken) {
+      localStorage.setItem('base44_access_token', urlToken);
+      setToken(urlToken);
+    } else {
+      const stored = localStorage.getItem('base44_access_token') || localStorage.getItem('token');
+      if (stored) setToken(stored);
+    }
+
     base44.auth.isAuthenticated().then(auth => {
       setIsAuth(auth);
       setChecking(false);
-      // Hvis allerede logget ind — verificer subscription med det samme
       if (auth) {
         base44.functions.invoke('verifySubscription', {}).catch(() => {});
       }
@@ -18,11 +30,21 @@ export default function CheckoutSuccess() {
   }, []);
 
   const handleCreateAccount = () => {
-    base44.auth.redirectToLogin('/app?subscription=success');
+    base44.auth.redirectToLogin('/CheckoutSuccess');
   };
 
   const handleOpenApp = () => {
-    window.location.href = '/app?subscription=success';
+    if (Capacitor.isNativePlatform()) {
+      window.location.href = '/app?subscription=success';
+    } else {
+      window.location.href = '/app?subscription=success';
+    }
+  };
+
+  const handleOpenNativeApp = () => {
+    // Deep link tilbage til native app med token
+    const dl = token ? buildAppDeepLink({ access_token: token }) : 'clubnosleep://auth';
+    window.location.href = dl;
   };
 
   return (
@@ -99,18 +121,36 @@ export default function CheckoutSuccess() {
 
       {/* CTAs */}
       {checking ? null : isAuth ? (
-        <button
-          onClick={handleOpenApp}
-          style={{
-            width: '100%', maxWidth: 380,
-            backgroundColor: '#3A2416', color: '#fff',
-            border: 'none', borderRadius: 14, padding: '16px',
-            fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          }}
-        >
-          Åbn appen <ArrowRight size={18} />
-        </button>
+        <>
+          <button
+            onClick={handleOpenApp}
+            style={{
+              width: '100%', maxWidth: 380,
+              backgroundColor: '#3A2416', color: '#fff',
+              border: 'none', borderRadius: 14, padding: '16px',
+              fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}
+          >
+            Åbn appen <ArrowRight size={18} />
+          </button>
+          {/* Deep link tilbage til native app hvis brugeren kom derfra */}
+          {token && !Capacitor.isNativePlatform() && (
+            <button
+              onClick={handleOpenNativeApp}
+              style={{
+                width: '100%', maxWidth: 380,
+                backgroundColor: 'transparent', color: '#5B3F2B',
+                border: '2px solid #C8A882', borderRadius: 14, padding: '14px',
+                fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                marginTop: '0.8rem',
+              }}
+            >
+              <Smartphone size={18} /> Tilbage til appen
+            </button>
+          )}
+        </>
       ) : (
         <>
           <button
@@ -128,10 +168,26 @@ export default function CheckoutSuccess() {
           </button>
           <p style={{ color: '#9A7A6A', fontSize: '0.78rem' }}>
             Har du allerede en konto?{' '}
-            <button onClick={() => base44.auth.redirectToLogin('/app?subscription=success')} style={{ background: 'none', border: 'none', color: '#C8A882', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
+            <button onClick={() => base44.auth.redirectToLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: '#C8A882', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
               Log ind her
             </button>
           </p>
+          {/* Deep link tilbage til native app hvis brugeren kom derfra */}
+          {token && (
+            <button
+              onClick={handleOpenNativeApp}
+              style={{
+                width: '100%', maxWidth: 380,
+                backgroundColor: 'transparent', color: '#5B3F2B',
+                border: '2px solid #C8A882', borderRadius: 14, padding: '14px',
+                fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                marginTop: '1.2rem',
+              }}
+            >
+              <Smartphone size={18} /> Tilbage til appen
+            </button>
+          )}
         </>
       )}
     </div>
