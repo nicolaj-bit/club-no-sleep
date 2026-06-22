@@ -56,6 +56,10 @@ export default function NativeAuthScreen() {
   };
 
   const handleSignup = () => {
+    setMode('signup');
+  };
+
+  const handleSignupRedirect = () => {
     redirectToWebAuth('signup');
   };
 
@@ -234,7 +238,7 @@ export default function NativeAuthScreen() {
               </p>
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={handleSignup}
+                onClick={handleSignupRedirect}
                 className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2"
                 style={{
                   backgroundColor: 'var(--color-primary)',
