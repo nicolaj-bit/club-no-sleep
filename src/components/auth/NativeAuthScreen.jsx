@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import { redirectToWebAuth, redirectToWebSubscription, openExternalUrl } from '@/lib/nativeAuth';
 
@@ -60,9 +61,14 @@ export default function NativeAuthScreen() {
   };
 
   const handleSignupRedirect = async () => {
-    const { appParams } = await import('@/lib/app-params');
-    const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
-    await openExternalUrl(baseUrl);
+    const isNative = Capacitor.isNativePlatform();
+    if (isNative) {
+      const { appParams } = await import('@/lib/app-params');
+      const baseUrl = appParams.appBaseUrl ? appParams.appBaseUrl.replace(/\/$/, '') : `https://app.base44.com/apps/${appParams.appId}`;
+      await openExternalUrl(baseUrl);
+    } else {
+      window.location.href = '/Landing';
+    }
   };
 
   return (
