@@ -57,40 +57,43 @@ export default function NativeAuthGate({ children }) {
   };
 
   useEffect(() => {
-    if (!isNative) return;
+    // Kør auth-tjek på alle platforme
+    if (isPublicRoute) {
+      setStatus('authed');
+      return;
+    }
 
-    // Cold start: tjek om appen blev åbnet via deep link
-    App.getLaunchUrl().then(({ url }) => {
-      if (url && url.includes('access_token')) {
+    // På native: tjek deep links og app-tilstand
+    if (isNative) {
+      App.getLaunchUrl().then(({ url }) => {
+        if (url && url.includes('access_token')) {
+          processDeepLink(url);
+        } else {
+          checkAuth();
+        }
+      }).catch(() => {
+        checkAuth();
+      });
+
+      let listeners = [];
+      App.addListener('appUrlOpen', ({ url }) => {
         processDeepLink(url);
-      } else {
-        checkAuth();
-      }
-    }).catch(() => {
-      checkAuth();
-    });
+      }).then((l) => listeners.push(l));
+      App.addListener('appStateChange', ({ isActive }) => {
+        if (isActive) checkAuth();
+      }).then((l) => listeners.push(l));
 
-    let listeners = [];
+      return () => {
+        listeners.forEach((l) => l.remove());
+      };
+    }
 
-    // Deep link listener — fanger token fra web auth (warm start)
-    App.addListener('appUrlOpen', ({ url }) => {
-      processDeepLink(url);
-    }).then((l) => listeners.push(l));
+    // På web: tjek auth direkte
+    checkAuth();
+  }, [isNative, isPublicRoute]);
 
-    // App state listener — re-check auth når appen kommer til forgrunden
-    App.addListener('appStateChange', ({ isActive }) => {
-      if (isActive) {
-        checkAuth();
-      }
-    }).then((l) => listeners.push(l));
-
-    return () => {
-      listeners.forEach((l) => l.remove());
-    };
-  }, [isNative]);
-
-  // På web eller offentlig route: lad alt passere
-  if (!isNative || isPublicRoute) {
+  // Offentlig route: lad alt passere
+  if (isPublicRoute) {
     return children;
   }
 
