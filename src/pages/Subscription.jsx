@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { openExternalUrl } from '@/lib/nativeAuth';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -81,7 +82,7 @@ export default function Subscription() {
           : 'Checkout only works from the published app, not the preview.');
         return;
       }
-      window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+      await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
       return;
     }
 
@@ -113,7 +114,7 @@ export default function Subscription() {
         : 'Checkout only works from the published app, not the preview.');
       return;
     }
-    window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+    await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
   };
 
   const handleRestore = async () => {

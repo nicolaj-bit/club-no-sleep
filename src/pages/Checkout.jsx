@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CreditCard, Check, ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { openExternalUrl } from '@/lib/nativeAuth';
 
 export default function Checkout() {
   const [selected, setSelected] = useState(null);
@@ -10,7 +10,7 @@ export default function Checkout() {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
-    window.location.href = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
+    await openExternalUrl('https://buy.stripe.com/00wdR9eRue256hG11J3cc00');
   };
 
   const handleAppStore = async () => {

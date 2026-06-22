@@ -69,6 +69,27 @@ export async function redirectToWebAuth(action = 'login') {
 }
 
 /**
+ * Åbner en ekstern URL i systembrowseren på native (SFSafariViewController / Chrome Custom Tab).
+ * På web: almindelig window.location.href.
+ * Brug dette til Stripe checkout URLs og andre eksterne betalingssider.
+ */
+export async function openExternalUrl(url) {
+  const isNative = Capacitor.isNativePlatform();
+
+  if (isNative) {
+    try {
+      const { Browser } = await import('@capacitor/browser');
+      await Browser.open({ url, presentationStyle: 'popover' });
+      return;
+    } catch (e) {
+      console.warn('[nativeAuth] Browser not available, falling back:', e.message);
+    }
+  }
+
+  window.location.href = url;
+}
+
+/**
  * Redirect til web for abonnement/betaling.
  * Sender access_token med så brugeren er logget ind på web.
  */

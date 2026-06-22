@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { openExternalUrl } from '@/lib/nativeAuth';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { Check, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
@@ -45,7 +46,7 @@ export default function Paywall({ onSubscribed }) {
     try {
       const response = await base44.functions.invoke('createCheckoutSession', {});
       if (response.data?.url) {
-        window.location.href = response.data.url;
+        await openExternalUrl(response.data.url);
       } else {
         throw new Error('No checkout URL returned');
       }

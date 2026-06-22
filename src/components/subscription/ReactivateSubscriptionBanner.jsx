@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { redirectToWebSubscription } from '@/lib/nativeAuth';
 import { RefreshCw } from 'lucide-react';
 
 export default function ReactivateSubscriptionBanner() {
@@ -9,10 +9,15 @@ export default function ReactivateSubscriptionBanner() {
   if (loading || !activeProfile) return null;
   if (activeProfile.subscription_status !== 'expired') return null;
 
+  const handleClick = () => {
+    const token = localStorage.getItem('base44_access_token');
+    redirectToWebSubscription(token);
+  };
+
   return (
-    <Link
-      to="/Checkout"
-      className="flex items-center gap-3 rounded-2xl px-4 py-3.5 active:opacity-80 transition-opacity"
+    <button
+      onClick={handleClick}
+      className="flex items-center gap-3 rounded-2xl px-4 py-3.5 active:opacity-80 transition-opacity w-full text-left"
       style={{
         background: 'linear-gradient(135deg, #C8A882, #A07850)',
         boxShadow: '0 2px 12px rgba(160,120,80,0.25)',
@@ -25,6 +30,6 @@ export default function ReactivateSubscriptionBanner() {
         <p className="text-sm font-semibold text-white leading-tight">Genaktiver dit abonnement</p>
         <p className="text-xs text-white/75 mt-0.5">Få fuld adgang igen →</p>
       </div>
-    </Link>
+    </button>
   );
 }
