@@ -22,7 +22,7 @@ export default function SubscriptionGate({ children }) {
     }
 
     // Public routes — ingen auth krævet
-    if (location.pathname === '/' || location.pathname === '/Onboarding' || location.pathname === '/AcceptInvite' || location.pathname === '/AuthNative' || location.pathname === '/Checkout' || location.pathname === '/CheckoutSuccess' || location.pathname === '/Terms' || location.pathname === '/Privacy') {
+    if (location.pathname === '/' || location.pathname === '/Landing' || location.pathname === '/Onboarding' || location.pathname === '/AcceptInvite' || location.pathname === '/AuthNative' || location.pathname === '/Checkout' || location.pathname === '/CheckoutSuccess' || location.pathname === '/Terms' || location.pathname === '/Privacy') {
       setStatus('ok');
       return;
     }
