@@ -43,7 +43,7 @@ const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
 function RootRoute() {
   const isNative = Capacitor.isNativePlatform();
-  return isNative ? <Navigate to="/app" replace /> : <Landing />;
+  return isNative ? <Navigate to="/app" replace /> : <Navigate to="/Landing" replace />;
 }
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
