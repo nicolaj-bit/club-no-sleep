@@ -1,44 +1,22 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, ArrowLeft, Loader2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { Check, ArrowLeft, Loader2 } from 'lucide-react';
 
 export default function Checkout() {
-  const [selected, setSelected] = useState(null);
-
-  const [stripeLoading, setStripeLoading] = useState(false);
-
-  const handleStripe = async () => {
-    if (window.self !== window.top) {
-      alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
-      return;
-    }
-    setStripeLoading(true);
-    try {
-      const res = await base44.functions.invoke('createCheckoutSession', {});
-      if (res?.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        alert('Kunne ikke starte betaling. Prøv igen.');
-        setStripeLoading(false);
-      }
-    } catch (e) {
-      console.error('Checkout error:', e);
-      alert('Noget gik galt. Prøv igen.');
-      setStripeLoading(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleAppStore = async () => {
     if (window.self !== window.top) {
       alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
       return;
     }
+    setLoading(true);
     try {
       const { Purchases, LOG_LEVEL } = await import('@revenuecat/purchases-capacitor');
       const { Capacitor } = await import('@capacitor/core');
 
       if (!Capacitor.isNativePlatform()) {
         alert('In-App Purchase er kun tilgængelig i iPhone-appen. Download appen fra App Store.');
+        setLoading(false);
         return;
       }
 
@@ -52,12 +30,14 @@ export default function Checkout() {
 
       const result = await Purchases.getOfferings();
       const pkg = result?.current?.monthly ?? result?.current?.availablePackages?.[0];
-      if (!pkg) { alert('Ingen abonnementer tilgængelige.'); return; }
+      if (!pkg) { alert('Ingen abonnementer tilgængelige.'); setLoading(false); return; }
       await Purchases.purchasePackage({ aPackage: pkg });
     } catch (e) {
       if (e?.userCancelled) return;
       console.error('IAP fejl:', e);
-      alert('Noget gik galt. Prøv igen eller vælg kortbetaling.');
+      alert('Noget gik galt. Prøv igen.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,154 +79,76 @@ export default function Checkout() {
           color: '#1E140A',
           margin: '0 0 0.6rem',
         }}>
-          Vælg betalingsmetode
+          Abonnement
         </h1>
         <p style={{ color: '#7A665A', fontSize: '0.88rem', lineHeight: 1.7, margin: 0 }}>
           59 kr. / måned · Ingen binding · Opsig når som helst
         </p>
       </div>
 
-      {/* Options */}
-      <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-
-        {/* Stripe — kortbetaling */}
-        <button
-          onClick={() => setSelected('stripe')}
+      {/* App Store IAP option */}
+      <div style={{ width: '100%', maxWidth: 480, marginBottom: '2rem' }}>
+        <div
           style={{
             width: '100%',
-            background: selected === 'stripe' ? 'linear-gradient(135deg, #3A2416, #5B3F2B)' : '#FFFDF9',
-            border: selected === 'stripe' ? '2px solid #3A2416' : '2px solid #E2D0BC',
+            background: 'linear-gradient(135deg, #3A2416, #5B3F2B)',
+            border: '2px solid #3A2416',
             borderRadius: 18,
             padding: '1.4rem 1.5rem',
-            cursor: 'pointer',
             textAlign: 'left',
-            transition: 'all 0.2s',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
               width: 48, height: 48,
               borderRadius: 12,
-              backgroundColor: selected === 'stripe' ? 'rgba(255,255,255,0.15)' : '#F3E9E1',
+              backgroundColor: 'rgba(255,255,255,0.15)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <CreditCard size={24} color={selected === 'stripe' ? '#fff' : '#5B3F2B'} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ color: selected === 'stripe' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>
-                Betal med kort
-              </p>
-              <p style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.7)' : '#7A665A', fontSize: '0.78rem', margin: 0 }}>
-                Visa, Mastercard, MobilePay · Sikker betaling
-              </p>
-            </div>
-            {selected === 'stripe' && (
-              <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Check size={13} color="#fff" />
-              </div>
-            )}
-          </div>
-        </button>
-
-        {/* App Store */}
-        <button
-          onClick={() => setSelected('appstore')}
-          style={{
-            width: '100%',
-            background: selected === 'appstore' ? 'linear-gradient(135deg, #3A2416, #5B3F2B)' : '#FFFDF9',
-            border: selected === 'appstore' ? '2px solid #3A2416' : '2px solid #E2D0BC',
-            borderRadius: 18,
-            padding: '1.4rem 1.5rem',
-            cursor: 'pointer',
-            textAlign: 'left',
-            transition: 'all 0.2s',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{
-              width: 48, height: 48,
-              borderRadius: 12,
-              backgroundColor: selected === 'appstore' ? 'rgba(255,255,255,0.15)' : '#F3E9E1',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              <svg width="24" height="24" viewBox="0 0 814 1000" fill={selected === 'appstore' ? '#fff' : '#5B3F2B'}>
+              <svg width="24" height="24" viewBox="0 0 814 1000" fill="#fff">
                 <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
               </svg>
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ color: selected === 'appstore' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 3px' }}>
+              <p style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 3px' }}>
                 Abonnement via App Store
               </p>
-              <p style={{ color: selected === 'appstore' ? 'rgba(255,255,255,0.7)' : '#7A665A', fontSize: '0.78rem', margin: 0 }}>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem', margin: 0 }}>
                 Betal via din Apple-konto · Bedst til iPhone
               </p>
             </div>
-            {selected === 'appstore' && (
-              <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Check size={13} color="#fff" />
-              </div>
-            )}
-          </div>
-        </button>
-
-        {/* Stripe — skjult midlertidigt indtil Apple-godkendelse
-        <button
-          onClick={() => setSelected('stripe')}
-          style={{
-            width: '100%',
-            background: selected === 'stripe' ? 'linear-gradient(135deg, #3A2416, #5B3F2B)' : '#FFFDF9',
-            border: selected === 'stripe' ? '2px solid #3A2416' : '2px solid #E2D0BC',
-            borderRadius: 18,
-            padding: '1.4rem 1.5rem',
-            cursor: 'pointer',
-            textAlign: 'left',
-            transition: 'all 0.2s',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{
-              width: 48, height: 48,
-              borderRadius: 12,
-              backgroundColor: selected === 'stripe' ? 'rgba(255,255,255,0.15)' : '#F3E9E1',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              <CreditCard size={24} color={selected === 'stripe' ? '#fff' : '#5B3F2B'} />
+            <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Check size={13} color="#fff" />
             </div>
-            <div style={{ flex: 1 }}>
-              <p style={{ color: selected === 'stripe' ? '#fff' : '#1E140A', fontSize: '0.95rem', fontWeight: 600, margin: 0 }}>
-                Betal med kort
-              </p>
-            </div>
-            {selected === 'stripe' && (
-              <div style={{ width: 22, height: 22, borderRadius: '50%', backgroundColor: '#C29A73', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Check size={13} color="#fff" />
-              </div>
-            )}
           </div>
-        </button>
-        */}
-
+        </div>
       </div>
 
       {/* CTA */}
       <div style={{ width: '100%', maxWidth: 480 }}>
         <button
-          onClick={selected === 'stripe' ? handleStripe : selected === 'appstore' ? handleAppStore : undefined}
-          disabled={!selected || stripeLoading}
+          onClick={handleAppStore}
+          disabled={loading}
           style={{
             width: '100%',
-            backgroundColor: selected ? '#3A2416' : '#C8B8A8',
+            backgroundColor: '#3A2416',
             color: '#fff',
             border: 'none',
             borderRadius: 14,
             padding: '16px',
             fontSize: '1rem',
             fontWeight: 600,
-            cursor: selected ? 'pointer' : 'default',
+            cursor: loading ? 'default' : 'pointer',
             transition: 'background-color 0.2s',
           }}
         >
-{stripeLoading ? (<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><Loader2 size={18} className="animate-spin" /> Opretter betaling...</span>) : !selected ? 'Vælg en betalingsmetode' : selected === 'stripe' ? 'Betal med kort →' : 'Fortsæt til App Store →'}
+          {loading ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Loader2 size={18} className="animate-spin" /> Henter...
+            </span>
+          ) : (
+            'Fortsæt til App Store →'
+          )}
         </button>
 
         <p style={{ color: '#9A7A6A', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
