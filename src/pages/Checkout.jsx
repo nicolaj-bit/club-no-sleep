@@ -19,14 +19,16 @@ function AppleIcon({ className, style }) {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const rc = useRevenueCat('guest');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [userId, setUserId] = useState('guest');
 
   // IAP via App Store er den eneste betalingsmetode
   const [selected] = useState('iap');
+
+  const rc = useRevenueCat(userId);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -34,6 +36,7 @@ export default function Checkout() {
         const isAuth = await base44.auth.isAuthenticated();
         if (isAuth) {
           const user = await base44.auth.me();
+          if (user?.id) setUserId(user.id);
           if (user?.email) {
             const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
             if (profiles.length) setProfile(profiles[0]);
@@ -51,9 +54,17 @@ export default function Checkout() {
     setSuccess(null);
 
     // IAP via RevenueCat
+    if (rc.loading) {
+      setError('Indlæser abonnement fra App Store… vent et øjeblik.');
+      return;
+    }
+    if (rc.error) {
+      setError(`RevenueCat fejl: ${rc.error}`);
+      return;
+    }
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
+      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek at du har internetforbindelse, og at appen er bygget med Capacitor (TestFlight/App Store).');
       return;
     }
 
@@ -159,9 +170,9 @@ export default function Checkout() {
         </div>
 
         {/* Error / success messages */}
-        {error && (
+        {(error || rc.error) && (
           <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'rgba(200,80,80,0.08)', border: '1px solid rgba(200,80,80,0.2)', color: '#C85050' }}>
-            {error}
+            {error || `RevenueCat: ${rc.error}`}
           </div>
         )}
         {success && (
