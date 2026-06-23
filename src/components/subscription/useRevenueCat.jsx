@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import { base44 } from '@/api/base44Client';
-import { isNativeApp } from '@/lib/platform';
 
 const RC_API_KEY = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 
@@ -23,7 +23,7 @@ export function useRevenueCat(userId) {
   const [customerInfo, setCustomerInfo] = useState(null);
 
   const refreshCustomerInfo = useCallback(async () => {
-    if (!isNativeApp()) return;
+    if (!Capacitor.isNativePlatform()) return;
     try {
       const info = await Purchases.getCustomerInfo();
       setCustomerInfo(info);
@@ -38,7 +38,10 @@ export function useRevenueCat(userId) {
 
   useEffect(() => {
     const init = async () => {
-      const native = isNativeApp();
+      // Brug Capacitor.isNativePlatform() — den tjekker om den rigtige
+      // native bridge er tilgængelig (modsat UA-baseret detection der kan
+      // give falske positiver i webviews/preview).
+      const native = Capacitor.isNativePlatform();
       setIsNative(native);
 
       // RevenueCat virker kun på native (iOS/Android) — spring over på web

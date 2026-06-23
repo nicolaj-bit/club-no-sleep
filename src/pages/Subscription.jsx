@@ -77,13 +77,6 @@ export default function Subscription() {
     // På /Checkout: udfør selve IAP-købet
     // Native iOS/iPadOS: brug RevenueCat In-App Purchase direkte
     if (rc.isNative) {
-      if (rc.error) {
-        setError(da
-          ? `Abonnementstjenesten kunne ikke indlæses. Prøv at genstarte appen. Teknisk fejl: ${rc.error}`
-          : `Subscription service could not be loaded. Try restarting the app. Technical error: ${rc.error}`);
-        return;
-      }
-
       const pkg = rc.offerings?.current?.availablePackages?.[0];
       if (!pkg) {
         console.error('[Subscription] Ingen RevenueCat offerings tilgængelige. Offerings:', rc.offerings);
