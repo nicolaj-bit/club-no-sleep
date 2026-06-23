@@ -25,9 +25,8 @@ export default function Checkout() {
   const [success, setSuccess] = useState(null);
   const [profile, setProfile] = useState(null);
 
-  // iOS/iPad → IAP som standard. Andre → Stripe.
-  const iosNative = isNativeIOS();
-  const [selected, setSelected] = useState(iosNative ? 'iap' : 'stripe');
+  // IAP via App Store er den eneste betalingsmetode
+  const [selected] = useState('iap');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -50,23 +49,6 @@ export default function Checkout() {
   const handleContinue = async () => {
     setError(null);
     setSuccess(null);
-
-    if (selected === 'stripe') {
-      setLoading(true);
-      try {
-        const response = await base44.functions.invoke('createCheckoutSession', {});
-        if (response.data?.url) {
-          window.location.href = response.data.url;
-        } else {
-          setError('Kunne ikke starte betaling. Prøv igen.');
-        }
-      } catch (_) {
-        setError('Kunne ikke starte betaling. Prøv igen.');
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
 
     // IAP via RevenueCat
     const pkg = rc.offerings?.current?.availablePackages?.[0];
@@ -147,67 +129,33 @@ export default function Checkout() {
           </p>
         </div>
 
-        {/* Payment method cards */}
-        <div className="space-y-3 mb-6">
-          {/* IAP option */}
-          <button
-            onClick={() => setSelected('iap')}
-            className="w-full text-left rounded-2xl p-4 flex items-center gap-3 transition-all"
-            style={selected === 'iap'
-              ? { backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }
-              : { backgroundColor: '#fff', border: '2px solid #EDE4DB' }}
+        {/* Payment method card — IAP only */}
+        <div className="mb-6">
+        <div
+          className="w-full rounded-2xl p-4 flex items-center gap-3"
+          style={{ backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }}
+        >
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
           >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={selected === 'iap' ? { backgroundColor: 'rgba(255,255,255,0.15)' } : { backgroundColor: '#F3E9E1' }}
-            >
-              <AppleIcon className="w-5 h-5" style={{ color: selected === 'iap' ? '#fff' : '#5d3a2c' }} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold" style={{ color: selected === 'iap' ? '#fff' : '#5d3a2c' }}>
-                In-App Purchase (App Store)
-              </p>
-              <p className="text-xs" style={{ color: selected === 'iap' ? 'rgba(255,255,255,0.8)' : '#7A665A' }}>
-                Betal via din Apple-konto · Bedst til iPhone
-              </p>
-            </div>
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-              style={selected === 'iap' ? { backgroundColor: '#C9AA8F' } : { border: '2px solid #EDE4DB' }}
-            >
-              {selected === 'iap' && <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />}
-            </div>
-          </button>
-
-          {/* Stripe option */}
-          <button
-            onClick={() => setSelected('stripe')}
-            className="w-full text-left rounded-2xl p-4 flex items-center gap-3 transition-all"
-            style={selected === 'stripe'
-              ? { backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }
-              : { backgroundColor: '#fff', border: '2px solid #EDE4DB' }}
+            <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold" style={{ color: '#fff' }}>
+              In-App Purchase (App Store)
+            </p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
+              Betal via din Apple-konto · Bedst til iPhone
+            </p>
+          </div>
+          <div
+            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+            style={{ backgroundColor: '#C9AA8F' }}
           >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={selected === 'stripe' ? { backgroundColor: 'rgba(255,255,255,0.15)' } : { backgroundColor: '#F3E9E1' }}
-            >
-              <CreditCard className="w-5 h-5" style={{ color: selected === 'stripe' ? '#fff' : '#5d3a2c' }} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold" style={{ color: selected === 'stripe' ? '#fff' : '#5d3a2c' }}>
-                Kort / MobilePay (Stripe)
-              </p>
-              <p className="text-xs" style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.8)' : '#7A665A' }}>
-                Betal med kort, MobilePay el. anden metode
-              </p>
-            </div>
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-              style={selected === 'stripe' ? { backgroundColor: '#C9AA8F' } : { border: '2px solid #EDE4DB' }}
-            >
-              {selected === 'stripe' && <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />}
-            </div>
-          </button>
+            <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />
+          </div>
+        </div>
         </div>
 
         {/* Error / success messages */}
@@ -232,9 +180,7 @@ export default function Checkout() {
         >
           {loading || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : selected === 'iap'
-              ? <>Fortsæt til App Store →</>
-              : <>Fortsæt til betaling →</>}
+            : <>Fortsæt til App Store →</>}
         </motion.button>
 
         {/* Footer */}
