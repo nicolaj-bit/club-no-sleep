@@ -65,6 +65,18 @@ export default function NativeAuthScreen() {
     window.location.reload();
   };
 
+  const handleAppleLogin = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await base44.auth.loginWithProvider('apple', '/app');
+    } catch (e) {
+      console.error('[NativeAuthScreen] Apple login error:', e);
+      setError(e?.message || 'Apple login mislykkedes. Prøv igen.');
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Hero gradient */}
@@ -131,6 +143,31 @@ export default function NativeAuthScreen() {
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
                 Indtast dine oplysninger for at fortsætte
               </p>
+
+              {/* Continue with Apple */}
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAppleLogin}
+                disabled={loading}
+                className="w-full py-3.5 rounded-2xl text-base font-semibold mb-3 flex items-center justify-center gap-2 transition-opacity"
+                style={{
+                  backgroundColor: '#000000',
+                  color: '#ffffff',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 814 1000" fill="#fff" style={{ marginRight: 6 }}>
+                  <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
+                </svg>
+                Continue with Apple
+              </motion.button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>eller</span>
+                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
+              </div>
 
               {/* Email */}
               <div className="mb-3">
