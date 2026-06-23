@@ -19,7 +19,6 @@ export default function Subscription() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-  const isCheckoutPage = location.pathname === '/Checkout';
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState(null);
@@ -68,13 +67,12 @@ export default function Subscription() {
 
   // Køb via RevenueCat IAP (native) eller Stripe (web)
   const handleIAPSubscribe = async () => {
-    // På /Subscription: naviger til /Checkout (selve betalingssiden)
-    if (!isCheckoutPage) {
-      navigate('/Checkout');
-      return;
-    }
+    // /Subscription: naviger til /Checkout (dedikeret betalingsside)
+    navigate('/Checkout');
+    return;
+  };
 
-    // På /Checkout: udfør selve IAP-købet
+  const _handlePurchase = async () => {
     // Native iOS/iPadOS: brug RevenueCat In-App Purchase direkte
     if (rc.isNative) {
       const pkg = rc.offerings?.current?.availablePackages?.[0];
