@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 /**
  * RevenueCat webhook — synkroniserer iOS IAP til UserProfile.subscription_status
@@ -8,30 +8,49 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  */
 Deno.serve(async (req) => {
   try {
+    console.log('[RevenueCat] webhook modtaget');
+
     // Validér webhook secret — accepter både rå token og "Bearer <token>"
-    const authHeader = req.headers.get('Authorization') || '';
+    const authHeader = req.headers.get('Authorization') || req.headers.get('authorization') || '';
     const webhookSecret = Deno.env.get('REVENUECAT_WEBHOOK_SECRET');
+    console.log('[RevenueCat] auth header til stede:', !!authHeader, 'secret konfigureret:', !!webhookSecret);
 
     if (webhookSecret) {
       const token = authHeader.startsWith('Bearer ')
         ? authHeader.slice(7)
         : authHeader;
       if (token !== webhookSecret) {
-        console.error('RevenueCat webhook: ugyldig authorization header');
+        console.error('[RevenueCat] auth mismatch — token længde:', token.length, 'secret længde:', webhookSecret.length);
         return Response.json({ error: 'Unauthorized' }, { status: 401 });
       }
     }
 
-    const body = await req.json();
+    console.log('[RevenueCat] auth OK, opretter base44 client...');
+    let base44;
+    try {
+      base44 = createClientFromRequest(req);
+    } catch (clientErr) {
+      console.error('[RevenueCat] createClient fejl:', clientErr.message);
+      return Response.json({ error: 'Client creation failed', detail: clientErr.message }, { status: 500 });
+    }
+    console.log('[RevenueCat] base44 client oprettet, parser body...');
+
+    let body;
+    try {
+      body = await req.json();
+    } catch (jsonErr) {
+      console.error('[RevenueCat] JSON parse fejl:', jsonErr.message);
+      return Response.json({ error: 'Invalid JSON body', detail: jsonErr.message }, { status: 400 });
+    }
+    console.log('[RevenueCat] body parsed, keys:', Object.keys(body || {}));
     const event = body.event;
 
     if (!event) {
+      console.error('[RevenueCat] manglende event i body');
       return Response.json({ error: 'Manglende event' }, { status: 400 });
     }
 
     console.log(`[RevenueCat] event: ${event.type}, app_user_id: ${event.app_user_id}`);
-
-    const base44 = createClientFromRequest(req);
 
     // Find bruger via app_user_id (vi sætter user.id eller email som RC userId)
     const appUserId = event.app_user_id;
@@ -43,7 +62,10 @@ Deno.serve(async (req) => {
     let profiles = [];
     try {
       profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: appUserId });
-    } catch {}
+      console.log('[RevenueCat] profiler fundet:', profiles.length);
+    } catch (filterErr) {
+      console.error('[RevenueCat] filter fejl:', filterErr.message);
+    }
 
     if (!profiles.length) {
       console.log(`[RevenueCat] ingen profil fundet for ${appUserId}`);
@@ -87,7 +109,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ ok: true });
   } catch (error) {
-    console.error('[RevenueCat] webhook fejl:', error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('[RevenueCat] webhook fejl:', error.message, error.stack);
+    return Response.json({ error: error.message, step: 'catch' }, { status: 500 });
   }
 });
