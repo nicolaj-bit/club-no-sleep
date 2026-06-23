@@ -86,7 +86,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const isPublicRoute = location.pathname === '/' || location.pathname === '/AcceptInvite';
+  const isPublicRoute = location.pathname === '/' || location.pathname === '/AcceptInvite' || location.pathname === '/Terms' || location.pathname === '/Privacy';
 
   if (!isPublicRoute && (isLoadingPublicSettings || isLoadingAuth)) {
     return (

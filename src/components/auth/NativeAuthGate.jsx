@@ -18,7 +18,7 @@ export default function NativeAuthGate({ children }) {
   const location = useLocation();
 
   // Offentlige routes der ikke kræver auth
-  const isPublicRoute = location.pathname === '/' || location.pathname === '/AcceptInvite' || location.pathname === '/Landing';
+  const isPublicRoute = location.pathname === '/' || location.pathname === '/AcceptInvite' || location.pathname === '/Landing' || location.pathname === '/Terms' || location.pathname === '/Privacy';
 
   const processDeepLink = async (url) => {
     try {
