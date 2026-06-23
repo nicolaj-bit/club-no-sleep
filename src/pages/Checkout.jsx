@@ -1,14 +1,11 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Subscription from './Subscription.jsx';
 
 /**
- * Checkout — videresender til /Subscription som håndterer både
- * native In-App Purchase (RevenueCat) og web Stripe checkout.
+ * Checkout — selve IAP-betalingssiden.
+ * Viser samme abonnements-UI som /Subscription, men her udfører
+ * "Abonner"-knappen det faktiske RevenueCat IAP-køb (native) eller
+ * Stripe checkout (web).
  */
 export default function Checkout() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate('/Subscription', { replace: true });
-  }, [navigate]);
-  return null;
+  return <Subscription />;
 }

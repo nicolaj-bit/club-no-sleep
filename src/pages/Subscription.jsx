@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
@@ -16,6 +17,9 @@ const DEFAULT_FEATURES_DA = [
 
 export default function Subscription() {
   const { lang } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isCheckoutPage = location.pathname === '/Checkout';
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState(null);
@@ -64,6 +68,13 @@ export default function Subscription() {
 
   // Køb via RevenueCat IAP (native) eller Stripe (web)
   const handleIAPSubscribe = async () => {
+    // På /Subscription: naviger til /Checkout (selve betalingssiden)
+    if (!isCheckoutPage) {
+      navigate('/Checkout');
+      return;
+    }
+
+    // På /Checkout: udfør selve IAP-købet
     // Native iOS/iPadOS: brug RevenueCat In-App Purchase direkte
     if (rc.isNative) {
       if (rc.error) {
