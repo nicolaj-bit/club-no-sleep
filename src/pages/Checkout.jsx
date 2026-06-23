@@ -174,10 +174,7 @@ export default function Checkout() {
             {error || `RevenueCat: ${rc.error}`}
           </div>
         )}
-        {/* Debug: RevenueCat state */}
-        <div className="rounded-xl px-4 py-2 mb-4 text-xs" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid #EDE4DB', color: '#7A665A' }}>
-          <strong>Debug:</strong> native={String(rc.isNative)} · loading={String(rc.loading)} · error={rc.error || 'none'} · offerings={rc.offerings ? 'yes' : 'null'} · current={rc.offerings?.current ? 'yes' : 'null'} · packages={rc.offerings?.current?.availablePackages?.length ?? 0}
-        </div>
+
         {success && (
           <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
             {success}
