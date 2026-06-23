@@ -65,7 +65,9 @@ export function useRevenueCat(userId) {
         await refreshCustomerInfo();
       } catch (err) {
         console.error('[RevenueCat] init error:', err);
-        setError(err.message || 'RevenueCat fejl');
+        // RevenueCat errors kan have forskellige strukturer —fang så mange detaljer som muligt
+        const errMsg = err?.message || err?.error?.message || err?.underlyingErrorMessage || err?.code || (typeof err === 'string' ? err : JSON.stringify(err));
+        setError(errMsg && errMsg !== '{}' ? errMsg : 'RevenueCat fejl');
       } finally {
         setLoading(false);
       }
