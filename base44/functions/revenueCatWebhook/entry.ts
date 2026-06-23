@@ -25,24 +25,43 @@ Deno.serve(async (req) => {
       }
     }
 
-    console.log('[RevenueCat] auth OK, opretter base44 client...');
-    let base44;
+    console.log('[RevenueCat] auth OK, læser body...');
+
+    let bodyText;
     try {
-      base44 = createClientFromRequest(req);
-    } catch (clientErr) {
-      console.error('[RevenueCat] createClient fejl:', clientErr.message);
-      return Response.json({ error: 'Client creation failed', detail: clientErr.message }, { status: 500 });
+      bodyText = await req.text();
+    } catch (readErr) {
+      console.error('[RevenueCat] body læse fejl:', readErr.message);
+      return Response.json({ error: 'Cannot read body', detail: readErr.message }, { status: 400 });
     }
-    console.log('[RevenueCat] base44 client oprettet, parser body...');
 
     let body;
     try {
-      body = await req.json();
+      body = JSON.parse(bodyText);
     } catch (jsonErr) {
       console.error('[RevenueCat] JSON parse fejl:', jsonErr.message);
       return Response.json({ error: 'Invalid JSON body', detail: jsonErr.message }, { status: 400 });
     }
     console.log('[RevenueCat] body parsed, keys:', Object.keys(body || {}));
+
+    // Opret base44 client UDEN Authorization header (SDK forventer "Bearer <token>")
+    let base44;
+    try {
+      const cleanHeaders = new Headers(req.headers);
+      cleanHeaders.delete('Authorization');
+      cleanHeaders.delete('authorization');
+      const cleanReq = new Request(req.url, {
+        method: req.method,
+        headers: cleanHeaders,
+        body: bodyText,
+      });
+      base44 = createClientFromRequest(cleanReq);
+    } catch (clientErr) {
+      console.error('[RevenueCat] createClient fejl:', clientErr.message);
+      return Response.json({ error: 'Client creation failed', detail: clientErr.message }, { status: 500 });
+    }
+    console.log('[RevenueCat] base44 client oprettet');
+
     const event = body.event;
 
     if (!event) {
