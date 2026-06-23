@@ -53,49 +53,30 @@ export default function Checkout() {
     setError(null);
     setSuccess(null);
 
-    // Native app → IAP via RevenueCat
-    if (rc.isNative) {
-      if (rc.loading) {
-        setError('Indlæser abonnement fra App Store… vent et øjeblik.');
-        return;
-      }
-      if (rc.error) {
-        setError(`RevenueCat fejl: ${rc.error}`);
-        return;
-      }
-      const pkg = rc.offerings?.current?.availablePackages?.[0];
-      if (!pkg) {
-        setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
-        return;
-      }
-
-      setLoading(true);
-      try {
-        await rc.purchase(pkg);
-        setSuccess('✓ Abonnement aktiveret!');
-        await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-        setTimeout(() => requestPushPermission(), 1500);
-      } catch (e) {
-        if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-          setError(e.message || 'Køb fejlede. Prøv igen.');
-        }
-      } finally {
-        setLoading(false);
-      }
+    if (rc.loading) {
+      setError('Indlæser abonnement fra App Store… vent et øjeblik.');
+      return;
+    }
+    if (rc.error) {
+      setError(`RevenueCat fejl: ${rc.error}`);
+      return;
+    }
+    const pkg = rc.offerings?.current?.availablePackages?.[0];
+    if (!pkg) {
+      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek at produkter og offerings er konfigureret i RevenueCat dashboard og App Store Connect.');
       return;
     }
 
-    // Web / non-native → Stripe checkout
     setLoading(true);
     try {
-      const res = await base44.functions.invoke('createCheckoutSession', {});
-      if (res?.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        setError('Kunne ikke oprette betalingssession. Prøv igen.');
-      }
+      await rc.purchase(pkg);
+      setSuccess('✓ Abonnement aktiveret!');
+      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
+      setTimeout(() => requestPushPermission(), 1500);
     } catch (e) {
-      setError(e?.response?.data?.error || e.message || 'Kunne ikke starte betaling. Prøv igen.');
+      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
+        setError(e.message || 'Køb fejlede. Prøv igen.');
+      }
     } finally {
       setLoading(false);
     }
@@ -158,7 +139,7 @@ export default function Checkout() {
           </p>
         </div>
 
-        {/* Payment method card */}
+        {/* Payment method card — IAP only */}
         <div className="mb-6">
         <div
           className="w-full rounded-2xl p-4 flex items-center gap-3"
@@ -168,18 +149,14 @@ export default function Checkout() {
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
             style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
           >
-            {rc.isNative
-              ? <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
-              : <CreditCard className="w-5 h-5" style={{ color: '#fff' }} />}
+            <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-              {rc.isNative ? 'In-App Purchase (App Store)' : 'Kortbetaling (Stripe)'}
+              In-App Purchase (App Store)
             </p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              {rc.isNative
-                ? 'Betal via din Apple-konto · Bedst til iPhone'
-                : 'Visa, Mastercard, MobilePay · Sikker betaling'}
+              Betal via din Apple-konto · Bedst til iPhone
             </p>
           </div>
           <div
@@ -197,6 +174,10 @@ export default function Checkout() {
             {error || `RevenueCat: ${rc.error}`}
           </div>
         )}
+        {/* Debug: RevenueCat state */}
+        <div className="rounded-xl px-4 py-2 mb-4 text-xs" style={{ background: 'rgba(0,0,0,0.03)', border: '1px solid #EDE4DB', color: '#7A665A' }}>
+          <strong>Debug:</strong> native={String(rc.isNative)} · loading={String(rc.loading)} · error={rc.error || 'none'} · offerings={rc.offerings ? 'yes' : 'null'} · current={rc.offerings?.current ? 'yes' : 'null'} · packages={rc.offerings?.current?.availablePackages?.length ?? 0}
+        </div>
         {success && (
           <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
             {success}
@@ -213,7 +194,7 @@ export default function Checkout() {
         >
           {loading || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : rc.isNative ? <>Fortsæt til App Store →</> : <>Betal med kort →</>}
+            : <>Fortsæt til App Store →</>}
         </motion.button>
 
         {/* Footer */}
