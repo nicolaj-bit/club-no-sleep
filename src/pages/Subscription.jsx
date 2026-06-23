@@ -6,12 +6,6 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { motion } from 'framer-motion';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 
-// Detect iOS native app (Capacitor webview)
-const isIOS = () => {
-  const ua = navigator.userAgent || '';
-  return /iPhone|iPad|iPod/.test(ua) && !window.MSStream;
-};
-
 const DEFAULT_FEATURES_DA = [
   { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
   { emoji: '💬', text: 'Ubegrænsede spørgsmål til eksperter' },
@@ -36,9 +30,8 @@ export default function Subscription() {
   const [saving, setSaving] = useState(false);
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const da = lang === 'da';
-  const onIOS = isIOS();
 
-  // RevenueCat — aktiv med web billing key (virker på alle platforme)
+  // RevenueCat — IAP på native, springes over på web
   const rc = useRevenueCat(userId || 'guest');
 
   useEffect(() => {
@@ -69,31 +62,56 @@ export default function Subscription() {
     }
   }, []);
 
-  // Køb via RevenueCat IAP (kun native)
+  // Køb via RevenueCat IAP (native) eller Stripe (web)
   const handleIAPSubscribe = async () => {
-    if (!rc.isNative) {
-      alert(da
-        ? 'Abonnement købes via App Store i iPhone-appen. Download appen for at abonnere.'
-        : 'Subscription is via App Store in the iPhone app. Download the app to subscribe.');
+    // Native iOS/iPadOS: brug RevenueCat In-App Purchase direkte
+    if (rc.isNative) {
+      if (rc.error) {
+        setError(da
+          ? `Abonnementstjenesten kunne ikke indlæses. Prøv at genstarte appen. Teknisk fejl: ${rc.error}`
+          : `Subscription service could not be loaded. Try restarting the app. Technical error: ${rc.error}`);
+        return;
+      }
+
+      const pkg = rc.offerings?.current?.availablePackages?.[0];
+      if (!pkg) {
+        console.error('[Subscription] Ingen RevenueCat offerings tilgængelige. Offerings:', rc.offerings);
+        setError(da
+          ? 'Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen. (Teknisk fejl: ingen produkter fundet)'
+          : 'Could not load subscription from App Store. Check your connection and try again. (Technical error: no products found)');
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+      try {
+        await rc.purchase(pkg);
+        setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription activated!');
+        // Synkroniser profil med backend (RevenueCat webhook opdaterer asynkront)
+        await base44.functions.invoke('verifySubscription', {}).catch(() => {});
+      } catch (e) {
+        if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
+          console.error('[Subscription] Purchase error:', e);
+          setError(e.message || (da ? 'Køb fejlede. Prøv igen.' : 'Purchase failed. Please try again.'));
+        }
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
-    const pkg = rc.offerings?.current?.availablePackages?.[0];
-    if (!pkg) {
-      setError(da ? 'Ingen abonnementer tilgængelige lige nu. Prøv igen senere.' : 'No subscriptions available right now. Try again later.');
-      return;
-    }
-
+    // Web: brug Stripe checkout
     setLoading(true);
     setError(null);
     try {
-      await rc.purchase(pkg);
-      setRestoreMessage(da ? '✓ Abonnement aktiveret!' : '✓ Subscription aktiveret!');
-      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-    } catch (e) {
-      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-        setError(e.message || (da ? 'Køb fejlede. Prøv igen.' : 'Purchase failed. Please try again.'));
+      const response = await base44.functions.invoke('createCheckoutSession', {});
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout. Please try again.');
       }
+    } catch (e) {
+      setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -203,7 +221,7 @@ export default function Subscription() {
   const priceLabel = iosPrice
     ? `${iosPrice} / ${da ? 'måned' : 'month'}`
     : display.price_label || '59 kr. / måned';
-  const ctaLabel = display.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.');
+  const ctaLabel = display.cta_label || (da ? 'Start abonnement' : 'Start subscription');
   const footerNote = display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.');
 
   return (
@@ -342,7 +360,7 @@ export default function Subscription() {
         </motion.div>
 
         {/* Error / restore message */}
-        {(error || rc.error) && (
+        {(error || (rc.error && rc.isNative)) && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}

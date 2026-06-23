@@ -32,6 +32,17 @@ Deno.serve(async (req) => {
       return Response.json({ active: false, reason: 'no_profile' });
     }
 
+    // If profile is already active, check if it's a RevenueCat (IAP) or Stripe subscription
+    if (profile.subscription_status === 'active') {
+      // RevenueCat IAP subscriptions have product IDs (not Stripe 'sub_' prefix)
+      const isStripeSub = profile.subscription_id && profile.subscription_id.startsWith('sub_');
+      if (!isStripeSub) {
+        // RevenueCat IAP — webhook has already verified; trust the active status
+        console.log(`IAP subscription active for ${user.email} (RevenueCat product: ${profile.subscription_id})`);
+        return Response.json({ active: true, status: 'active', source: 'revenuecat' });
+      }
+    }
+
     // If already marked active, verify it's still valid in Stripe
     if (profile.subscription_id) {
       try {

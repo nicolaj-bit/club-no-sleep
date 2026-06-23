@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { openExternalUrl } from '@/lib/nativeAuth';
+import { isNativeApp } from '@/lib/platform';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Check, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const FEATURES_DA = [
   { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
@@ -27,6 +30,8 @@ export default function Paywall({ onSubscribed }) {
   const { isDark } = useTheme();
   const da = lang === 'da';
   const features = da ? FEATURES_DA : FEATURES_EN;
+  const navigate = useNavigate();
+  const rc = useRevenueCat();
 
   const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
@@ -34,6 +39,12 @@ export default function Paywall({ onSubscribed }) {
   const [restoreMessage, setRestoreMessage] = useState(null);
 
   const handleSubscribe = async () => {
+    // Native iOS/iPadOS: redirect til /Subscription som håndterer RevenueCat IAP
+    if (isNativeApp()) {
+      navigate('/Subscription');
+      return;
+    }
+
     if (window.self !== window.top) {
       setError(da
         ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
@@ -41,6 +52,7 @@ export default function Paywall({ onSubscribed }) {
       return;
     }
 
+    // Web: brug Stripe checkout
     setLoading(true);
     setError(null);
     try {
@@ -65,16 +77,28 @@ export default function Paywall({ onSubscribed }) {
     setError(null);
     setRestoreMessage(null);
     try {
-      const response = await base44.functions.invoke('verifySubscription', {});
-      if (response.data?.active) {
-        setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
-        setTimeout(() => {
-          if (onSubscribed) onSubscribed();
-        }, 1200);
+      // Native: brug RevenueCat restore
+      if (isNativeApp() && rc.restorePurchases) {
+        const info = await rc.restorePurchases();
+        const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
+        if (hasActive) {
+          await base44.functions.invoke('verifySubscription', {}).catch(() => {});
+          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+          setTimeout(() => { if (onSubscribed) onSubscribed(); }, 1200);
+        } else {
+          setRestoreMessage(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
+        }
       } else {
-        setRestoreMessage(da
-          ? 'Intet aktivt abonnement fundet på denne konto.'
-          : 'No active subscription found on this account.');
+        // Web: tjek via Stripe backend
+        const response = await base44.functions.invoke('verifySubscription', {});
+        if (response.data?.active) {
+          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+          setTimeout(() => { if (onSubscribed) onSubscribed(); }, 1200);
+        } else {
+          setRestoreMessage(da
+            ? 'Intet aktivt abonnement fundet på denne konto.'
+            : 'No active subscription found on this account.');
+        }
       }
     } catch (e) {
       setError(da
@@ -213,7 +237,7 @@ export default function Paywall({ onSubscribed }) {
         >
           {loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
-            : (da ? 'Abonner for 59 kr./md.' : 'Subscribe for 59 DKK/mo.')}
+            : (da ? 'Start abonnement' : 'Start subscription')}
         </motion.button>
 
         {/* Restore purchases */}

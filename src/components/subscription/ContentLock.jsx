@@ -34,7 +34,7 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
   if (!locked) return children;
 
   const handleSubscribe = () => {
-    navigate('/Checkout');
+    navigate('/Subscription');
   };
 
   return (
