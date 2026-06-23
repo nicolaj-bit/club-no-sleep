@@ -53,31 +53,49 @@ export default function Checkout() {
     setError(null);
     setSuccess(null);
 
-    // IAP via RevenueCat
-    if (rc.loading) {
-      setError('Indlæser abonnement fra App Store… vent et øjeblik.');
-      return;
-    }
-    if (rc.error) {
-      setError(`RevenueCat fejl: ${rc.error}`);
-      return;
-    }
-    const pkg = rc.offerings?.current?.availablePackages?.[0];
-    if (!pkg) {
-      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek at du har internetforbindelse, og at appen er bygget med Capacitor (TestFlight/App Store).');
+    // Native app → IAP via RevenueCat
+    if (rc.isNative) {
+      if (rc.loading) {
+        setError('Indlæser abonnement fra App Store… vent et øjeblik.');
+        return;
+      }
+      if (rc.error) {
+        setError(`RevenueCat fejl: ${rc.error}`);
+        return;
+      }
+      const pkg = rc.offerings?.current?.availablePackages?.[0];
+      if (!pkg) {
+        setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        await rc.purchase(pkg);
+        setSuccess('✓ Abonnement aktiveret!');
+        await base44.functions.invoke('verifySubscription', {}).catch(() => {});
+        setTimeout(() => requestPushPermission(), 1500);
+      } catch (e) {
+        if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
+          setError(e.message || 'Køb fejlede. Prøv igen.');
+        }
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
+    // Web / non-native → Stripe checkout
     setLoading(true);
     try {
-      await rc.purchase(pkg);
-      setSuccess('✓ Abonnement aktiveret!');
-      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-      setTimeout(() => requestPushPermission(), 1500);
-    } catch (e) {
-      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-        setError(e.message || 'Køb fejlede. Prøv igen.');
+      const res = await base44.functions.invoke('createCheckoutSession', {});
+      if (res?.data?.url) {
+        window.location.href = res.data.url;
+      } else {
+        setError('Kunne ikke oprette betalingssession. Prøv igen.');
       }
+    } catch (e) {
+      setError(e?.response?.data?.error || e.message || 'Kunne ikke starte betaling. Prøv igen.');
     } finally {
       setLoading(false);
     }
@@ -140,7 +158,7 @@ export default function Checkout() {
           </p>
         </div>
 
-        {/* Payment method card — IAP only */}
+        {/* Payment method card */}
         <div className="mb-6">
         <div
           className="w-full rounded-2xl p-4 flex items-center gap-3"
@@ -150,14 +168,18 @@ export default function Checkout() {
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
             style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
           >
-            <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
+            {rc.isNative
+              ? <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
+              : <CreditCard className="w-5 h-5" style={{ color: '#fff' }} />}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-              In-App Purchase (App Store)
+              {rc.isNative ? 'In-App Purchase (App Store)' : 'Kortbetaling (Stripe)'}
             </p>
             <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              Betal via din Apple-konto · Bedst til iPhone
+              {rc.isNative
+                ? 'Betal via din Apple-konto · Bedst til iPhone'
+                : 'Visa, Mastercard, MobilePay · Sikker betaling'}
             </p>
           </div>
           <div
@@ -191,7 +213,7 @@ export default function Checkout() {
         >
           {loading || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : <>Fortsæt til App Store →</>}
+            : rc.isNative ? <>Fortsæt til App Store →</> : <>Betal med kort →</>}
         </motion.button>
 
         {/* Footer */}
