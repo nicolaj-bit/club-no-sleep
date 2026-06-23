@@ -69,7 +69,25 @@ export default function NativeAuthScreen() {
     setLoading(true);
     setError(null);
     try {
-      await base44.auth.loginWithProvider('apple', '/app');
+      const isNative = Capacitor.isNativePlatform();
+      if (isNative) {
+        // På native: åbn Apple OAuth i systembrowser (SFSafariViewController)
+        // og returner token via deep link, så appen modtager det korrekt.
+        const { appParams } = await import('@/lib/app-params');
+        const { APP_DEEP_LINK_SCHEME } = await import('@/lib/nativeAuth');
+        const { Browser } = await import('@capacitor/browser');
+
+        const appId = appParams.appId;
+        const appBaseUrl = appParams.appBaseUrl || 'https://app.base44.com';
+        const deepLink = `${APP_DEEP_LINK_SCHEME}://auth`;
+        const loginUrl = `${appBaseUrl}/api/apps/auth/apple/login?app_id=${appId}&from_url=${encodeURIComponent(deepLink)}`;
+
+        await Browser.open({ url: loginUrl, presentationStyle: 'popover' });
+        // Appen genindlæses når deep link returnerer med token — lad loading stå aktiv
+      } else {
+        // På web: brug SDK's loginWithProvider
+        await base44.auth.loginWithProvider('apple', '/app');
+      }
     } catch (e) {
       console.error('[NativeAuthScreen] Apple login error:', e);
       setError(e?.message || 'Apple login mislykkedes. Prøv igen.');

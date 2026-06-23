@@ -25,6 +25,11 @@ export default function NativeAuthGate({ children }) {
       const urlObj = new URL(url);
       const token = urlObj.searchParams.get('access_token');
       if (token) {
+        // Undgå uendelig loop: hvis token allerede er gemt, tjek auth direkte
+        if (localStorage.getItem('base44_access_token') === token) {
+          checkAuth();
+          return true;
+        }
         localStorage.setItem('base44_access_token', token);
         // Reload for at lade SDK geninitialisere med den nye token
         window.location.reload();
