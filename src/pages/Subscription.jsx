@@ -360,7 +360,7 @@ export default function Subscription() {
         </motion.div>
 
         {/* Error / restore message */}
-        {(error || (rc.error && rc.isNative)) && (
+        {error && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -368,7 +368,7 @@ export default function Subscription() {
             style={{ background: 'rgba(220,60,40,0.08)', border: '1px solid rgba(220,60,40,0.2)' }}
           >
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-red-500" />
-            <p className="text-xs text-red-600">{error || rc.error}</p>
+            <p className="text-xs text-red-600">{error}</p>
           </motion.div>
         )}
         {restoreMessage && (
