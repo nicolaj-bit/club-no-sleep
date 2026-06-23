@@ -3,21 +3,31 @@ import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
-import { useLanguage } from '@/components/ui/LanguageContext';
+import { isNativeIOS } from '@/lib/platform';
 import { requestPushPermission } from '@/utils/requestPushPermission';
-import { Loader2, Check, RefreshCw, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Loader2, Check, ArrowLeft, CreditCard, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// Apple logo (lucide har ikke en, så vi bruger et simpelt SVG)
+function AppleIcon({ className, style }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} fill="currentColor">
+      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.31-3.74 4.25z"/>
+    </svg>
+  );
+}
+
 export default function Checkout() {
-  const { lang } = useLanguage();
   const navigate = useNavigate();
-  const da = lang === 'da';
   const rc = useRevenueCat('guest');
   const [loading, setLoading] = useState(false);
-  const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [profile, setProfile] = useState(null);
+
+  // iOS/iPad → IAP som standard. Andre → Stripe.
+  const iosNative = isNativeIOS();
+  const [selected, setSelected] = useState(iosNative ? 'iap' : 'stripe');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -37,190 +47,200 @@ export default function Checkout() {
 
   const isActive = profile?.subscription_status === 'active' || rc.isSubscribed;
 
-  const handlePurchase = async () => {
+  const handleContinue = async () => {
     setError(null);
     setSuccess(null);
 
-    if (!Capacitor.isNativePlatform()) {
-      // Web: Stripe checkout
+    if (selected === 'stripe') {
       setLoading(true);
       try {
         const response = await base44.functions.invoke('createCheckoutSession', {});
         if (response.data?.url) {
           window.location.href = response.data.url;
         } else {
-          setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout.');
+          setError('Kunne ikke starte betaling. Prøv igen.');
         }
       } catch (_) {
-        setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout.');
+        setError('Kunne ikke starte betaling. Prøv igen.');
       } finally {
         setLoading(false);
       }
       return;
     }
 
-    // Native: RevenueCat IAP
+    // IAP via RevenueCat
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      setError(da
-        ? 'Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.'
-        : 'Could not load subscription from App Store. Check your connection and try again.');
+      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
       return;
     }
 
     setLoading(true);
     try {
       await rc.purchase(pkg);
-      setSuccess(da ? '✓ Abonnement aktiveret!' : '✓ Subscription activated!');
+      setSuccess('✓ Abonnement aktiveret!');
       await base44.functions.invoke('verifySubscription', {}).catch(() => {});
       setTimeout(() => requestPushPermission(), 1500);
     } catch (e) {
       if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-        setError(e.message || (da ? 'Køb fejlede. Prøv igen.' : 'Purchase failed. Please try again.'));
+        setError(e.message || 'Køb fejlede. Prøv igen.');
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRestore = async () => {
-    setRestoring(true);
-    setError(null);
-    try {
-      if (rc.isNative && rc.restorePurchases) {
-        const info = await rc.restorePurchases();
-        const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
-        if (hasActive) {
-          await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-          setSuccess(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
-        } else {
-          setError(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
-        }
-      } else {
-        const response = await base44.functions.invoke('verifySubscription', {});
-        if (response.data?.active) {
-          setSuccess(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
-        } else {
-          setError(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
-        }
-      }
-    } catch (_) {
-      setError(da ? 'Kunne ikke gendanne køb.' : 'Could not restore purchases.');
-    } finally {
-      setRestoring(false);
-    }
-  };
-
   const iosPkg = rc.offerings?.current?.availablePackages?.[0];
   const priceLabel = iosPkg?.product?.priceString
-    ? `${iosPkg.product.priceString} / ${da ? 'måned' : 'month'}`
+    ? `${iosPkg.product.priceString} / måned`
     : '59 kr. / måned';
 
+  if (isActive) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: '#f3efe9' }}>
+        <div className="w-full max-w-sm rounded-3xl p-8 text-center" style={{ backgroundColor: '#fff', border: '1px solid #EDE4DB' }}>
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(100,180,100,0.15)' }}>
+            <Check className="w-7 h-7" style={{ color: '#3A7A3A' }} />
+          </div>
+          <h2 className="text-xl font-semibold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            Du har allerede abonnement
+          </h2>
+          <p className="text-sm mb-6" style={{ color: '#7A665A' }}>
+            Du har fuld adgang til alle funktioner.
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="w-full py-3.5 rounded-2xl text-sm font-semibold"
+            style={{ backgroundColor: '#5d3a2c', color: '#fff' }}
+          >
+            Tilbage til appen
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div
-        className="flex items-center gap-3 px-4 py-4 border-b"
-        style={{ borderColor: 'var(--color-border)', paddingTop: 'max(16px, env(safe-area-inset-top))' }}
-      >
-        <button onClick={() => navigate(-1)} className="p-1">
-          <ArrowLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f3efe9' }}>
+      {/* Top bar */}
+      <div className="px-4 pt-4" style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}>
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm" style={{ color: '#5d3a2c' }}>
+          <ArrowLeft className="w-4 h-4" /> Tilbage
         </button>
-        <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-          {da ? 'Abonnement' : 'Subscription'}
-        </h1>
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-sm rounded-3xl p-8 text-center"
-          style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
-        >
-          {/* Logo / icon */}
+      <div className="flex-1 flex flex-col px-6 py-6">
+        {/* Header */}
+        <div className="mb-6">
           <div
-            className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl"
-            style={{ background: 'linear-gradient(160deg, #5B3F2B, #C29A73)' }}
+            className="w-14 h-14 rounded-2xl mb-4 flex items-center justify-center"
+            style={{ backgroundColor: '#5d3a2c' }}
           >
-            🌙
+            <span className="text-2xl font-bold" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
           </div>
-
-          <h2 className="text-2xl font-semibold mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            LALATOTO
-          </h2>
-          <p className="text-sm mb-6" style={{ color: 'var(--color-text-muted)' }}>
-            {da ? 'Fuld adgang til alle funktioner' : 'Full access to all features'}
+          <h1 className="text-2xl font-bold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            Vælg betalingsmetode
+          </h1>
+          <p className="text-sm" style={{ color: '#5d3a2c' }}>
+            {priceLabel} · Ingen binding · Opsig når som helst
           </p>
+        </div>
 
-          {/* Price */}
-          <div className="mb-6">
-            <p className="text-3xl font-bold" style={{ color: 'var(--color-primary)' }}>{priceLabel}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-              {da ? 'Fornyes automatisk. Annuller når som helst.' : 'Renews automatically. Cancel anytime.'}
-            </p>
-          </div>
-
-          {/* Success message */}
-          {success && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl px-4 py-3 mb-4"
-              style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)' }}
-            >
-              <p className="text-sm font-medium" style={{ color: '#3A7A3A' }}>{success}</p>
-            </motion.div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-start gap-2 rounded-xl px-4 py-3 mb-4 text-left"
-              style={{ background: 'rgba(200,80,80,0.08)', border: '1px solid rgba(200,80,80,0.2)' }}
-            >
-              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#C85050' }} />
-              <p className="text-xs" style={{ color: '#C85050' }}>{error}</p>
-            </motion.div>
-          )}
-
-          {/* CTA */}
-          {isActive ? (
-            <div
-              className="w-full py-4 rounded-2xl text-center text-sm font-semibold mb-3 flex items-center justify-center gap-2"
-              style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}
-            >
-              <Check className="w-4 h-4" /> {da ? 'Aktivt abonnement' : 'Active subscription'}
-            </div>
-          ) : (
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={handlePurchase}
-              disabled={loading || restoring || rc.loading}
-              className="w-full py-4 rounded-2xl text-base font-semibold mb-3 flex items-center justify-center gap-2 disabled:opacity-60"
-              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-            >
-              {loading || rc.loading
-                ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Behandler…' : 'Processing…'}</>
-                : da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.'}
-            </motion.button>
-          )}
-
+        {/* Payment method cards */}
+        <div className="space-y-3 mb-6">
+          {/* IAP option */}
           <button
-            onClick={handleRestore}
-            disabled={loading || restoring}
-            className="w-full py-3 rounded-2xl text-sm flex items-center justify-center gap-2 disabled:opacity-60"
-            style={{ color: 'var(--color-text-muted)' }}
+            onClick={() => setSelected('iap')}
+            className="w-full text-left rounded-2xl p-4 flex items-center gap-3 transition-all"
+            style={selected === 'iap'
+              ? { backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }
+              : { backgroundColor: '#fff', border: '2px solid #EDE4DB' }}
           >
-            {restoring
-              ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> {da ? 'Tjekker…' : 'Checking…'}</>
-              : <><RefreshCw className="w-3.5 h-3.5" /> {da ? 'Gendan eksisterende køb' : 'Restore existing purchase'}</>}
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={selected === 'iap' ? { backgroundColor: 'rgba(255,255,255,0.15)' } : { backgroundColor: '#F3E9E1' }}
+            >
+              <AppleIcon className="w-5 h-5" style={{ color: selected === 'iap' ? '#fff' : '#5d3a2c' }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: selected === 'iap' ? '#fff' : '#5d3a2c' }}>
+                In-App Purchase (App Store)
+              </p>
+              <p className="text-xs" style={{ color: selected === 'iap' ? 'rgba(255,255,255,0.8)' : '#7A665A' }}>
+                Betal via din Apple-konto · Bedst til iPhone
+              </p>
+            </div>
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+              style={selected === 'iap' ? { backgroundColor: '#C9AA8F' } : { border: '2px solid #EDE4DB' }}
+            >
+              {selected === 'iap' && <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />}
+            </div>
           </button>
-        </motion.div>
+
+          {/* Stripe option */}
+          <button
+            onClick={() => setSelected('stripe')}
+            className="w-full text-left rounded-2xl p-4 flex items-center gap-3 transition-all"
+            style={selected === 'stripe'
+              ? { backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }
+              : { backgroundColor: '#fff', border: '2px solid #EDE4DB' }}
+          >
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={selected === 'stripe' ? { backgroundColor: 'rgba(255,255,255,0.15)' } : { backgroundColor: '#F3E9E1' }}
+            >
+              <CreditCard className="w-5 h-5" style={{ color: selected === 'stripe' ? '#fff' : '#5d3a2c' }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: selected === 'stripe' ? '#fff' : '#5d3a2c' }}>
+                Kort / MobilePay (Stripe)
+              </p>
+              <p className="text-xs" style={{ color: selected === 'stripe' ? 'rgba(255,255,255,0.8)' : '#7A665A' }}>
+                Betal med kort, MobilePay el. anden metode
+              </p>
+            </div>
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+              style={selected === 'stripe' ? { backgroundColor: '#C9AA8F' } : { border: '2px solid #EDE4DB' }}
+            >
+              {selected === 'stripe' && <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />}
+            </div>
+          </button>
+        </div>
+
+        {/* Error / success messages */}
+        {error && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'rgba(200,80,80,0.08)', border: '1px solid rgba(200,80,80,0.2)', color: '#C85050' }}>
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
+            {success}
+          </div>
+        )}
+
+        {/* CTA button */}
+        <motion.button
+          whileTap={{ scale: 0.98 }}
+          onClick={handleContinue}
+          disabled={loading || rc.loading}
+          className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
+          style={{ backgroundColor: '#3e2a22', color: '#fff' }}
+        >
+          {loading || rc.loading
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
+            : selected === 'iap'
+              ? <>Fortsæt til App Store →</>
+              : <>Fortsæt til betaling →</>}
+        </motion.button>
+
+        {/* Footer */}
+        <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
+          <Lock className="w-3 h-3" /> Sikker betaling · Ingen binding · Annuller når som helst
+        </p>
       </div>
     </div>
   );
