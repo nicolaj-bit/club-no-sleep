@@ -8,13 +8,18 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
  */
 Deno.serve(async (req) => {
   try {
-    // Validér webhook secret
+    // Validér webhook secret — accepter både rå token og "Bearer <token>"
     const authHeader = req.headers.get('Authorization') || '';
     const webhookSecret = Deno.env.get('REVENUECAT_WEBHOOK_SECRET');
 
-    if (webhookSecret && authHeader !== webhookSecret) {
-      console.error('RevenueCat webhook: ugyldig authorization header');
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (webhookSecret) {
+      const token = authHeader.startsWith('Bearer ')
+        ? authHeader.slice(7)
+        : authHeader;
+      if (token !== webhookSecret) {
+        console.error('RevenueCat webhook: ugyldig authorization header');
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
     }
 
     const body = await req.json();
