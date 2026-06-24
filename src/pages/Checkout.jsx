@@ -20,7 +20,6 @@ function AppleIcon({ className, style }) {
 export default function Checkout() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState('guest');
@@ -50,24 +49,11 @@ export default function Checkout() {
   const isActive = profile?.subscription_status === 'active' || rc.isSubscribed;
 
   const handleContinue = async () => {
-    setError(null);
     setSuccess(null);
 
-    if (rc.loading) {
-      setError('Indlæser abonnement fra App Store… vent et øjeblik.');
-      return;
-    }
-    if (rc.error) {
-      setError(`RevenueCat fejl: ${rc.error}`);
-      return;
-    }
+    if (rc.loading) return;
     const pkg = rc.offerings?.current?.availablePackages?.[0];
-    if (!pkg) {
-      const allKeys = rc.offerings?.all ? Object.keys(rc.offerings.all) : [];
-      const hasCurrent = rc.offerings?.current ? 'ja' : 'nej';
-      setError(`Abonnementet kunne ikke indlæses. Offering "current" fundet: ${hasCurrent}. Andre offerings: ${allKeys.length ? allKeys.join(', ') : 'ingen'}. Tjek at (1) produktet er "Approved" i App Store Connect, (2) offering er sat som "Current" i RevenueCat, (3) produkt-ID matcher.`);
-      return;
-    }
+    if (!pkg) return;
 
     setLoading(true);
     try {
@@ -77,7 +63,7 @@ export default function Checkout() {
       setTimeout(() => requestPushPermission(), 1500);
     } catch (e) {
       if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-        setError(e.message || 'Køb fejlede. Prøv igen.');
+        console.warn('Purchase error:', e);
       }
     } finally {
       setLoading(false);
@@ -170,13 +156,7 @@ export default function Checkout() {
         </div>
         </div>
 
-        {/* Error / success messages */}
-        {(error || rc.error) && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'rgba(200,80,80,0.08)', border: '1px solid rgba(200,80,80,0.2)', color: '#C85050' }}>
-            {error || `RevenueCat: ${rc.error}`}
-          </div>
-        )}
-
+        {/* Success message */}
         {success && (
           <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
             {success}
