@@ -38,17 +38,12 @@ export function useRevenueCat(userId) {
 
   useEffect(() => {
     const init = async () => {
-      // Brug Capacitor.isNativePlatform() — den tjekker om den rigtige
-      // native bridge er tilgængelig (modsat UA-baseret detection der kan
-      // give falske positiver i webviews/preview).
+      // Brug Capacitor.isNativePlatform() til visning, men lad være med
+      // at springe over — i nogle TestFlight builds kan den returnere false
+      // selvom native bridge faktisk er tilgængelig. Vi forsøger altid at
+      // konfigurere; hvis det fejler, vises fejlen i stedet.
       const native = Capacitor.isNativePlatform();
       setIsNative(native);
-
-      // RevenueCat virker kun på native (iOS/Android) — spring over på web
-      if (!native) {
-        setLoading(false);
-        return;
-      }
 
       try {
         let rcUserId = userId || null;
