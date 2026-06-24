@@ -39,7 +39,7 @@ export default function BottomNav() {
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
-    { key: 'community', icon: Users, page: 'Community', name: 'Natteensomhed' },
+    { key: 'community', icon: Users, page: 'Community', name: 'Et lys i mørket' },
     { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
     { key: 'cafes', icon: ShoppingBag, page: 'BabyFriendlyCafes', name: 'Babyvenlige caféer' },
     { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },

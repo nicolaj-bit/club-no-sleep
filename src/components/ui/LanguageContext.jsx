@@ -12,7 +12,7 @@ const translations = {
     community: 'Community',
     calendar: 'Kalender',
     profile: 'Profil',
-    natteensomhed: 'Natteensomhed',
+    natteensomhed: 'Et lys i mørket',
 
     // Home
     goodDay: 'God dag, mor 🤍',
