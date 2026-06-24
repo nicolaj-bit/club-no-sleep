@@ -33,8 +33,8 @@ export function useSubscription() {
         const isDemoMode = configs.length > 0 && configs[0].demo_mode === true;
 
         if (isDemoMode) {
-          // In demo mode: all users (incl. admin) see the app as a locked/expired user → paywall visible
-          const result = { isActive: false, isTrial: false, demoMode: true };
+          // In demo mode: all users get full access (used for App Store/Google Play review)
+          const result = { isActive: true, isTrial: false, demoMode: true };
           _cache = result;
           _cacheTime = Date.now();
           setState({ loading: false, ...result });
