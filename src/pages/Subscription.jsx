@@ -124,8 +124,8 @@ export default function Subscription() {
     setError(null);
     setRestoreMessage(null);
     try {
-      if (rc.restorePurchases) {
-        // Gendan via RevenueCat
+      if (rc.isNative && rc.restorePurchases) {
+        // Native: Gendan via RevenueCat
         const info = await rc.restorePurchases();
         const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
         if (hasActive) {

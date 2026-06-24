@@ -1,34 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { useRevenueCat } from '@/components/subscription/useRevenueCat';
-import { isNativeIOS } from '@/lib/platform';
 import { requestPushPermission } from '@/utils/requestPushPermission';
-import { Loader2, Check, ArrowLeft, CreditCard, Lock } from 'lucide-react';
+import { Loader2, Check, ArrowLeft, CreditCard, Lock, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-// Apple logo (lucide har ikke en, så vi bruger et simpelt SVG)
-function AppleIcon({ className, style }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} style={style} fill="currentColor">
-      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.31-3.74 4.25z"/>
-    </svg>
-  );
-}
 
 export default function Checkout() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [userId, setUserId] = useState('guest');
-  const [noPackageMsg, setNoPackageMsg] = useState(null);
-
-  // IAP via App Store er den eneste betalingsmetode
-  const [selected] = useState('iap');
-
-  const rc = useRevenueCat(userId);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -36,7 +17,6 @@ export default function Checkout() {
         const isAuth = await base44.auth.isAuthenticated();
         if (isAuth) {
           const user = await base44.auth.me();
-          if (user?.id) setUserId(user.id);
           if (user?.email) {
             const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
             if (profiles.length) setProfile(profiles[0]);
@@ -47,40 +27,34 @@ export default function Checkout() {
     loadProfile();
   }, []);
 
-  const isActive = profile?.subscription_status === 'active' || rc.isSubscribed;
+  const isActive = profile?.subscription_status === 'active';
 
-  const handleContinue = async () => {
-    setSuccess(null);
+  const handleCheckout = async () => {
+    setError(null);
 
-    if (rc.loading) return;
-    const pkg = rc.offerings?.current?.availablePackages?.[0];
-    if (!pkg) {
-      setNoPackageMsg('Abonnementet kunne ikke hentes fra App Store. Tjek at IAP-produktet er godkendt i App Store Connect (status: "Ready to Submit" eller "Approved").');
+    // Iframe check — Stripe checkout virker kun fra den publicerede app
+    if (window.self !== window.top) {
+      setError('Checkout fungerer kun fra den publicerede app. Åbn appen på din telefon for at abonnere.');
       return;
     }
 
     setLoading(true);
     try {
-      await rc.purchase(pkg);
-      setSuccess('✓ Abonnement aktiveret!');
-      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-      setTimeout(() => requestPushPermission(), 1500);
-    } catch (e) {
-      if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
-        console.warn('Purchase error:', e);
-        const errMsg = e?.message || e?.underlyingErrorMessage || e?.code || (typeof e === 'string' ? e : JSON.stringify(e));
-        setNoPackageMsg(`Køb fejlede: ${errMsg}`);
+      const response = await base44.functions.invoke('createCheckoutSession', {});
+      const url = response?.data?.url;
+      if (url) {
+        // Åbn Stripe checkout i browseren — virker både på web og i native WebView
+        window.location.href = url;
+      } else {
+        setError('Kunne ikke oprette betalingssession. Prøv igen senere.');
       }
+    } catch (e) {
+      const errMsg = e?.response?.data?.error || e?.message || 'Ukendt fejl';
+      setError(`Fejl: ${errMsg}`);
     } finally {
       setLoading(false);
     }
   };
-
-  const iosPkg = rc.offerings?.current?.availablePackages?.[0];
-  const priceLabel = iosPkg?.product?.priceString
-    ? `${iosPkg.product.priceString} / måned`
-    : '59 kr. / måned';
-  const hasPackage = !!iosPkg;
 
   if (isActive) {
     return (
@@ -127,106 +101,83 @@ export default function Checkout() {
             <span className="text-2xl font-bold" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
           </div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            Vælg betalingsmetode
+            Bliv medlem
           </h1>
           <p className="text-sm" style={{ color: '#5d3a2c' }}>
-            {priceLabel} · Ingen binding · Opsig når som helst
+            59 kr. / måned · Ingen binding · Opsig når som helst
           </p>
         </div>
 
-        {/* Payment method card — IAP only */}
+        {/* Features */}
+        <div className="mb-6 space-y-2.5">
+          {[
+            'Fuld adgang til alle tigerspring og milepæle',
+            'Personlig AI-søvnrådgiver',
+            'Kalender med påmindelser',
+            'Mødregruppe og fællesskab',
+            'Babyvenlige caféer i dit område',
+          ].map((feature, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(91,63,43,0.1)' }}>
+                <Check className="w-3 h-3" style={{ color: '#5d3a2c' }} />
+              </div>
+              <p className="text-sm" style={{ color: '#5d3a2c' }}>{feature}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Payment method card */}
         <div className="mb-6">
-        <div
-          className="w-full rounded-2xl p-4 flex items-center gap-3"
-          style={{ backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }}
-        >
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+            className="w-full rounded-2xl p-4 flex items-center gap-3"
+            style={{ backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }}
           >
-            <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-              In-App Purchase (App Store)
-            </p>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              Betal via din Apple-konto · Bedst til iPhone
-            </p>
-          </div>
-          <div
-            className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-            style={{ backgroundColor: '#C9AA8F' }}
-          >
-            <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+            >
+              <CreditCard className="w-5 h-5" style={{ color: '#fff' }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: '#fff' }}>
+                Sikker betaling med kort
+              </p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                Betal via Stripe · Åbnes i browser
+              </p>
+            </div>
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+              style={{ backgroundColor: '#C9AA8F' }}
+            >
+              <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />
+            </div>
           </div>
         </div>
-        </div>
 
-        {/* Success message */}
-        {success && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
-            {success}
-          </div>
-        )}
-
-        {/* No package warning */}
-        {noPackageMsg && !hasPackage && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,150,80,0.1)', border: '1px solid rgba(200,150,80,0.3)', color: '#8a6b3a' }}>
-            {noPackageMsg}
-          </div>
-        )}
-
-        {/* RevenueCat error */}
-        {rc.error && (
+        {/* Error message */}
+        {error && (
           <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,60,60,0.1)', border: '1px solid rgba(200,60,60,0.3)', color: '#a04040' }}>
-            <strong>RevenueCat fejl:</strong> {rc.error}
-          </div>
-        )}
-
-        {/* Loading state */}
-        {rc.loading && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Henter abonnement fra App Store…
-          </div>
-        )}
-
-        {/* No package found — button is disabled, explain why */}
-        {!rc.loading && !hasPackage && !rc.error && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,150,80,0.1)', border: '1px solid rgba(200,150,80,0.3)', color: '#8a6b3a' }}>
-            <strong>Abonnement ikke tilgængeligt.</strong><br/>
-            Tjek i RevenueCat dashboard at du har oprettet et "Offering" med et pakke/produkt, og at produkt-ID'et matcher dit IAP-produkt i App Store Connect (status "Ready to Submit" eller "Approved").
-          </div>
-        )}
-
-        {/* Diagnostic panel — vises kun når ingen pakke findes */}
-        {!rc.loading && !hasPackage && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-mono" style={{ background: 'rgba(100,100,100,0.05)', border: '1px solid rgba(100,100,100,0.15)', color: '#7A665A' }}>
-            <strong>Diagnosticering:</strong><br/>
-            Native app: {rc.isNative ? 'Ja ✓' : 'Nej ✗'}<br/>
-            Offerings hentet: {rc.offerings ? 'Ja' : 'Nej'}<br/>
-            Current offering: {rc.offerings?.current ? 'Ja' : 'Nej — opret et "Current" offering i RevenueCat'}<br/>
-            Available packages: {rc.offerings?.current?.availablePackages?.length ?? 0}<br/>
-            Alle offering keys: {rc.offerings?.all ? Object.keys(rc.offerings.all).join(', ') || '(ingen)' : '(ingen)'}
+            {error}
           </div>
         )}
 
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
-          onClick={handleContinue}
-          disabled={loading || rc.loading || (!hasPackage && !rc.loading)}
+          onClick={handleCheckout}
+          disabled={loading}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
           style={{ backgroundColor: '#3e2a22', color: '#fff' }}
         >
-          {loading || rc.loading
+          {loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : <>Fortsæt til App Store →</>}
+            : <><ExternalLink className="w-4 h-4" /> Fortsæt til betaling →</>}
         </motion.button>
 
         {/* Footer */}
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
-          <Lock className="w-3 h-3" /> Sikker betaling · Ingen binding · Annuller når som helst
+          <Lock className="w-3 h-3" /> Sikker betaling via Stripe · Ingen binding · Annuller når som helst
         </p>
       </div>
     </div>

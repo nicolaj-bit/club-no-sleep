@@ -38,12 +38,17 @@ export function useRevenueCat(userId) {
 
   useEffect(() => {
     const init = async () => {
-      // Brug Capacitor.isNativePlatform() til visning, men lad være med
-      // at springe over — i nogle TestFlight builds kan den returnere false
-      // selvom native bridge faktisk er tilgængelig. Vi forsøger altid at
-      // konfigurere; hvis det fejler, vises fejlen i stedet.
       const native = Capacitor.isNativePlatform();
       setIsNative(native);
+
+      // RevenueCat Capacitor plugin virker kun med en native bridge.
+      // Base44 native apps kører i en WebView uden Capacitor bridge,
+      // så plugin'et kaster "Web not supported in this plugin".
+      // Spring over på web/WebView for at undgå fejlen.
+      if (!native) {
+        setLoading(false);
+        return;
+      }
 
       try {
         let rcUserId = userId || null;
