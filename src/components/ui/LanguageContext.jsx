@@ -6,7 +6,7 @@ const translations = {
     home: 'Hjem',
     menu: 'Menu',
     shop: 'Shop',
-    blog: 'Læs & Lær',
+    blog: 'Søg og find svar',
     sleepLog: 'Søvnlog',
     knowledge: 'Viden',
     community: 'Community',
@@ -133,7 +133,7 @@ const translations = {
     catBooks: 'Bøger',
 
     // Blog
-    blogTitle: 'Læs & Lær',
+    blogTitle: 'Søg og find svar',
     searchBlog: 'Søg indlæg...',
     noPosts: 'Ingen indlæg fundet',
     allCategories: 'Alle',
@@ -523,7 +523,7 @@ const translations = {
     catBooks: 'Books',
 
     // Blog
-    blogTitle: 'Blog',
+    blogTitle: 'Search and find answers',
     searchBlog: 'Search posts...',
     noPosts: 'No posts found',
     allCategories: 'All',
