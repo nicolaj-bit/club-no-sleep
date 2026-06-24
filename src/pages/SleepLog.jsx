@@ -101,6 +101,7 @@ function Chip({ label, color }) {
     green: { backgroundColor: '#F0FDF4', color: '#15803D' },
     yellow: { backgroundColor: '#FEFCE8', color: '#A16207' },
     red: { backgroundColor: '#FEF2F2', color: '#B91C1C' },
+    brown: { backgroundColor: '#F3E9E1', color: '#5B3F2B' },
   };
   return (
     <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={colors[color] || colors.blue}>
@@ -430,7 +431,7 @@ export default function SleepLog() {
                 {fallAsleepMinutes !== null && (
                   <Chip
                     label={`${t.felAsleepIn} ${fallAsleepMinutes} min`}
-                    color={fallAsleepMinutes > 30 ? 'red' : fallAsleepMinutes > 15 ? 'yellow' : 'green'}
+                    color="brown"
                   />
                 )}
               </div>
