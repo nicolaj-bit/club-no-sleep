@@ -216,6 +216,18 @@ export default function Settings() {
         {/* Admin push */}
         {isAdmin && <PushNotificationSender />}
 
+        {/* Admin sandbox checkout — kun for admin (test af IAP via App Store Sandbox) */}
+        {isAdmin && (
+          <Link
+            to="/Checkout"
+            className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
+            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
+          >
+            <CreditCard className="w-4 h-4" style={{ color: ICON_COLOR }} />
+            Sandbox betaling (admin)
+          </Link>
+        )}
+
         {/* FAQ + Support */}
         <div
           className="rounded-2xl overflow-hidden border"
