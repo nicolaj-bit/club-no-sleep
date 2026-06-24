@@ -2,14 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
-import { Loader2, Check, ArrowLeft, CreditCard, Lock, ExternalLink } from 'lucide-react';
+import { useWanilla } from '@/components/subscription/useWanilla';
+import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+function AppleIcon({ className, style }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} fill="currentColor">
+      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.31-3.74 4.25z"/>
+    </svg>
+  );
+}
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [purchasing, setPurchasing] = useState(false);
+  const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
+
+  const wanilla = useWanilla();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -29,30 +41,22 @@ export default function Checkout() {
 
   const isActive = profile?.subscription_status === 'active';
 
-  const handleCheckout = async () => {
+  const handlePurchase = async () => {
     setError(null);
-
-    // Iframe check — Stripe checkout virker kun fra den publicerede app
-    if (window.self !== window.top) {
-      setError('Checkout fungerer kun fra den publicerede app. Åbn appen på din telefon for at abonnere.');
-      return;
-    }
-
-    setLoading(true);
+    setPurchasing(true);
     try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      const url = response?.data?.url;
-      if (url) {
-        // Åbn Stripe checkout i browseren — virker både på web og i native WebView
-        window.location.href = url;
-      } else {
-        setError('Kunne ikke oprette betalingssession. Prøv igen senere.');
-      }
+      await wanilla.purchase();
+      setSuccess('✓ Abonnement aktiveret!');
+      // Synkroniser profil med backend
+      await base44.functions.invoke('verifySubscription', {}).catch(() => {});
+      setTimeout(() => requestPushPermission(), 1500);
     } catch (e) {
-      const errMsg = e?.response?.data?.error || e?.message || 'Ukendt fejl';
-      setError(`Fejl: ${errMsg}`);
+      const errMsg = e?.message || (typeof e === 'string' ? e : 'Køb fejlede');
+      if (!errMsg.toLowerCase().includes('cancel')) {
+        setError(errMsg);
+      }
     } finally {
-      setLoading(false);
+      setPurchasing(false);
     }
   };
 
@@ -126,7 +130,7 @@ export default function Checkout() {
           ))}
         </div>
 
-        {/* Payment method card */}
+        {/* Payment method card — Apple IAP via Wanilla */}
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
@@ -136,14 +140,14 @@ export default function Checkout() {
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
-              <CreditCard className="w-5 h-5" style={{ color: '#fff' }} />
+              <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-                Sikker betaling med kort
+                In-App Purchase (App Store)
               </p>
               <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                Betal via Stripe · Åbnes i browser
+                Betal via din Apple-konto · Sikker og nem
               </p>
             </div>
             <div
@@ -155,29 +159,44 @@ export default function Checkout() {
           </div>
         </div>
 
+        {/* Success message */}
+        {success && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-sm font-medium" style={{ background: 'rgba(100,180,100,0.1)', border: '1px solid rgba(100,180,100,0.2)', color: '#3A7A3A' }}>
+            {success}
+          </div>
+        )}
+
         {/* Error message */}
         {error && (
-          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,60,60,0.1)', border: '1px solid rgba(200,60,60,0.3)', color: '#a04040' }}>
-            {error}
+          <div className="flex items-start gap-2 rounded-xl px-4 py-3 mb-4" style={{ background: 'rgba(200,60,60,0.1)', border: '1px solid rgba(200,60,60,0.3)' }}>
+            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#a04040' }} />
+            <p className="text-xs" style={{ color: '#a04040' }}>{error}</p>
+          </div>
+        )}
+
+        {/* Loading state */}
+        {wanilla.loading && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Forbereder App Store…
           </div>
         )}
 
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
-          onClick={handleCheckout}
-          disabled={loading}
+          onClick={handlePurchase}
+          disabled={purchasing || wanilla.loading || !wanilla.ready}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
           style={{ backgroundColor: '#3e2a22', color: '#fff' }}
         >
-          {loading
+          {purchasing || wanilla.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : <><ExternalLink className="w-4 h-4" /> Fortsæt til betaling →</>}
+            : <>Abonner — 59 kr./md. →</>}
         </motion.button>
 
         {/* Footer */}
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
-          <Lock className="w-3 h-3" /> Sikker betaling via Stripe · Ingen binding · Annuller når som helst
+          <Lock className="w-3 h-3" /> Sikker betaling via Apple · Ingen binding · Annuller når som helst
         </p>
       </div>
     </div>
