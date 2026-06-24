@@ -191,6 +191,14 @@ export default function Checkout() {
           </div>
         )}
 
+        {/* No package found — button is disabled, explain why */}
+        {!rc.loading && !hasPackage && !rc.error && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,150,80,0.1)', border: '1px solid rgba(200,150,80,0.3)', color: '#8a6b3a' }}>
+            <strong>Abonnement ikke tilgængeligt.</strong><br/>
+            Tjek i RevenueCat dashboard at du har oprettet et "Offering" med et pakke/produkt, og at produkt-ID'et matcher dit IAP-produkt i App Store Connect (status "Ready to Submit" eller "Approved").
+          </div>
+        )}
+
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
