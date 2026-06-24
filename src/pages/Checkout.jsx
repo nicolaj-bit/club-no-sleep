@@ -63,7 +63,9 @@ export default function Checkout() {
     }
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek at produkter og offerings er konfigureret i RevenueCat dashboard og App Store Connect.');
+      const allKeys = rc.offerings?.all ? Object.keys(rc.offerings.all) : [];
+      const hasCurrent = rc.offerings?.current ? 'ja' : 'nej';
+      setError(`Abonnementet kunne ikke indlæses. Offering "current" fundet: ${hasCurrent}. Andre offerings: ${allKeys.length ? allKeys.join(', ') : 'ingen'}. Tjek at (1) produktet er "Approved" i App Store Connect, (2) offering er sat som "Current" i RevenueCat, (3) produkt-ID matcher.`);
       return;
     }
 
