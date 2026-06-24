@@ -199,6 +199,18 @@ export default function Checkout() {
           </div>
         )}
 
+        {/* Diagnostic panel — vises kun når ingen pakke findes */}
+        {!rc.loading && !hasPackage && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-mono" style={{ background: 'rgba(100,100,100,0.05)', border: '1px solid rgba(100,100,100,0.15)', color: '#7A665A' }}>
+            <strong>Diagnosticering:</strong><br/>
+            Native app: {rc.isNative ? 'Ja ✓' : 'Nej ✗'}<br/>
+            Offerings hentet: {rc.offerings ? 'Ja' : 'Nej'}<br/>
+            Current offering: {rc.offerings?.current ? 'Ja' : 'Nej — opret et "Current" offering i RevenueCat'}<br/>
+            Available packages: {rc.offerings?.current?.availablePackages?.length ?? 0}<br/>
+            Alle offering keys: {rc.offerings?.all ? Object.keys(rc.offerings.all).join(', ') || '(ingen)' : '(ingen)'}
+          </div>
+        )}
+
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
