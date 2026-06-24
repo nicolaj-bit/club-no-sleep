@@ -23,6 +23,7 @@ export default function Checkout() {
   const [success, setSuccess] = useState(null);
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState('guest');
+  const [noPackageMsg, setNoPackageMsg] = useState(null);
 
   // IAP via App Store er den eneste betalingsmetode
   const [selected] = useState('iap');
@@ -53,7 +54,10 @@ export default function Checkout() {
 
     if (rc.loading) return;
     const pkg = rc.offerings?.current?.availablePackages?.[0];
-    if (!pkg) return;
+    if (!pkg) {
+      setNoPackageMsg('Abonnementet kunne ikke hentes fra App Store. Tjek at IAP-produktet er godkendt i App Store Connect (status: "Ready to Submit" eller "Approved").');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -74,6 +78,7 @@ export default function Checkout() {
   const priceLabel = iosPkg?.product?.priceString
     ? `${iosPkg.product.priceString} / måned`
     : '59 kr. / måned';
+  const hasPackage = !!iosPkg;
 
   if (isActive) {
     return (
@@ -163,11 +168,18 @@ export default function Checkout() {
           </div>
         )}
 
+        {/* No package warning */}
+        {noPackageMsg && !hasPackage && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,150,80,0.1)', border: '1px solid rgba(200,150,80,0.3)', color: '#8a6b3a' }}>
+            {noPackageMsg}
+          </div>
+        )}
+
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleContinue}
-          disabled={loading || rc.loading}
+          disabled={loading || rc.loading || (!hasPackage && !rc.loading)}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
           style={{ backgroundColor: '#3e2a22', color: '#fff' }}
         >
