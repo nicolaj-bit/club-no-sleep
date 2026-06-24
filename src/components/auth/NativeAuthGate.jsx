@@ -53,14 +53,8 @@ export default function NativeAuthGate({ children }) {
         setStatus('unauthed');
         return;
       }
-      // Tjek abonnementsstatus — kun active/trial får adgang
-      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-      const sub = profiles[0]?.subscription_status;
-      if (sub === 'active' || sub === 'trial') {
-        setStatus('authed');
-      } else {
-        setStatus('unauthed');
-      }
+      // Alle authenticated brugere får adgang
+      setStatus('authed');
     } catch {
       setStatus('unauthed');
     }

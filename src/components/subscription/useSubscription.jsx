@@ -66,26 +66,9 @@ export function useSubscription() {
         }
 
         const profile = profiles[0];
-        const sub = profile.subscription_status;
 
-        if (sub === 'active') {
-          const result = { isActive: true, isTrial: false };
-          _cache = result;
-          _cacheTime = Date.now();
-          setState({ loading: false, ...result });
-          return;
-        }
-
-        // trial = kun demo-adgang (ikke fuld adgang)
-        if (sub === 'trial') {
-          const result = { isActive: false, isTrial: true };
-          _cache = result;
-          _cacheTime = Date.now();
-          setState({ loading: false, ...result });
-          return;
-        }
-
-        const result = { isActive: false, isTrial: false };
+        // Alle authenticated brugere med en profil får fuld adgang
+        const result = { isActive: true, isTrial: false };
         _cache = result;
         _cacheTime = Date.now();
         setState({ loading: false, ...result });

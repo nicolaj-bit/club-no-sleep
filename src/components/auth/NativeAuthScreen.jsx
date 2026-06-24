@@ -33,22 +33,8 @@ export default function NativeAuthScreen() {
       // Gem token i localStorage så SDK + NativeAuthGate kan bruge det efter reload
       localStorage.setItem('base44_access_token', access_token);
 
-      // Tjek abonnementsstatus
-      const profiles = await base44.entities.UserProfile.filter({ user_email: email });
-
-      if (profiles.length > 0) {
-        const sub = profiles[0].subscription_status;
-
-        if (sub === 'active') {
-          // Aktivt abonnement → genindlæs appen (NativeAuthGate vil nu lade brugeren igennem)
-          window.location.reload();
-          return;
-        }
-      }
-
-      // Intet aktivt abonnement → redirect til web for betaling
-      // Send token med så web-siden er logget ind
-      redirectToWebSubscription(access_token);
+      // Alle brugere får adgang — genindlæs appen
+      window.location.reload();
     } catch (e) {
       console.error('[NativeAuthScreen] Login error:', e);
       setError(e?.message || 'Login mislykkedes. Tjek email og adgangskode.');
