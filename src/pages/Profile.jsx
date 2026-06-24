@@ -138,17 +138,10 @@ export default function Profile() {
         </p>
         <button
           onClick={() => base44.auth.redirectToLogin('/Profile')}
-          className="w-full max-w-xs py-4 rounded-2xl text-base font-semibold mb-3"
+          className="w-full max-w-xs py-4 rounded-2xl text-base font-semibold"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           {lang === 'da' ? 'Log ind / Opret konto' : 'Log in / Sign up'}
-        </button>
-        <button
-          onClick={() => navigate('/Checkout')}
-          className="w-full max-w-xs py-3 rounded-2xl text-sm"
-          style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}
-        >
-          {lang === 'da' ? 'Bliv medlem →' : 'Become a member →'}
         </button>
       </div>
     );
