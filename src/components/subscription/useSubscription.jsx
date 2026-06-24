@@ -16,6 +16,15 @@ export function useSubscription() {
         return;
       }
 
+      // Demo mode (local "jeg vil kigge") — full access without login
+      if (localStorage.getItem('demo_mode') === 'true') {
+        const result = { isActive: true, isTrial: false, demoMode: true };
+        _cache = result;
+        _cacheTime = Date.now();
+        setState({ loading: false, ...result });
+        return;
+      }
+
       try {
         const isAuth = await base44.auth.isAuthenticated();
         if (!isAuth) {
