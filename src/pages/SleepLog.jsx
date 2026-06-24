@@ -310,10 +310,10 @@ export default function SleepLog() {
   }, [aiInput]);
 
   const calcNightMinutes = () => {
-    if (!form.bedtime || !form.wake_time) return null;
-    const [bh, bm] = form.bedtime.split(':').map(Number);
+    if (!form.sleep_time || !form.wake_time) return null;
+    const [sh, sm] = form.sleep_time.split(':').map(Number);
     const [wh, wm] = form.wake_time.split(':').map(Number);
-    let diff = (wh * 60 + wm) - (bh * 60 + bm);
+    let diff = (wh * 60 + wm) - (sh * 60 + sm);
     if (diff < 0) diff += 24 * 60;
     return diff;
   };
@@ -426,7 +426,7 @@ export default function SleepLog() {
             {(nightMinutes !== null || fallAsleepMinutes !== null) && (
               <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 {nightMinutes !== null && (
-                  <Chip label={`${Math.floor(nightMinutes / 60)}h ${nightMinutes % 60}m`} color="blue" />
+                  <Chip label={`${t.nightSleepDuration} ${Math.floor(nightMinutes / 60)}h ${nightMinutes % 60}m`} color="brown" />
                 )}
                 {fallAsleepMinutes !== null && (
                   <Chip
