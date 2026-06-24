@@ -68,6 +68,8 @@ export default function Checkout() {
     } catch (e) {
       if (!e.message?.includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
         console.warn('Purchase error:', e);
+        const errMsg = e?.message || e?.underlyingErrorMessage || e?.code || (typeof e === 'string' ? e : JSON.stringify(e));
+        setNoPackageMsg(`Køb fejlede: ${errMsg}`);
       }
     } finally {
       setLoading(false);
@@ -172,6 +174,20 @@ export default function Checkout() {
         {noPackageMsg && !hasPackage && (
           <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,150,80,0.1)', border: '1px solid rgba(200,150,80,0.3)', color: '#8a6b3a' }}>
             {noPackageMsg}
+          </div>
+        )}
+
+        {/* RevenueCat error */}
+        {rc.error && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium" style={{ background: 'rgba(200,60,60,0.1)', border: '1px solid rgba(200,60,60,0.3)', color: '#a04040' }}>
+            <strong>RevenueCat fejl:</strong> {rc.error}
+          </div>
+        )}
+
+        {/* Loading state */}
+        {rc.loading && (
+          <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Henter abonnement fra App Store…
           </div>
         )}
 
