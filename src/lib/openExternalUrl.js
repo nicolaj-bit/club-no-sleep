@@ -45,10 +45,10 @@ export async function openExternalUrl(url) {
     }
   }
 
-  // Web / PWA (and native fallback): open the in-app browser overlay
-  window.dispatchEvent(
-    new CustomEvent('open-in-app-browser', { detail: { url: safeUrl } })
-  );
+  // Web / PWA (and native fallback): open in a real new browser tab.
+  // (An in-app iframe overlay can't load sites that block framing —
+  // Shopify, App Store, etc. — so a new tab is the reliable option.)
+  openInNewTab(safeUrl);
 }
 
 /** Opens a URL in a real new browser tab, bypassing the in-app overlay. */
