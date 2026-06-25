@@ -51,12 +51,27 @@ export async function openExternalUrl(url) {
   openInNewTab(safeUrl);
 }
 
-/** Opens a URL in a real new browser tab, bypassing the in-app overlay. */
+/** Opens a URL in a real new browser tab (or escapes the preview iframe). */
 export function openInNewTab(url) {
   if (!url) return;
   let safeUrl = url;
   if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
-  nativeWindowOpen(safeUrl, '_blank', 'noopener,noreferrer');
+
+  // Inside a sandboxed preview iframe, window.open() popups open blank
+  // because the sandbox blocks them from loading the external page. Detect
+  // the iframe and navigate the top-level window instead so the page shows.
+  let inIframe = false;
+  try { inIframe = window.self !== window.top; } catch { inIframe = true; }
+
+  if (inIframe) {
+    try {
+      window.top.location.href = safeUrl;
+      return;
+    } catch {
+      // cross-origin top access blocked — fall through to a new tab
+    }
+  }
+  nativeWindowOpen(safeUrl, '_blank');
 }
 
 /** Returns true if the given URL is an external http(s) link. */
