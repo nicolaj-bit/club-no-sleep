@@ -15,7 +15,7 @@
     "@base44/sdk": "^0.8.34",
     "@base44/vite-plugin": "^1.0.23",
     "@capacitor/app": "^7.1.2",
-    "@capacitor/browser": "^7.0.5",
+    "@capacitor/browser": "^8.0.3",
     "@capgo/capacitor-calendar": "^8.0.1",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
