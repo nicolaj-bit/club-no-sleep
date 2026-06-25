@@ -32,6 +32,7 @@ import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import NativeAuthGate from './components/auth/NativeAuthGate';
+import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -159,6 +160,7 @@ function App() {
     <QueryClientProvider client={queryClientInstance}>
       <Router>
         <PublicOrAuth />
+        <InAppBrowserLinkHandler />
       </Router>
       <Toaster />
     </QueryClientProvider>
