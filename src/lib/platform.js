@@ -6,6 +6,14 @@ import { Capacitor } from '@capacitor/core';
  * så vi har UA-baserede fallbacks.
  */
 export function isNativeApp() {
+  // A native app WebView is always the top-level browsing context — never
+  // inside an iframe. The Base44 preview runs in an iframe, so treat that as
+  // non-native (also avoids false positives on iOS Safari where window.safari
+  // is undefined inside a cross-origin iframe).
+  try {
+    if (window.self !== window.top) return false;
+  } catch { return false; }
+
   try {
     if (Capacitor.isNativePlatform()) return true;
   } catch {}
