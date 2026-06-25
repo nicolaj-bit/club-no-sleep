@@ -1,18 +1,17 @@
-import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
+import { isNativeApp } from '@/lib/platform';
 
 // Keep a reference to the real window.open before any monkey-patch is
 // installed, so openInNewTab doesn't recurse through the patched version.
 const nativeWindowOpen = window.open.bind(window);
 
 /**
- * Opens an external URL in an in-app browser:
- *  - Native (iOS/Android): SFSafariViewController / Chrome Custom Tabs via
- *    the Capacitor Browser plugin (built-in close/Done button, app session
- *    preserved, login kept).
- *  - Web/PWA: an in-app browser overlay (iframe) with a close button, so the
- *    user stays inside the app and can return. A fallback "open in browser"
- *    button is shown for sites that block being framed.
+ * Opens an external URL:
+ *  - Native (iOS/Android): in-app browser via the Capacitor Browser plugin
+ *    (SFSafariViewController / Chrome Custom Tabs) with a built-in Done
+ *    button — the app session is preserved and the page loads natively
+ *    (no framing restrictions, so Shopify etc. work).
+ *  - Web/PWA: a new browser tab so the app stays open in its own tab.
  *
  * http:// links are upgraded to https://. mailto/tel schemes pass through.
  */
@@ -31,8 +30,11 @@ export async function openExternalUrl(url) {
     return;
   }
 
-  // Native: use the Capacitor Browser plugin (best experience)
-  if (Capacitor.isNativePlatform()) {
+  // Native: use the Capacitor Browser plugin — true in-app browser
+  // (SFSafariViewController / Chrome Custom Tabs) with a Done button.
+  // isNativeApp() is robust against WebView wrappers where
+  // Capacitor.isNativePlatform() alone may return false.
+  if (isNativeApp()) {
     try {
       await Browser.open({
         url: safeUrl,
@@ -41,36 +43,21 @@ export async function openExternalUrl(url) {
       });
       return;
     } catch (err) {
-      console.warn('Capacitor Browser plugin unavailable, using overlay:', err);
+      console.warn('Capacitor Browser plugin unavailable, opening in new tab:', err);
     }
   }
 
-  // Web / PWA (and native fallback): open in a real new browser tab.
-  // (An in-app iframe overlay can't load sites that block framing —
-  // Shopify, App Store, etc. — so a new tab is the reliable option.)
+  // Web / PWA (and native fallback): open in a real new browser tab so the
+  // app stays open. (An in-app iframe can't load sites that block framing —
+  // Shopify, App Store, etc.)
   openInNewTab(safeUrl);
 }
 
-/** Opens a URL in a real new browser tab (or escapes the preview iframe). */
+/** Opens a URL in a real new browser tab, keeping the app open. */
 export function openInNewTab(url) {
   if (!url) return;
   let safeUrl = url;
   if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
-
-  // Inside a sandboxed preview iframe, window.open() popups open blank
-  // because the sandbox blocks them from loading the external page. Detect
-  // the iframe and navigate the top-level window instead so the page shows.
-  let inIframe = false;
-  try { inIframe = window.self !== window.top; } catch { inIframe = true; }
-
-  if (inIframe) {
-    try {
-      window.top.location.href = safeUrl;
-      return;
-    } catch {
-      // cross-origin top access blocked — fall through to a new tab
-    }
-  }
   nativeWindowOpen(safeUrl, '_blank');
 }
 
