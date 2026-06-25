@@ -1,14 +1,20 @@
 import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 
+// Keep a reference to the real window.open before any monkey-patch is
+// installed, so openInNewTab doesn't recurse through the patched version.
+const nativeWindowOpen = window.open.bind(window);
+
 /**
- * Opens an external URL in an in-app browser on native platforms
- * (SFSafariViewController on iOS, Chrome Custom Tabs on Android) or in a
- * new browser tab on web/PWA. The app session and login are preserved —
- * the in-app browser has a native close/Done button that returns the user
- * to the app.
+ * Opens an external URL in an in-app browser:
+ *  - Native (iOS/Android): SFSafariViewController / Chrome Custom Tabs via
+ *    the Capacitor Browser plugin (built-in close/Done button, app session
+ *    preserved, login kept).
+ *  - Web/PWA: an in-app browser overlay (iframe) with a close button, so the
+ *    user stays inside the app and can return. A fallback "open in browser"
+ *    button is shown for sites that block being framed.
  *
- * @param {string} url - The URL to open (http/https; mailto/tel pass through).
+ * http:// links are upgraded to https://. mailto/tel schemes pass through.
  */
 export async function openExternalUrl(url) {
   if (!url) return;
@@ -25,23 +31,32 @@ export async function openExternalUrl(url) {
     return;
   }
 
-  try {
-    if (Capacitor.isNativePlatform()) {
-      // Native: SFSafariViewController (iOS) / Chrome Custom Tabs (Android)
-      // — has a built-in close/Done button, preserves the app session.
+  // Native: use the Capacitor Browser plugin (best experience)
+  if (Capacitor.isNativePlatform()) {
+    try {
       await Browser.open({
         url: safeUrl,
         presentationStyle: 'fullscreen',
         toolbarColor: '#5B3F2B',
       });
       return;
+    } catch (err) {
+      console.warn('Capacitor Browser plugin unavailable, using overlay:', err);
     }
-  } catch (err) {
-    console.warn('In-app browser unavailable, falling back to new tab:', err);
   }
 
-  // Web / PWA — open in a new tab (normal web behaviour; close tab to return)
-  window.open(safeUrl, '_blank', 'noopener,noreferrer');
+  // Web / PWA (and native fallback): open the in-app browser overlay
+  window.dispatchEvent(
+    new CustomEvent('open-in-app-browser', { detail: { url: safeUrl } })
+  );
+}
+
+/** Opens a URL in a real new browser tab, bypassing the in-app overlay. */
+export function openInNewTab(url) {
+  if (!url) return;
+  let safeUrl = url;
+  if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
+  nativeWindowOpen(safeUrl, '_blank', 'noopener,noreferrer');
 }
 
 /** Returns true if the given URL is an external http(s) link. */

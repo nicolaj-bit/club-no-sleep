@@ -33,6 +33,7 @@ import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import NativeAuthGate from './components/auth/NativeAuthGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
+import InAppBrowserOverlay from './components/InAppBrowserOverlay';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -161,6 +162,7 @@ function App() {
       <Router>
         <PublicOrAuth />
         <InAppBrowserLinkHandler />
+        <InAppBrowserOverlay />
       </Router>
       <Toaster />
     </QueryClientProvider>

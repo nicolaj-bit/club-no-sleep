@@ -2,32 +2,48 @@ import { useEffect } from 'react';
 import { openExternalUrl } from '@/lib/openExternalUrl';
 
 /**
- * Global click interceptor.
+ * Global interceptor that routes ALL external links through the in-app
+ * browser (SFSafariViewController / Chrome Custom Tabs on native, a new
+ * tab on web/PWA) so the app session and login are preserved.
  *
- * Any click on an <a> element whose href is an external http(s) URL is
- * captured and opened in the in-app browser (SFSafariViewController /
- * Chrome Custom Tabs on native, new tab on web) instead of navigating
- * away from the app. Internal React Router links (relative hrefs) and
- * mailto/tel schemes are left untouched.
+ * Two mechanisms:
+ *  1. Click interception — any click on an <a> with an http(s) href
+ *     (covers shop, support, privacy, terms, FAQ, articles, landing pages,
+ *     footer links, links inside rendered HTML/markdown, etc.).
+ *  2. window.open patch — programmatic calls such as the shop "Buy now"
+ *     button (ProductDetail) that use window.open(url, '_blank').
  *
- * Mount once near the app root so it covers every page.
+ * Internal React Router links (relative hrefs) and mailto/tel schemes are
+ * left untouched. Mount once near the app root so it covers every page.
  */
 export default function InAppBrowserLinkHandler() {
   useEffect(() => {
-    const handler = (event) => {
+    // 1) Intercept clicks on external <a> links (capture phase → runs first)
+    const clickHandler = (event) => {
       const anchor = event.target.closest && event.target.closest('a');
       if (!anchor) return;
       const href = anchor.getAttribute && anchor.getAttribute('href');
       if (!href) return;
-      // Only intercept external http(s) links
-      if (!/^https?:\/\//i.test(href)) return;
+      if (!/^https?:\/\//i.test(href)) return; // only external http(s)
       event.preventDefault();
       openExternalUrl(href);
     };
+    document.addEventListener('click', clickHandler, true);
 
-    // Capture phase so we run before React Router or other handlers
-    document.addEventListener('click', handler, true);
-    return () => document.removeEventListener('click', handler, true);
+    // 2) Patch window.open so programmatic external links open in-app too
+    const nativeOpen = window.open;
+    window.open = function (url, ...args) {
+      if (typeof url === 'string' && /^https?:\/\//i.test(url)) {
+        openExternalUrl(url);
+        return null;
+      }
+      return nativeOpen.call(this, url, ...args);
+    };
+
+    return () => {
+      document.removeEventListener('click', clickHandler, true);
+      window.open = nativeOpen;
+    };
   }, []);
 
   return null;
