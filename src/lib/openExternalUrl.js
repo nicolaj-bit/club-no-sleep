@@ -5,6 +5,11 @@ import { isNativeApp } from '@/lib/platform';
 // installed, so openInNewTab doesn't recurse through the patched version.
 const nativeWindowOpen = window.open.bind(window);
 
+// Re-entrancy guard: on web, Browser.open calls window.open internally, and
+// window.open is patched to call openExternalUrl — without this flag that
+// would recurse infinitely and freeze the page.
+let _opening = false;
+
 /**
  * Opens an external URL:
  *  - Native (iOS/Android): in-app browser via the Capacitor Browser plugin
@@ -34,7 +39,15 @@ export async function openExternalUrl(url) {
   // (SFSafariViewController / Chrome Custom Tabs) with a Done button.
   // isNativeApp() is robust against WebView wrappers where
   // Capacitor.isNativePlatform() alone may return false.
+  // Re-entrant call (Browser.open on web calls the patched window.open) —
+  // break the recursion by opening a plain new tab instead.
+  if (_opening) {
+    openInNewTab(safeUrl);
+    return;
+  }
+
   if (isNativeApp()) {
+    _opening = true;
     try {
       await Browser.open({
         url: safeUrl,
@@ -44,6 +57,8 @@ export async function openExternalUrl(url) {
       return;
     } catch (err) {
       console.warn('Capacitor Browser plugin unavailable, opening in new tab:', err);
+    } finally {
+      _opening = false;
     }
   }
 
