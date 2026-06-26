@@ -79,7 +79,8 @@ async function sendPushNotification(email, title, message) {
   if (!ONESIGNAL_APP_ID || !REST_API_KEY) return false;
   const body = {
     app_id: ONESIGNAL_APP_ID,
-    filters: [{ field: 'tag', key: 'email', relation: '=', value: email }],
+    include_aliases: { external_id: [email] },
+    target_channel: 'push',
     headings: { da: title, en: title },
     contents: { da: message, en: message },
     url: 'https://lalatoto.dk/PregnancyWeeks',
@@ -88,7 +89,7 @@ async function sendPushNotification(email, title, message) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${REST_API_KEY}`,
+      'Authorization': `Key ${REST_API_KEY}`,
     },
     body: JSON.stringify(body),
   });
