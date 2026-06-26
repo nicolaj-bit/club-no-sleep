@@ -9,13 +9,18 @@
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:sync": "vite build && npx cap sync ios",
+    "cap:open:ios": "npx cap open ios"
   },
   "dependencies": {
     "@base44/sdk": "^0.8.34",
     "@base44/vite-plugin": "^1.0.23",
-    "@capacitor/app": "^7.1.2",
+    "@capacitor/app": "^8.1.0",
     "@capacitor/browser": "^8.0.3",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/ios": "^8.4.1",
+    "@capacitor/push-notifications": "^8.1.1",
     "@capgo/capacitor-calendar": "^8.0.1",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
@@ -85,6 +90,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.1",
     "@eslint/js": "^9.19.0",
     "@types/node": "^22.13.5",
     "@types/react": "^18.2.66",
