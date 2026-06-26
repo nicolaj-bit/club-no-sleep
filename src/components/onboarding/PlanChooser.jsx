@@ -5,7 +5,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 
-export default function PlanChooser({ onChoose }) {
+export default function PlanChooser({ onChoose, finishing }) {
   const [selected, setSelected] = useState(null);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
   const { offerings, purchase } = useRevenueCat();
@@ -147,6 +147,7 @@ export default function PlanChooser({ onChoose }) {
       {/* Skip-knap — giver kun adgang til demo */}
       <button
         onClick={() => onChoose && onChoose('demo')}
+        disabled={finishing || loadingPurchase}
         style={{
           width: '100%',
           background: 'none',
@@ -155,13 +156,20 @@ export default function PlanChooser({ onChoose }) {
           fontSize: '0.82rem',
           marginTop: '1.2rem',
           padding: '8px',
-          cursor: 'pointer',
+          cursor: finishing || loadingPurchase ? 'default' : 'pointer',
+          opacity: finishing ? 0.6 : 1,
           textDecoration: 'underline',
           textDecorationColor: 'var(--color-border)',
           textUnderlineOffset: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
         }}
       >
-        Spring over — fortsæt med begrænset adgang
+        {finishing
+          ? <><Loader2 size={14} className="animate-spin" /> Et øjeblik…</>
+          : 'Spring over — fortsæt med begrænset adgang'}
       </button>
     </motion.div>
   );

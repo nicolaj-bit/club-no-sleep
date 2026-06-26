@@ -85,48 +85,58 @@ export default function Onboarding() {
   };
 
   const handleFinish = async (plan = 'demo') => {
-    setSaving(true);
-
-    const isActive = hasPaid || plan === 'paid' || plan === 'appstore';
-    const { accept_terms, accept_privacy, ...profileData } = form;
-    // Brugernavn bruges også som visningsnavn
-    if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
-    await base44.entities.UserProfile.create({
-      ...profileData,
-      gender: form.profile_label === 'mor' ? 'female' : 'male',
-      user_email: user.email,
-      subscription_status: isActive ? 'active' : 'trial',
-      subscription_started_at: isActive ? new Date().toISOString() : undefined,
-      trial_started_at: isActive ? undefined : new Date().toISOString(),
-    });
-
-    // Opret barn baseret på onboarding-data
-    if (childMode === 'gravid' && form.child_due_date) {
-      await base44.entities.Child.create({
-        user_email: user.email,
-        name: 'Mit barn',
-        due_date: form.child_due_date,
-      });
-    } else if (childMode === 'fodt' && (form.child_birthdate || form.child_due_date)) {
-      await base44.entities.Child.create({
-        user_email: user.email,
-        name: form.child_name?.trim() || 'Mit barn',
-        birthdate: form.child_birthdate || undefined,
-        due_date: form.child_due_date || undefined,
-      });
+    if (!user?.email) {
+      toast.error(t.errorTryAgain || 'Kunne ikke finde din bruger. Prøv igen.');
+      return;
     }
 
-    // Gem GDPR consent-log
-    await base44.entities.ConsentLog.create({
-      user_email: user.email,
-      terms_version: '1.0',
-      privacy_version: '1.0',
-      accepted_at: new Date().toISOString(),
-    });
+    setSaving(true);
+    try {
+      const isActive = hasPaid || plan === 'paid' || plan === 'appstore';
+      const { accept_terms, accept_privacy, ...profileData } = form;
+      // Brugernavn bruges også som visningsnavn
+      if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
+      await base44.entities.UserProfile.create({
+        ...profileData,
+        gender: form.profile_label === 'mor' ? 'female' : 'male',
+        user_email: user.email,
+        subscription_status: isActive ? 'active' : 'trial',
+        subscription_started_at: isActive ? new Date().toISOString() : undefined,
+        trial_started_at: isActive ? undefined : new Date().toISOString(),
+      });
 
-    // Onboarding done — allerede betalt via App Store: gå til appen.
-    // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
-    window.location.href = isActive ? '/app' : '/Checkout';
+      // Opret barn baseret på onboarding-data
+      if (childMode === 'gravid' && form.child_due_date) {
+        await base44.entities.Child.create({
+          user_email: user.email,
+          name: 'Mit barn',
+          due_date: form.child_due_date,
+        });
+      } else if (childMode === 'fodt' && (form.child_birthdate || form.child_due_date)) {
+        await base44.entities.Child.create({
+          user_email: user.email,
+          name: form.child_name?.trim() || 'Mit barn',
+          birthdate: form.child_birthdate || undefined,
+          due_date: form.child_due_date || undefined,
+        });
+      }
+
+      // Gem GDPR consent-log
+      await base44.entities.ConsentLog.create({
+        user_email: user.email,
+        terms_version: '1.0',
+        privacy_version: '1.0',
+        accepted_at: new Date().toISOString(),
+      });
+
+      // Onboarding done — allerede betalt via App Store: gå til appen.
+      // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
+      window.location.href = isActive ? '/app' : '/Checkout';
+    } catch (err) {
+      console.error('[Onboarding] handleFinish error:', err);
+      toast.error(err?.message || 'Noget gik galt. Prøv igen.');
+      setSaving(false);
+    }
   };
 
   const STEPS = [
@@ -374,7 +384,7 @@ export default function Onboarding() {
 
             {/* STEP 3 – Vælg plan */}
             {step === 3 && (
-              <PlanChooser onChoose={(plan) => handleFinish(plan)} />
+              <PlanChooser onChoose={(plan) => handleFinish(plan)} finishing={saving} />
             )}
 
             {/* STEP 2 – Barn */}
