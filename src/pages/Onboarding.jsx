@@ -87,7 +87,7 @@ export default function Onboarding() {
   const handleFinish = async (plan = 'demo') => {
     setSaving(true);
 
-    const isActive = hasPaid || plan === 'paid';
+    const isActive = hasPaid || plan === 'paid' || plan === 'appstore';
     const { accept_terms, accept_privacy, ...profileData } = form;
     // Brugernavn bruges også som visningsnavn
     if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
@@ -124,8 +124,9 @@ export default function Onboarding() {
       accepted_at: new Date().toISOString(),
     });
 
-    // Onboarding done — go to home
-    window.location.href = '/app';
+    // Onboarding done — allerede betalt via App Store: gå til appen.
+    // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
+    window.location.href = isActive ? '/app' : '/Checkout';
   };
 
   const STEPS = [
@@ -373,7 +374,7 @@ export default function Onboarding() {
 
             {/* STEP 3 – Vælg plan */}
             {step === 3 && (
-              <PlanChooser onChoose={() => handleFinish()} />
+              <PlanChooser onChoose={(plan) => handleFinish(plan)} />
             )}
 
             {/* STEP 2 – Barn */}
