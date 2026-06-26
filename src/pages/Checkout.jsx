@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
-import { useWanilla } from '@/components/subscription/useWanilla';
+import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -20,8 +20,9 @@ export default function Checkout() {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  const wanilla = useWanilla();
+  const rc = useRevenueCat(userId || 'guest');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -30,6 +31,7 @@ export default function Checkout() {
         if (isAuth) {
           const user = await base44.auth.me();
           if (user?.email) {
+            setUserId(user.id || user.email);
             const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
             if (profiles.length) setProfile(profiles[0]);
           }
@@ -42,17 +44,23 @@ export default function Checkout() {
   const isActive = profile?.subscription_status === 'active';
 
   const handlePurchase = async () => {
+    const pkg = rc.offerings?.current?.availablePackages?.[0];
+    if (!pkg) {
+      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
+      return;
+    }
+
     setError(null);
     setPurchasing(true);
     try {
-      await wanilla.purchase();
+      await rc.purchase(pkg);
       setSuccess('✓ Abonnement aktiveret!');
       // Synkroniser profil med backend
       await base44.functions.invoke('verifySubscription', {}).catch(() => {});
       setTimeout(() => requestPushPermission(), 1500);
     } catch (e) {
       const errMsg = e?.message || (typeof e === 'string' ? e : 'Køb fejlede');
-      if (!errMsg.toLowerCase().includes('cancel')) {
+      if (!errMsg.toLowerCase().includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
         setError(errMsg);
       }
     } finally {
@@ -130,7 +138,7 @@ export default function Checkout() {
           ))}
         </div>
 
-        {/* Payment method card — Apple IAP via Wanilla */}
+        {/* Payment method card — Apple IAP via RevenueCat/StoreKit */}
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
@@ -175,7 +183,7 @@ export default function Checkout() {
         )}
 
         {/* Loading state */}
-        {wanilla.loading && (
+        {rc.loading && (
           <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
             <Loader2 className="w-3.5 h-3.5 animate-spin" /> Forbereder App Store…
           </div>
@@ -185,11 +193,11 @@ export default function Checkout() {
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handlePurchase}
-          disabled={purchasing || wanilla.loading || !wanilla.ready}
+          disabled={purchasing || rc.loading}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
           style={{ backgroundColor: '#3e2a22', color: '#fff' }}
         >
-          {purchasing || wanilla.loading
+          {purchasing || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
             : <>Abonner — 59 kr./md. →</>}
         </motion.button>
