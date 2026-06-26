@@ -92,7 +92,7 @@ export default function Onboarding() {
 
     setSaving(true);
     try {
-      const isActive = hasPaid || plan === 'paid' || plan === 'appstore';
+      const isActive = hasPaid || plan === 'paid' || plan === 'appstore' || plan === 'googleplay';
       const { accept_terms, accept_privacy, ...profileData } = form;
       // Brugernavn bruges også som visningsnavn
       if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;

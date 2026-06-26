@@ -10,12 +10,14 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
-    "cap:sync": "vite build && npx cap sync ios",
-    "cap:open:ios": "npx cap open ios"
+    "cap:sync": "vite build && npx cap sync",
+    "cap:open:ios": "npx cap open ios",
+    "cap:open:android": "npx cap open android"
   },
   "dependencies": {
     "@base44/sdk": "^0.8.34",
     "@base44/vite-plugin": "^1.0.23",
+    "@capacitor/android": "^8.4.1",
     "@capacitor/app": "^8.1.0",
     "@capacitor/browser": "^8.0.3",
     "@capacitor/core": "^8.4.1",

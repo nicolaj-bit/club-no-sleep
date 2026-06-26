@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Club No Sleep</string>
+    <string name="title_activity_main">Club No Sleep</string>
+    <string name="package_name">com.base699f47a86e7e0a874d1159ed.app</string>
+    <string name="custom_url_scheme">com.base699f47a86e7e0a874d1159ed.app</string>
+</resources>
