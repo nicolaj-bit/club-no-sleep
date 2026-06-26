@@ -5,6 +5,7 @@ import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Capacitor } from '@capacitor/core';
 
 function AppleIcon({ className, style }) {
   return (
@@ -13,6 +14,19 @@ function AppleIcon({ className, style }) {
     </svg>
   );
 }
+
+function GooglePlayIcon({ className, style }) {
+  return (
+    <svg viewBox="0 0 512 512" className={className} style={style} fill="currentColor">
+      <path d="M99.6 8.1C91 14.5 86 24.9 86 37.6v436.8c0 12.7 5 23.1 13.6 29.5l229.6-251.9L99.6 8.1zm245.1 245.9l54.7-54.7-198-114.7L325.9 218 344.7 254zm0 4.1L325.9 294l-144.5 134.4 198-114.7-54.7-54.6zM426 219.4l-44.6-25.8-58.7 62.5 58.7 62.4 44.6-25.7c19.9-11.5 30-26.4 30-36.7s-10.1-25.2-30-36.7z"/>
+    </svg>
+  );
+}
+
+const STORE_LABELS = {
+  ios: { name: 'App Store', title: 'In-App Purchase (App Store)', sub: 'Betal via din Apple-konto · Sikker og nem', footer: 'Apple' },
+  android: { name: 'Google Play', title: 'In-App Purchase (Google Play)', sub: 'Betal via din Google-konto · Sikker og nem', footer: 'Google Play' },
+};
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -23,6 +37,8 @@ export default function Checkout() {
   const [userId, setUserId] = useState(null);
 
   const rc = useRevenueCat(userId || 'guest');
+  const platform = Capacitor.getPlatform();
+  const store = platform === 'android' ? STORE_LABELS.android : STORE_LABELS.ios;
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -31,7 +47,7 @@ export default function Checkout() {
         if (isAuth) {
           const user = await base44.auth.me();
           if (user?.email) {
-            setUserId(user.id || user.email);
+            setUserId(user.email);
             const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
             if (profiles.length) setProfile(profiles[0]);
           }
@@ -46,7 +62,7 @@ export default function Checkout() {
   const handlePurchase = async () => {
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      setError('Abonnementet kunne ikke indlæses fra App Store. Tjek din internetforbindelse og prøv igen.');
+      setError(`Abonnementet kunne ikke indlæses fra ${store.name}. Tjek din internetforbindelse og prøv igen.`);
       return;
     }
 
@@ -138,7 +154,7 @@ export default function Checkout() {
           ))}
         </div>
 
-        {/* Payment method card — Apple IAP via RevenueCat/StoreKit */}
+        {/* Payment method card — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
@@ -148,14 +164,16 @@ export default function Checkout() {
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
-              <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />
+              {platform === 'android'
+                ? <GooglePlayIcon className="w-5 h-5" style={{ color: '#fff' }} />
+                : <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-                In-App Purchase (App Store)
+                {store.title}
               </p>
               <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                Betal via din Apple-konto · Sikker og nem
+                {store.sub}
               </p>
             </div>
             <div
@@ -185,7 +203,7 @@ export default function Checkout() {
         {/* Loading state */}
         {rc.loading && (
           <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Forbereder App Store…
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Forbereder {store.name}…
           </div>
         )}
 
@@ -204,7 +222,7 @@ export default function Checkout() {
 
         {/* Footer */}
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
-          <Lock className="w-3 h-3" /> Sikker betaling via Apple · Ingen binding · Annuller når som helst
+          <Lock className="w-3 h-3" /> Sikker betaling via {store.footer} · Ingen binding · Annuller når som helst
         </p>
       </div>
     </div>

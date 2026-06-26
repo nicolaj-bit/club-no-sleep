@@ -43,7 +43,7 @@ export default function Subscription() {
         const user = await base44.auth.me();
         if (user) {
           if (user.role === 'admin') setIsAdmin(true);
-          setUserId(user.id || user.email);
+          setUserId(user.email);
           const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
           if (profiles.length) setProfile(profiles[0]);
         }

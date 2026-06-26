@@ -12,6 +12,11 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true });
     }
 
+    const targetEmail = data?.user_email || data?.created_by;
+    if (!targetEmail) {
+      return Response.json({ skipped: true, reason: 'Ingen bruger-email på event' });
+    }
+
     // Find active rules for calendar_event
     const rules = await base44.asServiceRole.entities.PushNotificationRule.filter({
       trigger_type: 'calendar_event',
@@ -31,14 +36,19 @@ Deno.serve(async (req) => {
       let title = rule.title || 'Ny kalenderaftale';
       let message = rule.message || 'Der er tilføjet en ny aftale';
 
+      const eventDate = data?.start_datetime
+        ? new Date(data.start_datetime).toLocaleDateString('da-DK')
+        : '';
+
       if (data) {
-        title = title.replace('{title}', data.title || '').replace('{date}', data.date || '');
-        message = message.replace('{title}', data.title || '').replace('{date}', data.date || '');
+        title = title.replace('{title}', data.title || '').replace('{date}', eventDate);
+        message = message.replace('{title}', data.title || '').replace('{date}', eventDate);
       }
 
       const body = {
         app_id: appId,
-        included_segments: ['All'],
+        include_aliases: { external_id: [targetEmail] },
+        target_channel: 'push',
         headings: { en: title, da: title },
         contents: { en: message, da: message },
       };
@@ -49,7 +59,7 @@ Deno.serve(async (req) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${apiKey}`,
+          'Authorization': `Key ${apiKey}`,
         },
         body: JSON.stringify(body),
       });

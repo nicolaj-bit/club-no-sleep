@@ -25,7 +25,9 @@ export async function requestPushPermission() {
     try {
       const user = await base44.auth.me();
       if (user?.email) {
-        OneSignal.login(user.id || user.email);
+        // Backend functions target pushes via external_id = email, so the
+        // client must log in with the same identifier for them to match.
+        OneSignal.login(user.email);
       }
     } catch (_) {
       // Ikke logget ind — fortsæt som anonym subscriber
