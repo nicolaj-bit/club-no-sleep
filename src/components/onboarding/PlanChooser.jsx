@@ -5,7 +5,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/openExternalUrl';
+import { openInSystemBrowser } from '@/lib/openExternalUrl';
 
 const STORE_LABELS = {
   ios: { name: 'App Store', planKey: 'appstore', sub: 'Betal via din App Store-konto · Bedst til iPhone' },
@@ -77,7 +77,7 @@ export default function PlanChooser({ onChoose, finishing }) {
     try {
       const response = await base44.functions.invoke('createCheckoutSession', {});
       if (response.data?.url) {
-        await openExternalUrl(response.data.url);
+        openInSystemBrowser(response.data.url);
       } else {
         console.error('[PlanChooser] createCheckoutSession returned no url:', response.data);
         toast.error('Kunne ikke starte betaling. Prøv igen.');

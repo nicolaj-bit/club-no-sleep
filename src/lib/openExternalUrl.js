@@ -81,6 +81,26 @@ export function openInNewTab(url) {
   nativeWindowOpen(safeUrl, '_blank');
 }
 
+/**
+ * Opens a URL in the device's actual system browser app (Safari / Chrome),
+ * not the in-app overlay used by openExternalUrl(). On native, Capacitor's
+ * WebView hands off any top-level navigation to a host outside the app's own
+ * domain to the OS (UIApplication.open on iOS, Intent.ACTION_VIEW on
+ * Android), which launches the real browser app. On web, opens a new tab.
+ */
+export function openInSystemBrowser(url) {
+  if (!url) return;
+  let safeUrl = url;
+  if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
+
+  if (isNativeApp()) {
+    window.location.href = safeUrl;
+    return;
+  }
+
+  openInNewTab(safeUrl);
+}
+
 /** Returns true if the given URL is an external http(s) link. */
 export function isExternalUrl(url) {
   if (!url) return false;
