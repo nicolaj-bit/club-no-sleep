@@ -6,7 +6,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { openExternalUrl } from '@/lib/openExternalUrl';
 
 function AppleIcon({ className, style }) {
   return (

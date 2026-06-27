@@ -1,12 +1,32 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const SHOPIFY_DOMAIN = Deno.env.get("SHOPIFY_STORE_DOMAIN");
-const SHOPIFY_TOKEN = Deno.env.get("SHOPIFY_ADMIN_API_TOKEN");
+const SHOPIFY_CLIENT_ID = Deno.env.get("SHOPIFY_CLIENT_ID");
+const SHOPIFY_CLIENT_SECRET = Deno.env.get("SHOPIFY_ADMIN_API_TOKEN");
+
+// CLI-built custom apps authenticate via OAuth client_credentials — there is
+// no static admin token to copy/paste, so we mint a short-lived access token
+// per invocation.
+async function getAccessToken() {
+  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/oauth/access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: SHOPIFY_CLIENT_ID,
+      client_secret: SHOPIFY_CLIENT_SECRET,
+      grant_type: "client_credentials",
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(`Shopify token exchange failed: ${data.error_description || data.error || res.status}`);
+  return data.access_token;
+}
 
 async function shopifyFetch(endpoint) {
-  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/${endpoint}`, {
+  const accessToken = await getAccessToken();
+  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/api/2024-10/${endpoint}`, {
     headers: {
-      "X-Shopify-Access-Token": SHOPIFY_TOKEN,
+      "X-Shopify-Access-Token": accessToken,
       "Content-Type": "application/json",
     },
   });

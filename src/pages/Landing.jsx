@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { openExternalUrl } from '@/lib/openExternalUrl';
 import LegalModal from '@/components/landing/LegalModal';
 import IPhoneMockup from '@/components/landing/IPhoneMockup';
 import FeaturesList from '@/components/landing/FeaturesList';

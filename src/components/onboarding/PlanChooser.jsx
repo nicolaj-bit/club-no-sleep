@@ -5,7 +5,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { openExternalUrl } from '@/lib/openExternalUrl';
 
 const STORE_LABELS = {
   ios: { name: 'App Store', planKey: 'appstore', sub: 'Betal via din App Store-konto · Bedst til iPhone' },
