@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
+import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 
 export default function NativeAuthScreen() {
-  const [mode, setMode] = useState('login'); // login | signup | verify
+  const [mode, setMode] = useState('login'); // login | signup | verify | forgot
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -104,6 +104,26 @@ export default function NativeAuthScreen() {
       setInfo('Vi har sendt en ny kode til din email.');
     } catch (e) {
       setError(e?.message || 'Kunne ikke sende koden igen. Prøv senere.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Indtast din email');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setInfo(null);
+    try {
+      await base44.auth.resetPasswordRequest(email);
+      setInfo(`Vi har sendt et link til at nulstille din adgangskode til ${email}.`);
+    } catch (e) {
+      console.error('[NativeAuthScreen] Reset password request error:', e);
+      setError(e?.message || 'Kunne ikke sende nulstillingslink. Prøv igen.');
     } finally {
       setLoading(false);
     }
@@ -297,6 +317,15 @@ export default function NativeAuthScreen() {
                 </button>
               </div>
 
+              {/* Forgot password */}
+              <button
+                onClick={() => { setError(null); setInfo(null); setMode('forgot'); }}
+                className="w-full text-right text-sm mb-3"
+                style={{ color: 'var(--color-accent)', fontWeight: 600 }}
+              >
+                Glemt adgangskode?
+              </button>
+
               {/* Error */}
               {error && (
                 <motion.div
@@ -471,6 +500,78 @@ export default function NativeAuthScreen() {
               >
                 Har du allerede en konto?{' '}
                 <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+              </button>
+            </motion.div>
+          ) : mode === 'forgot' ? (
+            <motion.div
+              key="forgot"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center text-center"
+            >
+              <KeyRound className="w-10 h-10 mb-4" style={{ color: 'var(--color-accent)' }} />
+              <h2
+                className="text-xl font-semibold mb-2"
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
+              >
+                Glemt adgangskode
+              </h2>
+              <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                {info || 'Indtast din email, og vi sender dig et link til at nulstille din adgangskode.'}
+              </p>
+
+              <div className="w-full mb-2">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleForgotPassword()}
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  inputMode="email"
+                  className="w-full px-4 py-3.5 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex items-center gap-2 mb-3 px-1"
+                >
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#dc2626' }} />
+                  <p className="text-sm" style={{ color: '#dc2626' }}>{error}</p>
+                </motion.div>
+              )}
+
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleForgotPassword}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl text-base font-semibold mt-2 flex items-center justify-center gap-2 transition-opacity"
+                style={{
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'var(--color-bg)',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send nulstillingslink'}
+              </motion.button>
+
+              <button
+                onClick={() => { setError(null); setInfo(null); setMode('login'); }}
+                className="w-full text-center text-sm pt-4"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Tilbage til login
               </button>
             </motion.div>
           ) : (
