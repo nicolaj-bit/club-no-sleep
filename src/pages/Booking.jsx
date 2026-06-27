@@ -310,34 +310,34 @@ export default function Booking() {
 
           <div>
             <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-              Noter til eksperten (valgfrit)
+              {t.bookingNotesLabel}
             </label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Beskriv hvad du gerne vil tale om..."
+              placeholder={t.bookingNotesPlaceholder}
               className="mt-2"
               rows={3}
             />
           </div>
 
           <div className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-primary)' }}>
-            <span style={{ color: 'var(--color-bg)', opacity: 0.7 }}>Total</span>
+            <span style={{ color: 'var(--color-bg)', opacity: 0.7 }}>{t.bookingTotal}</span>
             <span className="text-xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert?.hourly_rate} kr</span>
           </div>
 
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setStep(2)}>
-              Tilbage
+              {t.back}
             </Button>
-            <Button 
+            <Button
               className="flex-1 gap-2"
               style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               onClick={() => createBookingMutation.mutate()}
               disabled={createBookingMutation.isPending}
             >
               <Check className="w-5 h-5" />
-              Bekræft booking
+              {t.bookingConfirmBtn}
             </Button>
           </div>
         </div>

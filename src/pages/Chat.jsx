@@ -12,8 +12,10 @@ import ReportSheet from '@/components/community/ReportSheet';
 import { format, isToday, isYesterday } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Chat() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const conversationId = urlParams.get('id');
   const queryClient = useQueryClient();
@@ -109,7 +111,7 @@ export default function Chat() {
   const formatMessageDate = (dateStr) => {
     const date = new Date(dateStr);
     if (isToday(date)) return format(date, 'HH:mm');
-    if (isYesterday(date)) return `I går ${format(date, 'HH:mm')}`;
+    if (isYesterday(date)) return `${t.chatYesterday} ${format(date, 'HH:mm')}`;
     return format(date, 'd. MMM HH:mm', { locale: da });
   };
 
@@ -125,9 +127,9 @@ export default function Chat() {
   if (!loadingConv && conversation === null) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Ingen adgang til denne samtale.</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{t.chatNoAccess}</p>
         <Link to={createPageUrl('Community')}>
-          <Button variant="outline">Tilbage</Button>
+          <Button variant="outline">{t.chatBack}</Button>
         </Link>
       </div>
     );
@@ -159,7 +161,7 @@ export default function Chat() {
                 onClick={() => setReportTarget({ email: conversation?.participants?.find(p => p !== user?.email) })}
               >
                 <Flag className="w-4 h-4" />
-                Indberetning
+                {t.chatReport}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -178,8 +180,8 @@ export default function Chat() {
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{ color: 'var(--color-text-muted)' }}>Ingen beskeder endnu</p>
-            <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Sig hej!</p>
+            <p style={{ color: 'var(--color-text-muted)' }}>{t.chatNoMessages}</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{t.chatSayHi}</p>
           </div>
         ) : (
           messages.map((msg, i) => {
@@ -231,7 +233,7 @@ export default function Chat() {
       <div className="sticky bottom-0 border-t p-4 safe-area-bottom" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex items-center gap-2">
           <Input
-            placeholder="Skriv en besked..."
+            placeholder={t.chatInputPlaceholder}
             value={message}
             onChange={(e) => setMessage(e.target.value.slice(0, 1000))}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
