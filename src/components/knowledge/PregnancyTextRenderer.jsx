@@ -38,7 +38,7 @@ export function renderPregnancyText(text, motherName) {
         className="font-medium underline"
         style={{ color: 'var(--color-accent)' }}
       >
-        Her
+        her
       </a>
     );
     lastIndex = match.index + match[0].length;
