@@ -3,15 +3,17 @@ import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle } from 'lucide
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { redirectToWebSubscription, openExternalUrl, redirectToLogin } from '@/lib/nativeAuth';
 
 export default function NativeAuthScreen() {
-  const [mode, setMode] = useState('login'); // login | signup
+  const [mode, setMode] = useState('login'); // login | signup | verify
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -42,8 +44,69 @@ export default function NativeAuthScreen() {
     }
   };
 
-  const handleSignup = async () => {
-    await redirectToLogin('/app');
+  const handleRegister = async () => {
+    if (!email || !password) {
+      setError('Udfyld email og adgangskode');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Adgangskoden skal være mindst 8 tegn');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Adgangskoderne er ikke ens');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await base44.auth.register({ email, password });
+      setInfo('Vi har sendt en kode til din email. Indtast den herunder for at bekræfte din konto.');
+      setMode('verify');
+    } catch (e) {
+      console.error('[NativeAuthScreen] Register error:', e);
+      setError(e?.message || 'Oprettelse mislykkedes. Prøv igen.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otpCode) {
+      setError('Indtast koden fra din email');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await base44.auth.verifyOtp({ email, otpCode });
+      const { access_token } = await base44.auth.loginViaEmailPassword(email, password);
+      if (!access_token) {
+        throw new Error('Login mislykkedes efter bekræftelse');
+      }
+      localStorage.setItem('base44_access_token', access_token);
+      window.location.reload();
+    } catch (e) {
+      console.error('[NativeAuthScreen] Verify OTP error:', e);
+      setError(e?.message || 'Koden er forkert eller udløbet. Prøv igen.');
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setLoading(true);
+    setError(null);
+    setInfo(null);
+    try {
+      await base44.auth.resendOtp(email);
+      setInfo('Vi har sendt en ny kode til din email.');
+    } catch (e) {
+      setError(e?.message || 'Kunne ikke sende koden igen. Prøv senere.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDemo = () => {
@@ -182,7 +245,7 @@ export default function NativeAuthScreen() {
                   onChange={(e) => setEmail(e.target.value)}
                   autoCapitalize="none"
                   autoCorrect="off"
-                  keyboardType="email-address"
+                  inputMode="email"
                   className="w-full px-4 py-3.5 rounded-xl text-base outline-none"
                   style={{
                     backgroundColor: 'var(--color-bg-card)',
@@ -199,7 +262,7 @@ export default function NativeAuthScreen() {
                   placeholder="Adgangskode"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onSubmitEditing={handleLogin}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   className="w-full px-4 py-3.5 pr-12 rounded-xl text-base outline-none"
                   style={{
                     backgroundColor: 'var(--color-bg-card)',
@@ -252,7 +315,7 @@ export default function NativeAuthScreen() {
 
               {/* Switch to signup */}
               <button
-                onClick={handleSignup}
+                onClick={() => { setError(null); setInfo(null); setMode('signup'); }}
                 className="w-full text-center text-sm pt-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
@@ -273,9 +336,129 @@ export default function NativeAuthScreen() {
                 Jeg vil kigge
               </button>
             </motion.div>
-          ) : (
+          ) : mode === 'signup' ? (
             <motion.div
               key="signup"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h2
+                className="text-xl font-semibold mb-1 text-center"
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
+              >
+                Opret bruger
+              </h2>
+              <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                Indtast email og adgangskode for at oprette din konto
+              </p>
+
+              {/* Email */}
+              <div className="mb-3">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  inputMode="email"
+                  className="w-full px-4 py-3.5 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+              </div>
+
+              {/* Password */}
+              <div className="mb-3 relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Adgangskode (mindst 8 tegn)"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3.5 pr-12 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+
+              {/* Confirm password */}
+              <div className="mb-2">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Bekræft adgangskode"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
+                  className="w-full px-4 py-3.5 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+              </div>
+
+              {/* Error */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex items-center gap-2 mb-3 px-1"
+                >
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#dc2626' }} />
+                  <p className="text-sm" style={{ color: '#dc2626' }}>{error}</p>
+                </motion.div>
+              )}
+
+              {/* Register button */}
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleRegister}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl text-base font-semibold mb-3 flex items-center justify-center gap-2 transition-opacity"
+                style={{
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'var(--color-bg)',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <UserPlus className="w-5 h-5" /> Opret bruger
+                  </>
+                )}
+              </motion.button>
+
+              <button
+                onClick={() => { setError(null); setInfo(null); setMode('login'); }}
+                className="w-full text-center text-sm pt-2"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Har du allerede en konto?{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="verify"
               initial={{ y: 16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -16, opacity: 0 }}
@@ -287,29 +470,70 @@ export default function NativeAuthScreen() {
                 className="text-xl font-semibold mb-2"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Opret bruger
+                Bekræft din email
               </h2>
-              <p className="text-sm mb-8 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                Oprettelse og betaling sker på vores hjemmeside. Du vil blive omdirigeret nu.
+              <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                {info || `Vi har sendt en kode til ${email}. Indtast den herunder.`}
               </p>
+
+              <div className="w-full mb-2">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Kode fra email"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
+                  className="w-full px-4 py-3.5 rounded-xl text-base text-center outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex items-center gap-2 mb-3 px-1"
+                >
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#dc2626' }} />
+                  <p className="text-sm" style={{ color: '#dc2626' }}>{error}</p>
+                </motion.div>
+              )}
+
               <motion.button
                 whileTap={{ scale: 0.98 }}
-                onClick={handleSignup}
-                className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2"
+                onClick={handleVerifyOtp}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl text-base font-semibold mt-2 flex items-center justify-center gap-2 transition-opacity"
                 style={{
                   backgroundColor: 'var(--color-primary)',
                   color: 'var(--color-bg)',
+                  opacity: loading ? 0.6 : 1,
                 }}
               >
-                <UserPlus className="w-5 h-5" /> Gå til oprettelse
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Bekræft'}
               </motion.button>
+
               <button
-                onClick={() => setMode('login')}
+                onClick={handleResendOtp}
+                disabled={loading}
                 className="w-full text-center text-sm pt-4"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Har du allerede en konto?{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+                Fik du ingen kode?{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Send igen</span>
+              </button>
+
+              <button
+                onClick={() => { setError(null); setInfo(null); setMode('login'); }}
+                className="w-full text-center text-sm pt-2"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Tilbage til login
               </button>
             </motion.div>
           )}
