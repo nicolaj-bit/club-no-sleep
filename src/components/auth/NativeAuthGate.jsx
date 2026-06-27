@@ -47,13 +47,9 @@ export default function NativeAuthGate({ children }) {
         return true;
       }
 
-      // Midlertidig diagnostik: ingen af de kendte parametre blev fundet —
-      // vis den rå URL så vi kan se det faktiske format fra reset-mailen.
       console.warn('[NativeAuthGate] Ukendt deep link, ingen access_token/reset_token:', url);
-      window.alert(`Deep link uden kendt token:\n\n${url}`);
     } catch (e) {
       console.error('[NativeAuthGate] Deep link parse error:', e);
-      window.alert(`Deep link parse error:\n\n${url}\n\n${e.message}`);
     }
     return false;
   };
@@ -86,12 +82,9 @@ export default function NativeAuthGate({ children }) {
 
     // På native: tjek deep links og app-tilstand
     if (isNative) {
-      App.getLaunchUrl().then(({ url }) => {
-        if (url && url.includes('?')) {
-          processDeepLink(url);
-        } else {
-          checkAuth();
-        }
+      App.getLaunchUrl().then(async ({ url }) => {
+        const handled = url && url.includes('?') ? await processDeepLink(url) : false;
+        if (!handled) checkAuth();
       }).catch(() => {
         checkAuth();
       });
