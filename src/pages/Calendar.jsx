@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 // Native calendar helper — kun aktiv i Capacitor (iOS/Android)
 const isCapacitor = typeof window !== 'undefined' && !!window.Capacitor;
@@ -38,6 +40,7 @@ async function addToNativeCalendar(event) {
 
 export default function Calendar() {
   const { t, lang } = useLanguage();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const navigate = useNavigate();
   const dateLocale = lang === 'en' ? enUS : da;
   const [user, setUser] = useState(null);
@@ -125,6 +128,7 @@ export default function Calendar() {
         }
       />
 
+      <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="500px">
       {/* Month navigation */}
       <div className="px-5 mb-4 flex items-center justify-between">
         <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}>
@@ -229,6 +233,7 @@ export default function Calendar() {
           </div>
         }
       </div>
+      </ContentLock>
 
       {/* Add event bottom sheet */}
       <AnimatePresence>

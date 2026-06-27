@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 
-export default function NativeAuthScreen() {
-  const [mode, setMode] = useState('login'); // login | signup | verify | forgot
+export default function NativeAuthScreen({ resetToken } = {}) {
+  const [mode, setMode] = useState(resetToken ? 'reset' : 'login'); // login | signup | verify | forgot | reset
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -124,6 +126,36 @@ export default function NativeAuthScreen() {
     } catch (e) {
       console.error('[NativeAuthScreen] Reset password request error:', e);
       setError(e?.message || 'Kunne ikke sende nulstillingslink. Prøv igen.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!newPassword || !confirmNewPassword) {
+      setError('Udfyld begge adgangskodefelter');
+      return;
+    }
+    if (newPassword.length < 8) {
+      setError('Adgangskoden skal være mindst 8 tegn');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setError('Adgangskoderne er ikke ens');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await base44.auth.resetPassword({ resetToken, newPassword });
+      setInfo('Din adgangskode er nulstillet. Log ind med den nye adgangskode.');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setMode('login');
+    } catch (e) {
+      console.error('[NativeAuthScreen] Reset password error:', e);
+      setError(e?.message || 'Linket er udløbet eller ugyldigt. Anmod om et nyt.');
     } finally {
       setLoading(false);
     }
@@ -247,6 +279,17 @@ export default function NativeAuthScreen() {
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
                 Indtast dine oplysninger for at fortsætte
               </p>
+
+              {info && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mb-4 px-3 py-2 rounded-xl text-sm text-center"
+                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-accent)' }}
+                >
+                  {info}
+                </motion.div>
+              )}
 
               {/* Continue with Apple */}
               <motion.button
@@ -500,6 +543,98 @@ export default function NativeAuthScreen() {
               >
                 Har du allerede en konto?{' '}
                 <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+              </button>
+            </motion.div>
+          ) : mode === 'reset' ? (
+            <motion.div
+              key="reset"
+              initial={{ y: 16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center text-center"
+            >
+              <KeyRound className="w-10 h-10 mb-4" style={{ color: 'var(--color-accent)' }} />
+              <h2
+                className="text-xl font-semibold mb-2"
+                style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
+              >
+                Vælg ny adgangskode
+              </h2>
+              <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                Indtast en ny adgangskode for din konto.
+              </p>
+
+              <div className="w-full mb-3 relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Ny adgangskode (mindst 8 tegn)"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-3.5 pr-12 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+
+              <div className="w-full mb-2">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Bekræft ny adgangskode"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleResetPassword()}
+                  className="w-full px-4 py-3.5 rounded-xl text-base outline-none"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                />
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="flex items-center gap-2 mb-3 px-1"
+                >
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#dc2626' }} />
+                  <p className="text-sm" style={{ color: '#dc2626' }}>{error}</p>
+                </motion.div>
+              )}
+
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleResetPassword}
+                disabled={loading}
+                className="w-full py-4 rounded-2xl text-base font-semibold mt-2 flex items-center justify-center gap-2 transition-opacity"
+                style={{
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'var(--color-bg)',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Gem ny adgangskode'}
+              </motion.button>
+
+              <button
+                onClick={() => { setError(null); setInfo(null); setMode('login'); }}
+                className="w-full text-center text-sm pt-4"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Tilbage til login
               </button>
             </motion.div>
           ) : mode === 'forgot' ? (

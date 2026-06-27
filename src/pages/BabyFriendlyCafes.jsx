@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 function getMapsUrl(address) {
   const query = encodeURIComponent(address);
@@ -28,6 +30,7 @@ function getMapsUrl(address) {
 
 export default function BabyFriendlyCafes() {
   const { t } = useLanguage();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const [cafeSearchMode, setCafeSearchMode] = useState('all');
   const [userLocation, setUserLocation] = useState(null);
   const [showLocationConsent, setShowLocationConsent] = useState(false);
@@ -297,6 +300,7 @@ export default function BabyFriendlyCafes() {
             </div>
           )}
 
+          <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="400px">
           {/* Search area button */}
           <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
             <div>
@@ -461,6 +465,7 @@ export default function BabyFriendlyCafes() {
               })()}
             </>
           )}
+          </ContentLock>
         </div>
       </div>
     </PullToRefresh>

@@ -14,6 +14,7 @@ import NativeAuthScreen from './NativeAuthScreen';
  */
 export default function NativeAuthGate({ children }) {
   const [status, setStatus] = useState('loading'); // loading | authed | unauthed
+  const [resetToken, setResetToken] = useState(null);
   const isNative = Capacitor.isNativePlatform();
   const location = useLocation();
 
@@ -23,6 +24,16 @@ export default function NativeAuthGate({ children }) {
   const processDeepLink = async (url) => {
     try {
       const urlObj = new URL(url);
+
+      // Link fra "glemt adgangskode"-email: Base44s hostede side sender den
+      // videre til appen med reset_token i stedet for at vise sin egen formular.
+      const resetTokenParam = urlObj.searchParams.get('reset_token');
+      if (resetTokenParam) {
+        setResetToken(resetTokenParam);
+        setStatus('unauthed');
+        return true;
+      }
+
       const token = urlObj.searchParams.get('access_token');
       if (token) {
         // Undgå uendelig loop: hvis token allerede er gemt, tjek auth direkte
@@ -35,6 +46,8 @@ export default function NativeAuthGate({ children }) {
         window.location.reload();
         return true;
       }
+
+      console.warn('[NativeAuthGate] Ukendt deep link, ingen access_token/reset_token:', url);
     } catch (e) {
       console.error('[NativeAuthGate] Deep link parse error:', e);
     }
@@ -69,12 +82,9 @@ export default function NativeAuthGate({ children }) {
 
     // På native: tjek deep links og app-tilstand
     if (isNative) {
-      App.getLaunchUrl().then(({ url }) => {
-        if (url && url.includes('access_token')) {
-          processDeepLink(url);
-        } else {
-          checkAuth();
-        }
+      App.getLaunchUrl().then(async ({ url }) => {
+        const handled = url && url.includes('?') ? await processDeepLink(url) : false;
+        if (!handled) checkAuth();
       }).catch(() => {
         checkAuth();
       });
@@ -92,7 +102,13 @@ export default function NativeAuthGate({ children }) {
       };
     }
 
-    // På web: tjek auth direkte
+    // På web: tjek for reset_token i URL'en, ellers tjek auth direkte
+    const webResetToken = new URLSearchParams(window.location.search).get('reset_token');
+    if (webResetToken) {
+      setResetToken(webResetToken);
+      setStatus('unauthed');
+      return;
+    }
     checkAuth();
   }, [isNative, isPublicRoute]);
 
@@ -116,5 +132,5 @@ export default function NativeAuthGate({ children }) {
     return children;
   }
 
-  return <NativeAuthScreen />;
+  return <NativeAuthScreen resetToken={resetToken} />;
 }

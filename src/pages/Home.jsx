@@ -23,6 +23,7 @@ import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useAuth } from '@/lib/AuthContext';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
+import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 
 function getDailyAffirmationIndex() {
   const today = new Date();
@@ -138,6 +139,9 @@ export default function Home() {
 
       {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
       {user && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
+
+      {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over */}
+      {user && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
 
       {/* Færdiggør profil banner — kun hvis ingen profil */}
       {!profile && (

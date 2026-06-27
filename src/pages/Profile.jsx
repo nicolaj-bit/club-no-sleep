@@ -25,6 +25,7 @@ import ChildSwitcher from '@/components/children/ChildSwitcher';
 import AddChildSheet from '@/components/children/AddChildSheet';
 import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
+import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
 
 export default function Profile() {
@@ -174,6 +175,9 @@ export default function Profile() {
 
         {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
         <ReactivateSubscriptionBanner />
+
+        {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over */}
+        <CompleteMembershipBanner />
 
         {/* Færdiggør profil — vis kun hvis ingen profil */}
         {!profile && (
