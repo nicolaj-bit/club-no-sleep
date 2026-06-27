@@ -1,14 +1,31 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const SHOPIFY_DOMAIN = Deno.env.get("SHOPIFY_STORE_DOMAIN");
-const SHOPIFY_TOKEN = Deno.env.get("SHOPIFY_ADMIN_API_TOKEN");
+const SHOPIFY_CLIENT_ID = Deno.env.get("SHOPIFY_CLIENT_ID");
+const SHOPIFY_CLIENT_SECRET = Deno.env.get("SHOPIFY_ADMIN_API_TOKEN");
 
-async function shopifyFetch(endpoint) {
-  const CLIENT_ID = Deno.env.get("SHOPIFY_CLIENT_ID");
-  const credentials = btoa(`${CLIENT_ID}:${SHOPIFY_TOKEN}`);
+// CLI-built custom apps authenticate via OAuth client_credentials — there is
+// no static admin token to copy/paste, so we mint a short-lived access token
+// per invocation and reuse it across all calls within this run.
+async function getAccessToken() {
+  const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/oauth/access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: SHOPIFY_CLIENT_ID,
+      client_secret: SHOPIFY_CLIENT_SECRET,
+      grant_type: "client_credentials",
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(`Shopify token exchange failed: ${data.error_description || data.error || res.status}`);
+  return data.access_token;
+}
+
+async function shopifyFetch(endpoint, accessToken) {
   const res = await fetch(`https://${SHOPIFY_DOMAIN}/admin/api/2024-10/${endpoint}`, {
     headers: {
-      "Authorization": `Basic ${credentials}`,
+      "X-Shopify-Access-Token": accessToken,
       "Content-Type": "application/json",
     },
   });
@@ -16,8 +33,8 @@ async function shopifyFetch(endpoint) {
   return res.json();
 }
 
-async function syncProducts(base44) {
-  const { products } = await shopifyFetch("products.json?limit=250&status=active");
+async function syncProducts(base44, accessToken) {
+  const { products } = await shopifyFetch("products.json?limit=250&status=active", accessToken);
   
   // Clear existing products
   const existing = await base44.asServiceRole.entities.Product.list();
@@ -58,9 +75,9 @@ async function syncProducts(base44) {
   return products.length;
 }
 
-async function syncBlogs(base44) {
+async function syncBlogs(base44, accessToken) {
   // Get all blogs first
-  const { blogs } = await shopifyFetch("blogs.json");
+  const { blogs } = await shopifyFetch("blogs.json", accessToken);
   
   // Clear existing blog posts
   const existing = await base44.asServiceRole.entities.BlogPost.list();
@@ -71,7 +88,7 @@ async function syncBlogs(base44) {
   let totalArticles = 0;
   
   for (const blog of blogs) {
-    const { articles } = await shopifyFetch(`blogs/${blog.id}/articles.json?limit=250`);
+    const { articles } = await shopifyFetch(`blogs/${blog.id}/articles.json?limit=250`, accessToken);
     
     for (const article of articles) {
       if (!article.published_at) continue;
@@ -110,15 +127,16 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const type = body.type || "all";
 
+    const accessToken = await getAccessToken();
     let result = {};
 
     if (type === "products" || type === "all") {
-      const count = await syncProducts(base44);
+      const count = await syncProducts(base44, accessToken);
       result.products = count;
     }
 
     if (type === "blogs" || type === "all") {
-      const count = await syncBlogs(base44);
+      const count = await syncBlogs(base44, accessToken);
       result.blogs = count;
     }
 
