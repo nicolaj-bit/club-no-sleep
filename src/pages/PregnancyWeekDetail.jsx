@@ -63,7 +63,7 @@ export default function PregnancyWeekDetail() {
 
       <div className="px-4 pt-5 space-y-5">
         <div>
-          <h1 className="text-3xl font-light mb-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)', letterSpacing: '0.04em' }}>
+          <h1 className="text-3xl font-display font-medium mb-2" style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
             {data.label}
           </h1>
         </div>

@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
     <TabStateProvider>
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }
           .safe-area-bottom {
             padding-bottom: max(var(--safe-area-inset-bottom, 0px), 8px);
@@ -59,7 +59,7 @@ export default function Layout({ children, currentPageName }) {
             -moz-osx-font-smoothing: grayscale;
           }
           h1, h2, h3, .font-display {
-            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-family: 'Playfair Display', Georgia, serif;
           }
           ::-webkit-scrollbar { width: 3px; height: 3px; }
           ::-webkit-scrollbar-track { background: transparent; }
