@@ -120,19 +120,36 @@ export default function NativeAuthScreen() {
     try {
       const isNative = Capacitor.isNativePlatform();
       if (isNative) {
-        // På native: åbn Apple OAuth i systembrowser (SFSafariViewController)
-        // og returner token via deep link, så appen modtager det korrekt.
-        const { appParams } = await import('@/lib/app-params');
-        const { APP_DEEP_LINK_SCHEME } = await import('@/lib/nativeAuth');
-        const { Browser } = await import('@capacitor/browser');
+        // På native: brug Apples eget native Sign in with Apple-UI (ingen browser,
+        // ingen "vil bruge app.base44.com"-dialog). Identity-token verificeres
+        // server-side i Base44-funktionen appleNativeLogin.
+        const { SignInWithApple } = await import('@capacitor-community/apple-sign-in');
 
-        const appId = appParams.appId;
-        const appBaseUrl = appParams.appBaseUrl || 'https://app.base44.com';
-        const deepLink = `${APP_DEEP_LINK_SCHEME}://auth`;
-        const loginUrl = `${appBaseUrl}/api/apps/auth/apple/login?app_id=${appId}&from_url=${encodeURIComponent(deepLink)}`;
+        const result = await SignInWithApple.authorize({
+          clientId: 'com.base699f47a86e7e0a874d1159ed.app',
+          scopes: 'email name',
+        });
 
-        await Browser.open({ url: loginUrl, presentationStyle: 'popover' });
-        // Appen genindlæses når deep link returnerer med token — lad loading stå aktiv
+        const identityToken = result?.response?.identityToken;
+        if (!identityToken) {
+          throw new Error('Intet identity token modtaget fra Apple');
+        }
+
+        const fullName = result?.response?.givenName
+          ? `${result.response.givenName} ${result.response.familyName || ''}`.trim()
+          : undefined;
+
+        const { access_token } = await base44.functions.invoke('appleNativeLogin', {
+          identityToken,
+          fullName,
+        });
+
+        if (!access_token) {
+          throw new Error('Apple login mislykkedes — intet token modtaget');
+        }
+
+        localStorage.setItem('base44_access_token', access_token);
+        window.location.reload();
       } else {
         // På web: brug SDK's loginWithProvider
         await base44.auth.loginWithProvider('apple', '/app');
