@@ -134,7 +134,7 @@ const translations = {
 
     // Blog
     blogTitle: 'Søg og find svar',
-    searchBlog: 'Søg indlæg...',
+    searchBlog: 'Hvad vil du vide mere om?',
     noPosts: 'Ingen indlæg fundet',
     allCategories: 'Alle',
 
@@ -525,7 +525,7 @@ const translations = {
 
     // Blog
     blogTitle: 'Search and find answers',
-    searchBlog: 'Search posts...',
+    searchBlog: 'What would you like to know more about?',
     noPosts: 'No posts found',
     allCategories: 'All',
 
