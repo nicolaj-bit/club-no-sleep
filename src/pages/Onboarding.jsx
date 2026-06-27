@@ -231,6 +231,14 @@ export default function Onboarding() {
               >
                 <span className="flex items-center gap-2">Kom i gang <ArrowRight className="w-5 h-5" /></span>
               </Button>
+              <button
+                className="w-full text-center text-sm py-2"
+                style={{ color: 'var(--color-text-secondary)' }}
+                onClick={() => base44.auth.logout('/')}
+              >
+                Har du allerede en konto?{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+              </button>
             </div>
           </div>
         )}

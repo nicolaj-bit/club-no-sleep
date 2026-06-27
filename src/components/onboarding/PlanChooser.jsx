@@ -4,6 +4,8 @@ import { Check, Loader2 } from 'lucide-react';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
+import { base44 } from '@/api/base44Client';
+import { openExternalUrl } from '@/lib/nativeAuth';
 
 const STORE_LABELS = {
   ios: { name: 'App Store', planKey: 'appstore', sub: 'Betal via din App Store-konto · Bedst til iPhone' },
@@ -29,6 +31,7 @@ function GooglePlayGlyph({ color }) {
 export default function PlanChooser({ onChoose, finishing }) {
   const [selected, setSelected] = useState(null);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
+  const [testerCheckoutLoading, setTesterCheckoutLoading] = useState(false);
   const { offerings, purchase } = useRevenueCat();
 
   const platform = Capacitor.getPlatform();
@@ -63,6 +66,25 @@ export default function PlanChooser({ onChoose, finishing }) {
       }
     } finally {
       setLoadingPurchase(false);
+    }
+  };
+
+  // TEMPORÆR workaround mens IAP afventer App Store/Play Console-opsætning:
+  // sender beta-testere til Stripe checkout i systembrowseren, hvor de kan
+  // indtaste en rabatkode (fx 6 måneders gratis abonnement). Fjern når IAP virker.
+  const handleTesterCheckout = async () => {
+    setTesterCheckoutLoading(true);
+    try {
+      const response = await base44.functions.invoke('createCheckoutSession', {});
+      if (response.data?.url) {
+        await openExternalUrl(response.data.url);
+      } else {
+        toast.error('Kunne ikke starte betaling. Prøv igen.');
+      }
+    } catch (e) {
+      toast.error(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
+    } finally {
+      setTesterCheckoutLoading(false);
     }
   };
 
@@ -193,6 +215,32 @@ export default function PlanChooser({ onChoose, finishing }) {
         {finishing
           ? <><Loader2 size={14} className="animate-spin" /> Et øjeblik…</>
           : 'Spring over — fortsæt med begrænset adgang'}
+      </button>
+
+      {/* TEMPORÆR: beta-tester / rabatkode-vej via Stripe, mens IAP afventer App Store/Play Console-opsætning */}
+      <button
+        onClick={handleTesterCheckout}
+        disabled={testerCheckoutLoading || finishing}
+        style={{
+          width: '100%',
+          background: 'none',
+          border: '1px solid var(--color-border)',
+          borderRadius: 14,
+          color: 'var(--color-text-secondary)',
+          fontSize: '0.82rem',
+          marginTop: '0.75rem',
+          padding: '10px',
+          cursor: testerCheckoutLoading || finishing ? 'default' : 'pointer',
+          opacity: testerCheckoutLoading ? 0.6 : 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
+        }}
+      >
+        {testerCheckoutLoading
+          ? <><Loader2 size={14} className="animate-spin" /> Åbner betaling…</>
+          : 'Har du en rabatkode? (beta-test)'}
       </button>
     </motion.div>
   );
