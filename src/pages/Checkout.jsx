@@ -6,7 +6,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
-import { openExternalUrl } from '@/lib/openExternalUrl';
+import { openInSystemBrowser } from '@/lib/openExternalUrl';
 
 function AppleIcon({ className, style }) {
   return (
@@ -95,11 +95,13 @@ export default function Checkout() {
     try {
       const response = await base44.functions.invoke('createCheckoutSession', {});
       if (response.data?.url) {
-        await openExternalUrl(response.data.url);
+        openInSystemBrowser(response.data.url);
       } else {
+        console.error('[Checkout] createCheckoutSession returned no url:', response.data);
         setError('Kunne ikke starte betaling. Prøv igen.');
       }
     } catch (e) {
+      console.error('[Checkout] Tester checkout error:', e);
       setError(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
     } finally {
       setTesterCheckoutLoading(false);

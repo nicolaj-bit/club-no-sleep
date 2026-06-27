@@ -56,7 +56,12 @@ export async function openExternalUrl(url) {
       });
       return;
     } catch (err) {
-      console.warn('Capacitor Browser plugin unavailable, opening in new tab:', err);
+      // window.open('_blank') is a no-op inside the native WKWebView/WebView
+      // shell — there's no tab to open it in. Navigate the webview directly
+      // as the only fallback that's guaranteed to actually show something.
+      console.warn('Capacitor Browser plugin failed, falling back to direct navigation:', err);
+      window.location.href = safeUrl;
+      return;
     } finally {
       _opening = false;
     }
@@ -74,6 +79,26 @@ export function openInNewTab(url) {
   let safeUrl = url;
   if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
   nativeWindowOpen(safeUrl, '_blank');
+}
+
+/**
+ * Opens a URL in the device's actual system browser app (Safari / Chrome),
+ * not the in-app overlay used by openExternalUrl(). On native, Capacitor's
+ * WebView hands off any top-level navigation to a host outside the app's own
+ * domain to the OS (UIApplication.open on iOS, Intent.ACTION_VIEW on
+ * Android), which launches the real browser app. On web, opens a new tab.
+ */
+export function openInSystemBrowser(url) {
+  if (!url) return;
+  let safeUrl = url;
+  if (/^http:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl.slice(7);
+
+  if (isNativeApp()) {
+    window.location.href = safeUrl;
+    return;
+  }
+
+  openInNewTab(safeUrl);
 }
 
 /** Returns true if the given URL is an external http(s) link. */
