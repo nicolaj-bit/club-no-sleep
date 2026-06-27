@@ -368,7 +368,7 @@ export default function BabyFriendlyCafes() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-1.5 text-xs font-medium"
-                                  style={{ color: '#E1306C' }}
+                                  style={{ color: 'var(--color-accent)' }}
                                 >
                                   <Instagram className="w-4 h-4" />
                                   Instagram
@@ -437,7 +437,7 @@ export default function BabyFriendlyCafes() {
                           {(cafe.instagram || cafe.facebook || cafe.website) && (
                             <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                               {cafe.instagram && (
-                                <a href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#E1306C' }}>
+                                <a href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--color-accent)' }}>
                                   <Instagram className="w-4 h-4" /> Instagram
                                 </a>
                               )}
