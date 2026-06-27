@@ -11,6 +11,7 @@ import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import RichTextEditor from '@/components/about/RichTextEditor';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const DEFAULTS = {
   story_title: 'Vores rejse begyndte i 2018',
@@ -56,6 +57,7 @@ function getEntryId(content, section) {
 
 // Inline edit wrapper — shows pencil on hover, saves on check
 function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, richText = false, initialValue = '' }) {
+  const { t } = useLanguage();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
   const [saving, setSaving] = useState(false);
@@ -72,7 +74,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
     setSaving(false);
     setEditing(false);
     onSaved();
-    toast.success('Gemt');
+    toast.success(t.aboutUsSaved);
   };
 
   if (!isAdmin) return <>{children}</>;
@@ -84,7 +86,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
           onClick={() => setEditing(true)}
           className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover/edit:opacity-100 transition-opacity shadow"
           style={{ backgroundColor: 'var(--color-accent)', color: '#fff' }}
-          title={`Rediger ${label}`}
+          title={`${t.aboutUsEditLabel} ${label}`}
         >
           <Pencil className="w-3.5 h-3.5" />
         </button>
@@ -98,10 +100,10 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
           }
           <div className="flex gap-2">
             <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white" style={{ backgroundColor: 'var(--color-accent)' }}>
-              <Check className="w-3.5 h-3.5" /> {saving ? 'Gemmer…' : 'Gem'}
+              <Check className="w-3.5 h-3.5" /> {saving ? t.saving : t.aboutUsSaveBtn}
             </button>
             <button onClick={() => { setEditing(false); setValue(initialValue); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-              <X className="w-3.5 h-3.5" /> Annuller
+              <X className="w-3.5 h-3.5" /> {t.aboutUsCancel}
             </button>
           </div>
         </div>
@@ -111,6 +113,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
 }
 
 function PersonCard({ person, openId, setOpenId }) {
+  const { t } = useLanguage();
   const isOpen = openId === person.name;
   return (
     <div className="rounded-2xl overflow-hidden border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -126,7 +129,7 @@ function PersonCard({ person, openId, setOpenId }) {
           </a>
         )}
         <button onClick={() => setOpenId(isOpen ? null : person.name)} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--color-accent)' }}>
-          {person.facts.length} fun facts om mig
+          {person.facts.length} {t.aboutUsFunFacts}
           {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
         {isOpen && (
@@ -145,6 +148,7 @@ function PersonCard({ person, openId, setOpenId }) {
 }
 
 export default function AboutUs() {
+  const { t } = useLanguage();
   const { isDark } = useTheme();
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -202,10 +206,10 @@ export default function AboutUs() {
         <Link to={createPageUrl('Community')}>
           <Button variant="ghost" size="icon" className="-ml-2"><ChevronLeft className="w-5 h-5" /></Button>
         </Link>
-        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Mød familien</h1>
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsTitle}</h1>
         {isAdmin && (
           <span className="ml-auto text-xs px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-accent)' }}>
-            ✏️ Rediger ved at klikke
+            ✏️ {t.aboutUsClickToEdit}
           </span>
         )}
       </header>
@@ -245,7 +249,7 @@ export default function AboutUs() {
 
         {/* Contact info */}
         <section className="rounded-2xl p-5 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>Kontakt os</h2>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsContactUs}</h2>
           <div className="space-y-3">
             <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
@@ -279,12 +283,12 @@ export default function AboutUs() {
 
         {/* Support chat */}
         <section className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>Skriv til os 💬</h2>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsWriteToUs} 💬</h2>
           {currentUser ? (
             <UserSupportChat user={currentUser} />
           ) : (
             <p className="text-sm text-center py-6" style={{ color: 'var(--color-text-muted)' }}>
-              Log ind for at sende en besked til os.
+              {t.aboutUsLoginToMessage}
             </p>
           )}
         </section>

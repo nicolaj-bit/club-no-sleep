@@ -4,16 +4,18 @@ import { openExternalUrl } from '@/lib/openExternalUrl';
 import LegalModal from '@/components/landing/LegalModal';
 import IPhoneMockup from '@/components/landing/IPhoneMockup';
 import FeaturesList from '@/components/landing/FeaturesList';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
 
 export default function Landing() {
+  const { t } = useLanguage();
   const [isAuth, setIsAuth] = useState(false);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
 
   const handleBecomeMember = () => {
     if (window.self !== window.top) {
-      alert('Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.');
+      alert(t.landingPreviewPaymentAlert);
       return;
     }
     openExternalUrl(STRIPE_CHECKOUT_URL);
@@ -57,10 +59,10 @@ export default function Landing() {
           <span className="lnd-nav-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
-            <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
+            <button onClick={() => window.location.href = '/app'} style={btnDark}>{t.landingOpenApp}</button> :
             <>
-                <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>Log ind</button>
-                <button onClick={handleBecomeMember} style={btnDark}>Bliv medlem</button>
+                <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>{t.landingLogIn}</button>
+                <button onClick={handleBecomeMember} style={btnDark}>{t.landingBecomeMember}</button>
               </>
             }
           </div>
@@ -83,8 +85,8 @@ export default function Landing() {
               color: '#1E140A',
               margin: '0 0 1.6rem'
             }}>
-              Til dig, der er vågen,<br />
-              når resten af verden sover.
+              {t.landingHero1Title1}<br />
+              {t.landingHero1Title2}
             </h1>
 
             {/* Heart */}
@@ -95,10 +97,10 @@ export default function Landing() {
             </div>
 
             <p className="lnd-hero1-p" style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 0.6rem' }}>
-              Der findes en hel særlig form for ensomhed i moderskabet. En ensomhed som kommer snigende om natten, når baby igen er vågen og resten af verden er stille; <strong>Natteensomhed.</strong>
+              {t.landingHero1P1} <strong>{t.landingHero1P1Bold}</strong>
             </p>
             <p className="lnd-hero1-p" style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 2.8rem' }}>
-              <strong>CLUB NO SLEEP</strong> er en dansk app skabt til netop disse øjeblikke. For ingen skal føle sig alene i moderskabet.
+              <strong>{t.landingHero1P2Bold}</strong> {t.landingHero1P2}
             </p>
 
             <div className="lnd-hero1-cta" style={{ display: 'flex', gap: 12, flexDirection: 'column' }}>
@@ -108,13 +110,13 @@ export default function Landing() {
                     <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
                   </svg>
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>App Store</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Download now</div>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingAppStoreLabel}</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{t.landingDownloadNow}</div>
                   </div>
                 </a>
               </div>
-              <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>Bliv medlem</button>
-              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>Jeg vil kigge →</button>
+              <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>{t.landingBecomeMember}</button>
+              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>{t.landingIWantToLook}</button>
             </div>
           </div>
 
@@ -130,24 +132,24 @@ export default function Landing() {
 
           <div style={{ background: 'linear-gradient(160deg, #DCC1B0, #C8A882)', borderRadius: 24, padding: '2rem', border: '2px solid #B08D72', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 14, right: 14, backgroundColor: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', padding: '3px 10px', borderRadius: 20 }}>
-              FULD ADGANG
+              {t.landingFullAccess}
             </div>
 
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>Medlemskab</p>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>{t.landingMembership}</p>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: '1.4rem' }}>
               <span style={{ fontSize: '2.8rem', fontWeight: 700, color: '#fff' }}>59 kr.</span>
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>/ md.</span>
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>{t.landingPerMonth}</span>
             </div>
 
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.8rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                'AI søvnrådgivning',
-                'Tigerspring & udviklingsguide',
-                'Chat med andre forældre',
-                'Ekspert booking',
-                '100+ vidensartikler',
-                'Fælles kalender med partner',
-                'Notifikationer & milestene',
+                t.landingFeature1,
+                t.landingFeature2,
+                t.landingFeature3,
+                t.landingFeature4,
+                t.landingFeature5,
+                t.landingFeature6,
+                t.landingFeature7,
               ].map(f => (
                 <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: '0.88rem' }}>
                   <span style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.65rem' }}>✓</span>
@@ -158,10 +160,10 @@ export default function Landing() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button onClick={handleBecomeMember} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
-                Kom i Gang ✨
+                {t.landingGetStarted}
               </button>
               <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 14, padding: '13px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
-                Jeg vil kigge →
+                {t.landingIWantToLook}
               </button>
             </div>
           </div>
@@ -192,22 +194,18 @@ export default function Landing() {
           {/* RIGHT — copy */}
           <div style={{ flex: 1, maxWidth: 520 }}>
             <h2 className="lnd-klub-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.55rem', fontWeight: 400, color: '#1E140A', lineHeight: 1.15, margin: '0 0 1.3rem' }}>
-              Kom med i klubben
+              {t.landingKlubTitle}
             </h2>
             <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.82, margin: '0 0 1.2rem' }}>
-              Vi har været der.<br />
-              Der hvor nætterne er svære, dagene er lange og ingen helt forstår, hvad du
-              står i. Hvor far sover på sofaen og mor sover siddende. Hvor frygten for
-              natten allerede starter i løbet af eftermiddagen.<br />
-              CLUB NO SLEEP er skabt til dig, som savner et sted at blive spejlet og finde
-              andre, der er vågen sammen med dig.
+              {t.landingKlubP1}<br />
+              {t.landingKlubP1b}<br />
+              {t.landingKlubP1c}
             </p>
             <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.82, margin: '0 0 1.8rem' }}>
-              Kom med i klubben. For din egen skyld, og for alle de mødre som føler sig
-              alene netop nu. Sammen kan vi mindske ensomhed i moderskabet.
+              {t.landingKlubP2}
             </p>
             <p className="lnd-klub-sig" style={{ fontFamily: "'Dancing Script', cursive", fontSize: '1.6rem', fontWeight: 400, color: '#3A2412', margin: 0, lineHeight: 1.3 }}>
-              Kærligst og kram fra Sara &amp; Nicolaj
+              {t.landingKlubSig}
             </p>
           </div>
 
@@ -223,7 +221,7 @@ export default function Landing() {
           {/* Headline + heart */}
           <div style={{ textAlign: 'center', marginBottom: '3.8rem' }}>
             <h2 className="lnd-features-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.9rem' }}>
-              Dette finder du i appen
+              {t.landingFeaturesTitle}
             </h2>
             <svg width="20" height="18" viewBox="0 0 20 18" fill="none" style={{ display: 'inline-block' }}>
               <path d="M10 17C10 17 1 10.5 1 5C1 2.8 2.8 1 5 1C6.8 1 8.5 2.2 10 4C11.5 2.2 13.2 1 15 1C17.2 1 19 2.8 19 5C19 10.5 10 17 10 17Z" fill="#D4B89A" stroke="#D4B89A" strokeWidth="0.5" />
@@ -244,10 +242,10 @@ export default function Landing() {
           {/* Left copy */}
           <div className="lnd-partner-copy" style={{ flex: '1 1 280px', maxWidth: 360 }}>
             <h2 className="lnd-partner-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.5vw, 3rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1.18, margin: '0 0 1.3rem' }}>
-              Du skal ikke stå<br />med det hele alene
+              {t.landingPartnerTitle1}<br />{t.landingPartnerTitle2}
             </h2>
             <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.9, maxWidth: 300, margin: '0 0 2.4rem' }}>
-              Én konto inkluderer altid en gratis bruger mere, så du kan vælge at dele alt fra søvnlog, kalender og tigerspring med din partner. Sammen bliver det ofte lettere.
+              {t.landingPartnerP}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div style={{ display: 'flex', gap: 12 }}>
@@ -256,13 +254,13 @@ export default function Landing() {
                     <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
                   </svg>
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>App Store</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Download now</div>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingAppStoreLabel}</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{t.landingDownloadNow}</div>
                   </div>
                 </a>
               </div>
               <button className="lnd-partner-btn" onClick={handleBecomeMember} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
-                Bliv medlem
+                {t.landingBecomeMember}
               </button>
             </div>
           </div>
@@ -273,7 +271,7 @@ export default function Landing() {
             {/* Partner card */}
             <div className="lnd-partner-card" style={{ width: 210, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
               <div style={{ padding: '14px 16px', borderBottom: '1px solid #F0E8DF' }}>
-                <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>Del med partner</p>
+                <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>{t.landingSharePartner}</p>
               </div>
               <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {/* Sara row */}
@@ -283,10 +281,10 @@ export default function Landing() {
                       <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&q=80" alt="Sara" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <div>
-                      <p style={{ color: '#1E140A', fontSize: '0.62rem', fontWeight: 600, margin: 0 }}>Sara <span style={{ color: '#9A7A6A', fontWeight: 400 }}>(dig)</span></p>
+                      <p style={{ color: '#1E140A', fontSize: '0.62rem', fontWeight: 600, margin: 0 }}>Sara <span style={{ color: '#9A7A6A', fontWeight: 400 }}>{t.landingYou}</span></p>
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.56rem', color: '#fff', backgroundColor: '#C8A882', borderRadius: 5, padding: '2px 7px', fontWeight: 500 }}>Administrer</span>
+                  <span style={{ fontSize: '0.56rem', color: '#fff', backgroundColor: '#C8A882', borderRadius: 5, padding: '2px 7px', fontWeight: 500 }}>{t.landingManage}</span>
                 </div>
                 {/* Nicolaj row */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -295,15 +293,15 @@ export default function Landing() {
                       <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&q=80" alt="Nicolaj" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <div>
-                      <p style={{ color: '#1E140A', fontSize: '0.62rem', fontWeight: 600, margin: 0 }}>Nicolaj <span style={{ color: '#9A7A6A', fontWeight: 400 }}>(partner)</span></p>
+                      <p style={{ color: '#1E140A', fontSize: '0.62rem', fontWeight: 600, margin: 0 }}>Nicolaj <span style={{ color: '#9A7A6A', fontWeight: 400 }}>{t.landingPartner}</span></p>
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.56rem', color: '#7A665A' }}>Aktiv</span>
+                  <span style={{ fontSize: '0.56rem', color: '#7A665A' }}>{t.landingActive}</span>
                 </div>
                 {/* Divider */}
                 <div style={{ borderTop: '1px solid #F0E8DF', paddingTop: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <p style={{ color: '#5B3F2B', fontSize: '0.62rem', margin: 0 }}>Invitér partner</p>
+                    <p style={{ color: '#5B3F2B', fontSize: '0.62rem', margin: 0 }}>{t.landingInvitePartner}</p>
                     <span style={{ color: '#C8A882', fontSize: '1.1rem', fontWeight: 300 }}>+</span>
                   </div>
                 </div>
@@ -313,7 +311,7 @@ export default function Landing() {
             {/* Calendar card */}
             <div className="lnd-partner-card" style={{ width: 220, backgroundColor: '#FFFDF9', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 55px rgba(0,0,0,0.18)' }}>
               <div style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F0E8DF' }}>
-                <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>Fælles kalender</p>
+                <p style={{ color: '#1E140A', fontSize: '0.72rem', fontWeight: 700, margin: 0 }}>{t.landingSharedCalendar}</p>
                 <span style={{ color: '#C8A882', fontSize: '0.8rem' }}>›</span>
               </div>
               <div style={{ padding: '12px 16px' }}>
@@ -342,11 +340,11 @@ export default function Landing() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                     <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#C8A882', flexShrink: 0 }} />
-                    <p style={{ color: '#4A3525', fontSize: '0.52rem', margin: 0 }}>Osteopat kl. 10:00</p>
+                    <p style={{ color: '#4A3525', fontSize: '0.52rem', margin: 0 }}>{t.landingOsteopathEvent}</p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                     <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#8BA5C8', flexShrink: 0 }} />
-                    <p style={{ color: '#4A3525', fontSize: '0.52rem', margin: 0 }}>Barselscafé kl. 14:00</p>
+                    <p style={{ color: '#4A3525', fontSize: '0.52rem', margin: 0 }}>{t.landingCafeEvent}</p>
                   </div>
                 </div>
               </div>
@@ -363,18 +361,18 @@ export default function Landing() {
             <div>
               <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.05rem', fontWeight: 600, color: '#F5EFE9', letterSpacing: '0.04em', margin: '0 0 10px' }}>CLUB NO SLEEP</p>
               <p style={{ color: '#7A5A44', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 200, margin: 0 }}>
-                Din trygge havn som ny forælder — søvn, fællesskab og viden samlet ét sted.
+                {t.landingFooterTagline}
               </p>
             </div>
             <div>
-              <p style={{ color: '#5A4030', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px' }}>Juridisk</p>
+              <p style={{ color: '#5A4030', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px' }}>{t.landingLegal}</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-                <a href="/Terms" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>Handelsbetingelser</a>
-                <a href="/Privacy" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>Privatlivspolitik</a>
+                <a href="/Terms" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>{t.landingTerms}</a>
+                <a href="/Privacy" style={{ color: '#C8A882', fontSize: '0.86rem', cursor: 'pointer', textAlign: 'left', padding: 0, textDecoration: 'none' }}>{t.landingPrivacy}</a>
               </div>
             </div>
             <div>
-              <p style={{ color: '#5A4030', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px' }}>Hent appen</p>
+              <p style={{ color: '#5A4030', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 12px' }}>{t.landingGetTheApp}</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#3A2416', color: '#F5EFE9', borderRadius: 8, padding: '9px 12px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600 }}>
                   <svg width="16" height="16" viewBox="0 0 814 1000" fill="currentColor">
@@ -386,7 +384,7 @@ export default function Landing() {
             </div>
           </div>
           <div style={{ borderTop: '1px solid #2E1C0E', paddingTop: '1.5rem', textAlign: 'center' }}>
-            <p style={{ color: '#5A4030', fontSize: '0.76rem', margin: 0 }}>© 2025 Club No Sleep · Alle rettigheder forbeholdes</p>
+            <p style={{ color: '#5A4030', fontSize: '0.76rem', margin: 0 }}>{t.landingCopyright}</p>
           </div>
         </div>
       </footer>

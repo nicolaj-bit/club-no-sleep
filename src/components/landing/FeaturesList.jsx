@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Baby, Award, Zap, Lightbulb, Coffee, Calendar, Moon, MessageCircle, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const ICON_SIZE = 110;
 const ICON_COLOR = "#5B3A28";
@@ -11,60 +12,60 @@ const features = [
   {
     key: 'graviditet',
     icon: <Baby size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Graviditeten uge for uge',
-    desc: 'Modtag ugentlige opdateringer om baby, kroppen og alt hvad der ellers følger med graviditeten inklusiv et lille skriv til din partner samt kærlige forslag til \u201det lille næste skridt\u201d.',
+    titleKey: 'featPregnancyTitle',
+    descKey: 'featPregnancyDesc',
   },
   {
     key: 'milepæle',
     icon: <Award size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Milepæle',
-    desc: 'Bliv mindet om din babys milepæle og forevig de store øjeblikke med fine stickers og datoer, lige til at hente ned på din telefon.',
+    titleKey: 'featMilestonesTitle',
+    descKey: 'featMilestonesDesc',
   },
   {
     key: 'tigerspring',
     icon: <Zap size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Tigerspring',
-    desc: 'Få besked når din baby nærmer sig et udviklingsspring. Bliv klogere på dit barns udvikling og læs hvordan du bedst muligt hjælper dit barn, når verden bliver større.',
+    titleKey: 'featWonderWeeksTitle',
+    descKey: 'featWonderWeeksDesc',
   },
   {
     key: 'lys',
     icon: <Lightbulb size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Et lys i mørket',
-    desc: 'Se hvor mange andre mødre som er vågne om natten, præcis ligesom dig. Så føles stilheden lidt mindre ensom.',
+    titleKey: 'featNightLightTitle',
+    descKey: 'featNightLightDesc',
   },
   {
     key: 'caféer',
     icon: <Coffee size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Babyvenlige caféer',
-    desc: 'Find hyggelige kaffesteder anbefalet af andre mødre, hvor der er plads til barnevogn, babylyde og krummer på gulvet.',
+    titleKey: 'featCafesTitle',
+    descKey: 'featCafesDesc',
   },
   {
     key: 'kalender',
     icon: <Calendar size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Kalender',
-    desc: 'Hold styr på jordemodertider, lægebesøg, aktiviteter og andre vigtige datoer, og del kalenderen (og ansvaret) med en partner.',
+    titleKey: 'featCalendarTitle',
+    descKey: 'featCalendarDesc',
   },
   {
     key: 'søvn',
     icon: <Moon size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Søvnlog',
-    desc: 'Registrér babys nattesøvn, dagslure og opvågninger og modtag feedback fra AI søvnvejleder.',
+    titleKey: 'featSleepLogTitle',
+    descKey: 'featSleepLogDesc',
   },
   {
     key: 'fællesskab',
     icon: <MessageCircle size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Fællesskab',
-    desc: 'Ræk ud til en mor, der sidder vågen, præcis ligesom dig. Måske begynder et venskab netop der, hvor natten ellers føles mest stille.',
+    titleKey: 'featCommunityTitle',
+    descKey: 'featCommunityDesc',
   },
   {
     key: 'valg',
     icon: <CheckCircle2 size={ICON_SIZE} color={ICON_COLOR} strokeWidth={ICON_STROKE} />,
-    title: 'Din app dine valg',
-    desc: 'Tilpas din hjemmeskærm, vælg selv om du ønsker at invitere en partner (gratis), del kun det, du ønsker, og vælg det farvetema, der føles bedst for dig.',
+    titleKey: 'featChoicesTitle',
+    descKey: 'featChoicesDesc',
   },
 ];
 
-function FeatureCard({ f, imageUrl }) {
+function FeatureCard({ f, imageUrl, t }) {
   return (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
       <div style={{
@@ -79,18 +80,19 @@ function FeatureCard({ f, imageUrl }) {
         overflow: 'hidden',
       }}>
         {imageUrl ? (
-          <img src={imageUrl} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={imageUrl} alt={t[f.titleKey]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
-        <p style={{ color: '#1E140A', fontSize: '0.88rem', fontWeight: 600, margin: '0 0 6px', lineHeight: 1.3 }}>{f.title}</p>
-        <p style={{ color: '#7A665A', fontSize: '0.78rem', lineHeight: 1.72, margin: 0 }}>{f.desc}</p>
+        <p style={{ color: '#1E140A', fontSize: '0.88rem', fontWeight: 600, margin: '0 0 6px', lineHeight: 1.3 }}>{t[f.titleKey]}</p>
+        <p style={{ color: '#7A665A', fontSize: '0.78rem', lineHeight: 1.72, margin: 0 }}>{t[f.descKey]}</p>
       </div>
     </div>
   );
 }
 
 export default function FeaturesList() {
+  const { t } = useLanguage();
   const [activeSlide, setActiveSlide] = useState(0);
   const [iconMap, setIconMap] = useState({});
 
@@ -127,7 +129,7 @@ export default function FeaturesList() {
     <>
       {/* Desktop: 3-col grid */}
       <div className="lnd-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3rem 3.5rem' }}>
-        {features.map((f, i) => <FeatureCard key={i} f={f} imageUrl={iconMap[f.key]} />)}
+        {features.map((f, i) => <FeatureCard key={i} f={f} imageUrl={iconMap[f.key]} t={t} />)}
       </div>
 
       {/* Mobile: swipe carousel */}
@@ -143,7 +145,7 @@ export default function FeaturesList() {
             minHeight: 180,
           }}
         >
-          <FeatureCard f={features[activeSlide]} imageUrl={iconMap[features[activeSlide].key]} />
+          <FeatureCard f={features[activeSlide]} imageUrl={iconMap[features[activeSlide].key]} t={t} />
         </div>
 
         {/* Dot indicators */}
