@@ -196,7 +196,7 @@ export default function BabyFriendlyCafes() {
             {showTipForm && (
               <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
-                  Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
+                  Fortæl os, hvis du kender en babyvenlig café, så vi kan tilføje den til listen. Jo flere jo bedre!
                 </p>
                 <Textarea
                   placeholder="Café info — hjemmeside, Instagram, navn og adresse *"

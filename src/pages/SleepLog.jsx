@@ -352,7 +352,7 @@ export default function SleepLog() {
           <Link to={createPageUrl('Home')} className="p-1.5 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
             <ChevronLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-2xl font-display font-medium" style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>{t.sleepLogTitle}</h1>
+          <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>{t.sleepLogTitle}</h1>
         </div>
         <button
           onClick={() => setView(v => v === 'log' ? 'history' : 'log')}

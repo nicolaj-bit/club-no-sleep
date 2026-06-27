@@ -1,239 +1,1252 @@
-// Graviditet uge-for-uge — indhold fra Word dokument
-// {{motherName}} erstattes med brugerens brugernavn i UI'en
-// Links til lalatoto.dk konverteres til klikbare "Her"-links i UI'en
+// Udvidet uge-for-uge data inspireret af Politikens Graviditetsbog af Lene Skou Jensen
 export const PREGNANCY_WEEKS = {
   4: {
-    label: "Uge 1-4",
-    body: ["I de første uger sker der noget lidt mærkeligt: du er teknisk set gravid, før du overhovedet er gravid. Graviditeten regnes nemlig fra første dag i din sidste menstruation, selvom befrugtningen først sker senere.", "Omkring uge 3 til 4 kan det befrugtede æg sætte sig fast i livmoderen, og kroppen begynder langsomt at skrue op for graviditetshormonet hCG. Det er det hormon, der kan få en graviditetstest til at vise to streger.", "Baby er stadig mikroskopisk lille, men der sker allerede noget stort. Måske mærker du ingenting. Måske mærker du ømme bryster, murren i underlivet, træthed eller en fornemmelse af, at noget er lidt anderledes.", "Det kan også være, du bare lever helt almindeligt videre uden at vide, at kroppen allerede er begyndt på sit største lille hemmelige projekt."],
-    partner: ["{{motherName}} ved måske ikke engang selv endnu, at kroppen er i gang med noget stort. Men hvis hun virker mere træt, mere følsom eller lidt anderledes i kroppen, kan der allerede være meget på spil indeni."],
-    next_step: ["Når graviditetstesten viser positiv kan det være, at der løber tusinde spørgsmål igennem dit hoved, og det kan også være, at der er helt tomt. Men et godt første emne at tale om er, hvornår I har lyst til at dele nyhederne, og hvem som skal vide det først?"]
+    baby: "Fosteret er på størrelse med et valmuefrø – ca. 1 mm. Cellerne deler sig med en utrolig hastighed, og de første grundlæggende strukturer begynder at dannes.",
+    mom: "Du er måske ikke klar over, at du er gravid endnu. Nogle mærker en let træthed eller ømme bryster.",
+    tip: "Tag din første folinsyre-tablet – det beskytter mod neuralrørsdefekter.",
+    detail: {
+      intro: "Uge 4 er begyndelsen på noget utroligt. Selvom du måske endnu ikke ved, at du er gravid, er kroppen allerede i fuld gang med at skabe et nyt liv. Det befrugtede æg har nu indlejret sig i livmoderens slimhinde, og de første celler begynder at differentiere sig til de strukturer, der en dag bliver din baby.",
+      babySection: {
+        title: "Babyen i uge 4",
+        paragraphs: [
+          "Dit foster er på størrelse med et lille valmuefrø – knap 1 mm. Men på trods af den minimale størrelse sker der enorme ting. Cellerne deler sig konstant og begynder at organisere sig i tre lag: det ydre lag (ektoderm) vil blive til hud, hjerne og nervesystem; det midterste lag (mesoderm) vil blive til muskler, knogler og hjertet; og det indre lag (endoderm) vil blive til indre organer som lunger og tarme.",
+          "Neuralrøret – som siden bliver til hjernen og rygraden – begynder at lukke sig i denne uge. Det er præcis derfor, at folinsyre er så vigtigt i de tidlige uger. Hjertet er endnu ikke dannet, men de første celler, der snart vil begynde at slå, er allerede på plads.",
+          "Moderkagen (placenta) og fosterhinderne begynder også at dannes. Moderkagen vil de næste mange måneder fungere som barnets livslinje – den leverer ilt og næringsstoffer og fjerner affaldsstoffer."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 4",
+        paragraphs: [
+          "Mange kvinder mærker endnu ingenting – og det er helt normalt. Hormonniveauet er begyndt at stige, men det tager tid, før kroppen reagerer tydeligt. Nogen oplever dog allerede let brystømhed, en vis træthed eller hyppigere vandladningstrang.",
+          "hCG-hormonet (humant choriongonadotropin) produceres nu af de celler, der omgiver fosteret. Det er dette hormon, der giver positivt udslag på en graviditetstest. hCG signalerer til dine æggestokke, at de skal stoppe med at producere det hormon, der udløser menstruation – og det er derfor, din periode udebliver.",
+          "Progesteron stiger også markant. Det holder livmoderslimhinden intakt og forhindrer, at kroppen afstøder fosteret. En bivirkning er, at progesteron kan gøre dig træt og let utilpas – lidt som symptomerne fra en forestående menstruation."
+        ]
+      },
+      tips: [
+        "Start med folinsyre (400 mikrogram dagligt) hvis du ikke allerede gør det – det kan forebygge neuralrørsdefekter.",
+        "Undgå alkohol og rygning fra nu af.",
+        "Book en tid hos din praktiserende læge, der kan henvise dig til jordemoderambulatoriet.",
+        "Spis varieret og sundt – din krop har brug for gode næringsstoffer allerede nu.",
+        "Undgå selvmedicinering – tjek altid med din læge, inden du tager håndkøbsmedicin."
+      ],
+      didYouKnow: "Vidste du, at dit foster i uge 4 allerede har sit eget unikke DNA? Fra det øjeblik ægget blev befrugtet, var alt – hårfarve, øjenfarve og disposition for visse sygdomme – bestemt."
+    }
   },
   5: {
-    label: "Uge 5",
-    body: ["Nu er graviditeten måske begyndt at føles lidt mere virkelig. Måske har du stået med en positiv test i hånden. Måske har du taget flere, bare for lige at være helt sikker. Det hele er helt nyt, både for din krop og dit sind, og for en eventuel partner.", "Baby er cirka på størrelse med et sesamfrø, men udviklingen går stærkt. De første anlæg til hjerne, rygmarv og hjerte er i gang med at tage form, selvom det hele stadig er meget, meget lille.", "Din krop arbejder også på højtryk. Hormonerne stiger, og det kan mærkes. Måske er du træt på en helt ny måde. Måske føles dine bryster ømme. Måske kommer kvalmen snigende. Måske mærker du næsten ingenting og bliver bekymret over dét.", "Begge dele kan være helt almindeligt.", "Uge 5 kan føles som en blanding af glæde, uro, hemmelighed og \u201cer det virkeligt?\u201d. Det giver mening, hvis du ikke helt ved, hvor du skal placere alle følelserne endnu."],
-    partner: ["{{motherName}} kan godt være meget påvirket, selvom det endnu ikke kan ses. Det er ikke sikkert, hun selv ved, hvad hun har brug for, og der kan være mange følelser eller slet ingen. Begge dele er helt normalt. Ro, tålmodighed og lidt ekstra omsorg kan lande virkelig blødt lige nu."],
-    next_step: ["Hvis testen er positiv, kan I begynde at tale om, hvornår I vil kontakte lægen og få graviditeten registreret. At sige nyheden højt til en tredjepart kan gøre, at det hele føles lidt mere virkeligt."]
+    baby: "Ca. 2 mm – ligner en lille tudse. Hjertet begynder at slå ca. 100 gange i minuttet. Øjner og ører er under udvikling.",
+    mom: "Kvalme kan begynde at melde sig. Brysterne kan føles tunge og ømme.",
+    tip: "Spis små, hyppige måltider og prøv ingefærtabletter mod kvalme.",
+    detail: {
+      intro: "I uge 5 sker en af graviditetens mest dramatiske begivenheder: dit barns hjerte begynder at slå. Selvom det endnu kun er to enkle rørhjerter, er det begyndelsen på det organ, der vil slå mere end to milliarder gange i løbet af et helt liv.",
+      babySection: {
+        title: "Babyen i uge 5",
+        paragraphs: [
+          "Fosteret er nu ca. 2-3 mm og begynder at ligne en lille tadpole (haletudse) med hoved og hale. Hjertet – som på dette tidspunkt er to enkle rør – begynder at pulsere. Hjertefrekvensen er mellem 80-100 slag i minuttet og vil stige til over 160 i de kommende uger.",
+          "Hjerneboblerne begynder at dannes: forhjernen, mellembhjernen og baghjernen lægger sig til rette. Øjengruber er synlige som mørke pletter på begge sider af det lille hoved. Øregangene begynder ligeledes at dannes.",
+          "Arme og ben begynder at spire frem som meget primitive knopper. De er ikke meget mere end små ujævnheder i kroppen, men de vil inden for få uger begynde at forme sig til genkendelige lemmer. Navlestrengen er under dannelse og vil snart overtage rollen som fostrets livslinje."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 5",
+        paragraphs: [
+          "Nu begynder mange kvinder for alvor at mærke graviditeten. Morgenkvalmeen – som egentlig godt kan opstå på alle tidspunkter af dagen – er et af de mest kendte graviditetssymptomer. Den skyldes primært det stigende hCG-niveau og kan variere enormt fra kvinde til kvinde.",
+          "Brysterne er typisk ømmere og hævede. Brystvorterne kan være særligt sensitive og have mørknet i farve. Dette er et naturligt tegn på, at kroppen forbereder sig på amning – selvom den stadig er mange måneder væk.",
+          "Træthed er et andet meget typisk symptom i denne periode. Det skyldes dels det store hormonelle arbejde, dels at kroppen nu producerer markant mere blod end normalt for at forsyne det voksende foster. Mange kvinder oplever, at de sover mere end sædvanligt og alligevel føler sig trætte."
+        ]
+      },
+      tips: [
+        "Spis små, hyppige måltider – et tomt mavesæk forværrer kvalmen.",
+        "Ingefærtabletter, -karameller eller frisk ingefærte kan hjælpe mod kvalme.",
+        "Undgå madretter med stærke lugte – lugtsansen er nu meget skærpet.",
+        "Drik rigeligt vand – dehydrering forværrer kvalme.",
+        "Fortæl din partner om dine symptomer – støtte fra nærtstående har stor betydning.",
+        "Hvil dig, når du kan – træthed i første trimester er fuldstændig normal."
+      ],
+      didYouKnow: "Vidste du, at ca. 70-80% af alle gravide kvinder oplever morgenkvalme? Det er faktisk et tegn på, at graviditeten skrider normalt frem – forskning tyder på, at kvinder med kvalme har lavere risiko for spontan abort."
+    }
   },
   6: {
-    label: "Uge 6",
-    body: ["Baby er stadig bitte lille, cirka på størrelse med en linse, men der sker allerede helt vildt meget. De første anlæg til hjerne, rygmarv og hjerte er i gang, og hos nogle kan man begynde at se hjerteaktivitet ved en tidlig scanning.", "Det er næsten absurd, hvor meget noget så lille kan fylde. Ikke i maven endnu, måske, men i tankerne. Og måske også i kroppen.", "For mange begynder symptomerne at melde sig tydeligere nu. Kvalme, ømme bryster, oppustethed, træthed og en lugtesans, der pludselig opfører sig som en sporhund i et parfumeri. Måske kan du lugte køleskabet fra den anden ende af huset. Måske har du lyst til rugbrød med ost klokken 22. Måske kan du ikke længere tåle tanken om kaffe, selvom du elskede det i sidste uge.", "Det hele kan føles lidt hemmeligt endnu. Udefra ligner du måske dig selv. Indeni er kroppen i gang med noget af det største, nemlig at skabe liv.", "Hvis du er helt udmattet, er det ikke dovenskab. Det er graviditetens usynlige byggeplads, der er gået i gang. Og selvom graviditeten ikke er synlig endnu, er det vigtigt, at du lytter til dine krops signaler og sørger for ekstra hvile, hvis det er dét, som du har brug for."],
-    partner: ["Hvis {{motherName}} virker træt, kvalm eller lidt mere stille end normalt, giver det god mening. Kroppen arbejder hårdt, selvom det endnu ikke kan ses. En snack, et glas vand, lidt ro eller at du tager aftensmaden kan føles større, end du tror."],
-    next_step: ["Hvis kvalme og udmattelse begynder at fylde meget, så kan det være en god idé at tale om, om det kan være nødvendigt at fortælle om graviditeten til visse personer tidligere end planlagt. Det kan fx være til en arbejdsgiver eller en veninde/familiemedlem, som kan hjælpe med at aflaste lidt i hverdagen."]
+    baby: "Ca. 4-6 mm. Ansigtsstrukturer dannes – øjengruber, næse og mund er synlige. Arme og ben spirer frem.",
+    mom: "Kvalme og træthed er nu almindelige. Mange oplever stærke lugtafvigelser.",
+    tip: "Hvil dig så meget du kan – kroppen arbejder intenst.",
+    detail: {
+      intro: "I uge 6 begynder dit barn for alvor at tage form. Ansigtet er ved at udvikle sig, og de første spæde tegn på arme og ben bliver synlige. Det er en travl uge for cellerne.",
+      babySection: {
+        title: "Babyen i uge 6",
+        paragraphs: [
+          "Fosteret er nu 4-6 mm og vokser med en forbløffende hastighed. Hjertet slår nu regelmæssigt, og på en tidlig ultralydsscanning vil man typisk kunne se og høre det. Frekvensen er steget til ca. 100-120 slag i minuttet.",
+          "Ansigtet begynder at tage form: øjengruber er tydeligt synlige, og de anlæg, der bliver til øjets linse og nethinde, er under dannelse. Næsegroperne og mundhulen er synlige. Tidlige anlæg til tand og spytkirtler er også til stede.",
+          "Arm- og benknopper er nu klart synlige. De vil inden for de næste uger begynde at forme sig til egentlige lemmer med hænder og fødder. Hjernens tre hoveddele – forhjernen, mellembhjernen og baghjernen – er alle under aktiv udvikling."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 6",
+        paragraphs: [
+          "For mange kvinder er uge 6 en af de hårdeste i graviditeten. Hormonniveauet er på sit højeste, og kvalme, træthed og humørsvingninger er meget almindelige. Det kan føles overvældende – men det er et tegn på, at alt foregår som det skal.",
+          "Livmoderen er nu begyndt at vokse, selvom du endnu ikke kan se det udefra. Den øgede blodgennemstrømning til bækkenet kan give en let følelse af tryk eller ubehag. Hyppig vandladning er typisk, fordi livmoderen trykker på blæren.",
+          "Lugtesansen er nu markant skærpet – en evolutionær mekanisme, der menes at beskytte fosteret mod potentielt skadelige stoffer. Mange kvinder kan ikke tåle lugten af kød, kaffe eller parfume, som de tidligere elskede."
+        ]
+      },
+      tips: [
+        "Åbn vinduerne når du laver mad – frisk luft hjælper mod lug-trelateret kvalme.",
+        "Undgå at børste tænder lige efter et måltid hvis du har tendens til at kaste op.",
+        "B6-vitamin (pyridoxin) har dokumenteret effekt mod svær kvalme – tal med din læge.",
+        "Sæt en kiks eller en riskagebid ved sengen og spis det inden du står op.",
+        "Prøv at slå op hvilke lugte du reagerer på og undgå dem aktivt."
+      ],
+      didYouKnow: "Vidste du, at hjertet i uge 6 allerede slår med sin helt egen rytme? Det er faktisk muligt at høre det på en vaginal ultralydsscanning allerede nu – mange forældre beskriver dette som et af de mest rørende øjeblikke i hele graviditeten."
+    }
   },
   7: {
-    label: "Uge 7",
-    body: ["I uge 7 sker der meget inde i det lille univers, du bærer rundt på. Baby er cirka på størrelse med et lille blåbær, og kroppen begynder langsomt at tage mere form. Små anlæg til arme og ben er på vej, og hovedet fylder stadig en stor del af det hele.", "Det kan lyde lidt vildt, at noget på størrelse med et blåbær allerede kan lave så meget ballade i kroppen. Men det kan det.", "Måske er kvalmen taget til. Måske er du sulten og utilpas på samme tid, hvilket er en ret træls kombination. Måske er du så træt, at en tur fra sofaen til køkkenet føles som en lille ekspedition. Måske græder du over en reklame, en rugbrødsmad eller ingenting.", "Hormonerne pumper derudaf, kroppen bygger noget stort, og du prøver bare at være et menneske imens og få hverdagen til at fungere.", "Det er okay, hvis du ikke føler dig strålende. Mange graviditeter begynder mere med kvalme, hemmeligheder og joggingbukser end med glød og magi."],
-    partner: ["Det her kan være en uge, hvor {{motherName}} virkelig ikke føler sig som sig selv. Hun har måske brug for mere hvile, mindre støj og færre spørgsmål om, hvorfor hun er så træt. Det kan være en kæmpe hjælp, hvis du ser behovene, før hun skal forklare dem."],
-    next_step: ["Tal om, hvordan I kan gøre hverdagen lidt lettere de næste uger, hvis kvalme og træthed begynder at fylde mere. Er der daglige opgaver, som føles uoverskuelige? Er der aftaler i kalenderen, som bør aflyses?"]
+    baby: "Ca. 10 mm. Hjernen danner 100 nye celler pr. minut. Hænder og fødder har 'finner'.",
+    mom: "Hormonerne er på sit højeste. Svær kvalme (hyperemesis) kan opstå.",
+    tip: "Fortæl din jordemoder om svære symptomer – hyperemesis kan behandles.",
+    detail: {
+      intro: "Uge 7 er hjernens store uge. Mens din baby fortsat vokser dramatisk i størrelse, er den mest imponerende aktivitet usynlig for det blotte øje: hjernen danner nu op til 100 nye nerveceller hvert eneste minut.",
+      babySection: {
+        title: "Babyen i uge 7",
+        paragraphs: [
+          "Fosteret er nu ca. 10 mm – lidt over 1 cm. Hjernen er nu det organ, der vokser hurtigst. Denne eksplosive neurale vækst vil fortsætte hele graviditeten og endda de første leveår. Det er afgørende for barnets fremtidige kognitive evner.",
+          "Hænder og fødder er nu tydeligt synlige og ligner paddlignende strukturer med begyndende finger- og tåadskillelse. I løbet af de næste par uger vil 'svømmerfinnerne' åbne sig til separate fingre og tæer.",
+          "Ansigtet modnes: øjnene er nu dækket af tidlige øjenlåg, og næse og læber er under dannelse. Tungen begynder at tage form inde i mundhulen. Øregangene og de ydre ørestrukturer er tydeligt anlagt."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 7",
+        paragraphs: [
+          "For mange kvinder er uge 7 den hårdeste i hele graviditeten. Kvalmen kan nu ramme på alle tidspunkter af døgnet, og træthed er ekstrem. Humørsvingninger er meget udtalte – fra glæde til gråd på få minutter er ikke ualmindeligt.",
+          "Et særligt problematisk symptom, som rammer ca. 1-2% af gravide, er hyperemesis gravidarum – svær og vedvarende kvalme og opkastning, der fører til vægttab og dehydrering. Hvis du oplever dette, er det vigtigt at søge lægehjælp. Det kan behandles effektivt.",
+          "Spyt kan tiltagere markant i denne periode – en tilstand kaldet ptyalisme. Det er ikke farligt men kan være ubehageligt. Det afhjælpes bedst ved hyppig tandbørstning og at synke spyttet, selvom det føles modbydeligt."
+        ]
+      },
+      tips: [
+        "Hvil dig uden dårlig samvittighed – kroppen gør et gigantisk arbejde.",
+        "Opsøg lægehjælp ved svær, vedvarende kvalme med opkastning og vægttab.",
+        "Akupunktur kan hos nogle kvinder lindre kvalme – tal med din jordemoder.",
+        "Tag maden i små portioner, selv om du ikke føler dig sulten – et tomt mavesæk er det værste.",
+        "Lad gerne en nær person lave maden, hvis lugten generer dig."
+      ],
+      didYouKnow: "Vidste du, at hjerneudviklingen i uge 7 er så intensiv, at den ikke har nogen parallel i det voksne liv? En voksen hjerne danner næsten ingen nye neuroner, men et foster i uge 7 danner hundredvis hvert minut."
+    }
   },
   8: {
-    label: "Uge 8",
-    body: ["Baby er nu cirka på størrelse med en hindbær. Stadig lille nok til at være helt usynlig udefra, men stor nok til at fylde ret meget i dit indre landskab.", "De små arme og ben udvikler sig videre, og ansigtet begynder langsomt at tage form. Det er stadig meget tidligt, men kroppen er i fuld gang med at bygge et lille menneske fra bunden. Ret imponerende, når man tænker på, at du måske samtidig bare prøver at overleve lugten af opvaskemaskinen.", "Mange mærker stadig kvalme, træthed, ømme bryster, humørsvingninger og en ret ny relation til mad. Måske har du cravings. Måske har du anticravings, hvor alt du plejede at kunne lide, pludselig får dig til at løbe hen til vasken.", "Det kan være en lidt mærkelig tid. Du føler dig måske meget gravid, men ser ikke gravid ud. Og det kan gøre det svært for andre at forstå, hvor meget der faktisk sker.", "Men din krop ved det.", "Den arbejder stille, intenst og hele tiden."],
-    partner: ["Selvom graviditeten stadig er usynlig for andre, kan den fylde meget for {{motherName}}. Det kan betyde noget, at du tager det alvorligt, også før maven kommer. Det kan måske virke som om, at I ikke snakker om andet, når I er alene, men husk på, at for {{motherName}} fylder graviditeten helt naturligt rigtig meget, og hvis I stadig holder nyheden hemmelig, så er du den eneste, som hun kan dele sine tanker, bekymringer, begejstring og alt derimellem med."],
-    next_step: ["Hvis I ikke allerede har gjort det, kan det være et godt tidspunkt at få styr på første lægebesøg og de næste aftaler i graviditeten. Anvend eventuelt kalenderen i denne app og husk at slå til, at den må deles med din partner, så I begge får påmindelser om aftalerne."]
+    baby: "Ca. 16 mm – på størrelse med et hindbær. Alle indre organer er anlagt. Øjnene er dækket af øjenlåg.",
+    mom: "Livmoderen er dobbelt så stor. Du kan føle dig oppustet og have hovedpine.",
+    tip: "Drik 2 liter vand dagligt og undgå koffeinholdige drikkevarer.",
+    detail: {
+      intro: "I uge 8 er et vigtigt udviklingsmæssigt milepæl nået: alle barnets indre organer er nu anlagt. De er ikke fuldt udviklede endnu, men grundstrukturen er på plads. Det er begyndelsen på en lang modningsproces.",
+      babySection: {
+        title: "Babyen i uge 8",
+        paragraphs: [
+          "Fosteret er nu ca. 16 mm og vejer ca. 1 gram – på størrelse med et hindbær. Alle de vigtigste organer er nu anlagt: hjertet med fire kamre, lungerne, leveren, nyrerne, maven og tarmene er alle til stede i rudimentær form.",
+          "Øjenlågene er nu dannet og dækker øjnene fuldstændigt. De vil forblive lukkede frem til ca. uge 26-28, hvor de åbner sig for første gang. Fingrenes grundform er nu tydelig, selvom de stadig er sammenvoksede. I løbet af de næste uger vil apoptose (programmeret celledød) skille fingrene ad.",
+          "Hjertet slår nu med over 160 slag i minuttet – dobbelt så hurtigt som dit eget. På ultralyd er det tydeligt synligt og hørbart. Hjernens to hemisfærer begynder at differentiere sig."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 8",
+        paragraphs: [
+          "Livmoderen er nu på størrelse med en appelsin og er vokset til det dobbelte siden du blev gravid. Du kan selv mærke den som en fast, blød knude lidt over skambenets kant, hvis du trykker forsigtigt.",
+          "Hormoner og den øgede blodmængde kan forårsage hyppige hovedpiner. Paracetamol er det eneste smertestillende middel, der er sikkert under graviditet – ibufenprofen og aspirin bør undgås. Mange kvinder finder, at rigeligt vand, frisk luft og hvile er de bedste remedier.",
+          "Fordøjelsen er nu langsommere end normalt – progesteron slapper musklerne i tarmvæggen af. Det kan medføre forstoppelse. Frisk frugt, grøntsager, fuldkorn og rigeligt vand hjælper."
+        ]
+      },
+      tips: [
+        "Drik mindst 2 liter vand dagligt – det hjælper mod forstoppelse og hovedpine.",
+        "Spis fiberrig kost: grøntsager, fuldkornsbrød og tørrede frugter.",
+        "Paracetamol er det eneste smertestillende du bør tage – kun ved behov.",
+        "Book din første jordemoderkonsultation hvis du ikke allerede har gjort det.",
+        "Undgå råt kød, upasteuriserede mejeriprodukter og listeria-risikable fødevarer."
+      ],
+      didYouKnow: "Vidste du, at barnets hjerte allerede i uge 8 har fire kamre ligesom dit? Det lille hjerte pumper nu fostrets blod rundt i hele kroppen – en bedrift, der er næsten ufattelig i betragtning af fostertets størrelse."
+    }
   },
   9: {
-    label: "Uge 9",
-    body: ["Baby er nu cirka på størrelse med et kirsebær. Lille, men allerede i fuld gang med at ligne mere og mere et lille menneske. De små arme og ben bliver tydeligere, og kroppen begynder langsomt at rette sig lidt mere ud.", "Det er ret vildt at tænke på, at noget så lille allerede har så travlt. Der bliver bygget organer, nervesystem, ansigtstræk og små bevægelser, mens du måske bare prøver at komme igennem dagen uden at skulle forholde dig til lugten af mad.", "Mange er stadig ramt af kvalme, træthed, oppustethed og ømme bryster. Måske føles dit tøj lidt strammere, uden at du egentlig har en rigtig gravid mave endnu. Det kan være en lidt mærkelig mellemtilstand, hvor kroppen føles anderledes, men verden omkring dig ikke rigtig kan se det.", "Det kan også være, at følelserne ligger lidt tættere på overfladen. Glæde, uro, irritation og tårer kan godt do meget tæt sammen i denne tid.", "Der sker meget, også selvom det stadig er usynligt for de fleste."],
-    partner: ["{{motherName}} kan godt føle sig lidt fanget mellem at være gravid og endnu ikke rigtig kunne vise det. Det kan være en sårbar tid, hvor hun både har brug for ro, forståelse og at du tager hendes symptomer alvorligt, selvom maven endnu ikke fylder."],
-    next_step: ["Overvej om det er for Jer at tage mavebilleder undervejs i graviditeten. Det kan være et hyggeligt minde at se tilbage på, men det skal samtidig føles trygt og naturligt. Anvend eventuelt milepælsfiltrene i appen. Her har du også mulighed for at slå påmindelser til, hvis du vil mindes om, at det er tid til et nyt mavebillede."]
+    baby: "Ca. 23 mm. Fosteret begynder at bevæge sig – selvom du ikke kan mærke det. Musklerne modnes.",
+    mom: "Træthed er meget udtalt. Uro i benene om natten er almindeligt.",
+    tip: "Let motion som gåture kan faktisk mindske træthed og kvalme.",
+    detail: {
+      intro: "I uge 9 begynder fosteret at bevæge sig for første gang – og selv om du langt fra kan mærke det endnu, er det et utroligt øjeblik i udviklingen. Musklerne er nu funktionelle og reagerer på nervesignaler.",
+      babySection: {
+        title: "Babyen i uge 9",
+        paragraphs: [
+          "Fosteret er nu ca. 23 mm og vejer ca. 2 gram. Fra denne uge bruges betegnelsen 'foster' i stedet for embryo, da alle de grundlæggende strukturer nu er på plads. Barnet ligner nu tydeligere et lille menneske.",
+          "Musklerne er nu tilstrækkelig udviklede til at reagere på nervesignaler, og fosteret begynder at lave spontane, ujævne bevægelser. Det bukker og retter sig, vrider sig og gør alt muligt – men da det svømmer frit i fostervand og er meget lille, kan du ikke mærke noget.",
+          "Fingrene er nu adskilt fra hinanden. Tæerne er ved at adskille sig ligesom. Halen, som fosteret har haft siden de tidligste uger, er nu næsten forsvundet. Ansigtet er tydeligere med næse, mund og øjne på plads – om end stadig meget primitivt."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 9",
+        paragraphs: [
+          "Træthed er fortsat et dominerende symptom. Det er faktisk en af de mest udmattende perioder i hele graviditeten – ikke mindst fordi kroppen producerer en enormt øget mængde blod og arbejder hårdt for at danne moderkagen, der endnu ikke er fuldt funktionel.",
+          "Uro i benene om natten – restless legs syndrome – rammer mange gravide, særligt i første trimester. Det er relateret til jernmangel og hormonelle ændringer. Fortæl din jordemoder om det, da det kan behandles.",
+          "Nogen oplever nu en let lempelse af de mest voldsomme symptomer, mens andre synes uge 9 er den hårdeste. Husk: alle graviditeter er forskellige, og der er ingen 'normal' måde at have det på."
+        ]
+      },
+      tips: [
+        "Let motion – gerne 20-30 minutters gåtur dagligt – kan faktisk reducere træthed og kvalme.",
+        "Sov en middagslur hvis du har mulighed for det.",
+        "Fortæl din jordemoder om uro i benene – det kan skyldes jernmangel.",
+        "Prøv let yoga eller svømning – det er skånsomt og godt for kroppen.",
+        "Vær mild ved dig selv – hvil uden dårlig samvittighed."
+      ],
+      didYouKnow: "Vidste du, at fosteret i uge 9 kan 'hoppe' inde i livmoderen? Disse tidlige bevægelser er spontane og ureflekterede – skabt af et nervesystem, der tester sine kredsløb for første gang."
+    }
   },
   10: {
-    label: "Uge 10",
-    body: ["Baby er cirka på størrelse med et jordbær, og selvom det stadig er meget småt, er der sket enormt meget. Mange af de vigtigste anlæg i kroppen er på plads, og nu handler udviklingen mere og mere om at vokse, forfine og styrke det hele.", "Små fingre og tæer begynder at blive tydeligere. Ansigtet udvikler sig, og kroppen begynder langsomt at få mere form. Det lille liv inde i dig er stadig alt for lille til, at du kan mærke bevægelser, men der er allerede aktivitet.", "For dig kan uge 10 føles som en fortsættelse af de seneste uger. Måske er kvalmen stadig en trofast og rigtig træls følgesvend. Måske er trætheden så tung, at du næsten ikke kan genkende dig selv. Måske er du begyndt at tælle ned til, at første trimester snart er bag dig.", "Det er også helt normalt, hvis du bliver lidt mere utålmodig nu. Du er måske træt af at gå med hemmeligheden selv, og alligevel er der stadig lidt uger endnu til første scanning, og til at maven tydeligt kan ses udefra.", "Graviditeten kan godt føles både meget virkelig og meget uvirkelig på samme tid."],
-    partner: ["Hvis {{motherName}} stadig er træt, kvalm eller følelsesmæssigt fyldt op, er det ikke fordi hun \u201chænger fast\u201d i symptomerne. Kroppen arbejder stadig intenst. Det kan betyde meget, at du ikke forventer, at hun bare er tilbage til normalen endnu."],
-    next_step: ["Overvej om I har lyst til at skrive graviditetsdagbog. Det kan være en rigtig fin måde at få styr på alle tankerne, og så er det et fint minde at sidde med senere i livet. Hvis lysten er der, men du ikke helt ved, hvor du skal starte, så findes der bøger til formålet, som kan hjælpe dig i gang."]
+    baby: "Ca. 31 mm. Alle vitale organer er dannet og begynder at modnes. Knoglerne hærder.",
+    mom: "Kvalme begynder for mange at aftage. Livmoderen er nu på størrelse med en appelsin.",
+    tip: "Fortæl din arbejdsgiver om graviditeten, så dine arbejdsvilkår kan tilpasses.",
+    detail: {
+      intro: "I uge 10 nærmer vi os slutningen af den mest intensive organudviklingsfase. Alle barnets organer er nu dannet, og den store opgave nu er modning og vækst. For mange kvinder begynder uge 10 at føles lettere.",
+      babySection: {
+        title: "Babyen i uge 10",
+        paragraphs: [
+          "Fosteret er nu ca. 31 mm og vejer ca. 4 gram. Alle vitale organer er dannet og begynder nu den lange modningsproces. Hjertet er nu fuldt funktionelt med fire kamre og pumper blod effektivt.",
+          "Knoglerne begynder at forkalke – dvs. at omdannes fra blød brusk til hård knogle. Dette kræver rigelige mængder calcium, og din krop vil begynde at trække på dine egne knogledepoter hvis du ikke får nok via kosten.",
+          "Barnet kan nu bøje og strække arme og ben. Fingrene er fuldt adskilte og begynder at udvikle fingernegle. Tungen er tilstrækkelig udviklet til, at fosteret kan synke – det gør det ved konstant at synke fostervand."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 10",
+        paragraphs: [
+          "For mange kvinder begynder der nu langsomt at ske et skift. Kvalmen kan begynde at aftage lidt, og energiniveauet vender forsigtigt tilbage. Det er dog individuelt – nogen har det stadig hårdt langt ind i andet trimester.",
+          "Livmoderen er nu på størrelse med en appelsin og er steget op af bækkenet. Du kan selv mærke den over skambenets kant. Maveomkredsen begynder muligvis at øges lidt, selvom det for de fleste endnu ikke er synligt for andre.",
+          "Hormonproduktionen er stadig høj, men hCG-niveauet begynder en langsom stabilisering, der typisk topper i uge 10-12. Mange af de værste første-trimester-symptomer er relateret til hCG, og når det falder, lindres symptomerne."
+        ]
+      },
+      tips: [
+        "Spis calciumrige fødevarer: mælk, ost, yoghurt, bønner og grønkål.",
+        "Det kan nu være tid til at fortælle din arbejdsgiver – du har ret til at tilpasse arbejdet.",
+        "Blod- og urinprøver i første trimester kan afsløre jernmangel og andre mangler – bed om dem.",
+        "Overvej om du ønsker nakkefoldscanning + blodprøver (uge 11-14) for kromosomal screening.",
+        "Skriv dagbog – mange finder det terapeutisk at dokumentere graviditeten."
+      ],
+      didYouKnow: "Vidste du, at fosteret i uge 10 allerede aktivt synker fostervand? Det er ikke bare tilfældigt – det er en vigtig øvelse, der hjælper med at udvikle fordøjelsessystemet og lungernes kapacitet."
+    }
   },
   11: {
-    label: "Uge 11",
-    body: ["Baby er nu cirka på størrelse med en lime. Det lille ansigt udvikler sig videre, kroppen vokser, og bevægelserne bliver mere aktive, selvom du stadig ikke kan mærke dem endnu.", "Det kan næsten føles snydeagtigt, at der sker så meget derinde, uden at du får direkte besked fra baby. Ingen små spark endnu. Ingen tydelig mave for mange. Bare symptomer, tanker og måske en voksende fornemmelse af, at noget stort nærmer sig.", "For mange begynder kvalmen langsomt at ændre sig omkring denne periode, men ikke for alle. Nogle mærker en lille lettelse. Andre føler stadig, at de lever af kiks, pasta og meget specifikke ting, som kroppen pludselig har udpeget som de eneste acceptable fødevarer.", "Du kan også begynde at tænke mere på den første scanning. Det kan vække både spænding og nervøsitet. Måske glæder du dig. Måske holder du lidt igen med glæden, indtil du har set noget på skærmen.", "Begge dele giver mening."],
-    partner: ["{{motherName}} kan godt være mere nervøs, end hun viser. Den første scanning kan fylde meget, fordi graviditeten pludselig bliver mere virkelig. Det kan hjælpe, at du ikke kun spørger praktisk, men også giver plads til de bekymringer der måtte fylde."],
-    next_step: ["Mange vælger at dele nyheden efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyheden. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måder at fortælle nyheden på! Her \u201chttps://www.lalatoto.dk/blogs/bloggen/saadan-indretter-du-puslebordet\u201d."]
+    baby: "Ca. 41 mm. Barnet kan nu synke. Ydre kønsorganer begynder at differentiere sig.",
+    mom: "Første trimester nærmer sig slutningen. Energien kan langsomt vende tilbage.",
+    tip: "Planlæg din nakkefoldscanning (uge 11-14).",
+    detail: {
+      intro: "Uge 11 er præget af en mærkbar overgang. Kroppen begynder at vænne sig til graviditeten, og for mange kvinder letter de mest voldsomme symptomer. Samtidig sker der vigtige udviklingsspring hos fosteret.",
+      babySection: {
+        title: "Babyen i uge 11",
+        paragraphs: [
+          "Fosteret er nu ca. 41 mm og vejer ca. 7 gram. Kroppen begynder at strækkes ud – benene er nu klart længere end armene. Ansigtet har fået mere menneskelige proportioner, med øjnene bevæget frem mod ansigtscentrum.",
+          "Ydre kønsorganer begynder at differentiere sig, men er endnu ikke synlige på en ultralydsscanning. Kønnet kan typisk ikke afgøres med sikkerhed før uge 16-20. Internt er testes hos drenge ved at vandre nedad, og æggestokke hos piger er ved at aflejre deres livslange beholdning af æganlæg.",
+          "Nyrerne er nu tilstrækkeligt udviklede til at producere urin, som skilles ud i fostervandet. Fosteret synker derefter dette fostervand, og det omsættes. Dette cirkulationssystem er vigtigt for bl.a. lungernes og fordøjelsessystemets modning."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 11",
+        paragraphs: [
+          "Mange kvinder begynder at mærke, at de store hormonbølger aftager lidt. Kvalmen er måske ikke borte, men den kan have mistet noget af sin kraft. Energien vender langsomt tilbage for de fleste.",
+          "Livmoderen er nu tydeligt mærkbar i den nedre del af maven. Hos smalle kvinder kan en lille 'baby-bule' begynde at vise sig, selvom det for de fleste stadig er for tidligt.",
+          "En del kvinder oplever moderation i blodtrykket i anden halvdel af første trimester. Det kan medføre svimmelhed, særligt ved hurtige bevægelser. Rejs dig langsomt fra stolen eller sengen."
+        ]
+      },
+      tips: [
+        "Book din nakkefoldscanning (kombinationstest) til uge 11-14 nu – det er populært og tiderne går hurtigt.",
+        "Spis jernrige fødevarer: rødt kød, bønner, spinat og berigede kornprodukter.",
+        "C-vitamin hjælper med optagelsen af jern fra plantebaserede kilder – spis citrus til.",
+        "Let svimmelhed ved at rejse sig er normalt – rejs dig altid langsomt.",
+        "Overvej hvornår og hvem du vil fortælle din nyhed til – mange venter til efter 12-ugersscanning."
+      ],
+      didYouKnow: "Vidste du, at piger allerede i uge 11-12 har alle de æganlæg, de nogensinde vil have? Den kvindelige krop dannes med et bestemt antal æganlæg – op til 7 millioner ved fødslen – og der dannes ikke nye i løbet af livet."
+    }
   },
   12: {
-    label: "Uge 12",
-    body: ["Uge 12 føles for mange som en lille milepæl. Baby er cirka på størrelse med en blomme, og selvom det stadig er tidligt, begynder det lille menneske derinde at få mere og mere form.", "Hvis I skal til 12 ugers scanning, kan det være første gang, I virkelig ser baby på en skærm. Et lille bankende hjerte. En lille krop. Måske en bevægelse, der får det hele til at føles meget virkeligt på én gang.", "For nogle bliver denne uge fyldt med lettelse. For andre vækker den nervøsitet. Måske har du ventet på at nå hertil, før du turde tro lidt mere på det. Måske har du allerede knyttet sig dybt. Måske føles det stadig lidt uvirkeligt.", "I kroppen kan symptomerne begynde at lette for nogle, mens andre stadig kæmper med kvalme, træthed og en krop, der føles som om den har sit eget lille styresystem.", "Det er ikke en konkurrence om at nyde det mest. Det er en stor overgang, og du må gerne lande i den i dit eget tempo."],
-    partner: ["For {{motherName}} kan uge 12 være følelsesfuld på mange måder. Måske er hun lettet, nervøs, rørt eller helt flad bagefter. Giv plads til, at scanningen ikke bare er en aftale i kalenderen, men et øjeblik der kan sidde i kroppen længe efter."],
-    next_step: ["Hvis 12-ugers scanningen var Jeres milepæl for at fortælle Jeres nærmeste om graviditeten, så tal om hvem I vil fortælle det til. Det er også et godt tidspunkt at tale om, om nyheden skal deles offentligt på de sociale medier, eller om det er vigtigt for Jer at beholde nyheden i inderkredsen."]
+    baby: "Ca. 53 mm – på størrelse med en blomme. Fingrene har fingeraftryk. Fosteret kan gribe. Nyrerne producerer urin.",
+    mom: "Mange oplever energiboost. Risikoen for spontan abort falder markant. Maven begynder at vise sig.",
+    tip: "Nu er et godt tidspunkt at fortælle din gode nyhed til venner og familie.",
+    detail: {
+      intro: "Uge 12 er en fejringsværdig uge. Risikoen for spontan abort falder til under 1%, og de fleste vælger at dele den glade nyhed med venner og familie. Barnet er nu genkendeligt menneskeligt.",
+      babySection: {
+        title: "Babyen i uge 12",
+        paragraphs: [
+          "Fosteret er nu ca. 53 mm og vejer ca. 14 gram – på størrelse med en blomme. Alle organer er på plads, og kroppen er nu proportionalt mere ligevægtig. Hoved, krop og lemmer er alle tydelige.",
+          "Fingrene har nu fingeraftryk – et helt unikt mønster, der aldrig vil gå igen i verden. Gribeindfleksen er aktiv, og fosteret kan nu gribe om navlestrengen. Ansigtet er nu meget menneskeligeligt med en tydelig næse, mund og øjenbryn.",
+          "Nyrerne producerer nu aktivt urin, der skilles ud i fostervandet. Tarmene er nu fuldt tilbagetrukkne i bughulen. Hjernen sender stadigt mere komplekse signaler, og bevægelserne er mere koordinerede."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 12",
+        paragraphs: [
+          "For mange kvinder er uge 12 et vendepunkt. Energien vender tilbage, kvalmen aftager, og der opstår en ny glæde og lethed. Det er ikke alle, der oplever dette – nogen har det stadig svært – men det er det typiske mønster.",
+          "Livmoderen stiger nu op over skambenet og kan mærkes tydeligt. Maven begynder at vise sig, og tøjet kan måske allerede sidde strammere i taljen. Mange kvinder oplever nu en stigende appetit.",
+          "Hormonet relaxin begynder at øge sit virke – det løsner ledbånd og led, hvilket kan føre til lette sting i lysken og bækkenet. Det er en normal del af kroppens forberedelse på graviditeten og den kommende fødsel."
+        ]
+      },
+      tips: [
+        "Del din nyhed nu – det første trimester er overstået, og risikoen er markant reduceret.",
+        "Bestil graviditetspleje-produkter hvis du vil forebygge strækmærker.",
+        "Det er tid til at undersøge barselsregler og -rettigheder på dit arbejde.",
+        "Fortsæt med folinsyre og overvej D-vitamintilskud.",
+        "Book en tid til tandbørsning – hormonerne kan øge risiko for tandkødsbetændelse."
+      ],
+      didYouKnow: "Vidste du, at fingeraftryk dannes allerede i uge 10-12, og at de er fuldstændigt unikke – selv hos identiske tvillinger? De dannes af det mønster, som amnionteret skaber på fingertoppenes overflade."
+    }
   },
   13: {
-    label: "Uge 13",
-    body: ["Baby er nu cirka på størrelse med en fersken. Kroppen vokser videre, ansigtet bliver mere detaljeret, og de små bevægelser fortsætter derinde, selvom du måske stadig ikke mærker dem.", "Du er ved at lande i 2. trimester, og måske letter kvalmen lidt. Måske kommer der små glimt af energi tilbage. Måske ikke. Graviditetskroppen læser ikke altid kalenderen, desværre.", "Det kan også være en uge, hvor nyheden begynder at komme ud til flere. Og det kan føles både dejligt og mærkeligt. Pludselig er graviditeten ikke kun jeres hemmelighed længere. Andre får reaktioner, spørgsmål, meninger og glæde. Det kan være varmt, men også lidt meget.", "Måske begynder du også at kigge på din mave oftere. Er den der? Er det oppustethed? Er det baby? Er det aftensmad? Sandsynligvis lidt af det hele.", "Der er noget fint ved denne fase, og det hele begynder at virke meget virkeligt."],
-    partner: ["Når flere begynder at kende til graviditeten, kan {{motherName}} også få flere kommentarer og spørgsmål. Måske elsker hun den øgede opmærksomhed. Men det kan også være at den trætter hende, og i så fald kan det være rart, hvis du hjælper med at passe på hendes grænser. Ikke alle behøver vide alt, og det er helt okay."],
-    next_step: ["Tal om, hvordan I sikrer hinanden og baby bedst, hvis I ikke er gift. Det kan lyde som en tung samtale, men i virkeligheden handler det om kærlighed, tryghed og om at passe godt på den familie, I er ved at skabe."]
+    baby: "Ca. 65 mm. Andet trimester begynder. Stemme-båndet anlægges. Fosteret kan åbne munden.",
+    mom: "Andet trimester starter – for mange den behageligste periode. Libido kan stige.",
+    tip: "Begynd at bruge fugtighedscreme på maven, lår og bryster.",
+    detail: {
+      intro: "Velkommen til andet trimester! Uge 13 markerer begyndelsen på den periode, som mange gravide beskriver som den dejligste. Energien er tilbage, kvalmen aftager, og maven begynder at vokse synligt.",
+      babySection: {
+        title: "Babyen i uge 13",
+        paragraphs: [
+          "Fosteret er nu ca. 65-75 mm og vejer ca. 23 gram. Kroppen er nu mere proportional – benene er nu næsten lige så lange som armene. Hoved udgør fortsat en stor del af den samlede kropslængde.",
+          "Stemmebåndet begynder at anlægges i halsen – selvom barnet selvfølgelig endnu ikke kan lave lyde, er grundstrukturerne ved at komme på plads. Mundhulen er funktionel, og fosteret åbner og lukker munden, øver synkebevægelser.",
+          "Tarmen er nu endeligt tilbagetrukkket i bughulen. Leveren er nu stor og fylder en væsentlig del af bughulen – dens primære funktion er i denne fase at producere blodceller, en rolle som knoglemarven overtager hen mod slutningen af graviditeten."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 13",
+        paragraphs: [
+          "De fleste kvinder oplever en markant lettelse ved indgangen til andet trimester. Hormonstormen fra første trimester aftager, og kroppen begynder at vænne sig til graviditetstilstanden. Energiniveauet stiger, humøret bliver mere stabilt.",
+          "Mange kvinder oplever en øget seksuell lyst i andet trimester. Den øgede blodgennemstrømning i bækkenet øger sansefornemmelserne, og fraværet af kvalme og træthed giver plads til at nyde dette. Sex er fuldstændig sikkert under en normal graviditet.",
+          "Brysterne er fortsat store og måske ømme. Mælkekirtlerne udvides, og nogen begynder at producere råmælk (colostrum) – en gullig, tyk og næringsstof-rig første mælk – allerede fra andet trimester."
+        ]
+      },
+      tips: [
+        "Start med at bruge fugtighedscreme dagligt på maven, lår, hofter og bryster.",
+        "Mandelmiddel, kokosolie eller specifikke graviditetsolier er gode valg mod strækmærker.",
+        "Sex er sikkert – men tal med din jordemoder hvis du har spørgsmål eller usikkerheder.",
+        "Begynd evt. bækkenbundstræning nu – det er aldrig for tidligt.",
+        "Planlæg rejser til andet trimester hvis du ønsker at rejse – det er den bedste periode."
+      ],
+      didYouKnow: "Vidste du, at barnet allerede i uge 13 kan skelne sødt fra bittert i fostervandet? Det synker fostervand konstant, og smagssansen er nu tilstrækkelig aktiv til at reagere på det din mor spiser. Det er faktisk muligt, at barnets smagspræferencer formes allerede nu."
+    }
   },
   14: {
-    label: "Uge 14",
-    body: ["Du er nu landet helt i 2. trimester og baby er cirka på størrelse med en citron. Den lille krop vokser, ansigtet bliver mere tydeligt, og baby kan lave små bevægelser, som du måske endnu ikke mærker.", "For mange føles andet trimester som en lidt blødere fase. Ikke nødvendigvis nem, men måske lidt mindre tåget end de første uger. Kvalmen kan begynde at slippe, energien kan langsomt vende tilbage, og graviditeten kan føles mere virkelig.", "Men hvis du stadig er træt, kvalm eller ikke føler dig spor blomstrende, er du ikke forkert. Der findes ikke én rigtig måde at være gravid på.", "Maven kan begynde at vise sig lidt mere, eller også ligner det stadig mest, at du har spist en virkelig god frokost. Begge dele er normalt.", "Uge 14 kan føles som at stå ved begyndelsen af noget nyt. Første trimester er bag dig, og kroppen fortsætter med at gøre sit stille, store arbejde."],
-    partner: ["{{motherName}} er måske på vej ind i en lettere periode, men det betyder ikke, at hun pludselig har uendeligt overskud. Det kan være en god tid at blive ved med at spørge ind og ikke antage, at alt er nemt, bare fordi de første uger er overstået."],
-    next_step: ["Det kan være en god idé at blive bekendt med Jeres barselsvilkår, inden fødslen kommer alt for tæt på. Det kan virke som en helt ny verden, og måske også lidt uoverskueligt at tage hul på, men oftest når det praktiske er på plads, kan det være langt nemmere bare at glæde sig."]
+    baby: "Ca. 80 mm. Fingernegle er fuldt udviklede. Fosteret kan grimasse.",
+    mom: "Livmoderen er synlig. Rundligamentssmerter er normale.",
+    tip: "Bækkenbundøvelser er vigtige nu for at forebygge inkontinens.",
+    detail: {
+      intro: "I uge 14 er barnet nu klart identificerbart som menneske på ultralyd. Ansigtsudtryk – om end ureflekterede – begynder at opstå, og væksten accelererer.",
+      babySection: {
+        title: "Babyen i uge 14",
+        paragraphs: [
+          "Fosteret er nu ca. 80-90 mm og vejer ca. 43 gram. Fingernegle er nu fuldt udviklede og vokser aktivt. Fostre har undertiden kradset sig selv i ansigtet med neglene – det kan ses på ultralyd.",
+          "Ansigtsmusklerne er nu tilstrækkelig udviklede til, at fosteret kan lave grimasser – rynke panden, smile og frown. Disse udtryk er ikke bevidste, men er refleksagtige reaktioner fra et modnet nervesystem. De er alligevel vidunderlige at se på scanning.",
+          "Øjnene er fortsat lukket, men kan nu bevæge sig under øjenlågene. Barnet kan registrere lys – stærkt lys mod maven kan udløse reaktioner. Ørerne er nu i korrekt position på siderne af hovedet."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 14",
+        paragraphs: [
+          "Livmoderen er nu godt mærkbar over skambenets kant, og for mange er maven nu tydeligt synlig. Tøjet sidder sandsynligvis strammere, og mange kvinder begynder nu at købe graviditetstøj.",
+          "Rundligamentssmerter – en stikkende fornemmelse i siderne af maven, særligt ved hurtige bevægelser, hoste eller nys – er meget normale og skyldes de strækende ledbånd, der holder livmoderen på plads. De er harmløse men kan være ubehagelige.",
+          "Huden kan begynde at forandre sig: nogen oplever brunfarvning på panden og kinderne (chloasma), og linea nigra – en mørk linje ned over maven – kan begynde at dukke op. Det er forårsaget af hormonernes effekt på pigmentcellerne."
+        ]
+      },
+      tips: [
+        "Øv bækkenbundøvelser dagligt: stram op som om du skal holde vandladningen, hold 5-10 sekunder, slap af og gentag 10 gange.",
+        "Chloasma (masken) forblev ved solen – brug solcreme i ansigtet.",
+        "Rundligamentssmerter lindres ved at undgå hurtige bevægelser og ved at støtte maven ved hoste.",
+        "Justerbare buksekile og komfortabelt undertøj gør hverdagen lettere.",
+        "Fortsæt med D-vitamin og folinsyre."
+      ],
+      didYouKnow: "Vidste du, at barnet i uge 14 faktisk kan føle smerte? Smerteopfattelsens nervebaner er nu tilstrækkeligt udviklet til, at fosteret reagerer på smertefulde stimuli. Dette er en vigtig overvejelse i forbindelse med invasive indgreb."
+    }
   },
   15: {
-    label: "Uge 15",
-    body: ["Baby er nu cirka på størrelse med et æble. Lille nok til stadig at have god plads, men stor nok til at der sker virkelig meget. Arme og ben bliver længere, kroppen bliver mere proportioneret, og de små bevægelser bliver langsomt mere koordinerede.", "Du kan stadig ikke nødvendigvis mærke baby endnu, men der er aktivitet derinde. Det er lidt som at have en hemmelig lille gymnast i maven, bare uden at få adgang til forestillingen endnu.", "For nogle begynder energien at vende mere tilbage. For andre føles kroppen stadig tung, træt eller uforudsigelig. Måske er appetitten anderledes eller måske har du fået helt nye madpræferencer. Det kan være en skør og skøn periode på én og samme tid."],
-    partner: ["{{motherName}} er måske ved at få lidt mere energi, men det betyder ikke, at kroppen ikke stadig arbejder hårdt. Det kan være en tid hvor hun på tidspunkter virker helt som sig selv, men lige så hurtigt kan blive ramt af træthed og følelser. Det kan nogle gange være svært at navigere i, men med forståelse og ro kommer man langt."],
-    next_step: ["Hvis energien så småt er på vej tilbage, så kan det være et godt tidspunkt at tale praktik i forhold til, om der skal indrettes børneværelse, pusleplads, børnesikres og lignende i jeres hjem og lægge en plan herfor."]
+    baby: "Ca. 10 cm. Hår begynder at gro. Øjnene bevæger sig. Fosteret er meget aktivt.",
+    mom: "Du kan begynde at mærke lette bevægelser – 'sommerfugle' eller 'luftbobler'. Maven er synlig.",
+    tip: "Sov på siden (helst venstre) fra nu af for optimal blodgennemstrømning.",
+    detail: {
+      intro: "I uge 15 nærmer sig et af graviditetens mest magiske øjeblikke: de første bevægelser. Mange kvinder beskriver det som at mærke sommerfugle eller luftbobler – og det er præcis det, det er!",
+      babySection: {
+        title: "Babyen i uge 15",
+        paragraphs: [
+          "Fosteret er nu ca. 10 cm (fra isse til sæde) og vejer ca. 70 gram. Hår begynder at spire frem på hovedet, og et fint lag dun (lanugo) dækker kroppen. Dette dun hjælper med at fastholde den beskyttende vernixcoating.",
+          "Øjnene kan nu bevæge sig under de lukkede øjenlåg. Barnet er yderst aktivt og rammer, sparker, vender sig og gyver sig rundt. De fleste førstemødre mærker endnu ingenting, mens kvinder der har født før typisk kan mærke bevægelserne allerede nu.",
+          "Høresansen udvikler sig hurtigt. Barnet kan nu høre lyde fra omverdenen – din stemme, musik, og lyde udefra. Det er faktisk dokumenteret, at nyfødte genkender melodier, de er blevet afspillet mange gange under graviditeten."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 15",
+        paragraphs: [
+          "Maven er nu tydeligt synlig, og de fleste fremmede kan se, at du er gravid. Livmoderen strækker sig nu op til ca. halvvejs mellem navlen og skambenets kant.",
+          "Nogen begynder nu at mærke de første svage bevægelser – beskrevet som 'sommerfugle', 'luftbobler' eller 'let rumlen'. Hos førstemødre sker det typisk fra uge 16-20, mens flergangsgravide kan mærke det allerede nu.",
+          "Blodtrykket er typisk lavt i andet trimester. Det kan føre til svimmelhed, særligt ved hurtige holdningsskift. Tilstrækkelig væskeindtagelse og langsomme bevægelser hjælper."
+        ]
+      },
+      tips: [
+        "Sov på venstre side – det giver optimal blodgennemstrømning til placenta og baby.",
+        "En graviditetspude er en god investering fra nu af.",
+        "Tal og syng til din baby – de kan høre dig, og det styrker tilknytningen.",
+        "Pas på blodtrykket: rejs dig altid langsomt fra siddende eller liggende stilling.",
+        "Spis omega-3 rige fødevarer: fed fisk som laks, makrel og sild (max 2x om ugen) er gode kilder."
+      ],
+      didYouKnow: "Vidste du, at nyfødte foretrækker de historier og sange, de har hørt i livmoderen? Forsøg viser, at nyfødte babyer roligere af at høre en stemme eller melodi, de kender fra livet inde i maven – selv umiddelbart efter fødslen."
+    }
   },
   16: {
-    label: "Uge 16",
-    body: ["Baby er nu cirka på størrelse med en avocado. Et lille, travlt menneske i fuld udvikling. Musklerne bliver stærkere, ansigtet mere tydeligt, og baby kan lave små bevægelser, som måske stadig er for fine til, at du mærker dem.", "Der sker også noget fint nu: baby begynder langsomt at få mere kontrol over kroppen. Ikke på en \u201cjeg har styr på det hele\u201d måde, men mere på en \u201cjeg prøver lige at bevæge armen herinde\u201d måde.", "Du kan måske begynde at mærke små forandringer i kroppen. Maven fylder måske lidt mere. Ligamenterne kan spænde, især når livmoderen vokser. Måske har du mere energi. Måske er du stadig træt. Måske har du fået en ny og meget specifik craving, som ingen andre helt forstår.", "Det kan også være en uge, hvor tankerne om fremtiden begynder at tage mere form. Ikke kun babyting og aftaler, men små billeder af et liv, der langsomt er på vej til at ændre sig.", "Som familie begynder I allerede nu at blive til, lidt efter lidt."],
-    partner: ["{{motherName}} kan være i en fase, hvor graviditeten begynder at fylde på en ny måde. Ikke kun fysisk, men også i tanker om fremtiden. Det kan være en fin tid at tale om, hvem I gerne vil være som familie, uden at I behøver have alle svarene nu."],
-    next_step: ["Tal om hvilke traditioner I gerne vil skabe som familie, når baby kommer. Er der traditioner som I hver især har med Jer fra Jeres barndom, som I ønsker at føre videre? Og er der ligeledes traditioner som I ikke længere føler tilknytning til?"]
+    baby: "Ca. 11,6 cm, vejer ca. 100 g. Hørelsen udvikles markant. Øjnene kan opfange lys.",
+    mom: "Fri for kvalme for de fleste. Linea nigra kan opstå. Maven er tydeligt synlig.",
+    tip: "Tal og syng til din baby – de kan høre dig og danne minder om din stemme.",
+    detail: {
+      intro: "Uge 16 er en glad uge for mange. De første-trimester-udfordringer er overstået, energien er tilbage, og du er nu tydeligst gravid. Barnet kan nu høre din stemme.",
+      babySection: {
+        title: "Babyen i uge 16",
+        paragraphs: [
+          "Fosteret er nu ca. 11,6 cm og vejer ca. 100 gram – en stor milepæl! Øjnene kan nu opfange lys, selvom øjenlågene er lukkede. Stærkt lys direkte på maven kan få barnet til at vende sig væk.",
+          "Høresansen er nu godt udviklet. Barnet kan høre lyde fra omverdenen – din stemme, musik, din hjertebanken og fordøjelseslyde. Dette er begyndelsen på kommunikation og tilknytning, der starter allerede i livmoderen.",
+          "Skelettet er nu i høj grad hærdet. Knoglerne er synlige på røntgen. Musklerne er stærke nok til at bevæge alle lemmer koordineret. Barnet bevæger sig konstant, selvom du måske endnu ikke mærker det tydeligt."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 16",
+        paragraphs: [
+          "For de fleste er uge 16 en af de bedste i hele graviditeten. Energien er høj, maven er flot rund og tydelig, og de fleste ser straalmende ud – den klassiske 'pregnancy glow' opstår typisk i denne periode.",
+          "Linea nigra – den mørke linje fra navlen ned til skambenets kant – er nu synlig hos mange. Den skyldes melaninproduktionen og forsvinder typisk af sig selv måneder efter fødslen.",
+          "Kroppen producerer nu ca. 50% mere blod end normalt. Det øgede blodvolumen kan give synlige blodårer på brysterne og maven. Nogen oplever let hævelse i hænder og fødder – det er normalt."
+        ]
+      },
+      tips: [
+        "Syng og tal til din baby – det fremmer tilknytning og barnet genkender din stemme.",
+        "Gå til din anden jordemoderbesøg og tjek om du skal have jerntilskud.",
+        "Book din morfologiske scanning (store scanning) til uge 18-20.",
+        "Fugtighedscreme dagligt på maven, hofter og lår.",
+        "Overvej barselsgymnastik eller graviditetsfitness – det er skånsomt og socialt."
+      ],
+      didYouKnow: "Vidste du, at barnet i uge 16 kan skelne forskellen på din stemme og fremmedes stemmer? Forsøg viser, at hjertefrekvensen falder (et tegn på afslapning) når de hører moderens stemme, men stiger ved fremmede stemmer."
+    }
   },
   17: {
-    label: "Uge 17",
-    body: ["Baby er nu cirka på størrelse med en pære. Kroppen vokser videre, knoglerne bliver stærkere, og de små bevægelser derinde bliver mere aktive, selvom du måske stadig ikke kan mærke dem tydeligt.", "Nogle begynder at mærke de allerførste små bobler omkring denne tid. Andre mærker ingenting endnu. Begge dele kan være helt normalt. De første bevægelser kan føles som små luftbobler, sommerfugle eller en mærkelig lille fornemmelse indefra, som man først senere forstår var baby.", "Din krop er måske begyndt at føles mere gravid nu. Maven kan være mere synlig, tøjet kan stramme, og du kan måske mærke, at kroppen arbejder anderledes, når du rejser dig, går eller ligger ned.", "Der kan også være dage, hvor graviditeten føles lidt mere rolig. Som om første trimester langsomt slipper sit tag, og du begynder at finde en ny rytme i det hele.", "Men det er også helt okay, hvis du stadig føler dig træt, tung eller følelsesmæssigt lidt over det hele. Graviditet er ikke en lige linje. Den er mere som en mærkelig blanding af kærlighed, bekymringer, hormoner, humørsvingninger, cravings og at føle sig \u201csom sig selv\u201d for pludselig med et sæt at huske, at man faktisk gemmer på noget stort og magisk."],
-    partner: ["{{motherName}} begynder måske at mærke graviditeten på en ny måde nu, både fysisk og mentalt. Det kan være en fin tid at spørge ind til, hvordan det føles for hende, uden at ville fikse noget. Nogle gange er det nok bare at lytte."],
-    next_step: ["Tal om, hvordan I hver især mærker graviditeten lige nu. Har I øjeblikke, hvor I helt glemmer det, for pludselig at huske \u201cNårh ja! Der er en baby på vej\u201d? Får I mange spørgsmål? Går I selv med mange spørgsmål? Får graviditeten Jer til at føle, at I kommet tættere på hinanden? Eller det modsatte?"]
+    baby: "Ca. 13 cm. Fedt aflejres under huden. Fingeraftryksknogler hærder.",
+    mom: "Ryggen kan begynde at gøre ondt. Næseblod og tilstoppet næse er almindeligt.",
+    tip: "Svømning aflaster ryggen og er skånsom motion under graviditeten.",
+    detail: {
+      intro: "I uge 17 begynder barnets krop at afrunde sig – fedt aflejres under huden og giver det karakteristiske, bløde babyseende. Simultant kan rygproblemer begynde at melde sig hos mor.",
+      babySection: {
+        title: "Babyen i uge 17",
+        paragraphs: [
+          "Fosteret er nu ca. 13 cm og vejer ca. 140 gram. For første gang begynder fedt at aflejres under huden. Dette fedt er afgørende for barnets varmeregulering efter fødslen og bidrager til den bløde, runde babyform vi kender.",
+          "Fingeraftryksknogler og tåknogler hærder yderligere. Immunsystemet modnes – barnet producerer nu sine egne antistoffer, omend det fortsat modtager væsentlige immunstoffer fra dig via moderkagen.",
+          "Sanseudviklingen er nu i høj gear. Berøringssansen er nu aktiv over hele kroppen. Smagssansen er veludviklet. Øjnene kan bevæge sig i koordinerede mønstre. Barnet 'øver' alle sine sanser konstant."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 17",
+        paragraphs: [
+          "Rygsmerte er et af de mest almindelige klager i andet trimester. Den voksende livmoder forrykker tyngdepunktet fremad, og kroppen kompenserer ved at bøje ryggen bagover – det belaster lænden og kan give smerter.",
+          "Næseblod og tilstoppet næse er meget almindelige nu. Det skyldes den øgede blodmengde og de hormonudløste slimhindehævelser. Brug saltvandsslimhindespray og fugter godt.",
+          "Søvnen kan begynde at blive mere besværlig. Maven er stor nok til at gøre sideligende stilling nødvendig, men det kræver tilvænning. En graviditetspude til at støtte maven og benene er en god investering."
+        ]
+      },
+      tips: [
+        "Svøm gerne 2-3 gange om ugen – det aflaster ryggen og er dejligt for hele kroppen.",
+        "Brug saltvandsslimhindespray mod tilstoppet næse – det er sikkert.",
+        "En graviditetspude til sengen hjælper markant med søvnkvaliteten.",
+        "Undgå at stå med hælene inden til – det forværrer rygsmerte.",
+        "Fysioterapeut specialiseret i gravide kan hjælpe ved vedvarende rygsmerte."
+      ],
+      didYouKnow: "Vidste du, at fedtet der dannes i uge 17 er et særligt type fedt kaldet 'brunt fedt'? Det er ekstremt metabolisk aktivt og er barnets primære varmekilde de første uger af livet, inden det lærer at ryste og producere varme på anden vis."
+    }
   },
   18: {
-    label: "Uge 18",
-    body: ["Baby er cirka på størrelse med en sød kartoffel, og der sker stadig masser derinde. Ørerne udvikler sig, kroppen vokser, og baby bevæger sig mere og mere, selvom bevægelserne stadig kan være svære at mærke udefra.", "Mange begynder at vente lidt på de første tydelige bevægelser nu. Måske mærker du noget. Måske er du i tvivl. Måske ligger du helt stille om aftenen og forsøger at skelne mellem baby, mavebobler og aftensmad. Det er en ret særlig tid.", "For nogle er uge 18 også tiden, hvor 20 ugers scanningen begynder at fylde i tankerne. Den kan vække glæde, spænding og nervøsitet på én gang. Det er helt forståeligt. Det er stort at skulle se baby igen og få kigget grundigt på, hvordan det hele udvikler sig.", "I kroppen kan du måske mærke mere tyngde, spændinger i underlivet, ømme ligamenter eller en mave, der ikke længere helt kan ignoreres. Måske begynder du også at sove lidt mere kreativt med puder overalt.", "Graviditeten er ved at blive mere synlig. Ikke kun for andre, men måske også for dig selv."],
-    partner: ["For {{motherName}} kan tiden op til scanningen fylde mere, end man lige ser udefra. Hun kan både glæde sig og være nervøs. Det kan betyde meget, at du også viser, at det er noget, I går til sammen."],
-    next_step: ["Ved 20 ugers scanningen vil man ofte kunne se om I venter en pige eller dreng. Tal om, om I ønsker at kende babys køn, hvis det bliver muligt. Og hvis ikke, ønsker I da at få kønnet nedskrevet på et stykke papir, så I kan finde ud af det senere i graviditeten?"]
+    baby: "Ca. 14,2 cm, vejer 190 g. Myelin dannes om nerverne. Fosteret kan gabe.",
+    mom: "Bevægelserne er tydelige for de fleste. Hår og negle vokser hurtigt.",
+    tip: "Gå til tandlægen – hormoner kan give tandkødsbetændelse.",
+    detail: {
+      intro: "I uge 18 er en stor milepæl for barnets hjerne og nervesystem. Myelindannelsen accelererer, og nervesystemet bliver lynhurtigt mere effektivt. For de fleste mødre er dette også ugen, hvor bevægelserne for alvor kan mærkes.",
+      babySection: {
+        title: "Babyen i uge 18",
+        paragraphs: [
+          "Fosteret er nu ca. 14,2 cm og vejer ca. 190 gram. Myelin – det hvide, fedtholdige stof, der isolerer nerverne og gør nervesignalerne hurtigere – begynder at dannes om nerverne. Denne myelindannelse fortsætter helt op i de tidlige voksenår.",
+          "Fosteret kan nu gabe, strække sig og lave grimasser, der ligner latter og gråd. Det er refleksagtige bevægelser, men de er alligevel fascinerende. Barnet er nu meget aktivt og bevæger sig mange gange i timen.",
+          "Høresansen er nu så veludviklet, at barnet reagerer på pludselige høje lyde med et sæt. Ydre ørestrukturer er fuldt udviklede og sidder korrekt. Det indre øre er tilstrækkeligt modent til at registrere lydenes retning."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 18",
+        paragraphs: [
+          "De fleste kvinder mærker nu tydeligt barnets bevægelser – om end ikke alle. Førstemødre kan godt have det svært ved at adskille barnets bevægelser fra fordøjelseslyde. Flergangsgravide genkender dem typisk hurtigt.",
+          "Hår og negle vokser nu hurtigere end normalt – en glædelig bivirkning af de graviditetshormoner. Mange kvinder oplever også, at håret bliver tykkere og mere glansfuldt. Det skyldes, at hormoner forlænger hårets vækstfase.",
+          "Hormoner kan forårsage hævede og blødende tandkødsligt – graviditetstandkødsbetændelse. Tandlægebesøg er gratis under graviditet i mange kommuner, og det anbefales kraftigt at benytte sig af det."
+        ]
+      },
+      tips: [
+        "Book tid hos tandlægen nu – graviditetstankødsbetændelse er hyppig og behandles let.",
+        "Bland eventuel jern-tilskud med orange-juice for bedre optagelse.",
+        "Begynd at skrive bevægelserne ned – du vil elske at se tilbage på det.",
+        "Brug blød tandbørste og mild tandpasta for at skåne hævede tandkød.",
+        "Omega-3 syrer er vigtige for barnets hjerne og øjne – spis fed fisk et par gange om ugen."
+      ],
+      didYouKnow: "Vidste du, at myelindannelsen som starter i uge 18 faktisk ikke er afsluttet før du er i midten af tyverne? Præfrontal cortex – den del af hjernen der styrer beslutningstaging og impulskontrol – er den sidst myeliniserede region. Det forklarer mange teenageradfærd!"
+    }
   },
   19: {
-    label: "Uge 19",
-    body: ["Baby er nu cirka på størrelse med en mango. Kroppen bliver mere proportioneret, huden er stadig tynd, og baby bevæger sig rundt i sit lille vandunivers med mere og mere kraft.", "Måske mærker du små puf nu. Måske føles det stadig som noget, der kunne være baby, men også kunne være fordøjelsen. Det er helt almindeligt at være i tvivl i starten. De første bevægelser kommer sjældent med fanfare. De kommer mere som små stille hilsner indefra.", "For mange nærmer 20 ugers scanningen sig, og det kan gøre denne uge lidt spændt. Man kan godt være glad og nervøs samtidig. Faktisk er det næsten en graviditetsklassiker at have to følelser i kroppen på én gang.", "Din mave vokser måske, og kroppen kan begynde at sende nye små beskeder. Mere tyngde. Mere stræk. Mere sult. Mere behov for at skifte stilling. Måske også en stærkere fornemmelse af, at graviditeten ikke længere bare er en tanke, men noget der fylder i hele kroppen.", "Og så er der hele spørgsmålet om køn, navne, drømme og forestillinger. Nogle elsker at vide alt. Andre vil gerne gemme lidt mystik. Begge dele kan være helt rigtigt."],
-    partner: ["{{motherName}} kan være i en fase, hvor graviditeten bliver mere konkret. Scanning, køn, navne og forestillinger kan begynde at fylde. Det er en god tid at være nysgerrig sammen, uden at I behøver beslutte alt endnu."],
-    next_step: ["Tal om, om I ønsker at arrangere en \u2019gender reveal party\u2019 eller på anden måde gøre noget ud af at afsløre kønnet. Klik \u201c https://www.lalatoto.dk/blogs/bloggen/fine-maader-at-afsloere-babys-koen\u201d hvor vi har samlet en række søde, sjove og festlige måder at afsløre kønnet på."]
+    baby: "Ca. 15,3 cm. Vernix begynder at dække kroppen. Sansecentraler modnes.",
+    mom: "Du er midt i graviditeten. Mange oplever graviditetshukommelse.",
+    tip: "Sørg for at få nok jern – rødt kød, bønner og grønne blade er gode kilder.",
+    detail: {
+      intro: "I uge 19 befinder du dig midt i graviditeten. Barnets krop er nu dækket af et beskyttende lag, og sanserne modnes intenst. For mange er dette en meget god periode.",
+      babySection: {
+        title: "Babyen i uge 19",
+        paragraphs: [
+          "Fosteret er nu ca. 15,3 cm og vejer ca. 240 gram. En hvid, fedtagtig substans kaldet vernix caseosa begynder at dække kroppen. Det beskytter den sarte hud mod at blive opblødt af fostervandet, og hjælper med at regulere temperaturen og beskytte mod infektioner.",
+          "Sansecentralerne i hjernen – for syn, lugt, smag, høring og berøring – modnes hurtigt nu. Disse sansecentre er afgørende for al læring og oplevelse. Jo mere modne de er ved fødslen, jo hurtigere kan barnet begynde at sanse og lære.",
+          "Fosseterets hjerneaktivitet er nu kompleks nok til at udvise koordinerede bevægelsesmønstre. Barnet sover og vågner i cyklusser – typisk 20-30 minutters søvn efterfulgt af aktivitet. Mange mødre begynder at lægge mærke til disse rytmer."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 19",
+        paragraphs: [
+          "'Graviditetshukommelse' – glemsel, manglende koncentration og svigtende hukommelse – er et reelt, videnskabeligt dokumenteret fænomen. Det skyldes dels hormoner, dels søvnmangel, og dels at hjernen prioriterer anderledes under graviditet.",
+          "Mange kvinder oplever en øget varmeproduktion og sveder mere end normalt. Det skyldes den øgede stofskifteaktivitet. Løstsiddende tøj i naturlige materialer hjælper.",
+          "Bevægelserne er nu et dagligt ritual for de fleste. Du begynder at kende dit barns mønstre – hvornår det er aktivt, hvornår det sover. Denne tidlige forståelse af barnets individuelle rytme er begyndelsen på foreldreinstinktet."
+        ]
+      },
+      tips: [
+        "Spis jernrige fødevarer dagligt: bøf, linser, spinat, tørrede abrikoser.",
+        "C-vitamin øger jernoptagelsen – drik gerne appelsinjuice til jernrige måltider.",
+        "Skriv bevægelserne ned i en app eller dagbog.",
+        "Luftige, løse tøj i bomuld hjælper mod overophedning.",
+        "En god graviditetsdagbog er en dejlig erindring at se tilbage på."
+      ],
+      didYouKnow: "Vidste du, at vernix – det hvide fedtlag – ikke blot er et beskyttende lag, men at nyfødte faktisk lugter af det? Den karakteristiske 'nyfødt-duft' stammer delvis fra vernix. Det er faktisk en evolutionær mekanisme, der udløser omsorgsadfærd hos forældre."
+    }
   },
   20: {
-    label: "Uge 20",
-    body: ["Uge 20 føles for mange som en stor milepæl. Halvvejs. Baby er cirka på størrelse med en banan, og kroppen er i fuld gang med at vokse, øve sig og blive mere klar til livet udenfor maven.", "Hvis I skal til 20 ugers scanning, kan det være en meget særlig oplevelse. Her bliver baby gennemgået mere grundigt, og mange mærker, at graviditeten bliver endnu mere virkelig bagefter. En lille profil på skærmen. Små hænder. Måske en fod. Måske en baby, der absolut ikke gider ligge samarbejdsvilligt. Måske går I derfra med følelsen af allerede at have fået en fornemmelse af babys personlighed.", "Baby kan nu begynde at høre lyde og stemmer. Mest dæmpet og filtreret gennem kroppen, men din stemme er allerede en del af babys lille verden. Måske er det lidt rørende at tænke på, at noget så hverdagsagtigt som din stemme, din latter eller lyden af dig, der går rundt derhjemme, allerede kan blive genkendeligt.", "For nogle er denne uge fyldt med lettelse. For andre også med nervøsitet. Begge dele giver mening. Det er et stort tidspunkt i graviditeten.", "Du kan måske mærke baby mere tydeligt nu, men det varierer meget. Placering af moderkagen, din krop og om du har været gravid før kan alt sammen spille ind. Det vigtigste er ikke at sammenligne for meget med andre.", "Uge 20 kan også åbne for større tanker. Ikke kun om babyudstyr og navne, men om familie, værdier og det liv, I gerne vil skabe."],
-    partner: ["Baby kan begynde at høre stemmer nu, og {{motherName}} bærer allerede meget af babys lydverden i sig. Hvis du taler til maven, synger lidt eller bare siger hej, er det ikke fjollet. Det er derimod en lille begyndelse på en hel særlig kontakt mellem dig og baby. Hvis du gør det regelmæssigt vil du endda kunne opleve, at baby med tiden \u2019svarer\u2019 fx med et lille spark."],
-    next_step: ["Tal åbent og kærligt om hvilke værdier I ønsker at tage med fra Jeres egen opdragelse. Måske er der elementer fra Jeres egen barndom, som I husker som særligt værdifulde. Måske er der også elementer I ønsker at bryde med."]
+    baby: "Ca. 16,4 cm og vejer ca. 300 g. HALVVEJS! Sveddannelse begynder. Fodsålerne er dannet.",
+    mom: "Halvvejen er nået! Maveknapper kan poppe ud. Søvnkvaliteten begynder at blive påvirket.",
+    tip: "Book din morfologiske scanning (store scanning) til uge 18-22 nu!",
+    detail: {
+      intro: "TILLYKKE! Du er halvvejs! Uge 20 er en fejret milepæl i enhver graviditet. Barnet er nu på størrelse med en banan, og den morfologiske scanning giver et detaljeret billede af alt.",
+      babySection: {
+        title: "Babyen i uge 20",
+        paragraphs: [
+          "Fosteret er nu ca. 16,4 cm (isse-sæde) og vejer ca. 300 gram – vi er halvvejs! Fodsålernes karakteristiske linjer og mønstre er nu fuldt dannet. Sveddannelse begynder i de nyudviklede svedkirtler.",
+          "Den morfologiske scanning (store scanning) foretages typisk nu. Den giver en detaljeret undersøgelse af alle organer, blodkar, knogler og hjerne. Mange forældre ser her for første gang tydelige ansigtstræk, hænder og fødder.",
+          "Barnet er nu så stort, at det begynder at spille en mere aktiv rolle i din fysiske oplevelse af graviditeten. Mange mødre rapporterer tydeligt sparke og strikke mod ribljenene i denne periode."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 20",
+        paragraphs: [
+          "Livmoderen er nu på højde med navlen. Mavekredsen er nu mærkbart større, og de fleste klæder er erstattet med graviditetstøj. Det er en tid for mange kvinder, hvor maven er flot rund og graviditeten føles dejlig.",
+          "Søvnen er nu en udfordring for mange. Maven gør det svært at finde en behagelig stilling, og barnets aktivitet kan afbryde søvnen. Venstre-sidenliggende stilling er ideel. En god graviditetspude er nu uundværlig.",
+          "Fordøjelsesproblemer som halsbrand og sure opstød er meget almindelige i uge 20 og fremefter, efterhånden som livmoderen presser op mod maveindholdet. Små, hyppige måltider og undgåelse af syrlig og fed mad hjælper."
+        ]
+      },
+      tips: [
+        "Halvvejsfejring er fortjent – planlæg noget dejligt for dig og din partner.",
+        "Book den morfologiske scanning nu hvis du ikke allerede har gjort det (uge 18-22).",
+        "Graviditetspude til sengen er nu nærmest nødvendig.",
+        "Undgå store måltider om aftenen – det forværrer halsbrand.",
+        "Sov på venstre side – det giver den bedste blodforsyning til placenta."
+      ],
+      didYouKnow: "Vidste du, at barnets fingeraftryk allerede er unikke i uge 20? De endelige mønstre er nu fastsat for livet. Det er faktisk fostervandets bevægelse over fingertoppenes hud, der skaber det individuelle mønster – ikke generne alene."
+    }
   },
   21: {
-    label: "Uge 21",
-    body: ["Baby er nu cirka på størrelse med en gulerod. Bevægelserne bliver stærkere, kroppen vokser, og baby øver sig videre på alt det, der langsomt gør det lille menneske mere klar til verden.", "Måske mærker du små spark mere tydeligt nu. Måske kommer de især, når du lægger dig ned, spiser noget sødt eller endelig prøver at slappe af. Babyer har allerede en imponerende evne til at vælge deres timing.", "Din mave fylder måske mere i hverdagen. Måske mærker du tyngde, ømme hofter, uro i benene eller behov for flere pauser. Måske føler du dig egentlig ret godt tilpas lige nu. Der kan være stor forskel på graviditeter, også fra uge til uge.", "For mange bliver baby mere virkelig i denne periode. Ikke kun som noget man har set på en scanning, men som en lille tilstedeværelse, der begynder at give lyd fra sig med kroppen. Og så begynder navne måske at snige sig ind i samtalerne."],
-    partner: ["{{motherName}} kan måske begynde at mærke baby mere nu, og det kan både være rørende og lidt mærkeligt. Det kan føles særligt, hvis du også viser interesse for de små puf, selvom du måske endnu ikke kan mærke dem udenpå. Men pludselig en dag mærker du det også, og så er det noget helt særligt."],
-    next_step: ["Tal om navne, ikke for at beslutte noget, men bare for at mærke efter, hvad I hver især kan lide. Nogle har kendt det rigtige navn hele deres voksne liv. Andre finder først det helt rigtige navn, når baby ligger i deres arme. Nogle laver lange lister. Andre opkalder baby efter en person, som har betydet meget for dem. Uanset hvor I står, så er der god tid endnu til at finde det helt rigtige navn. Klik \u201c https://www.lalatoto.dk/blogs/bloggen/hvad-skal-barnet-hedde\u201d hvor vi har samlet en lang række navne. Både de populære, de usædvanlige og de lidt skøre."]
+    baby: "Ca. 26,7 cm (hoved til fod). Smagssansen udviklles – barnet smager hvad du spiser.",
+    mom: "Uro i benene og kramper i lægge om natten er typiske.",
+    tip: "Magnesium kan hjælpe mod benspasmer – tal med din jordemoder.",
+    detail: {
+      intro: "I uge 21 er barnet nu målbart fra hoved til fod. Smagssansen er fuldt aktiv, og dit barns smags-præferencer formes direkte af din kost. Hvad du spiser nu, kan påvirke barnets madpræferencer i årevis!",
+      babySection: {
+        title: "Babyen i uge 21",
+        paragraphs: [
+          "Fosteret er nu ca. 26,7 cm fra hoved til fod og vejer ca. 360 gram. Smagssansen er nu fuldt funktionel. Barnet synker kontinuerligt fostervand og kan smage, hvad du spiser – stærke aromaer som hvidløg, vanilje og karry er alle detekterbare.",
+          "Forskning viser, at de smagspræferencer, barnet udvikler i livmoderen, bæres med ind i barnelivet. Børn af mødre der spiste varieret kost under graviditeten, er typisk mere villige til at smage nye ting som spædbørn.",
+          "Sanserne arbejder nu koordineret. Barnet reagerer på lys, lyd og berøring på en integreret måde. Det er begyndelsen på de komplekse sanseintegreringsprocesser, der er grundlaget for al læring."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 21",
+        paragraphs: [
+          "Kramper i læggenene – særligt om natten – er meget almindelige i andet trimester. De skyldes en kombination af mineralmangel (magnesium, calcium), reduceret blodgennemstrømning og uhensigtsmæssig stilling under søvn.",
+          "Uro i benene (restless legs syndrome) er et andet hyppigt problem, der forstyrrer søvnen. Det beskrives som en uimodståelig trang til at bevæge benene, kombineret med ubehagelige fornemmelser i dem. Det er forbundet med jernmangel og kan afhjælpes.",
+          "Mange kvinder oplever nu en øget svedtendens og en varmefornemmelse. Det er hormonelt og metabolisk betinget – kroppen arbejder hårdt og producerer meget varme."
+        ]
+      },
+      tips: [
+        "Spis magnesiumrige fødevarer: mandler, mørk chokolade, spinat, avocado.",
+        "Tal med din jordemoder om magnesiumtilskud ved hyppige kramper.",
+        "Stræk læggemusklen aktivt inden sengetid for at forebygge kramper.",
+        "Jernmangel forårsager uro i benene – få tjekket dit jernniveau.",
+        "Spis varieret og med mange grøntsager – det former barnets fremtidige smagshorisont."
+      ],
+      didYouKnow: "Vidste du, at mødre der spiste gulerødder under graviditeten, fik børn der bedre accepterede gulerodsmad som spædbørn? Dette er dokumenteret i videnskabelige studier. Barnet 'husker' smagene fra fostervandet og genkender dem i mælken."
+    }
   },
   22: {
-    label: "Uge 22",
-    body: ["Baby er cirka på størrelse med en papaya, og der er efterhånden mere baby at forholde sig til. Kroppen vokser, sanserne udvikler sig, og baby kan måske reagere på lyd og bevægelse på små måder.", "Det kan være, du mærker mere liv nu. Små puf, skub eller bevægelser, der bliver mere genkendelige. Nogle dage kan der være mere aktivitet end andre, og i denne periode er der stadig god plads derinde til at vende og dreje sig.", "Din egen krop kan også begynde at kræve lidt mere opmærksomhed. Måske er huden på maven begyndt at stramme. Måske kommer der halsbrand, ømme ligamenter eller en følelse af, at kroppen har brug for en anden slags tempo end før.", "Det er også ofte omkring denne tid, at babyting begynder at dukke op i tankerne. Hvad har man egentlig brug for? Hvad er nødvendigt? Hvad er bare virkelig nuttet? Og hvorfor findes der så meget?!", "Det kan hurtigt blive overvældende. Men baby har ikke brug for alt. Baby har brug for tryghed, nærhed, mad, søvn, omsorg og nogle få gode ting, der fungerer i jeres hverdag."],
-    partner: ["Det kan være en stor hjælp for {{motherName}}, hvis projekt babyudstyr bliver en fælles opgave. Både for at gøre opgaven mere overskuelig, men også for at vise interesse. Måske du kunne foreslå en tur til en børneudstyrsbutik?"],
-    next_step: ["Overvej hvilke babyting I faktisk har brug for, og hvad I gerne vil vente med. Er der eventuelt udstyr eller tøj som kan gå i arv fra søskende eller familie? Kan noget købes brugt? Og er der ting som kan vente, indtil I rent faktisk ved om behovet opstår? Klik \u201c https://www.lalatoto.dk/blogs/bloggen/huskeliste-og-indkobsliste-til-baby-dette-skal-du-bruge-til-din-guldklump\u201d for at se en komplet indkøbsliste til den første tid."]
+    baby: "Ca. 27,8 cm. Øjenbryn og øjenvifter er synlige. Greberefleksen er stærk.",
+    mom: "Livmoderen når navlen. Hæmorider kan opstå. Blodtrykket er typisk lavt.",
+    tip: "Undgå at stå op for hurtigt – lavt blodtryk kan give svimmelhed.",
+    detail: {
+      intro: "I uge 22 er barnets ansigt nu klart genkendeligt med øjenbryn og øjenvipper. Greberefleksen er så stærk, at barnet aktivt kan holde fast om navlestrengen. For mor gælder det om at passe på lavt blodtryk.",
+      babySection: {
+        title: "Babyen i uge 22",
+        paragraphs: [
+          "Fosteret er nu ca. 27,8 cm og vejer ca. 430 gram. Øjenbryn og øjenvipper er nu klart synlige. Trods de lukkede øjne er ansigtet nu meget udtryksfuldt og genkendeligt på ultralyd.",
+          "Greberefleksen er nu meget stærk – fosteret griber aktivt om navlestrengen og kan holde fast. Denne refleks er grundlaget for den griberefleks, som nyfødte udviser og som evolutionært set hjalp spædbørn med at holde fast i moderen.",
+          "Læbestaben, der normalt absorberes i fosteret uger, er nu intakt. Oversæt: barnet har nu fuldstændigt menneskelige læbebevægelser og sugesignaler. Sugelysten er aktiv, og barnet suger på sin tommelfinger eller navlestrengen."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 22",
+        paragraphs: [
+          "Livmoderen er nu omtrent på navlehøjde. Mange kvinder oplever, at navlen begynder at poppe ud – det er fuldstændigt normalt og midlertidigt.",
+          "Hæmorider – hævede blodkar ved endetarmsåbningen – er meget hyppige under graviditet. Den øgede blodmengde og trykket fra livmoderen er årsagen. De kan give kløe, ømhed og lette blødninger. Behandling er beroligende cremer og fiberrig kost.",
+          "Blodtrykket er typisk lavt i andet trimester, og svimmelhed ved hurtige holdningsskift er meget almindelig. Undgå at ligge på ryggen i lang tid – det kan give 'vena cava syndrom', hvor livmoderen klemmer den store vene og reducerer blodtilbagestrømningen til hjertet."
+        ]
+      },
+      tips: [
+        "Rejs dig altid langsomt – lavt blodtryk giver svimmelhed.",
+        "Hæmorider lindres af: fiberrig kost, rigeligt vand og beroligende salve.",
+        "Undgå at ligge fladt på ryggen – brug pude under hoften.",
+        "Kontaktlinser kan passe dårligere nu – midlertidig synsstyret er normalt under graviditet.",
+        "Det er nu tid til at begynde at overveje fødselsplan og præferencer."
+      ],
+      didYouKnow: "Vidste du, at greberefleksen er så stærk i uge 22, at nyfødte faktisk kan bære sin egen vægt i et par sekunder ved at holde fast om en finger? Det er en evolutionær arv fra vores forfædre, der krøb på trær, og mor og unge skulle holde fast i hinanden."
+    }
   },
   23: {
-    label: "Uge 23",
-    body: ["Baby er nu cirka på størrelse med en aubergine. Der er stadig masser af udvikling i gang, men baby begynder at føles mere og mere som et lille menneske, der faktisk bor derinde og ikke bare som en idé, man taler om.", "Bevægelserne kan måske mærkes mere tydeligt nu. Små puf, skub eller en følelse af, at nogen lige vender sig rundt indefra. Det kan stadig variere meget fra dag til dag, men måske begynder du at genkende babys små mønstre.", "Kroppen kan også begynde at føles mere gravid på den praktiske måde. Måske kommer der mere tyngde, flere toiletbesøg, lidt halsbrand eller følelsen af, at du ikke helt kan sidde, ligge eller rejse dig lige så elegant som før. Baby vokser, og det gør dit behov for pauser måske også.", "Det kan også være, at tankerne om fødslen begynder at melde sig lidt mere nu. Ikke nødvendigvis på en dramatisk måde, men som små spørgsmål. Hvordan mon det bliver? Hvad har jeg brug for? Hvad vil jeg gerne vide mere om?", "Det kan være rart at åbne døren til de tanker stille og roligt, før det hele kommer tættere på."],
-    partner: ["For {{motherName}} kan fødslen begynde at fylde lidt mere i tankerne, også selvom der stadig er god tid. Det kan være en stor støtte, hvis du går nysgerrigt ind i samtalen sammen med hende, i stedet for at tænke, at det først er relevant senere."],
-    next_step: ["Undersøg hvilke muligheder der er for smertelindring under fødslen. Overvej om du ønsker en klar plan for smertelindring, eller om du foretrækker at tage det som det kommer."]
+    baby: "Ca. 28,9 cm. Lungerne producerer surfaktant. Øjenlågene kan åbne sig.",
+    mom: "Svangerskabsdiabetes testes typisk nu. Vejrtrækningsøvelser er nyttige.",
+    tip: "Øv vejrtrækningsøvelser – de hjælper dig til at slappe af under veer og fødsel.",
+    detail: {
+      intro: "I uge 23 sker en vigtig udviklingsbegivenhed i barnets lunger: produktionen af surfaktant begynder. Dette stof er afgørende for, at lungerne kan udvide sig og trække vejret efter fødslen.",
+      babySection: {
+        title: "Babyen i uge 23",
+        paragraphs: [
+          "Fosteret er nu ca. 28,9 cm og vejer ca. 500 gram. Lungerne begynder at producere surfaktant – et overfladeaktivt stof, der er absolut nødvendigt for lungernes funktion efter fødslen. Uden surfaktant ville lungernes luftblærer klæbe sammen ved udånding.",
+          "Øjenlågene er nu åbne eller på vej til at åbne. Barnet kan nu se lys – stærkt lys mod maven vil typisk få barnet til at reagere. Nethinden og synsnerven er funktionelle, om end synet er umodent.",
+          "Barnet er nu meget aktivt og bevæger sig hyppigt. Du kan nu tydeligt mærke både sparken, strækning og drejen. Mange mødre beskriver dette som en af de mest glædelige oplevelser i graviditeten – at mærke sit barns individualitet igennem bevægelserne."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 23",
+        paragraphs: [
+          "Glukosebelastningstesten (for svangerskabsdiabetes) foregår typisk i uge 24-28. Svangerskabsdiabetes rammer ca. 3-5% af gravide og skyldes, at graviditetshormoner påvirker kroppens insulinfølsomhed. Det kan behandles effektivt.",
+          "Huden på maven er nu stærkt strakt og kan give kløe. Fugtgivende creme hjælper. Nogen oplever PUPPer – pregnancy urticaria papules and plaques – som er en harmløs, men meget kløende hudreaktion.",
+          "Åndenød begynder for mange at opstå nu. Livmoderen presser opadtil mod mellemgulvet og reducerer lungekapaciteten. Opret holdning og vejrtrækningsøvelser hjælper."
+        ]
+      },
+      tips: [
+        "Øv diafragmatisk vejrtrækning dagligt: dybe maveåndedræt der roer nervesystemet.",
+        "Fugtighedscreme mod kløende mave – undgå bade- og cremer med stærk parfume.",
+        "Ret op ved at sidde og stå ret – det giver lungerne mere plads.",
+        "Fødselsforberedelse kurser begynder typisk nu – overvej at tilmelde dig.",
+        "Spis regelmæssigt for at holde blodsukkeret stabilt."
+      ],
+      didYouKnow: "Vidste du, at premature babyer født i uge 23-24 har en vis overlevelseschance på specialiserede neonatale intensivafdelinger? Surfaktantproduktionen i uge 23 er en af grundene til, at denne uge betragtes som en grænse for mulig overlevelse. Det er en mindreelse for, hvad medicinsk fremskridt har gjort muligt."
+    }
   },
   24: {
-    label: "Uge 24",
-    body: ["Baby er cirka på størrelse med en majskolbe, og kroppen bliver langsomt mere robust. Baby øver sig på sine bevægelser og på at synke og sanserne bliver hele tiden mere og mere udviklede.", "Måske føles maven mere tydelig nu. Ikke kun når du ser dig i spejlet, men når du bukker dig, sover, tager sko på eller prøver at passere nogen i et smalt køkken.", "For mange bliver graviditeten mere virkelig i denne periode, og baby kan begynde at fylde mere i jeres samtaler, jeres planer og måske også i de små forestillinger om, hvem det her lille menneske mon bliver.", "Det kan også vække minder fra jeres egen barndom. Hvad vil I give videre? Hvad håber I, baby en dag vil huske? Måske er det ikke store ting, men stemninger. Søndagsmorgen. Trygge arme. Ferier. Sange. Måden nogen sagde godnat på.", "Nogle gange begynder forældreskabet allerede der. I de små tanker om, hvad et godt barndomsminde egentlig er."],
-    partner: ["{{motherName}} bærer baby fysisk, men I kan begge begynde at bære tankerne om den familie, I er ved at skabe. Det kan være fint at tale om barndomsminder, og det vil for de fleste betyde meget, hvis du tager initiativ til at snakke om baby. På denne måde mærker hun også, at Jeres nye forældreskab også fylder i dine tanker."],
-    next_step: ["Tal om hvad som I husker som de bedste minder fra jeres egen barndom, og hvordan I kan videreføre det til jeres eget barn. Det behøver ikke være de helt store ting, men kan være små minder, som har betydet noget. Minder som at din mor gav dig strømper på under dynen om morgenen, eller at din far læste godnathistorie med sjove stemmer om aftenen."]
+    baby: "Ca. 30 cm, vejer ca. 600 g. Hjernen vokser meget hurtigt. Surfaktant produceres.",
+    mom: "Mavesvie og halsbrand er meget almindelige. Rygsmerter forværres.",
+    tip: "Spis lille og ofte. Undgå at ligge ned umiddelbart efter et måltid.",
+    detail: {
+      intro: "I uge 24 er en vigtig viability-grænse nået: babyer født nu har med intensiv pleje en reel chance for at overleve. Hjernen vokser nu med en hastighed, der ikke har nogen parallel.",
+      babySection: {
+        title: "Babyen i uge 24",
+        paragraphs: [
+          "Fosteret er nu ca. 30 cm og vejer ca. 600 gram. Hjernen vokser nu ekstremt hurtigt – de karakteristiske bugtninger og folde begynder at dannes på hjernebarken. Jo flere folder, jo større overfladeareal – og dermed jo mere hjernekraft.",
+          "Ansigtet er nu fuldstændig menneskeligeligt med alle ansigtstræk på plads. Øjnene er nu åbne og kan fokusere primitivt. Barnet kan reagere på lys med pupilkontraktion. Fingrene er fuldt formede med negle.",
+          "Kredsløbet er modent nok til at barnet teknisk set kan overleve udenfor livmoderen med intensiv medicinsk hjælp. Det er en vigtig medicinsk og etisk grænse – kaldet viabilitet."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 24",
+        paragraphs: [
+          "Mavesvie og halsbrand er nu ekstremt hyppige. Livmoderen presser opadtil på mavesækken og kan presse madens sure indhold op i spiserøret. Antacida, der er godkendt til gravide, kan benyttes.",
+          "Rygsmerter forværres typisk i uge 24 og fremover. Vægten øges, tyngdepunktet forskydes og bækkenbundets ledbånd er løsnede. Ergonomisk korrekte stole, gangture og svømning hjælper markant.",
+          "Svulmende fødder og ankler er et hyppigt problem. Den øgede væskeretention er hormonelt betinget. Hold benene hævet, undgå at stå stille i lang tid og brug støttestrømper om nødvendigt."
+        ]
+      },
+      tips: [
+        "Brug syreneutraliserende midler godkendt til gravide mod halsbrand.",
+        "Spis 5-6 små måltider dagligt frem for 3 store.",
+        "Vent mindst 1 time efter et måltid, inden du lægger dig ned.",
+        "Hæv overkroppen lidt ved søvn for at reducere halsbrand.",
+        "Kontakt jordemoder eller læge ved pludselig svulmen i hænder, ansigt eller markant forværring."
+      ],
+      didYouKnow: "Vidste du, at antallet af hjerneceller (neuroner) faktisk er størst under fosterlivet? Et foster har faktisk FLERE neuroner end en voksen. Fra og med fødsel og de første leveår dør de hjerneceller, der ikke bruges, af – kroppen trimmer hjernen til effektivitet i en proces kaldet neural pruning."
+    }
   },
   25: {
-    label: "Uge 25",
-    body: ["Baby er nu cirka på størrelse med et blomkål. Der bliver mere fylde på kroppen, og baby fortsætter med at øve sig på bevægelser, reflekser og små rytmer inde i maven.", "Du mærker måske mere liv nu. Måske er der bestemte tidspunkter på dagen, hvor baby virker mere aktiv. Måske når du ligger stille. Måske når du lige har spist. Måske præcis når du egentlig havde tænkt dig at sove.", "I kroppen kan du måske mærke mere tyngde, ømme hofter, halsbrand eller behov for flere pauser. Det er ikke sikkert, du føler dig besværet hele tiden, men kroppen kan begynde at minde dig om, at den altså har gang i noget ret stort.", "Det kan også være en fin tid at begynde at tænke endnu mere på lyd. Musik, din stemme, partners stemme, et instrument eller en sang som går igen, der måske senere bliver en del af putning.", "Baby kender allerede noget af din lydverden. Måske er det derfor, det kan føles lidt særligt at forestille sig de lyde, der skal følge jer ind i den første tid sammen."],
-    partner: ["{{motherName}} kan måske mærke baby mere tydeligt nu, mens du stadig mest må forestille dig det. Det kan være en fin måde at være med på ved at tale til maven, lægge en hånd på den eller være nysgerrig på de små bevægelser, når hun mærker dem."],
-    next_step: ["Overvej om I vil lave en lille playliste til fødslen eller den første tid hjemme. De fleste fødestuer tilbyder, at man kan afspille sin egen medbragte musik. Det kan være en fin måde at skabe ro i en ellers ny, og for nogle presset, situation. Hvis du har ønske om at afspille din egen musik, så undersøg på forhånd med fødestedet, hvordan det kan lade sig gøre."]
+    baby: "Ca. 34,6 cm. Fingrene er så udviklede at de kan gribe om navlestrengen. Smertesansen er aktiv.",
+    mom: "Åndenød kan opstå. Huden på maven kan klø intenst.",
+    tip: "En graviditetspude hjælper markant med søvnkvaliteten.",
+    detail: {
+      intro: "I uge 25 er barnet nu en miniudgave af den baby, du snart vil møde. Fingrene er fuldt funktionelle, og smertesansen er aktiv. Mors søvn bliver stadig mere udfordrende, men hjælp er på vej i form af graviditetspuder.",
+      babySection: {
+        title: "Babyen i uge 25",
+        paragraphs: [
+          "Fosteret er nu ca. 34,6 cm og vejer ca. 700 gram. Fingrene er nu fuldt udviklede med negle og fingeraftryk, og grebsstyrken er imponerende. Barnet griber aktivt om navlestrengen og kan holde fast.",
+          "Smertesansen er nu aktiv på tværs af hele kroppen. Dette er ikke blot en refleks – hjernen behandler nu smerteimpulser på et niveau, der ligner voksnes. Det er en vigtig overvejelse i al medicinsk behandling af fosteret.",
+          "Lungernes surfaktantproduktion øges nu markant. I tilfælde af tidlig fødsel kan steroid-behandling af mor fremskynde modningen yderligere. Huden begynder at tykkeres og miste sin gennemsigtige karakter."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 25",
+        paragraphs: [
+          "Åndenød er nu meget udbredt. Livmoderen presser opadtil mod lungerne og reducerer kapaciteten. Det er ubehageligt men ikke farligt. Oprejst stilling, langsom vejrtrækning og pauser ved anstrengelse er vigtige.",
+          "Huden på maven kan nu klø intenst, som den strækker sig. Dette er normalt, men pludselig svær kløe – særligt på hænder og fødder – kan være tegn på svangerskabskolestatse (ICP), der bør undersøges.",
+          "Søvnen er nu en reel udfordring. Maven gør sideliggning nødvendig, men den er ikke altid komfortabel. Hyppig vandladning, bevægelserne og halsbrand forstyrrer søvnen yderligere."
+        ]
+      },
+      tips: [
+        "Køb en god graviditetspude nu – den kan revolutionere søvnkvaliteten.",
+        "Fugtighedscreme flere gange dagligt mod kløende mave.",
+        "Kontakt læge ved pludselig kraftig kløe på hænder og fødder – det kan være ICP.",
+        "Gå korte ture og tag pauser – ikke anstrengende motion i perioder med åndenød.",
+        "Planlæg barselsorlov og hvornår du stopper med at arbejde."
+      ],
+      didYouKnow: "Vidste du, at barnet allerede i uge 25 kan 'huske' gentagne oplevelser? Forsøg viser, at fostre ved gentagen eksponering for en bestemt lyd gradvist reagerer mindre på den – et tegn på habituation, der er en grundlæggende form for læringsprocesser."
+    }
   },
   26: {
-    label: "Uge 26",
-    body: ["Baby er cirka på størrelse med et lille hvidkålshoved, og der er efterhånden godt gang i både vækst og bevægelse. Baby bliver stærkere, og de små spark og skub kan måske begynde at føles lidt mindre som bobler og mere som at der faktisk ligger en baby i din mave. Det er ret vildt!", "Øjnene er i udvikling, sanserne modnes, og baby øver sig videre i sit lille varme univers. Der er stadig lang vej endnu, men det kan føles, som om baby bliver mere og mere virkelig uge for uge.", "For dig kan kroppen begynde at kræve mere. Måske bliver søvnen mere afbrudt. Måske føles lænden træt. Måske er du mere sulten, mere tørstig eller mere følelsesladet. Måske mærker du plukkeveer som små spændinger i maven. Det kan være helt almindeligt, men hvis de gør ondt, bliver regelmæssige, eller du bliver utryg, skal du altid kontakte jordemoder eller fødested.", "Det kan også være, at omgivelserne begynder at tale mere om babyshower, gaver og fejring. Nogle elsker det. Andre får svedige håndflader ved tanken om at være centrum i en stue fuld af mennesker og pastelfarvede cupcakes.", "Der er ikke én rigtig måde at blive fejret på, og hvad end du har det bedst med, er det en god idé at melde ud."],
-    partner: ["{{motherName}} kan have meget forskellige følelser omkring at blive fejret. Måske vil hun gerne overraskes, måske vil hun helst have noget helt stille og roligt, og måske vil hun slet ikke. Det vigtigste er, at det føles som omsorg for hende, og ikke som endnu en opgave. Lyt til hendes ønsker og tilbyd eventuelt at være budbringeren til familie og venner."],
-    next_step: ["Tal om, om I ønsker Jer et babyshower. For nogle er det helt naturligt og endda noget man ser frem til. For andre er det ikke drømmen at være midtpunkt og kan skabe unødvendig stress. Måske er overraskelseselementet slet ikke dig. Eller måske drømmer du bare om en rolig brunch med de nærmeste. Måske din partner kan give dine veninder et diskret praj om dine ønsker, så oplevelsen bliver god for alle."]
+    baby: "Ca. 35,6 cm og vejer ca. 760 g. Øjnene er nu fuldt åbne. Immunstoffer overføres fra dig.",
+    mom: "Tredje trimester er snart her. Bekkensmerter kan opstå.",
+    tip: "Bækkenbelte kan give god lindring – tal med din jordemoder.",
+    detail: {
+      intro: "I uge 26 er barnet næsten klar til tredje trimester. Øjnene er nu åbne, og barnet begynder at se – om end svagt. Det vigtige immunitetsoverførsel fra mor til barn er i gang.",
+      babySection: {
+        title: "Babyen i uge 26",
+        paragraphs: [
+          "Fosteret er nu ca. 35,6 cm og vejer ca. 760 gram. Øjnene er nu åbne og kan se! Synet er stadig meget primitivt – barnet kan primært skelne lys fra mørke og registrere bevægelse – men det er begyndelsen.",
+          "Immunstoffer (IgG-antistoffer) overføres nu aktivt fra dig til barnet via moderkagen. Disse antistoffer giver barnet den første immunitets-beskyttelse mod sygdomme, som du er immun over for. Processen intensiveres i tredje trimester.",
+          "Lungerne modnes fortsat. Surfaktantproduktionen øges, og lungevævet er nu mere komplekst. Babyer født i uge 26 har en reel chance for at overleve med intensiv behandling, om end de vil have mange udfordringer."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 26",
+        paragraphs: [
+          "Bækkensmerter – symfyseløsning eller bækkenløsning – rammer op til 50% af gravide i varierende grad. Det skyldes hormonet relaxin, der løsner ledbåndene i bækkenet. Smerten sidder typisk foran (symfysen) eller bag ved bækkenet.",
+          "Hyppig vandladning er nu markant. Livmoderen presser direkte på blæren, og mange oplever, at en hoste eller nys kan medføre utilsigtet lækage. Bækkenbundøvelser hjælper.",
+          "Braxton Hicks sammentrækninger – øvelsessammentrækninger – er nu tydeligere og hyppigere. De er smertefri, ujævne og har ikke en bestemt rytme. Ægte veer er derimod regelmæssige og tiltagende i intensitet."
+        ]
+      },
+      tips: [
+        "Et bækkenbelte kan lindre bækkensmerter markant – tal med din jordemoder om dette.",
+        "Undgå aktiviteter der provokerer bækkensmerter: lange gåture, trapper, tunge løft.",
+        "Bækkenbundøvelser forebygger urininkontinens.",
+        "Lær forskel på Braxton Hicks og ægte veer – Braxton Hicks er uregelméssige og smertefri.",
+        "Book fødselsforberedelseskursus nu hvis du ikke allerede har gjort det."
+      ],
+      didYouKnow: "Vidste du, at barnet i uge 26 kan skelne din stemme fra andre stemmer? Hjernens hørecenter er nu tilstrækkeligt modent til at behandle talens tonale mønstre. Nyfødte genkender moderens stemme fra første øjeblik – og præfererer den."
+    }
   },
   27: {
-    label: "Uge 27",
-    body: ["Baby er cirka på størrelse med et blomkålshoved, og der sker stadig meget inde i maven. Baby tager på, øver sig i små bevægelser og bliver bedre til at reagere på lyde, lys og bevægelse. Måske mærker du, at der er mere rytme i babys aktivitet nu. Nogle tidspunkter er der ro, og andre tidspunkter føles det, som om nogen holder en lille fest derinde.", "Kroppen kan begynde at føles tungere, og du bliver måske hurtigere forpustet eller mere træt end før. Det giver god mening. Din krop arbejder hele tiden, også når du selv synes, du ikke laver noget."],
-    partner: ["{{motherName}} kan måske mærke graviditeten mere fysisk nu. Det kan være en stor hjælp, hvis du tager lidt mere praktisk ansvar uden at vente på at blive spurgt. Små ting kan føles meget store, når kroppen er tung."],
-    next_step: ["Tal om, om I ønsker Jer en sidste getaway sammen, inden I bliver et familiemedlem rigere. At stå på tærsklen til at gå fra to til tre kan føles som en ret stor ting, og for nogle er det helt rigtigt at snuppe en spa-date, en overnatning, en forlænget weekend eller lignende sammen bare Jer to."]
+    baby: "Ca. 36,6 cm. Hjernen kan drømme – REM-søvn er observeret. Smags- og lugtesansen er aktive.",
+    mom: "Tredje trimester begynder! Braxton Hicks intensiveres. Energien kan aftage.",
+    tip: "Begynd at planlægge barselsorlov og praktiske ting hjemme.",
+    detail: {
+      intro: "Velkommen til tredje trimester! Uge 27 markerer starten på graviditetens afsluttende fase. Barnet kan nu drømme, og det er der faktisk forskning der dokumenterer.",
+      babySection: {
+        title: "Babyen i uge 27",
+        paragraphs: [
+          "Fosteret er nu ca. 36,6 cm og vejer ca. 875 gram. En utrolig opdagelse: hjernebølgerne hos fosteret i denne periode viser REM-søvnmønstre – de same mønstre vi ser hos drømmende voksne. Barnet drømmer muligvis allerede!",
+          "Smags- og lugtesansen er nu i fuld funktion. Barnet synker store mændger fostervand og smager hvad du spiser. Lugtesansen er aktiv via de kemiske forbindelser i fostervandet.",
+          "Huden er nu tykkkere og begynder at se mere ud som en nyfødt babys hud. Vernixlaget er stadig tykt, men lanugoet (det fine dun) begynder at aftage fra ansigtet og øvre krop."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 27",
+        paragraphs: [
+          "Tredje trimester starter, og for mange kvinder begynder energiniveauet at falde igen. Kroppen bruger enorme ressourcer på den accelererende vækst af barnet i denne fase.",
+          "Braxton Hicks sammentrækninger – øvelsessammentrækninger – er nu hyppigere og måske stærkere. De er en del af kroppens naturlige forberedelse til fødsel og er ikke farlige. Hvil og væskeindtagelse hjælper.",
+          "Søvn er en stigende udfordring. Mange kvinder oplever livlige og bizarre drømme under graviditet – sandsynligvis relateret til hormonelle forandringer og den emotionelle intensitet af at vente barn."
+        ]
+      },
+      tips: [
+        "Planlæg hvornår du stopper med at arbejde og start barselsorloven.",
+        "Forbered barnets soveplads, tøj og udstyr hjemme.",
+        "Hvil og prio søvn – energien er vigtig at spare op til fødslen.",
+        "Overvej at undersøge ammehjelp og ammegrupper i dit område.",
+        "Snak med din partner om forventninger til den første tid med baby."
+      ],
+      didYouKnow: "Vidste du, at REM-søvn hos fostre er meget mere udbredt end hos voksne? Et foster kan bruge op til 80% af sin tid i REM-søvn, mens voksne kun bruger ca. 20-25%. Forskning tyder på, at REM-søvn er afgørende for hjernens udvikling og konsolidering af ny viden."
+    }
   },
   28: {
-    label: "Uge 28",
-    body: ["Baby er cirka på størrelse med en aubergine og du er nu godt på vej ind i den sidste del af graviditeten. Baby vokser, tager mere på og begynder at fylde godt i maven. Bevægelserne kan føles tydeligere, og nogle gange kan du måske næsten se dem udenpå maven. Det kan være en ret vild oplevelse for din partner også.", "Baby kan åbne og lukke øjnene, og hjernen udvikler sig hurtigt. Der er stadig vigtige uger tilbage, men det lille menneske derinde bliver mere og mere klar til verden udenfor.", "For dig kan tredje trimester føles som et skift. Måske bliver søvnen lettere forstyrret, kroppen tungere og behovet for pauser større. Du må gerne sænke tempoet lidt."],
-    partner: ["{{motherName}} kan måske have brug for mere ro og mere hjælp nu, også selvom hun ikke altid beder om det. Det er helt normalt hvis hendes søvn begynder at blive påvirket nu, og det kan påvirke overskuddet i dagtimerne. Måske hun har brug for, at du reder op på sofaen til en dejlig middagslur."],
-    next_step: ["Nu er et godt tidspunkt at begynde at tænke praktisk i forhold til den første dyrebare tid i barselsboblen, og en stor hjælp kan være at fylde fryseren op med middagsretter over de næste uger. Hvis I starter allerede nu, behøver det ikke at blive et stort og uoverskueligt projekt. Lav fx dobbeltportion af aftensmaden og frys halvdelen ned. Eller spørg bedsteforældre, om de har lyst til at fryse et par portioner ned af dén dér gode lasagne eller svigerfars bolognese."]
+    baby: "Ca. 37,6 cm, vejer ca. 1 kg. Lungerne er næsten modne. Barnet kan blinke.",
+    mom: "Hævede ben og ankler om aftenen. Søvn bliver mere besværlig.",
+    tip: "Sæt benene op når du sidder – det reducerer hævelse.",
+    detail: {
+      intro: "I uge 28 er barnet nået 1 kg – en stor milepæl! Lungerne er nu næsten modne nok til, at barnet ville have gode chancer for at overleve en tidlig fødsel. Øjnene kan nu blinke.",
+      babySection: {
+        title: "Babyen i uge 28",
+        paragraphs: [
+          "Fosteret er nu ca. 37,6 cm og vejer ca. 1 kg – en fantastisk milepæl! Øjenlågene kan nu åbne og lukke – barnet blinker. Pupillerne reagerer på lys og mørke. Farvesynet er endnu ikke fuldt udviklet, men kan begynde.",
+          "Lungerne er nu næsten modne. Babyer født i uge 28 har med moderne neonatal intensivbehandling over 90% overlevelseschance. Surfaktantproduktionen er nu tilstrækkelig til selvstændig vejrtrækning med støtte.",
+          "Hjernen vokser fortsat hurtigt. Nerverne er ved at blive mere myeliniserede, og forbindelserne mellem hjerneregioner bliver stadig mere komplekse. Barnet viser nu klart adfærd som søvn-vågecyklusser og reaktioner på stimuli."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 28",
+        paragraphs: [
+          "Hævede fødder og ankler – særligt om aftenen – er meget hyppige. Det skyldes den øgede væskeretention og det reducerede blodtilbageløb fra benene. Sæt benene op og undgå at stå stille længe ad gangen.",
+          "Hyppige bakrustur til toilettet, halsbrand, åndenød og rygmerte er alle normale symptomer i denne fase. Det er et kompliceret logistisk puslespil at sove godt.",
+          "Rhesus-negativ blodtype kræver anti-D injection typisk i uge 28-30 for at forhindre sensibilisering mod barnets blod. Din jordemoder eller læge vil tage hånd om dette automatisk."
+        ]
+      },
+      tips: [
+        "Hæv benene over hjerteniveau mindst 20 min. to gange dagligt.",
+        "Undgå at stå stille – bevæg dig jævnligt selvom det er tungt.",
+        "Kontakt læge ved pludselig eller meget kraftig hævelse – det kan sjældent være tegn på præeklampsi.",
+        "Støttestrømper kan hjælpe meget mod hævede ben og reducere risiko for blodpropper.",
+        "Book evt. 'babymoon' – en lille romantisk ferie for to inden baby ankommer."
+      ],
+      didYouKnow: "Vidste du, at babyer født i uge 28 i dag har over 90% chance for at overleve? For 50 år siden var prognosen langt mere alvorlig. Fremskridtene inden for neonatal intensivbehandling er intet mindre end ekstraordinære."
+    }
   },
   29: {
-    label: "Uge 29",
-    body: ["Baby er cirka på størrelse med en butternut squash og bliver nu hele tiden rundere og stærkere fordi kroppen fortsætter med at lagre fedt. Det er små, vigtige forberedelser til livet udenfor maven. Bevægelserne kan være kraftige nu, og nogle gange kan det føles, som om baby rammer præcis de steder, hvor der ikke var brug for det. Måske bliver du øm på et bestemt ribben eller skal tisse hele tiden.", "Maven fylder mere, og det kan blive sværere at finde gode stillinger, både om dagen og om natten. Måske begynder tankerne om tiden efter fødslen også at fylde mere. Hvem bliver baby? Hvordan bliver hverdagen? Hvad vil I gerne tage med videre som familie?"],
-    partner: ["{{motherName}} er måske både spændt, træt, glad og lidt overvældet. Det kan være en stor gave, hvis du kan være rolig, kærlig og stabil, også når følelserne skifter hurtigt."],
-    next_step: ["Tag en åben snak om dåb versus navngivning. I Danmark skal babyer navngives før de er et halvt år, og dette kan gøres ved enten dåb i folkekirken eller navngivning i sognet hvor barnet bor. Der er altså masser af tid til at beslutte sig, men det kan være en god idé at lufte Jeres tanker inden baby kommer til verden."]
+    baby: "Ca. 38,6 cm. Fedtdepoter bygges op. Knoglerne er fuldt udviklede men stadig bløde.",
+    mom: "Kortåndethed er almindelig. Forstoppelse kan forværres.",
+    tip: "Spis fiberrig mad og drik rigeligt. Et aftenwalk hjælper fordøjelsen.",
+    detail: {
+      intro: "I uge 29 fokuserer barnets kroppen på at opbygge fedtreserver til livet udenfor livmoderen. Disse fedtdepoter er barnets energikilde de første dage og hjælper med varmeregulering.",
+      babySection: {
+        title: "Babyen i uge 29",
+        paragraphs: [
+          "Fosteret er nu ca. 38,6 cm og vejer ca. 1,15 kg. Fedtdepoterne bygges nu op hurtigt under huden. Det er disse fedtdepoter, der giver nyfødte den karakteristiske runde, bløde form og hjælper med at holde dem varme udenfor livmoderens beskyttede miljø.",
+          "Knoglerne er nu fuldt udviklede, men er stadig bløde og fleksible. Dette er en vigtig tilpasning til fødslen – det fleksible kranium tillader barnet at passere gennem fødselsgangen. Kraniet vil langsomt hærde i løbet af de første leveår.",
+          "Barnet er nu meget aktivt og stærkt. Sparkene og stødene kan nu være ganske kraftfulde. Mange mødre kan se aftryk af en fod eller en albue bevæge sig hen over mavens overflade."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 29",
+        paragraphs: [
+          "Kortåndethed topper typisk i tredje trimester. Livmoderen fylder nu langt op i bughulen og presser mellemgulvet opad med reduceret lungekapacitet til følge. En uprejst stilling og dybe vejrtrækningsøvelser hjælper.",
+          "Forstoppelse er et vedvarende problem for mange. Progesteron slaffer tarmvæggens muskler, og den voksende livmoder presser på tarmene. Rigeligt vand og fiber er essentielt.",
+          "Søvnmangel begynder at ophobe sig. De mange forstyrrelser om natten – vandladning, smerter, barnets aktivitet og halsbrand – giver en meget fragmenteret søvn. Hvil og lure i dagtimerne er vigtige."
+        ]
+      },
+      tips: [
+        "Spis havregrød, linser, æbler og fuldkornsbrød mod forstoppelse.",
+        "Prøv et let aftenwalk efter aftensmaden – det stimulerer fordøjelsen.",
+        "Drik et glas varmt vand med citron om morgenen mod forstoppelse.",
+        "Læg en pude under ryggen ved hvil for at aflaste mellemgulvet.",
+        "Planlæg hvem der hjælper de første uger efter fødslen."
+      ],
+      didYouKnow: "Vidste du, at knoglerne i babyens kranium ved fødslen ikke er sammenvoksede? De overlappende knogler og bløde fontaneller giver kraniet mulighed for at ændre form under passage gennem fødselsgangen – en genial evolutionær løsning. Fontanellerne lukkes gradvist i løbet af de første to leveår."
+    }
   },
   30: {
-    label: "Uge 30",
-    body: ["Der er nu omkring 10 uger til termin, og baby er cirka på størrelse med et stort spidskål. Det kan føles både meget tæt på og meget langt væk på samme tid.", "Baby øver sig stadig på livet udenfor maven. Lungerne modnes, hjernen udvikler sig, og kroppen bliver stærkere. Du kan måske mærke små rytmer eller tidspunkter på dagen, hvor baby er mere aktiv. Der er også chance for, at du mærker at baby har hikke, hvilket kan være ret hyggeligt, at tænke på.", "For dig kan kroppen begynde at kræve mere hensyn. Måske sover du dårligere, får mere uro i kroppen eller mærker mere tyngde. Måske sover du mere i ske med din graviditetspude end med din partner, og det er ikke mærkeligt. Det er meget arbejde at bygge et menneske."],
-    partner: ["{{motherName}} kan måske ikke helt det samme som før. Du kan opleve, at hun har et stort behov for at \u201cbygge rede\u201d og forberede sig til babys ankomst, men at energien ikke er tilstrækkelig, til alt det hun gerne vil. Det vil være en stor hjælp for hende, hvis hun mærker, at hendes ønsker og opgaver også betyder noget for dig."],
-    next_step: ["Overvej at sende en invitation til venner og familie til en praktisk dag i hus og have, når I kommer lidt tættere på terminsdatoen. Det kan være en stor lettelse, at der ikke venter en masse projekter, når I kommer hjem med baby. Sørg for sodavand og pizza, eller bed alle om at tage en lille ret med, og så skal det nok blive en hyggelig dag, selv med rengøringsklud og lugejern."]
+    baby: "Ca. 39,9 cm, vejer ca. 1,3 kg. Hjernen danner bugtninger og folder. Barnet regulerer sin egen temperatur.",
+    mom: "Lændesmerter er meget normale. Barnets bevægelser er stærke og synlige.",
+    tip: "Mærk barnets bevægelser dagligt – der bør være mindst 10 bevægelser over 2 timer.",
+    detail: {
+      intro: "I uge 30 er en imponerende hjernemilepæl nået: bugtningerne og folderne i hjernebarken opstår, og hjernen begynder at ligne en voksen hjerne. Barnet er nu en personlighed med egne bevægelsesmønstre.",
+      babySection: {
+        title: "Babyen i uge 30",
+        paragraphs: [
+          "Fosteret er nu ca. 39,9 cm og vejer ca. 1,3 kg. Hjernen er nu præget af de karakteristiske bugtninger og folder (gyri og sulci), der er med til at øge hjernebarkens overfladeareal massivt. Jo mere folder, desto mere kognitiv kapacitet.",
+          "Barnet kan nu regulere sin egen temperatur – en vigtig udviklingsmilepæl. Termostaten i hypothalamus er nu funktionel. Dette er afgørende for livet udenfor livmoderen, hvor barnet konstant skal regulere sin kropstemperatur.",
+          "Bevægelsesmønstrene er nu meget individuelle og karakteristiske. Mange forældre begynder at opleve, at barnet har sine egne tydelige præferencer – aktive perioder, hviletider og reaktioner på lyde og berøring."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 30",
+        paragraphs: [
+          "Lændesmerter er nu meget udbredte og kan for nogen være ganske invaliderende. Den voksende vægt, de løse ledbånd og det forskudte tyngdepunkt bidrager alle til problemet. Fysioterapi, svømning og bækkenstøttebælte hjælper.",
+          "Barnets bevægelser er nu kraftfulde og tydeligt synlige – en fod, albue eller et hoved, der stritter ud ad maven, er nu et karakteristisk syn. Husk at mærke bevægelserne dagligt.",
+          "Mange kvinder opdager nu tegn på den kommende fødsel: modning af cervix (livmoderhalsens åbning), øget udflåd og Braxton Hicks sammentrækninger der intensiveres."
+        ]
+      },
+      tips: [
+        "Tæl sparket: mærk og registrer mindst 10 bevægelser over 2 timer dagligt.",
+        "Kontakt jordemoder eller fødegangen hvis du mærker markant færre bevægelser end normalt.",
+        "Svøm eller gå i vand – det aflaster ryggen og er herligt.",
+        "Se på jordemoderens råd angående tegn på fødsel og hvornår du skal tage på hospitalet.",
+        "Pak barseltasken nu – du er 10 uger fra termin, men aldrig for tidlig."
+      ],
+      didYouKnow: "Vidste du, at hjernens foldestruktur faktisk er en genialt løsning på et pladsproblem? Hjernebarken, hvis den lå flad ud, ville have et areal på ca. 2.500 cm² – ca. størrelsen på en pizzaæske. Foldningen er det, der gør det muligt at anbringe denne enorme overflade i et kranium."
+    }
   },
   31: {
-    label: "Uge 31",
-    body: ["Baby vokser videre, og der bliver langsomt mindre plads i maven til baby, som nu er på størrelse med en melon. Bevægelserne kan derfor føles mere som stræk, glid og tryk end små hurtige spark. Det kan stadig være ret tydeligt, bare på en ny måde.", "Måske begynder du at tænke mere på alt det praktiske. Tøj, bleer, sovested, autostol, pusleplads og alt det, man hurtigt kan google sig helt rundtosset til. Husk, at baby først og fremmest har brug for jer. Ikke det perfekte hjem."],
-    partner: ["{{motherName}} kan måske have mange tanker om alt det, der mangler. Hjælp med at skabe overblik og skelne mellem det vigtigste og det, der sagtens kan vente."],
-    next_step: ["Lav en liste over hvad der mangler af det vigtigste til baby, og hvad der kan vente. Man kan hurtig købe sig fattig i alverdens ting. Og selvom det kan være hyggeligt at fylde huset med babyudstyr, så kan det være en fordel at vente med visse produkter, til baby er ankommet og I kender jeres behov. Hvis I har brug for et hurtigt overblik, så læs \u201c https://www.lalatoto.dk/blogs/bloggen/huskeliste-og-indkobsliste-til-baby-dette-skal-du-bruge-til-din-guldklump\u201d, hvor vi har lavet en indkøbsliste til den første tid med baby."]
+    baby: "Ca. 41,1 cm, vejer ca. 1,5 kg. Al sanseudvikling er komplet. Barnet er meget aktivt.",
+    mom: "Livmoderen er tæt på brystbenets underkant. Halsbrand og åndenød på sit højeste.",
+    tip: "Sov med overkroppen let hævet for at reducere halsbrand.",
+    detail: {
+      intro: "I uge 31 er alle barnets sanser nu fuldt ud udviklede. Barnet kan se, høre, smage, lugte og føle. Det bruger samtlige sanser aktivt i sin forberedelse til livet udenfor.",
+      babySection: {
+        title: "Babyen i uge 31",
+        paragraphs: [
+          "Fosteret er nu ca. 41,1 cm og vejer ca. 1,5 kg. Al primær sanseudvikling er nu komplet. Barnet kan se, høre, smage, lugte og føle. Det integrerer nu informationer fra alle sanser og reagerer komplekst.",
+          "Hjernen er nu tilstrækkelig moden til at koordinere vejrtrækningstests – barnet laver 'åndedrætsbevægelser' i fostervandet. Dette er vigtig øvelse til det øjeblik, barnet trækker luft for første gang.",
+          "Barnet er ekstremt aktivt og kan vende sig fra side til side. De fleste babyer vender sig nu til vejledning (hoved nedad) i forberedelse til fødsel, selvom der stadig er god plads til at lave ændringer."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 31",
+        paragraphs: [
+          "Livmoderen er nu tæt på brystbenets underkant, og for mange er åndenød og halsbrand nu på sit absolutte højeste. Det er den mest komprimerede tilstand, kroppen er i.",
+          "Urininkontinens ved hoste, nys eller latter er meget udbredt. Bækkenbundøvelser er nu vigtigere end nogensinde. Mange kvinder finder det hjælpsomt at krydse benene ved nys.",
+          "Træthed og søvnmangel ophober sig. Mange kvinder er nu klar til at stoppe med at arbejde. Lyt til din krop – den ved hvad den har brug for."
+        ]
+      },
+      tips: [
+        "Hæv sengegavlen med et par cm eller brug ekstra puder under overkroppen mod halsbrand.",
+        "Øv Kegel-øvelser (bækkenbundstræning) flittigt – 3 gange 10 gentagelser dagligt.",
+        "Planlæg hvornår du stopper med at arbejde – kroppen har brug for hvile.",
+        "Lær tegnene på for tidlig fødsel: regelmæssige veer, pludselig rigelig væskeafgang, kraftige smerter.",
+        "Hav dit barselstaske klar nu."
+      ],
+      didYouKnow: "Vidste du, at barnet allerede i livmoderen har en foretrukken hånd? Studier viser, at de fleste fostre er højrehåndede allerede fra uge 18-20, og dette præferencemønster holder typisk livet igennem."
+    }
   },
   32: {
-    label: "Uge 32",
-    body: ["Baby er cirka på størrelse med en stor squash.", "Baby tager mere og mere på og bliver mere robust uge for uge. Nogle babyer begynder at lægge sig med hovedet nedad omkring denne tid, mens andre stadig vender og drejer sig. Der er stadig tid, og din jordemoder hjælper med at holde øje med det, der er relevant.", "For dig kan maven føles tungere, og det kan være sværere at sove godt. Måske vågner du ofte, skal tisse eller har svært ved at finde en stilling, hvor kroppen kan slappe af. Det er helt normalt, og det kan betyde, at overskuddet ikke er som det plejer. Det er heller ikke mærkeligt, hvis du har brug for en middagslur, eller at sove længe i weekenderne. Lyt til din krop, og giv dig selv lov til at lave ingenting, hvis det er dét, som du har allermest brug for."],
-    partner: ["Selvom det er {{motherName}}, som har den største opgave foran sig i forbindelse med fødslen, så har du også en vigtig rolle. Det kan være rart at tale om, hvordan du bedst kan støtte hende (og dig selv), inden I står midt i det."],
-    next_step: ["Tal om hvilken rolle partneren skal have under fødslen. Hvor lidt eller hvor meget ønsker I, at partneren skal deltage? Er der øvelser, som er en hjælp for den fødende? Massage, akupunktur eller ord? Er det partneren som klipper navlesnoren, hvis det bliver en mulighed? Det er meget forskelligt fra par til par, hvor deltagende partneren er. Det vigtigste er, at I har fået snakket om det på forhånd og er on the same page."]
+    baby: "Ca. 42,4 cm, vejer ca. 1,7 kg. Mange babyer drejer nu til vejledning (hoved nedad).",
+    mom: "Braxton Hicks intensiveres. Huden er strammet. Navlen kan poppe ud.",
+    tip: "Begynd at sy barseltasken og forberede barnets seng og tøj.",
+    detail: {
+      intro: "I uge 32 begynder mange babyer at dreje sig til vejledning (hoved nedad) – klar til fødslen. Det er dog ikke alt for tidligt – barnet har fortsat god mulighed for at ændre position i de kommende uger.",
+      babySection: {
+        title: "Babyen i uge 32",
+        paragraphs: [
+          "Fosteret er nu ca. 42,4 cm og vejer ca. 1,7 kg. Mange babyer drejer sig nu til vejledning (vertex-stilling), da det er den mest praktiske position for en vaginal fødsel. De fleste drejer sig endeligt i uge 34-36.",
+          "Tæerne er nu fuldt synlige og komplette med bitte negle. Huden er glat og begynder at nærme sig den friske farve, vi kender fra nyfødte. Vernixlaget er fortsat tykt.",
+          "Søvn-vågecyklusser er nu meget regulære og ligner det mønster, barnet vil have efter fødslen. Mange forældre kan nu tydeligt mærke, hvornår barnet er aktivt og hvornår det sover."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 32",
+        paragraphs: [
+          "Braxton Hicks sammentrækninger er nu hyppige og kan være ret intense. Husk: de er uregelméssige og aftager ved hvile og vandindtagelse. Ægte veer er regelmæssige, tiltagende og intensiveres ved aktivitet.",
+          "Navlen kan nu poppe ud som en lille knap – et helt normalt og forbigående fænomen. Den vender typisk tilbage til det normale i ugerne efter fødslen.",
+          "Det praktiske arbejde kan med fordel begynde nu: pakke barseltaske, installere autostol, tilberede barnets seng og købe de nødvendige artikler."
+        ]
+      },
+      tips: [
+        "Pak barseltasken nu – inkl. ting til dig, din partner og baby.",
+        "Installer og tjek autostolen inden babyens ankomst.",
+        "Lær forskel på Braxton Hicks og ægte veer – spørg din jordemoder hvis du er usikker.",
+        "Hold hydreret – dehydrering kan udløse Braxton Hicks.",
+        "Strikke og sy er populære aktiviteter nu – det er afstressende og produktivt."
+      ],
+      didYouKnow: "Vidste du, at babyer i sæde-stilling (sæde nedad) kan drejes til vejledning ved hjælp af en teknik kaldet ekstern version? En specialiseret jordmoder eller læge kan forsigtigt dreje barnet udefra – proceduren lykkes i ca. 50-60% af tilfældene."
+    }
   },
   33: {
-    label: "Uge 33",
-    body: ["Baby er cirka på størrelse med en ananas.", "Baby bliver rundere, stærkere og mere klar til livet udenfor. Huden bliver glattere, og kroppen fortsætter med at lagre fedt. Det er små forberedelser til at kunne holde varmen, spise, sove og være i verden.", "Måske mærker du flere plukkeveer eller mere pres i kroppen. Måske føles det, som om kroppen stille og roligt øver sig. Det kan være både fascinerende og anstrengende.", "Kalenderen kan også begynde at føles anderledes nu. Der er ikke uendeligt mange uger tilbage. Det betyder ikke, at alt skal være perfekt. Men det kan være rart at få styr på de praktiske ting omkring fødslen og den første tid, så der er ro til bare at glæde sig."],
-    partner: ["{{motherName}} kan have brug for, at du er med til at tænke praktisk fremad. Det er en stor tryghed at vide, at I er to om at sikre praktikken omkring fødslen. Hvad gør I, hvis fødslen går i gang? Hvem ringer I til? Hvad skal være klar?"],
-    next_step: ["Tal om hvad der skal ske, når fødslen går i gang? Hvem tager sig af eventuelle søskende eller kæledyr? Hvordan kommer I til hospitalet, hvis det er her, at fødslen skal foregå? Hvad skal klargøres, hvis det er en hjemmefødsel? Har I vigtige telefonnumre lige ved hånden?"]
+    baby: "Ca. 43,7 cm, vejer ca. 1,9 kg. Barnet suger på tommelfingeren. Øver vejrtrækning.",
+    mom: "Bækkenbundsmerter. Hyppig vandladning for alvor.",
+    tip: "Øv afspænding og åndedræt til fødslen. Overvej fødselsforberedelse.",
+    detail: {
+      intro: "I uge 33 øver barnet intensivt alle de færdigheder, det har brug for lige efter fødslen: suge, synke og ånde. Sugeinstinktet er nu så stærkt, at ultralyd tydligvis viser barnet sugende på sin tommelfinger.",
+      babySection: {
+        title: "Babyen i uge 33",
+        paragraphs: [
+          "Fosteret er nu ca. 43,7 cm og vejer ca. 1,9 kg. Sugeinstinktet er nu fuldt udvikllet. Barnet suger aktivt på sin tommelfinger – dette er ikke blot en refleks, men en aktiv øvelse af den færdighed, det har allermest brug for efter fødslen.",
+          "Lungerne øver vejrtrækning ved at trække fostervand ind og ud. Disse øvelsesbevægelser er afgørende for lungernes muskulære udvikling og for modningen af det system, der styrer vejrtrækning.",
+          "Knoglerne er nu næsten fuldstændig udviklede. Det er kun kraniet og de små knogler i hænderne og fødderne, der fortsat er meget bløde og fleksible – en nødvendighed for fødslen og den tidlige vækst."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 33",
+        paragraphs: [
+          "Bækkenbundsmerter er meget udbredte nu. Den voksende baby og de løsnede ledbånd giver et intenst tryk mod bækkenbunden. Mange kvinder beskriver en følelse af tyngde og pres i skridtet.",
+          "Hyppig vandladning er nu meget udtalt. Mange kvinder rejser sig 2-3 gange om natten til toilettet. Det er normalt – men kontakt din jordemoder ved smerter ved vandladning eller blod i urinen.",
+          "Mange kvinder oplever nu en meget intens periode følelsesmæssigt – blanding af glæde, nervøsitet og frygt for fødslen. Alle følelser er legitime og normale."
+        ]
+      },
+      tips: [
+        "Tilmeld dig fødselsforberedelse nu hvis du ikke allerede er tilmeldt.",
+        "Øv at trække vejret dybt og langsomt – det er din vigtigste 'fødselsmedicin'.",
+        "Akupunktur kan lindre bækkensmerter og forberede kroppen til fødsel.",
+        "Tal åbent med din partner om frygt og forventninger til fødslen.",
+        "Lav en fødselplan – skriv dine præferencer ned, men vær åben over for ændringer."
+      ],
+      didYouKnow: "Vidste du, at nyfødte har et meget stærkt sugeinstinkt, fordi det bogstaveligt talt er livsvigtigt? Nyfødte babyer, der ikke kan suge effektivt, er i fare for sult og dehydrering. Det er grunden til, at sugeinstinktet er et af de første og stærkeste reflekser ved fødslen."
+    }
   },
   34: {
-    label: "Uge 34",
-    body: ["Baby er cirka på størrelse med et hokkaidogræskar og bliver mere og mere klar, men har stadig godt af tiden i maven. Lungerne modnes, hjernen udvikler sig, og baby tager fortsat på. Bevægelserne kan være store og tydelige, men måske også mere begrænsede af pladsen.", "Din krop kan føles meget gravid nu. Måske bliver du hurtigere træt, mærker mere tyngde eller har brug for flere pauser. Det kan også være, at du oplever væske i kroppen nu og har svært ved at passe dine sko. Husk at lytte til kroppen.", "Måske begynder små babyting at fylde i hjemmet nu. Det kan føles både rørende og lidt uvirkeligt."],
-    partner: ["{{motherName}} kan måske have svingende overskud til praktiske ting. Hjælp med at gøre hjemmet klar på en rolig måde. Det handler ikke om at alting skal stå knivskarpt, men om at skabe en tryg base."],
-    next_step: ["Brug den næste uges tid på at gøre puslepladsen klar. Det er ikke fordi, at der er behov for det helt store, men det er rart at have et praktisk sted, hvor baby ligger rart og alting er lige ved hånden. Ønsker I inspiration til en hyggelig og praktisk pusleplads så kig her."]
+    baby: "Ca. 45 cm, vejer ca. 2,1 kg. Lungerne er næsten fuldt modne. Søvncyklus ligner nyfødt.",
+    mom: "Lændegener og bækkentryk er hyppige. Cervix modner langsomt.",
+    tip: "Akupunktur kan hjælpe på bækkensmerter og forberede kroppen til fødsel.",
+    detail: {
+      intro: "I uge 34 er lungerne næsten fuldt modne – en baby født nu vil typisk klare sig godt med minimal medicinsk støtte. Barnet er nu en miniudgave af den baby, du snart vil møde.",
+      babySection: {
+        title: "Babyen i uge 34",
+        paragraphs: [
+          "Fosteret er nu ca. 45 cm og vejer ca. 2,1 kg. Lungerne er nu næsten fuldt modne. En baby født i uge 34 vil typisk klare vejrtrækning selvstændigt med kun lettere støtte og har en fremragende prognose.",
+          "Søvncykluserne ligner nu næsten de, vi ser hos nyfødte – vekslende let søvn, dyb søvn og vågne perioder. Mange forældre genkender allerede 'deres' baby i disse mønstre.",
+          "Barnet er nu i vejledning (hoved nedad) hos de fleste. Plads er nu en knap ressource i livmoderen, og bevægelserne er mere 'rulleagtige' og store snarere end de voldsomme spark."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 34",
+        paragraphs: [
+          "Lændesmerte og bækkentryk er nu meget udbredte. Bækkenets blødgjorte ledbånd, kombineret med barnets tyngde og position, giver intense smerter for mange.",
+          "Cervix begynder nu langsomt at modne – det kaldes cervix-modning eller 'ripening'. Det er en naturlig del af forberedelserne til fødslen og kan mærkes som let ubehag i underlive.",
+          "Det er nu tid til at gennemgå fødseplanens detaljer med din jordemoder – diskuter dine ønsker, hvornår du skal tage på hospitalet, og hvad du kan forvente."
+        ]
+      },
+      tips: [
+        "Gennemgå din fødselsplan med din jordemoder.",
+        "Sørg for at have plan B for transport til hospitalet – hvem kører, og hvad sker der om natten?",
+        "Akupunktur til bækkenforberedelse er populært – spørg din jordemoder.",
+        "Blød mad og lette måltider hjælper på fordøjelsen.",
+        "Hav nødtelefonnumrene nemt tilgængeligt: jordemoder, hospital og taxi."
+      ],
+      didYouKnow: "Vidste du, at babyer i uge 34 faktisk allerede kan drages mod menneskeansigter? Forskning viser, at nyfødte præfererer at se på ansigter frem for anden visuel stimuli fra første dag. Denne præference er medfødt – ikke lært – og er en vigtig mekanisme for social tilknytning."
+    }
   },
   35: {
-    label: "Uge 35",
-    body: ["Baby er cirka på størrelse med en honningmelon og nærmer sig sin fødselsvægt, men vokser stadig. Kroppen bliver rundere, og der er mindre plads til de store bevægelser. Måske føles det mere som stræk derinde, og maven kan se helt ud-af-form-agtig ud, når baby møver rundt.", "Maven er nok svær at overse nu, og måske får du flere kommentarer fra andre. Folk mener det ofte kærligt, men det kan godt føles som meget. Du må gerne sige fra, hvis du ikke orker mere smalltalk om maven eller berøring.", "For dig kan de sidste uger føles som en blanding af ventetid, træthed og forventning."],
-    partner: ["{{motherName}} kan måske føle sig mere sårbar nu. Hjælp med at beskytte hendes ro, hvis verden bliver lidt for støjende. Nogle gange er kærlighed også at skabe lidt fred omkring hende."],
-    next_step: ["Find de første babyting frem og vask det, I gerne vil have klar. Det anbefales at vaske nyt tøj og andre tekstiler inden brug, og nu er et godt tidspunkt at begynde at klargøre babys lille garderobe, sengetøj, stofbleer osv. Jeres tørresnor har aldrig været så nuttet som nu!"]
+    baby: "Ca. 46,2 cm, vejer ca. 2,4 kg. Næsten al knogleudvikling komplet. Barnet fylder livmoderen.",
+    mom: "Råmælk (colostrum) kan starte. Skridtbenssmerter er almindelige.",
+    tip: "Hvil dig så meget du kan – du har brug for energireserver til fødslen.",
+    detail: {
+      intro: "I uge 35 er barnet nu næsten fuldbårent og fylder det meste af livmoderen. Råmælken er nu klar, og din krop forbereder sig intensivt på fødslen.",
+      babySection: {
+        title: "Babyen i uge 35",
+        paragraphs: [
+          "Fosteret er nu ca. 46,2 cm og vejer ca. 2,4 kg. Næsten al knogleudvikling er komplet – undtaget kraniet, som forbliver fleksibelt. Barnet fylder nu det meste af livmoderen, og der er kun begrænset plads tilbage.",
+          "Barnet er nu fuldt ud funktionelt på næsten alle måder. Organerne er modne, hjernen er aktiv, og alle sanser virker. Dersom barnet nu fødes, vil det typisk kun have brug for minimal medicinsk støtte.",
+          "Lanugoet (det fine dun) er nu næsten helt forsvundet. Vernixlaget er tykt og beskyttende. Huden er glat og begynder at udvikle den farve, barnet vil have ved fødslen."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 35",
+        paragraphs: [
+          "Råmælk (colostrum) er nu klar og kan begynde at lække fra brysterne. Det er det første, barnet vil modtage ved amning – ekstremt næringsrigt og fuldt af antistof. Sæt evt. indlæg i bh'en.",
+          "Skridtbenssmerter – smerter dybt i skridtet – er meget normale nu. Det skyldes bækkenbundets tryk fra det sænkede foster. Det er ikke farligt men kan gøre det svært at gå.",
+          "Kroppen er nu klar til fødsel. De kommende uger vil forberede cervix yderligere, og du kan begynde at mærke tegn: øget udflåd, slimproppen der afgår, eller små prøveveer."
+        ]
+      },
+      tips: [
+        "Hvil rigeligt – du opsparer energi til fødslen.",
+        "Brug indlæg i bh'en ved råmælkslækage.",
+        "Gå ture dagligt for at hjælpe barnet til at sætte sig godt i bækkenet.",
+        "Øv fødselspositoner med din partner – kending til stillingerne er hjælpsomt.",
+        "Forbered dit hjem til babyens ankomst – lejlighed, seng, babyudstyr."
+      ],
+      didYouKnow: "Vidste du, at colostrum – råmælken – indeholder op til 100 gange mere immunbeskyttende antistoffer end ordinær modermælk? Det er faktisk beskrevet som 'flydende guld' af neonatologer. Selv et enkelt måltid colostrum kan give barnet en enorm immunologisk fordel."
+    }
   },
   36: {
-    label: "Uge 36",
-    body: ["Baby er cirka på størrelse med et romainesalathoved.", "Nu nærmer I jer for alvor. Baby fylder godt i maven, og kroppen arbejder videre med at gøre klar til fødslen. Nogle babyer ligger allerede med hovedet nedad, mens andre stadig har lidt deres egen plan.", "Du kan måske mærke mere pres nedad, flere plukkeveer eller en tungere fornemmelse i kroppen. Måske går du langsommere, sover dårligere eller har brug for flere pauser. Det er helt forståeligt.", "Mentalt kan det også begynde at skifte fra \u201cvi skal have en baby\u201d til \u201cvi skal snart møde vores baby.\u201d"],
-    partner: ["{{motherName}} kan have brug for hjælp til at lukke løse ender. Hospitalstaske, snacks, oplader, tøj til baby og alt det praktiske kan fylde meget i hovedet, indtil det er pakket."],
-    next_step: ["Det er et godt tidspunkt nu at sørge for, at hospitalstasken er pakket, så det ikke fylder i hovedet de næste par uger. Vi har udarbejdet den ultimative liste \u201c https://www.lalatoto.dk/blogs/bloggen/pakkeliste-hospitalstasken-skal-ogsa-indeholde-de-vigtigste-ting-til-din-partner\u201d med ting til både mor, partner og baby."]
+    baby: "Ca. 47,4 cm, vejer ca. 2,6 kg. Barnet er næsten fuldbåren. Huden er glat.",
+    mom: "Livmoderen synker ned i bækkenet. Åndenød aftager men vandladning øges.",
+    tip: "Kend tegnene på fødsel: regelmæssige veer, vandrøret brister, slimproppen.",
+    detail: {
+      intro: "I uge 36 sker nedsynkning – barnets hoved sænker sig ned i bækkenet i forberedelse til fødslen. Det giver en pludselig lettelse i åndenød, men forværrer vandladningstrangen.",
+      babySection: {
+        title: "Babyen i uge 36",
+        paragraphs: [
+          "Fosteret er nu ca. 47,4 cm og vejer ca. 2,6 kg. Barnet er nu næsten fuldbårent. Huden er glat med en frisk farve. Vernix er stadig tilstede men tyndere. Lanugo er nærmest borte.",
+          "Barnet er nu fast i vejledning hos de fleste. Pladsen er yderst begrænset, og bevægelserne er ret stiliserede. Mange mødre bemærker en ændring i bevægelsesmønstret nu – de er færre men stærkere.",
+          "Alle organer er nu fuldt modne og klar til at fungere selvstændigt. Lungerne producerer rigelig surfaktant. Hjernen er aktiv og klar. Immunsystemet har modtaget store mængder antistoffer fra dig."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 36",
+        paragraphs: [
+          "Nedsynkning – lightening – sker typisk i uge 36-38 hos førstegangsfødende. Barnet sænker sig ned i bækkenet, og du kan pludselig trykke vejret lettre, men løber til toilettet endnu hyppigere.",
+          "Øget udflåd er normalt og er et tegn på, at cervix modner. Slimproppen – en tyktflydende, evt. blodtilblandet slim – kan afgå nu. Det er et normalt tegn på fødselsforberedelse.",
+          "Mange kvinder oplever nu en stor trang til at rydde op og forberede hjemmet – den berømte 'redebygningstrang'. Følg den – men pas på ikke at overanstrenge dig."
+        ]
+      },
+      tips: [
+        "Kend fødselstegnene: regelmæssige veer (hvert 5. min i 1 time), vandrøret brister, slimet blodigt udflåd.",
+        "Ring til fødegangen ved tvivl – de er vant til spørgsmål.",
+        "Afslut alle praktiske forberedelser nu.",
+        "Hvil og lad redebygningstrang komme – men undgå at overtrætte dig.",
+        "Hav nødtelefonnumre klart tilgængeligt for alle involverede."
+      ],
+      didYouKnow: "Vidste du, at slimproppen kan afgå dage eller uger inden fødslen begynder? Det er blot et tegn på, at cervix begynder at modne og åbne sig – det er ikke ensbetydende med, at du skal på hospitalet med det samme. Ring til din jordemoder for vejledning."
+    }
   },
   37: {
-    label: "Uge 37",
-    body: ["Baby er nu på størrelse med et bundt grønkål og er tæt på klar til livet udenfor maven, selvom der stadig kan gå nogle uger endnu. De sidste uger bruges blandt andet på at tage på, modne og samle kræfter.", "Måske føles det, som om du går ind i et slags venteland. Alt kan ske snart, og samtidig kan der stadig gå tid. Det kan være en mærkelig boble at være i.", "Du må gerne være utålmodig, nervøs, spændt og glad på samme tid. Der er ikke én rigtig måde at vente på."],
-    partner: ["{{motherName}} kan måske have brug for ro omkring fødslen. Tal om hendes ønsker, ikke som en stram plan, men som en kærlig retning. Hvad gør hende tryg? Hvad har hun brug for fra dig?"],
-    next_step: ["Overvej at skrive en ønskeliste til fødslen. Når først veerne ruller kan det være svært at formidle de ønsker og tanker, som du har til fødslen. Derfor er en ønskeliste god. Tænk over om du har særlige ønsker til smertelindring. Om du ønsker at blive bakket op i særlige teknikker. Om din partner skal have en særlig rolle under fødslen. Det er også en god idé at skrive ned, om der er ting, som du er særligt nervøs for, eller om du har oplevelser med i bagagen som kan påvirke din oplevelse. Det kan også være, at du har det bedst med at tage det hele som det kommer."]
+    baby: "Ca. 48,6 cm, vejer ca. 2,9 kg. FULDBÅREN! Alle organer er modne.",
+    mom: "Fødsel kan ske hvornår som helst. Bækkenet åbner sig. Hormoner forbereder alt.",
+    tip: "Sørg for at barseltasken er pakket og klar. Hav hospitalet på speed dial.",
+    detail: {
+      intro: "FULDBÅREN! I uge 37 er dit barn officielt fuldbårent. Alle organer er modne, hjernen er klar, og barnet er parat til livet udenfor livmoderen. Fødslen kan nu begynde hvornår som helst.",
+      babySection: {
+        title: "Babyen i uge 37",
+        paragraphs: [
+          "Fosteret er nu ca. 48,6 cm og vejer ca. 2,9 kg. Fra i dag er dit barn officielt fuldbårent (term). Alle organer er modne og funktionelle. Hjernen er nu klar til at styre alle de komplekse processer, der er nødvendige for selvstændigt liv.",
+          "Barnet øver vejrtrækning aktivt. Lungerne er fuldt modne med rigelig surfaktant. Det vil tage sit første åndedræt umiddelbart efter fødslen, og det vil ske naturligt og refleksivt.",
+          "Barnet er nu godt gemt i bækkenet (hos de fleste) og venter på fødselssignalet. Det er nu barnet og moders hormoner tilsammen, der udløser fødslens start."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 37",
+        paragraphs: [
+          "Kroppen er nu i fuldt fødselsforberedende modus. Hormoner som oxytocin og prostaglandiner forbereder cervix, løsner og modner det yderst. Bækkenet åbner sig yderligere under relaxins indflydelse.",
+          "Slimproppen kan afgå (om ikke allerede sket), og Braxton Hicks kan mærkes dagligt. Mange kvinder beskriver en stigende 'venter og ser' stemning – en blanding af spænding og utålmodighed.",
+          "Fødselstegnene er nu vigtige at kende: regelmæssige veer, vandrøret der brister (en pludselig vandafgang), og slimproppen. Ring til fødegangen ved enhver tvivl."
+        ]
+      },
+      tips: [
+        "Barselstasken skal pakket og klar – til både dig, din partner og baby.",
+        "Hav hospitalets nummer og taxaselskabets nummer på speed dial.",
+        "Forbered din partner på fødselstegnene og hvornår I skal tage afsted.",
+        "Spis godt, hvil dig og lad kroppen gøre det, den er skabt til.",
+        "Skriv eventuelt et fødselsbrev til barnet – mange oplever det som smukt at give barnet ved ankomsten."
+      ],
+      didYouKnow: "Vidste du, at det faktisk er BARNET der udløser fødslens start? Barnets lunger sender et signal, når de er modne nok – og dette signal sætter hormonkaskaden i gang, der resulterer i veer. Det er en genial biologisk synkronisering, der sikrer, at fødslen sker på det optimale tidspunkt."
+    }
   },
   38: {
-    label: "Uge 38",
-    body: ["Baby er cirka så lang som en porre og kan komme når som helst nu, men det kan også tage lidt tid endnu. Det er lige præcis det svære ved de sidste uger. Man ved det ikke.", "Måske mærker du flere plukkeveer, mere tryk, ændret energi eller en fornemmelse af, at kroppen arbejder. Måske mærker du ingenting nyt. Begge dele kan være helt almindeligt.", "Omverdenen begynder måske også at skrive mere. \u201cEr der sket noget?\u201d \u201cNogen baby?\u201d Det kan være kærligt ment, men det kan også være trættende, når man selv går og venter."],
-    partner: ["{{motherName}} kan have brug for, at du hjælper med at passe på boblen. I behøver ikke svare alle med det samme. I må gerne lave jeres egne små regler for kontakt, besøg og opdateringer."],
-    next_step: ["Tal om hvem I ønsker skal besøge jer på hospitalet, hvis nogen, og om og af hvem I ønsker besøg den første tid hjemme. Der kan være mange forventninger fra familien til den første tid, og måske også fra Jer selv. Mærk efter hvad I egentlig har lyst til, og husk på, at det er Jer som i sidste ende bestemmer."]
+    baby: "Ca. 49,8 cm, vejer ca. 3,1 kg. Barnet er mentalt og fysisk klar.",
+    mom: "Intens pres mod bækkenbunden. Utålmodige og klar til at møde baby.",
+    tip: "Gåture hjælper barnet til at sætte sig godt og kan stimulere fødselsstarten.",
+    detail: {
+      intro: "I uge 38 er barnet nu fuldt klar. Mange førstemødre er utålmodige og udtrætte – kroppen er tung og bevægelse er besværlig. Men husk: du er ved at møde dit barn inden for meget kort tid.",
+      babySection: {
+        title: "Babyen i uge 38",
+        paragraphs: [
+          "Fosteret er nu ca. 49,8 cm og vejer ca. 3,1 kg. Barnet er nu mentalt og fysisk fuldt klar til livet udenfor. Hjernen vil fortsat modne i de første leveår, men den er nu klar til at styre alle de vitale funktioner.",
+          "Vernixlaget er nu tyndere eller næsten borte. Huden er glat, fed og frisk. Hår og negle er fuldt udviklede. Barnet vil komme til verden pænt og klar.",
+          "Barnet er nu meget stille i sine bevægelser – det har ganske enkelt ikke plads. Dette bekymrer mange mødre, men det er normalt. Det vigtigste er, at der STADIG ER bevægelser dagligt."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 38",
+        paragraphs: [
+          "Intens tyngde og pres mod bækkenbunden er nu det dominerende symptom. Mange kvinder har svært ved at gå i længere tid, sove komfortabelt eller sidde i lang tid.",
+          "Mange førstemødre befinder sig nu i en slags 'limbo' – venter og venter. Distraher dig selv med hyggelige aktiviteter, film og kvalitetstid med din partner.",
+          "Gåture, boldcirkel-øvelser og svømning kan hjælpe barnet til at sætte sig optimalt og potentielt stimulere fødslen. Men de kan heller ikke tvinge en fødsel, der ikke er klar – det sker på barnets betingelser."
+        ]
+      },
+      tips: [
+        "Daglige gåture på 30 min. kan hjælpe barnet til at sætte sig godt.",
+        "Boldcirkel øvelser (graviditetsbold) kan lindre pres og stimulere fødsel.",
+        "Nyd de sene natteture med din partner inden babyens ankomst.",
+        "Lav de ting du glæder dig til at gøre de næste mange måneder ikke kan: spise sushi, drikke et glas vin (IKKE anbefalet under graviditet), sove længe.",
+        "Skriv en fødselsdagshilsen til barnet – som du kan give det på sin første fødselsdag."
+      ],
+      didYouKnow: "Vidste du, at kun ca. 5% af babyer faktisk fødes præcis på terminsdatoen? De fleste fødes inden for en 2-ugers periode før eller efter termin. Terminsdatoen er et estimat baseret på en gennemsnitlig graviditetslängde på 280 dage."
+    }
   },
   39: {
-    label: "Uge 39",
-    body: ["Baby er cirka på størrelse med en vandmelon og nu er det tæt på. Baby er klar til at møde jer, men bestemmer stadig selv timingen sammen med kroppen. Det kan føles som at stå med hånden på dørhåndtaget uden at vide, hvornår døren åbner.", "Måske er du tung, øm, træt eller bare meget klar. Måske får du pludselig energi til at ordne skuffer, vaske babytøj eller rydde op i noget, ingen andre kan forstå vigtigheden af. Redebygning ER en ting!", "Prøv at give dig selv lov til at være i det uden at analysere alt. De sidste dage kan være stille, mærkelige, intense men også magiske."],
-    partner: ["{{motherName}} er måske ved at være fyldt helt op. Både af baby og af ventetid. Spørg hellere \u201chvad ville føles rart lige nu?\u201d end \u201csker der noget?\u201d"],
-    next_step: ["Overvej om en mor-behandling kunne være dejlig nu. Der findes mange tilbud såsom massage, akupunktur, fødselsmodning eller andet, der føles rart for kroppen lige nu, og som måske kan give dig en pause, hvis tankerne lige nu er domineret af utålmodighed."]
+    baby: "Ca. 50,7 cm, vejer ca. 3,3 kg. Hjernen og nervesystemet modnes fortsat. Barnet er fuldt klar.",
+    mom: "Mærk barnets bevægelser nøje. Cervix modner og åbner.",
+    tip: "Kend tegnene på fødsel og hvornår du skal kontakte hospitalet.",
+    detail: {
+      intro: "I uge 39 er du nu tæt på – meget tæt på. Barnet er fuldt klar, og det er bare et spørgsmål om hvornår kroppen sender startssignalet. Vær tålmodig og stol på din krop.",
+      babySection: {
+        title: "Babyen i uge 39",
+        paragraphs: [
+          "Fosteret er nu ca. 50,7 cm og vejer ca. 3,3 kg. Barnet er nu fuldt klar til livet udenfor. Hjernen og nervesystemet fortsætter dog med at modnes – en proces, der fortsætter i de første mange leveår.",
+          "Barnet er nu meget stille – det har simpelthen ikke plads. MEN der skal stadig være bevægelser dagligt. Mærk efter barnets bevægelser hver dag, og kontakt straks fødegangen, hvis mønsteret ændrer sig.",
+          "Barnet gemmer energi til den store begivenhed. Det spiser (synker fostervand), hviler og venter. Ligesom dig."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 39",
+        paragraphs: [
+          "Cervix modner og åbner sig nu løbende. Din jordemoder kan ved en intern undersøgelse vurdere, hvor langt du er. Det er en god ide at diskutere dette ved dit næste besøg.",
+          "Slimproppen kan komme nu – en tyktflydende og evt. let blodig slim. Det er et tegn på, at cervix åbner sig. Det kan ske dage inden fødslens start.",
+          "Mange kvinder oplever nu en ny ro og accept – kroppen ved, hvad den gør. Stol på processen. Fødslen vil komme."
+        ]
+      },
+      tips: [
+        "Mærk barnets bevægelser dagligt – minimal 10 bevægelser over 2 timer.",
+        "Kend tegnene: regelmæssige veer, vandafgang, slimproppen.",
+        "Hvil og sov så meget du kan – du har brug for energi til fødslen.",
+        "Hold en lav tone og vær til stede – undgå overstimulering og for mange besøg.",
+        "Hjemmefødselsplaner: gennemgå alt med jordemoder."
+      ],
+      didYouKnow: "Vidste du, at forskning viser, at børn født i uge 39-40 klarer sig bedre end dem, der er igangsatte i uge 37-38? De ekstra to uger giver hjernen og lungerne vigtig ekstra modenhed. Det er en af grundene til, at man nu venter med planlagte igangsættelser til mindst uge 39."
+    }
   },
   40: {
-    label: "Uge 40",
-    body: ["Baby er cirka på størrelse med et lille halloweengræskar og terminsugen er her. Den dato, I måske har talt om i månedsvis, står nu lige foran jer eller er måske allerede kommet. Men termin er ikke en udløbsdato. Det er et pejlemærke.", "Baby er færdigudviklet, men det er stadig helt almindeligt, at fødslen ikke starter præcis på terminsdagen. Det kan kræve tålmodighed, og det er helt okay, hvis du ikke har ret meget af den tilbage.", "Din krop arbejder på sin egen måde. Måske tydeligt, måske stille. Du må gerne være både taknemmelig, utålmodig, spændt og virkelig træt."],
-    partner: ["{{motherName}} kan være i en ret særlig tilstand nu. Måske har hun brug for nærhed, måske for plads, måske for distraktion, måske for ro. Det kan skifte. Din opgave er ikke at få fødslen til at ske, men at være et trygt sted, mens I venter."],
-    next_step: ["Overvej at arrangere en rolig aften kun for jer to. Måske derhjemme med takeaway, fodmassage og en god film. Eller en sidste middag ude bare jer to, inden baby kommer, hvis overskuddet er til det. Det er en helt særlig tid lige nu, og den allersidste tid som bare Jer to."]
+    baby: "Ca. 51,2 cm, vejer ca. 3,4 kg. TERMINEN! Barnet er fuldt udviklet og klar.",
+    mom: "Du er ved terminen! Kun 5% føder præcist på terminsdatoen – vær tålmodig.",
+    tip: "Slap af og stol på din krop. Veerne vil komme. Nyd det magiske øjeblik.",
+    detail: {
+      intro: "TERMINEN! Uge 40 er den officielle termin, men husk: kun 5% af babyer ankommer præcist på denne dag. Det er ikke en deadline – det er et estimat. Vær tålmodig og nyd disse allersidste dage inden mødet.",
+      babySection: {
+        title: "Babyen i uge 40",
+        paragraphs: [
+          "Dit barn er nu ca. 51,2 cm og vejer ca. 3,4 kg – men der er store variationer. Alt fra 2,5 til 4,5 kg er normalt. Barnet er fuldt udviklet og klar til at møde verden.",
+          "Hjernen er aktiv og klar. Alle sanser er fuldt funktionelle. Lungerne er klar til det første åndedræt. Immunsystemet er forberedt med dine antistoffer. Alt er på plads.",
+          "Barnet venter nu – ligesom dig. Det er en gensidig forberedelse: dit barn klar til at komme ud, og din krop klar til at modtage det. Det er et biologisk mirakel, der snart folder sig ud."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 40",
+        paragraphs: [
+          "Det er terminen, og du er klar – mere end klar. Det er helt normalt at føde op til to uger efter terminsdatoen og stadig betragtes som normal. Nyd din jordemoders opfølgning og scanning.",
+          "Kroppen forbereder sig konstant. Cervix modner, hormoner stiger og Braxton Hicks sammentrækninger er hyppige. Veerne vil komme – og du er stærkere end du tror.",
+          "Emotionelt kan terminen være udfordrende. Forventningerne er store, og 'hvornår kommer den?' spørgsmålet fra omgivelserne kan blive trættende. Undgå at svare på telefonen hvis du har brug for ro."
+        ]
+      },
+      tips: [
+        "Stol på din krop – den ved hvad den gør, og det vil ske.",
+        "Gå daglige ture og brug graviditetsbold til at hjælpe på vej.",
+        "Nyd de allersidste dage af kvindeligehed – dit liv forandres snart på den smukkeste måde.",
+        "Kig på babybilleder af barnet og skriv breve til det.",
+        "Forbered dine nærmeste på 'hvornår'-spørgsmål – de er elskede men trættende!"
+      ],
+      didYouKnow: "Vidste du, at begrebet 'termin' på latin betyder 'grænse' eller 'slutdato'? Men en graviditet er ikke en kontraktlig forpligtigelse – det er en biologisk proces med en vis variation. De fleste fysiologer foretrækker at tale om en 'termin-vindue' på uge 38-42 frem for en enkelt dato."
+    }
   },
   41: {
-    label: "Uge 41-42",
-    body: ["Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.", "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.", "Baby har været længe hos dig, og kroppen har båret jer hele vejen hertil. Det er stort, også selvom du måske mest føler dig træt, utålmodig eller følelsesmæssigt lidt brugt.", "Det kan være fristende at google sig til alverdens alternative metoder, til at sætte fødslen i gang, men hvad kroppen typisk har brug for er ofte bare ro. Ro til at samle kræfter til fødslen.", "Tal med jordemoder eller fødested om næste skridt, og hold hinanden lidt ekstra tæt i ventetiden. Før I ved af det er hun/han her."],
-    partner: [],
-    next_step: []
+    baby: "Ca. 51,7 cm, vejer ca. 3,6 kg. Moderkagen fungerer fortsat godt. Negle og hår kan være lange.",
+    mom: "Over terminen er normalt. Jordemoder tilbyder igangsættelsesamtale.",
+    tip: "Bliv ved med at mærke bevægelser dagligt. Kontakt sygehuset ved ændringer.",
+    detail: {
+      intro: "I uge 41 er du over terminen – og det er helt normalt. Ca. 20-30% af graviditeter overskride terminsdatoen. Barnet har det fortsat godt, og jordemødrene følger dig tæt.",
+      babySection: {
+        title: "Babyen i uge 41",
+        paragraphs: [
+          "Fosteret er nu ca. 51,7 cm og vejer ca. 3,6 kg. Barnet er fortsat trygt og har det godt. Moderkagen fungerer fortsat fint for de fleste. Barnet sover og spiser normalt.",
+          "Hår og negle kan nu være bemærkelsesværdig lange. Vernixlaget er nu tyndt eller borte. Huden kan se lidt tør og flakkende ud – det er kun fordi det beskyttende lag er opløst, og det er fuldstændig harmløst.",
+          "Barnet er nu færdigt med at vokse – det venter bare på startskuddet. Overskydende fedtdepoter giver en rund, velsernæret baby, du snart vil møde."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 41",
+        paragraphs: [
+          "Din jordemoder vil nu tilbyde tæt opfølgning med regelmæssige skanninger af moderkagen og fostervandets mængde. Alt dette for at sikre, at alt fortsat er godt.",
+          "Igangsættelsessamtalen tilbydes typisk nu. Det indebærer information om, hvornår og hvordan man kan igangsætte fødslen, og hvad det indebærer. Det er en valgmulighed, ikke en pligt.",
+          "Det er okay at føle frustration, utålmodighed og træthed. Det er OKAY at have nok. Kroppen er klar – det er blot et spørgsmål om timing."
+        ]
+      },
+      tips: [
+        "Mærk bevægelserne dagligt – kontakt hospitalet ved markant ændring.",
+        "Gå til alle planlagte scanninger og konsultationer.",
+        "Lyt til jordemødrenes råd om igangsætning.",
+        "Drik rigeligt og hvil meget.",
+        "Nyd de allersidste dage – snart er livet et helt andet."
+      ],
+      didYouKnow: "Vidste du, at igangsættelses-metoder har varieret enormt gennem historien? Fra kastor-olie (der give svær diarré og kramper) til lange gåture og kraftig aktivitet – mange af de folkemedicinske metoder har lidt eller ingen effekt. Medicinsk igangsætning med prostaglandiner og oxytocin er i dag den mest effektive og sikre metode."
+    }
   },
   42: {
-    label: "Uge 41-42",
-    body: ["Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.", "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.", "Baby har været længe hos dig, og kroppen har båret jer hele vejen hertil. Det er stort, også selvom du måske mest føler dig træt, utålmodig eller følelsesmæssigt lidt brugt.", "Det kan være fristende at google sig til alverdens alternative metoder, til at sætte fødslen i gang, men hvad kroppen typisk har brug for er ofte bare ro. Ro til at samle kræfter til fødslen.", "Tal med jordemoder eller fødested om næste skridt, og hold hinanden lidt ekstra tæt i ventetiden. Før I ved af det er hun/han her."],
-    partner: [],
-    next_step: []
+    baby: "Barnet er nu post-termin. Huden kan se lidt tør ud. Alle organer fungerer fint.",
+    mom: "Igangsættelse vil typisk tilbydes nu. Du er meget tæt på at møde din baby!",
+    tip: "Stol på dit plejeteam. Igangsættelse er en sikker og meget almindelig procedure.",
+    detail: {
+      intro: "Uge 42 – du er post-termin, og igangsætning vil typisk nu tilbydes eller anbefales. Det er begyndelsen på den allersidste fase inden mødet med dit barn.",
+      babySection: {
+        title: "Babyen i uge 42",
+        paragraphs: [
+          "Dit barn er nu post-termin men har det fortsat godt. Alle organer er fuldt funktionelle. Huden kan se lidt tør og skrællet ud, da vernixlaget er opløst, men det er kun kosmetisk.",
+          "Barnet er nu meget stort – typisk over 3,5 kg – og bevæger sig stadig. Placentafunktionen kontrolleres nøje via scanning, da moderkagen kan begynde at aftage i funktion ved meget lang graviditet.",
+          "Barnet er klar og venter – akkurat som du gør. Den store dag er meget tæt på."
+        ]
+      },
+      momSection: {
+        title: "Din krop i uge 42",
+        paragraphs: [
+          "Igangsætning tilbydes nu af jordemoder og læge. Dette indebærer typisk mekanisk åbning af cervix (ballonkateter), eller medicinsk igangsætning med prostaglandiner og/eller oxytocin.",
+          "Igangsætning er en sikker og dokumenteret procedure. Forskning viser, at igangsætning ved uge 41-42 reducerer risikoen for komplikationer sammenlignet med at vente.",
+          "Du er klar. Dit barn er klar. Stol på dit plejeteam og din krop – inden for meget kort tid holder du dit barn."
+        ]
+      },
+      tips: [
+        "Stol på dit plejeteam og deres anbefalinger.",
+        "Igangsætning er rutinemæssig og almindelig – lad dig ikke bekymre.",
+        "Pak eventuelle ekstra ting du mangler i barseltasken.",
+        "Skriv eventuelt et brev til dit fremtidige selv om denne ventende tid.",
+        "Snart holder du din baby – al ventetiden er nu ved at ende."
+      ],
+      didYouKnow: "Vidste du, at mødre, der igangsættes i uge 41-42, faktisk har lavere risiko for kejsersnit end mødre, der fortsætter graviditeten og afventer? En større metaanalyse (ARRIVE-studiet) viste, at elektiv igangsætning i uge 41 var forbundet med bedre udkomme end at vente på spontan fødsel. Det er information, der har ændret den kliniske praksis mange steder."
+    }
   }
 };

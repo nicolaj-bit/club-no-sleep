@@ -5,7 +5,7 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			display: ['Playfair Display', 'Georgia', 'serif'],
+  			display: ['Cormorant Garamond', 'Georgia', 'serif'],
   			body: ['Inter', '-apple-system', 'sans-serif'],
   		},
   		borderRadius: {

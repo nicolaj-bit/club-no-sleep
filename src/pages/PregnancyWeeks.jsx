@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
-import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
+import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 import PageHeader from '@/components/ui/PageHeader';
@@ -37,8 +37,11 @@ function WeekCard({ week, data, isCurrent }) {
             </span>
           )}
           <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>
-            {data.label}
+            Uge {week}
           </span>
+          {data?.title && (
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{data.title}</span>
+          )}
         </div>
         {open
           ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
@@ -48,15 +51,31 @@ function WeekCard({ week, data, isCurrent }) {
 
       {open && (
         <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-          <div className="pt-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              {data.body[0]}
-            </p>
-            {data.body.length > 1 && (
-              <p className="text-sm leading-relaxed mt-2" style={{ color: 'var(--color-text-secondary)' }}>
-                {data.body[1]}
-              </p>
-            )}
+          {/* Baby */}
+          <div className="pt-3 space-y-1">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Baby className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Babyen</span>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.baby}</p>
+          </div>
+
+          {/* Mom */}
+          <div className="space-y-1">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Heart className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Din krop</span>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.mom}</p>
+          </div>
+
+          {/* Tip */}
+          <div className="rounded-xl p-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-cappuccino)' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-cappuccino)' }}>Tip</span>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{data.tip}</p>
           </div>
 
           <Link
@@ -65,7 +84,7 @@ function WeekCard({ week, data, isCurrent }) {
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <BookOpen className="w-4 h-4" />
-            <span>Læs mere om {data.label.toLowerCase()}</span>
+            <span>Læs mere om uge {week}</span>
           </Link>
         </div>
       )}
@@ -104,6 +123,7 @@ export default function PregnancyWeeks() {
   const dueDateStr = profile?.child_due_date;
   const currentWeek = dueDateStr ? getPregnancyWeek(dueDateStr) : null;
   const isPregnant = currentWeek !== null && currentWeek >= 4 && currentWeek <= 42;
+  const isPostTerm = currentWeek !== null && currentWeek > 42;
 
   const weeksToShow = Object.keys(PREGNANCY_WEEKS).map(Number).sort((a, b) => a - b);
 
@@ -113,6 +133,7 @@ export default function PregnancyWeeks() {
       <PageHeader title="Graviditet uge for uge" />
 
       <div className="px-4 pt-5 pb-6 space-y-5">
+        {/* Week list */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
             Alle uger

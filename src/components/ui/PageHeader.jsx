@@ -43,7 +43,7 @@ export default function PageHeader({
         </button>
         {title && (
           <h1
-            className="text-base font-display font-medium truncate"
+            className="text-sm font-semibold truncate"
             style={{ color: 'var(--color-text-primary)' }}
           >
             {title}

@@ -129,7 +129,7 @@
   }
 
   h1, h2, h3, .serif {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 
   html.dark {
@@ -168,7 +168,7 @@
 
 /* Typography helpers */
 .font-display {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
 }
 .font-body {
   font-family: 'Inter', -apple-system, sans-serif;

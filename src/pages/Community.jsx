@@ -248,7 +248,7 @@ export default function Community() {
               <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
                 <Lock className="w-7 h-7 text-white" />
               </div>
-              <h3 className="text-lg font-display font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+              <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
                 {t.onlyForMoms}
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>

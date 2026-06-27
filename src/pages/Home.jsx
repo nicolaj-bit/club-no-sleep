@@ -128,7 +128,7 @@ export default function Home() {
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <ChildSwitcher />
-            <h1 className="text-[38px] font-display font-medium leading-tight mt-2" style={{ color: 'var(--color-text-primary)' }}>{greeting}</h1>
+            <h1 className="text-[38px] font-light leading-tight mt-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{greeting}</h1>
           </div>
           <div className="flex items-center gap-2 mt-1">
             {user && <NotificationBell userEmail={user.email} />}

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -198,7 +197,7 @@
 .article-content h2,
 .article-content h3,
 .article-content h4 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
   color: var(--color-text-primary);
   font-weight: 600;
   margin-top: 2em;
@@ -275,26 +274,4 @@
 .dark [class*="border-gray"],
 .dark [class*="border-slate"] {
   border-color: #3A312B !important;
-}
-
-/* ── Standard typography utilities ── */
-.heading-page {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-
-.heading-section {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.label-caps {
-  font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
 }

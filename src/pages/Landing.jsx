@@ -54,7 +54,7 @@ export default function Landing() {
       {/* ── NAVBAR ── */}
        <nav style={{ backgroundColor: '#F5EDE0', borderBottom: '1px solid #E2D4C0', position: 'sticky', top: 0, zIndex: 50, paddingTop: 'env(safe-area-inset-top)' }}>
          <div className="lnd-nav-inner" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
-          <span className="lnd-nav-title" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
+          <span className="lnd-nav-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
             <button onClick={() => window.location.href = '/app'} style={btnDark}>Åbn app →</button> :
@@ -76,7 +76,7 @@ export default function Landing() {
           {/* Left copy */}
           <div className="lnd-hero1-copy" style={{ flex: '1 1 340px', minWidth: 260 }}>
             <h1 className="lnd-hero1-h1" style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(2.4rem, 4.5vw, 3.4rem)',
               fontWeight: 400,
               lineHeight: 1.15,
@@ -191,7 +191,7 @@ export default function Landing() {
 
           {/* RIGHT — copy */}
           <div style={{ flex: 1, maxWidth: 520 }}>
-            <h2 className="lnd-klub-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '2.55rem', fontWeight: 400, color: '#1E140A', lineHeight: 1.15, margin: '0 0 1.3rem' }}>
+            <h2 className="lnd-klub-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.55rem', fontWeight: 400, color: '#1E140A', lineHeight: 1.15, margin: '0 0 1.3rem' }}>
               Kom med i klubben
             </h2>
             <p style={{ color: '#3A2412', fontSize: '0.875rem', lineHeight: 1.82, margin: '0 0 1.2rem' }}>
@@ -222,7 +222,7 @@ export default function Landing() {
 
           {/* Headline + heart */}
           <div style={{ textAlign: 'center', marginBottom: '3.8rem' }}>
-            <h2 className="lnd-features-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(2.1rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.9rem' }}>
+            <h2 className="lnd-features-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.8vw, 2.9rem)', fontWeight: 400, color: '#1E140A', margin: '0 0 0.9rem' }}>
               Dette finder du i appen
             </h2>
             <svg width="20" height="18" viewBox="0 0 20 18" fill="none" style={{ display: 'inline-block' }}>
@@ -243,7 +243,7 @@ export default function Landing() {
 
           {/* Left copy */}
           <div className="lnd-partner-copy" style={{ flex: '1 1 280px', maxWidth: 360 }}>
-            <h2 className="lnd-partner-h2" style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(2.1rem, 3.5vw, 3rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1.18, margin: '0 0 1.3rem' }}>
+            <h2 className="lnd-partner-h2" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.1rem, 3.5vw, 3rem)', fontWeight: 400, color: '#1E140A', lineHeight: 1.18, margin: '0 0 1.3rem' }}>
               Du skal ikke stå<br />med det hele alene
             </h2>
             <p style={{ color: '#3E2810', fontSize: '0.88rem', lineHeight: 1.9, maxWidth: 300, margin: '0 0 2.4rem' }}>
@@ -361,7 +361,7 @@ export default function Landing() {
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
             <div>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '1.05rem', fontWeight: 600, color: '#F5EFE9', letterSpacing: '0.04em', margin: '0 0 10px' }}>CLUB NO SLEEP</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.05rem', fontWeight: 600, color: '#F5EFE9', letterSpacing: '0.04em', margin: '0 0 10px' }}>CLUB NO SLEEP</p>
               <p style={{ color: '#7A5A44', fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 200, margin: 0 }}>
                 Din trygge havn som ny forælder — søvn, fællesskab og viden samlet ét sted.
               </p>
@@ -395,7 +395,7 @@ export default function Landing() {
 
       {/* Responsive */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Dancing+Script:wght@400;500&display=swap');
 
         /* ── NAVBAR ── */
         .lnd-nav-inner { padding: 0 2.5rem !important; }
