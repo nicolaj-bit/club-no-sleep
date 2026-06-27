@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 // Branded LALATOTO AI avatar
 function AIAvatar({ size = 'sm', iconUrl = null }) {
@@ -59,6 +61,7 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
 
 export default function AIChat() {
   const { t } = useLanguage();
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -242,6 +245,7 @@ export default function AIChat() {
 
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
+      <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="100%">
 
         {/* Empty state */}
         {visibleMessages.length === 0 && !isLoading && (
@@ -342,9 +346,11 @@ export default function AIChat() {
         )}
 
         <div ref={bottomRef} />
+      </ContentLock>
       </div>
 
       {/* Input bar */}
+      {hasSubscription && (
       <div
         className="px-4 pt-3 pb-6 border-t"
         style={{
@@ -389,6 +395,7 @@ export default function AIChat() {
           {t.aiDisclaimer}
         </p>
       </div>
+      )}
     </div>
   );
 }

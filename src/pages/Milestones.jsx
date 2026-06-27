@@ -6,6 +6,8 @@ import MilestoneCamera from '@/components/milestones/MilestoneCamera';
 import TypeSticker from '@/components/milestones/TypeSticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
 import { Camera } from 'lucide-react';
+import ContentLock from '@/components/subscription/ContentLock';
+import { useSubscription } from '@/components/subscription/useSubscription';
 
 const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -39,6 +41,7 @@ function normalizeDbFrame(f) {
 
 export default function Milestones() {
   const [cameraFrame, setCameraFrame] = useState(null);
+  const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
 
   const { data: dbFrames = [], isSuccess } = useQuery({
     queryKey: ['milestoneFrames'],
@@ -75,28 +78,30 @@ export default function Milestones() {
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       <PageHeader title="Milepæle" />
 
-      <div className="px-4 pt-2 space-y-8">
-        {CATEGORY_ORDER.map(cat => (
-          <div key={cat}>
-            <h2
-              className="text-base font-semibold mb-4 tracking-wide uppercase"
-              style={{ color: 'var(--color-text-muted)', fontSize: 11, letterSpacing: '0.1em' }}
-            >
-              {CATEGORY_LABELS[cat]}
-            </h2>
+      <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="320px">
+        <div className="px-4 pt-2 space-y-8">
+          {CATEGORY_ORDER.map(cat => (
+            <div key={cat}>
+              <h2
+                className="text-base font-semibold mb-4 tracking-wide uppercase"
+                style={{ color: 'var(--color-text-muted)', fontSize: 11, letterSpacing: '0.1em' }}
+              >
+                {CATEGORY_LABELS[cat]}
+              </h2>
 
-            <div className="space-y-3">
-              {grouped[cat].map(frame => (
-                <MilestoneRow
-                  key={frame.id}
-                  frame={frame}
-                  onCapture={() => setCameraFrame(frame)}
-                />
-              ))}
+              <div className="space-y-3">
+                {grouped[cat].map(frame => (
+                  <MilestoneRow
+                    key={frame.id}
+                    frame={frame}
+                    onCapture={() => setCameraFrame(frame)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ContentLock>
     </div>
   );
 }

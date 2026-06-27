@@ -66,9 +66,10 @@ export function useSubscription() {
         }
 
         const profile = profiles[0];
+        const isTrial = profile.subscription_status === 'trial';
+        const isActive = profile.subscription_status === 'active' || isTrial;
 
-        // Alle authenticated brugere med en profil får fuld adgang
-        const result = { isActive: true, isTrial: false };
+        const result = { isActive, isTrial };
         _cache = result;
         _cacheTime = Date.now();
         setState({ loading: false, ...result });
