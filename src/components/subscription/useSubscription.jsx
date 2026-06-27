@@ -67,7 +67,7 @@ export function useSubscription() {
 
         const profile = profiles[0];
         const isTrial = profile.subscription_status === 'trial';
-        const isActive = profile.subscription_status === 'active' || isTrial;
+        const isActive = profile.subscription_status === 'active';
 
         const result = { isActive, isTrial };
         _cache = result;
