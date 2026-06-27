@@ -38,6 +38,7 @@ Deno.serve(async (req) => {
   try {
     const topic = req.headers.get("X-Shopify-Topic") || "";
     const body = await req.json();
+    console.log(`[shopifyWebhook] received topic="${topic}" id=${body?.id}`);
 
     // Use service role for webhook (no user auth)
     const base44 = createClientFromRequest(req);
@@ -129,8 +130,10 @@ Deno.serve(async (req) => {
       }
     }
 
+    console.log(`[shopifyWebhook] processed topic="${topic}" successfully`);
     return Response.json({ ok: true });
   } catch (error) {
+    console.error(`[shopifyWebhook] error: ${error.message}`);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
