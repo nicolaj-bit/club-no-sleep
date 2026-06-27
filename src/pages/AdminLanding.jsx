@@ -67,6 +67,8 @@ export default function AdminLanding() {
   const [featureIcons, setFeatureIcons] = useState({});
   const [sleepAgentPrompt, setSleepAgentPrompt] = useState('');
   const [loading, setLoading] = useState(false);
+  const [shopifySyncing, setShopifySyncing] = useState(false);
+  const [shopifyResult, setShopifyResult] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -103,6 +105,26 @@ export default function AdminLanding() {
     };
     loadData();
   }, []);
+
+  const handleShopifySync = async () => {
+    setShopifySyncing(true);
+    setShopifyResult(null);
+    try {
+      const response = await base44.functions.invoke('shopifySync', { type: 'all' });
+      if (response.data?.success) {
+        setShopifyResult({ ok: true, message: `Synkroniseret: ${response.data.synced.products ?? 0} produkter, ${response.data.synced.blogs ?? 0} blogindlæg` });
+        toast.success('Shopify synkroniseret');
+      } else {
+        setShopifyResult({ ok: false, message: response.data?.error || 'Ukendt fejl' });
+        toast.error('Synkronisering fejlede');
+      }
+    } catch (e) {
+      setShopifyResult({ ok: false, message: e?.message || 'Synkronisering fejlede' });
+      toast.error('Synkronisering fejlede');
+    } finally {
+      setShopifySyncing(false);
+    }
+  };
 
   const handleIconUploaded = (key, url) => {
     setFeatureIcons(prev => ({ ...prev, [key]: url }));
@@ -187,6 +209,24 @@ export default function AdminLanding() {
       <button onClick={handleSaveIcons} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>
         {loading ? 'Gemmer...' : 'Gem ikoner'}
       </button>
+
+      {/* SHOPIFY SYNC */}
+      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>🛍️ Shopify-synkronisering</h2>
+      <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
+        Henter produkter og blogindlæg fra Shopify ind i appen. Kør denne efter du har sat Shopify-credentials op, eller når du vil opdatere data manuelt.
+      </p>
+      <button
+        onClick={handleShopifySync}
+        disabled={shopifySyncing}
+        style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.75rem' }}
+      >
+        {shopifySyncing ? 'Synkroniserer...' : 'Synkroniser nu'}
+      </button>
+      {shopifyResult && (
+        <p style={{ fontSize: '0.85rem', color: shopifyResult.ok ? '#3A7A3A' : '#a04040', marginBottom: '2rem' }}>
+          {shopifyResult.message}
+        </p>
+      )}
 
       {/* SLEEP AGENT PROMPT */}
       <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>🌙 Søvnrådgiver AI — prompt</h2>
