@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
-import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
+import { Loader2, Check, ArrowLeft, Lock, AlertCircle, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
+import { openExternalUrl } from '@/lib/nativeAuth';
 
 function AppleIcon({ className, style }) {
   return (
@@ -35,6 +36,7 @@ export default function Checkout() {
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [testerCheckoutLoading, setTesterCheckoutLoading] = useState(false);
 
   const rc = useRevenueCat(userId || 'guest');
   const platform = Capacitor.getPlatform();
@@ -81,6 +83,26 @@ export default function Checkout() {
       }
     } finally {
       setPurchasing(false);
+    }
+  };
+
+  // TEMPORÆR workaround mens IAP afventer App Store/Play Console-opsætning:
+  // sender beta-testere til Stripe checkout i systembrowseren, hvor de kan
+  // indtaste en rabatkode (fx 6 måneders gratis abonnement). Fjern når IAP virker.
+  const handleTesterCheckout = async () => {
+    setError(null);
+    setTesterCheckoutLoading(true);
+    try {
+      const response = await base44.functions.invoke('createCheckoutSession', {});
+      if (response.data?.url) {
+        await openExternalUrl(response.data.url);
+      } else {
+        setError('Kunne ikke starte betaling. Prøv igen.');
+      }
+    } catch (e) {
+      setError(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
+    } finally {
+      setTesterCheckoutLoading(false);
     }
   };
 
@@ -224,6 +246,18 @@ export default function Checkout() {
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
           <Lock className="w-3 h-3" /> Sikker betaling via {store.footer} · Ingen binding · Annuller når som helst
         </p>
+
+        {/* TEMPORÆR: beta-tester / rabatkode-vej via Stripe, mens IAP afventer App Store/Play Console-opsætning */}
+        <button
+          onClick={handleTesterCheckout}
+          disabled={testerCheckoutLoading}
+          className="w-full mt-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
+          style={{ border: '1px solid #C9AA8F', color: '#5d3a2c', backgroundColor: 'transparent' }}
+        >
+          {testerCheckoutLoading
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> Åbner betaling…</>
+            : <><Ticket className="w-4 h-4" /> Har du en rabatkode? (beta-test)</>}
+        </button>
       </div>
     </div>
   );
