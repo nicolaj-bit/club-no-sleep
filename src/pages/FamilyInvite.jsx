@@ -9,23 +9,26 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
 import { BottomSheet } from '@/components/ui/BottomSheet';
-
-const TITLE_SUGGESTIONS = ['Far', 'Farmor', 'Farfar', 'Mormor', 'Morfar', 'Søster', 'Bror', 'Veninde', 'Ven'];
-
-const PERMISSIONS = [
-  { key: 'can_see_sleep_log', label: 'Søvnlog', emoji: '😴' },
-  { key: 'can_see_wonder_weeks', label: 'Tigerspring', emoji: '🐯' },
-  { key: 'can_see_calendar', label: 'Kalender', emoji: '📅' },
-  { key: 'can_see_knowledge', label: 'Viden & artikler', emoji: '📚' },
-  ];
-
-const NOTIFICATIONS = [
-  { key: 'notify_wonder_weeks', label: 'Notifikationer om tigerspring', emoji: '🐯' },
-  { key: 'notify_sleep', label: 'Notifikationer om søvnlog', emoji: '😴' },
-  { key: 'notify_calendar', label: 'Notifikationer om aftaler', emoji: '📅' },
-];
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function FamilyInvite() {
+  const { t } = useLanguage();
+
+  const TITLE_SUGGESTIONS = [t.familyInviteFar, t.familyInviteFarmor, t.familyInviteFarfar, t.familyInviteMormor, t.familyInviteMorfar, t.familyInviteSoster, t.familyInviteBror, t.familyInviteVeninde, t.familyInviteVen];
+
+  const PERMISSIONS = [
+    { key: 'can_see_sleep_log', label: t.sleepLog, emoji: '😴' },
+    { key: 'can_see_wonder_weeks', label: t.familyInviteWonderWeeks, emoji: '🐯' },
+    { key: 'can_see_calendar', label: t.calendar, emoji: '📅' },
+    { key: 'can_see_knowledge', label: t.familyInviteKnowledgeArticles, emoji: '📚' },
+  ];
+
+  const NOTIFICATIONS = [
+    { key: 'notify_wonder_weeks', label: t.familyInviteNotifyWonderWeeks, emoji: '🐯' },
+    { key: 'notify_sleep', label: t.familyInviteNotifySleep, emoji: '😴' },
+    { key: 'notify_calendar', label: t.familyInviteNotifyCalendar, emoji: '📅' },
+  ];
+
   const [user, setUser] = useState(null);
   const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,11 +82,11 @@ export default function FamilyInvite() {
 
   const handleSend = async () => {
     if (!form.invitee_email || !form.invitee_title) {
-      toast.error('Udfyld email og vælg en titel');
+      toast.error(t.familyInviteFillEmailAndTitle);
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.invitee_email)) {
-      toast.error('Indtast en gyldig email');
+      toast.error(t.familyInviteValidEmail);
       return;
     }
     setSaving(true);
@@ -105,9 +108,9 @@ export default function FamilyInvite() {
       setInvites(prev => [invite, ...prev]);
       setSheetOpen(false);
       resetForm();
-      toast.success(`Invitation sendt til ${form.invitee_email} 🎉`);
+      toast.success(`${t.familyInviteSentTo} ${form.invitee_email} 🎉`);
     } catch (e) {
-      toast.error('Noget gik galt. Prøv igen.');
+      toast.error(t.familyInviteSomethingWrong);
     } finally {
       setSaving(false);
     }
@@ -116,13 +119,13 @@ export default function FamilyInvite() {
   const handleDelete = async (id) => {
     await base44.entities.FamilyInvite.delete(id);
     setInvites(prev => prev.filter(i => i.id !== id));
-    toast.success('Invitation slettet');
+    toast.success(t.familyInviteDeleted);
   };
 
   const statusBadge = (status) => {
-    if (status === 'accepted') return <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Accepteret</span>;
-    if (status === 'declined') return <span className="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">Afvist</span>;
-    return <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Afventer</span>;
+    if (status === 'accepted') return <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{t.familyInviteAccepted}</span>;
+    if (status === 'declined') return <span className="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">{t.familyInviteDeclined}</span>;
+    return <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{t.familyInvitePending}</span>;
   };
 
   if (loading) return null;
@@ -135,7 +138,7 @@ export default function FamilyInvite() {
           <ArrowLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
         </Link>
         <h1 className="text-3xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>
-          Deling & adgang
+          {t.familyInviteTitle}
         </h1>
       </div>
 
@@ -143,7 +146,7 @@ export default function FamilyInvite() {
         {/* Intro */}
         <div className="rounded-2xl p-4 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {pageConfig?.intro_text || 'Invitér et familiemedlem til at følge med — de får adgang til præcis det, du vælger, og kan modtage notifikationer om barnets milepæle.'}
+            {pageConfig?.intro_text || t.familyInviteIntro}
           </p>
         </div>
 
@@ -154,14 +157,14 @@ export default function FamilyInvite() {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           <UserPlus className="w-5 h-5" />
-          {pageConfig?.invite_button_label || 'Invitér familiemedlem'}
+          {pageConfig?.invite_button_label || t.familyInviteInviteMember}
         </Button>
 
         {/* Existing invites */}
         {invites.length > 0 && (
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-wider px-1" style={{ color: 'var(--color-text-muted)' }}>
-              Sendte invitationer
+              {t.familyInviteSentInvites}
             </p>
             {invites.map(invite => (
               <div
@@ -205,23 +208,23 @@ export default function FamilyInvite() {
 
         {invites.length === 0 && (
           <div className="text-center py-10">
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen invitationer endnu</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.familyInviteNoInvites}</p>
           </div>
         )}
       </div>
 
       {/* Invite Bottom Sheet */}
-      <BottomSheet open={sheetOpen} onOpenChange={setSheetOpen} title="Invitér familiemedlem">
+      <BottomSheet open={sheetOpen} onOpenChange={setSheetOpen} title={t.familyInviteInviteMember}>
         <div className="px-5 py-2 space-y-5 pb-8">
 
           {/* Email */}
           <div className="space-y-1.5">
-            <Label>Email på familiemedlem</Label>
+            <Label>{t.familyInviteEmailLabel}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
               <Input
                 type="email"
-                placeholder="fx farmor@gmail.com"
+                placeholder={t.familyInviteEmailPlaceholder}
                 value={form.invitee_email}
                 onChange={e => setForm({ ...form, invitee_email: e.target.value })}
                 className="pl-9"
@@ -231,9 +234,9 @@ export default function FamilyInvite() {
 
           {/* Titel */}
           <div className="space-y-1.5">
-            <Label>Titel</Label>
+            <Label>{t.familyInviteTitleLabel}</Label>
             <Input
-              placeholder="fx Farmor, Bedste, Tante Lise..."
+              placeholder={t.familyInviteTitlePlaceholder}
               value={form.invitee_title}
               onChange={e => setForm({ ...form, invitee_title: e.target.value })}
             />
@@ -257,7 +260,7 @@ export default function FamilyInvite() {
 
           {/* Adgang */}
           <div className="space-y-1.5">
-            <Label>Hvad skal deles?</Label>
+            <Label>{t.familyInviteWhatToShare}</Label>
             <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: 'var(--color-border)' }}>
               {PERMISSIONS.map(p => (
                 <div key={p.key} className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -273,7 +276,7 @@ export default function FamilyInvite() {
 
           {/* Notifikationer */}
           <div className="space-y-1.5">
-            <Label>Notifikationer</Label>
+            <Label>{t.notifications}</Label>
             <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: 'var(--color-border)' }}>
               {NOTIFICATIONS.map(n => (
                 <div key={n.key} className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -294,7 +297,7 @@ export default function FamilyInvite() {
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <Check className="w-5 h-5" />
-            {saving ? 'Sender…' : 'Send invitation'}
+            {saving ? t.familyInviteSending : t.familyInviteSendInvite}
           </Button>
         </div>
       </BottomSheet>
