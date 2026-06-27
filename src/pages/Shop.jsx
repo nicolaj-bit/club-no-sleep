@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import PageHeader from '@/components/ui/PageHeader';
@@ -29,10 +29,8 @@ export default function Shop() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
-  const [showSearch, setShowSearch] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
-  const categoryRef = useRef(null);
 
   const sortOptions = SORT_OPTIONS.map(o => ({
     ...o,
@@ -90,94 +88,43 @@ export default function Shop() {
       <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
         <PageHeader title="Shop" />
 
-        {/* Category pills + Search */}
+        {/* Search + Category modal */}
         <div className="sticky top-16 z-30 backdrop-blur-xl border-b transition-transform duration-300" style={{ background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', borderColor: isDark ? 'var(--color-border)' : '#E8DDD2', transform: visible ? 'translateY(0)' : 'translateY(-220%)' }}>
-          <div className="px-4 pt-3 pb-2">
-            {showSearch ? (
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
-                  <Input
-                    placeholder={t.searchProducts}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="pl-9 border-0 rounded-xl"
-                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                    autoFocus
-                  />
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => { setShowSearch(false); setSearch(''); }}>
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" onClick={() => setShowSearch(true)}>
-                    <Search className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setCategoryOpen(true)}>
-                    <LayoutGrid className="w-5 h-5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setFilterOpen(true)}>
-                    <SlidersHorizontal className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Category pills */}
-          <div ref={categoryRef} className="px-4 pb-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-            <div className="flex gap-2 w-max">
-              {categories.map(cat => {
-                const isActive = activeCategory === cat.key;
-                return (
-                  <button
-                    key={cat.key}
-                    onClick={() => setActiveCategory(cat.key)}
-                    className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
-                    style={isActive
-                      ? {
-                          background: 'linear-gradient(135deg, #C8A882, #A0785A)',
-                          color: '#fff',
-                          boxShadow: '0 2px 12px rgba(160,120,90,0.35)',
-                        }
-                      : {
-                          backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
-                          color: 'var(--color-text-secondary)',
-                          border: '1px solid var(--color-border)',
-                        }}
-                  >
-                    <span className="text-base leading-none">{cat.icon}</span>
-                    <span>{cat.label}</span>
-                  </button>
-                );
-              })}
+          <div className="px-4 pt-3 pb-3 space-y-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+              <Input
+                placeholder={t.searchProducts}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 border-0 rounded-xl"
+                style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+              />
+              {search && (
+                <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <X className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setCategoryOpen(true)}
+                className="flex-1 justify-start gap-2 rounded-xl"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span className="text-sm">{activeCat?.label || t.categoriesTitle}</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setFilterOpen(true)}
+                className="gap-2 rounded-xl"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
-
-        {/* Hero banner for active category */}
-        {activeCategory !== 'all' && (
-          <div
-            className="mx-4 mt-4 rounded-2xl px-6 py-5 flex items-center gap-4 overflow-hidden relative"
-            style={{ background: 'linear-gradient(135deg, #C8A882 0%, #A0785A 100%)' }}
-          >
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-6xl opacity-20 select-none">
-              {activeCat?.icon}
-            </div>
-            <div>
-              <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-0.5">
-                {t.categoryLabel}
-              </p>
-              <h2 className="text-white text-2xl font-semibold">{activeCat?.label}</h2>
-              <p className="text-white/80 text-sm mt-0.5">
-                {filteredProducts.length} {t.productsLabel}
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Products Grid */}
         <div className="p-4 mt-2">
