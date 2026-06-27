@@ -67,7 +67,6 @@ export default function Blog() {
   };
 
   const categories = [
-    allLabel,
     ...activeCategories.map(c =>
       getTranslated(categoryTranslations, c.id, 'label', c.label)
     )
