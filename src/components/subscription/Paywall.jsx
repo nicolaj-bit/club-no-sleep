@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { openExternalUrl } from '@/lib/openExternalUrl';
 import { isNativeApp } from '@/lib/platform';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
