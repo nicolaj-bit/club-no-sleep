@@ -97,9 +97,11 @@ export default function Checkout() {
       if (response.data?.url) {
         await openExternalUrl(response.data.url);
       } else {
+        console.error('[Checkout] createCheckoutSession returned no url:', response.data);
         setError('Kunne ikke starte betaling. Prøv igen.');
       }
     } catch (e) {
+      console.error('[Checkout] Tester checkout error:', e);
       setError(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
     } finally {
       setTesterCheckoutLoading(false);

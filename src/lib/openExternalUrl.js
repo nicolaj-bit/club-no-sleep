@@ -56,7 +56,12 @@ export async function openExternalUrl(url) {
       });
       return;
     } catch (err) {
-      console.warn('Capacitor Browser plugin unavailable, opening in new tab:', err);
+      // window.open('_blank') is a no-op inside the native WKWebView/WebView
+      // shell — there's no tab to open it in. Navigate the webview directly
+      // as the only fallback that's guaranteed to actually show something.
+      console.warn('Capacitor Browser plugin failed, falling back to direct navigation:', err);
+      window.location.href = safeUrl;
+      return;
     } finally {
       _opening = false;
     }

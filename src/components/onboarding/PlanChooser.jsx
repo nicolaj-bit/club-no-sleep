@@ -79,9 +79,11 @@ export default function PlanChooser({ onChoose, finishing }) {
       if (response.data?.url) {
         await openExternalUrl(response.data.url);
       } else {
+        console.error('[PlanChooser] createCheckoutSession returned no url:', response.data);
         toast.error('Kunne ikke starte betaling. Prøv igen.');
       }
     } catch (e) {
+      console.error('[PlanChooser] Tester checkout error:', e);
       toast.error(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
     } finally {
       setTesterCheckoutLoading(false);
