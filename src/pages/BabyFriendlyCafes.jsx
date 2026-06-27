@@ -199,13 +199,13 @@ export default function BabyFriendlyCafes() {
                   Fortæl os, hvis du kender en babyvenlig café, så vi kan tilføje den til listen. Jo flere jo bedre!
                 </p>
                 <Textarea
-                  placeholder="Café info — hjemmeside, Instagram, navn og adresse *"
+                  placeholder="Caféens navn og hjemmeside eller Instagram profil"
                   value={tipData.cafeInfo}
                   onChange={(e) => setTipData({ ...tipData, cafeInfo: e.target.value })}
                   className="min-h-20"
                 />
                 <Textarea
-                  placeholder="Hvorfor er den god til babyer?"
+                  placeholder="Hvad kan du særligt godt lide ved netop dette sted?"
                   value={tipData.whyGood}
                   onChange={(e) => setTipData({ ...tipData, whyGood: e.target.value })}
                   className="min-h-20"
