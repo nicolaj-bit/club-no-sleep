@@ -1,7 +1,9 @@
 import React from 'react';
 
-// Regex der finder lalatoto.dk links, inkl. omkringstående citationstegn
-const LINK_REGEX = /[""]?\s*(https?:\/\/(?:www\.)?lalatoto\.dk(?:\s*›\s*|\/)[^""\s]*?)\s*[""]?/gi;
+// Regex der finder citerede lalatoto.dk links — inkl. ordet "Her" før og citationstegn omkring
+// "Her "https://..."" → erstattes med ét "her"-link
+// "Klik "https://..."" → "Klik her" (ordet før bevares medmindre det er "Her")
+const LINK_REGEX = /(?:\b[Hh]er\s+)?["\u201c\u201d]\s*(https?:\/\/(?:www\.)?lalatoto\.dk[^"\u201c\u201d]+?)\s*["\u201c\u201d]/gi;
 
 function cleanUrl(url) {
   // Erstat " › " med "/" (Google-søgningstilfælde)
