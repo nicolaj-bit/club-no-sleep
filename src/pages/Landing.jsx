@@ -23,22 +23,22 @@ export default function Landing() {
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
-    
+
     // Load phone image URLs from config
     const loadPhoneUrls = async () => {
       try {
         const configs = await base44.entities.AppConfig.list();
-        const landingConfig = configs.find(c => c.key === 'landing_phones');
+        const landingConfig = configs.find((c) => c.key === 'landing_phones');
         if (landingConfig) {
           setPhoneUrls({
             a: landingConfig.phone_a_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',
-            b: landingConfig.phone_b_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png',
+            b: landingConfig.phone_b_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png'
           });
         }
       } catch (e) {
         setPhoneUrls({
           a: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',
-          b: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png',
+          b: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png'
         });
       }
     };
@@ -70,8 +70,8 @@ export default function Landing() {
       </nav>
 
       {/* ════════════════════════════════
-           HERO 1 — "Til dig, der er vågen"
-        ════════════════════════════════ */}
+            HERO 1 — "Til dig, der er vågen"
+         ════════════════════════════════ */}
       <section className="lnd-hero1-section" style={{ backgroundColor: '#F5EDE0', padding: '6rem 2.5rem 5rem' }}>
         <div className="lnd-hero1-inner" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
 
@@ -107,7 +107,7 @@ export default function Landing() {
               <div style={{ display: 'flex', gap: 12 }}>
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
                   <svg width="22" height="22" viewBox="0 0 814 1000" fill="currentColor">
-                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z" />
                   </svg>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingAppStoreLabel}</div>
@@ -116,7 +116,7 @@ export default function Landing() {
                 </a>
               </div>
               <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>{t.landingBecomeMember}</button>
-              <button className="lnd-hero1-btn" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>{t.landingIWantToLook}</button>
+              <button className="lnd-hero1-btn hidden" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>{t.landingIWantToLook}</button>
             </div>
           </div>
 
@@ -125,8 +125,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-           HERO 2 — Pris & hvad du får
-        ════════════════════════════════ */}
+            HERO 2 — Pris & hvad du får
+         ════════════════════════════════ */}
       <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
         <div style={{ maxWidth: 520, margin: '0 auto' }}>
 
@@ -143,26 +143,26 @@ export default function Landing() {
 
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.8rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                t.landingFeature1,
-                t.landingFeature2,
-                t.landingFeature3,
-                t.landingFeature4,
-                t.landingFeature5,
-                t.landingFeature6,
-                t.landingFeature7,
-              ].map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: '0.88rem' }}>
+              t.landingFeature1,
+              t.landingFeature2,
+              t.landingFeature3,
+              t.landingFeature4,
+              t.landingFeature5,
+              t.landingFeature6,
+              t.landingFeature7].
+              map((f) =>
+              <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: '0.88rem' }}>
                   <span style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.65rem' }}>✓</span>
                   {f}
                 </li>
-              ))}
+              )}
             </ul>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <button onClick={handleBecomeMember} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
                 {t.landingGetStarted}
               </button>
-              <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 14, padding: '13px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }}>
+              <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 14, padding: '13px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }} className="hidden">
                 {t.landingIWantToLook}
               </button>
             </div>
@@ -172,8 +172,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-           "Kom med i klubben"
-        ════════════════════════════════ */}
+            "Kom med i klubben"
+         ════════════════════════════════ */}
       <section style={{ backgroundColor: '#D9C9AE', position: 'relative', overflow: 'hidden' }}>
         {/* Big decorative circle — bottom right, partially clipped */}
         <div style={{
@@ -213,8 +213,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-           HERO 3 — "Dette finder du i appen"
-        ════════════════════════════════ */}
+            HERO 3 — "Dette finder du i appen"
+         ════════════════════════════════ */}
       <section className="lnd-features-section" style={{ backgroundColor: '#FFFDF9', padding: '5.5rem 3rem 6.5rem' }}>
         <div style={{ maxWidth: 1020, margin: '0 auto' }}>
 
@@ -234,8 +234,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-           HERO 4 — "Du skal ikke stå med det hele alene"
-        ════════════════════════════════ */}
+            HERO 4 — "Du skal ikke stå med det hele alene"
+         ════════════════════════════════ */}
       <section className="lnd-partner-section" style={{ backgroundColor: '#D9C4A0', padding: '5rem 2.5rem' }}>
         <div className="lnd-partner-inner" style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, flexWrap: 'wrap' }}>
 
@@ -251,7 +251,7 @@ export default function Landing() {
               <div style={{ display: 'flex', gap: 12 }}>
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
                   <svg width="22" height="22" viewBox="0 0 814 1000" fill="currentColor">
-                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z" />
                   </svg>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingAppStoreLabel}</div>
@@ -376,7 +376,7 @@ export default function Landing() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#3A2416', color: '#F5EFE9', borderRadius: 8, padding: '9px 12px', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600 }}>
                   <svg width="16" height="16" viewBox="0 0 814 1000" fill="currentColor">
-                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z"/>
+                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z" />
                   </svg>
                   App Store
                 </a>
