@@ -70,8 +70,8 @@ export default function Landing() {
       </nav>
 
       {/* ════════════════════════════════
-            HERO 1 — "Til dig, der er vågen"
-         ════════════════════════════════ */}
+              HERO 1 — "Til dig, der er vågen"
+           ════════════════════════════════ */}
       <section className="lnd-hero1-section" style={{ backgroundColor: '#F5EDE0', padding: '6rem 2.5rem 5rem' }}>
         <div className="lnd-hero1-inner" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 80, flexWrap: 'wrap' }}>
 
@@ -116,7 +116,7 @@ export default function Landing() {
                 </a>
               </div>
               <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>{t.landingBecomeMember}</button>
-              <button className="lnd-hero1-btn hidden" onClick={() => window.location.href = '/app'} style={{ ...btnBrown, backgroundColor: 'transparent', color: '#5B3F2B', border: '1.5px solid #C8A882' }}>{t.landingIWantToLook}</button>
+              
             </div>
           </div>
 
@@ -125,8 +125,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-            HERO 2 — Pris & hvad du får
-         ════════════════════════════════ */}
+              HERO 2 — Pris & hvad du får
+           ════════════════════════════════ */}
       <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
         <div style={{ maxWidth: 520, margin: '0 auto' }}>
 
@@ -162,9 +162,9 @@ export default function Landing() {
               <button onClick={handleBecomeMember} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
                 {t.landingGetStarted}
               </button>
-              <button onClick={() => window.location.href = '/app'} style={{ width: '100%', backgroundColor: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', borderRadius: 14, padding: '13px', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer' }} className="hidden">
-                {t.landingIWantToLook}
-              </button>
+              
+
+              
             </div>
           </div>
 
@@ -172,8 +172,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-            "Kom med i klubben"
-         ════════════════════════════════ */}
+              "Kom med i klubben"
+           ════════════════════════════════ */}
       <section style={{ backgroundColor: '#D9C9AE', position: 'relative', overflow: 'hidden' }}>
         {/* Big decorative circle — bottom right, partially clipped */}
         <div style={{
@@ -213,8 +213,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-            HERO 3 — "Dette finder du i appen"
-         ════════════════════════════════ */}
+              HERO 3 — "Dette finder du i appen"
+           ════════════════════════════════ */}
       <section className="lnd-features-section" style={{ backgroundColor: '#FFFDF9', padding: '5.5rem 3rem 6.5rem' }}>
         <div style={{ maxWidth: 1020, margin: '0 auto' }}>
 
@@ -234,8 +234,8 @@ export default function Landing() {
       </section>
 
       {/* ════════════════════════════════
-            HERO 4 — "Du skal ikke stå med det hele alene"
-         ════════════════════════════════ */}
+              HERO 4 — "Du skal ikke stå med det hele alene"
+           ════════════════════════════════ */}
       <section className="lnd-partner-section" style={{ backgroundColor: '#D9C4A0', padding: '5rem 2.5rem' }}>
         <div className="lnd-partner-inner" style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60, flexWrap: 'wrap' }}>
 
