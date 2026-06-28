@@ -64,6 +64,8 @@ export default function AdminLanding() {
   const [sleepAgentConfig, setSleepAgentConfig] = useState(null);
   const [phoneA, setPhoneA] = useState('');
   const [phoneB, setPhoneB] = useState('');
+  const [hero1Image, setHero1Image] = useState('');
+  const [hero1Config, setHero1Config] = useState(null);
   const [featureIcons, setFeatureIcons] = useState({});
   const [sleepAgentPrompt, setSleepAgentPrompt] = useState('');
   const [loading, setLoading] = useState(false);
@@ -97,6 +99,12 @@ export default function AdminLanding() {
         if (sleepAgentRecord) {
           setSleepAgentConfig(sleepAgentRecord);
           setSleepAgentPrompt(sleepAgentRecord.help_about_text_da || '');
+        }
+
+        const hero1Record = configs.find(c => c.key === 'landing_hero1_image');
+        if (hero1Record) {
+          setHero1Config(hero1Record);
+          setHero1Image(hero1Record.hero1_image_url || '');
         }
       } catch (e) {
         console.error(e);
@@ -147,6 +155,24 @@ export default function AdminLanding() {
     }
   };
 
+  const handleSaveHero1Image = async () => {
+    setLoading(true);
+    try {
+      const data = { key: 'landing_hero1_image', hero1_image_url: hero1Image };
+      if (hero1Config) {
+        await base44.entities.AppConfig.update(hero1Config.id, data);
+      } else {
+        const created = await base44.entities.AppConfig.create(data);
+        setHero1Config(created);
+      }
+      toast.success('Hero1-billede gemt');
+    } catch (e) {
+      toast.error('Fejl ved gemning');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSaveIcons = async () => {
     setLoading(true);
     try {
@@ -188,6 +214,19 @@ export default function AdminLanding() {
       </div>
       <button onClick={handleSavePhones} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
         {loading ? 'Gemmer...' : 'Gem telefoner'}
+      </button>
+
+      {/* HERO1 MOBILE IMAGE */}
+      <h2 style={{ fontSize: '1.1rem' }}>🖼️ Hero1 mobil-billede</h2>
+      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>Billede der vises i hero1-sektionen på landing-siden (kun på mobil). Upload eller indsæt en URL.</p>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>Billede-URL:</label>
+        <input type="text" value={hero1Image} onChange={(e) => setHero1Image(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
+        {hero1Image && <img src={hero1Image} alt="Preview hero1" style={{ maxWidth: 200, borderRadius: 8 }} />}
+      </div>
+      <button onClick={handleSaveHero1Image} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
+        {loading ? 'Gemmer...' : 'Gem hero1-billede'}
       </button>
 
       {/* FEATURE ICONS */}

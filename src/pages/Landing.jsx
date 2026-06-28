@@ -12,6 +12,7 @@ export default function Landing() {
   const { t } = useLanguage();
   const [isAuth, setIsAuth] = useState(false);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
+  const [hero1Image, setHero1Image] = useState('');
 
   const handleBecomeMember = () => {
     if (window.self !== window.top) {
@@ -34,6 +35,11 @@ export default function Landing() {
             a: landingConfig.phone_a_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',
             b: landingConfig.phone_b_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4a23c7aba_Screenshot2025-06-08at193447.png'
           });
+        }
+
+        const hero1Config = configs.find((c) => c.key === 'landing_hero1_image');
+        if (hero1Config?.hero1_image_url) {
+          setHero1Image(hero1Config.hero1_image_url);
         }
       } catch (e) {
         setPhoneUrls({
@@ -121,6 +127,13 @@ export default function Landing() {
           </div>
 
           {/* Right — app mockup image (tom — indsæt selv via AdminLanding) */}
+
+          {/* Mobile hero image — kun synlig på mobil, vælges via AdminLanding */}
+          {hero1Image && (
+            <div className="lnd-hero1-mobile-img" style={{ width: '100%', borderRadius: 18, overflow: 'hidden', boxShadow: '0 18px 50px -12px rgba(58,36,22,0.25)', marginTop: '0.5rem' }}>
+              <img src={hero1Image} alt="Club No Sleep" style={{ width: '100%', height: 'auto', display: 'block' }} />
+            </div>
+          )}
         </div>
       </section>
 
@@ -463,6 +476,7 @@ export default function Landing() {
         .lnd-hero1-phones { width: 380px !important; height: 500px !important; }
         .lnd-phone-a { width: 220px !important; height: 450px !important; }
         .lnd-phone-b { width: 200px !important; height: 415px !important; }
+        .lnd-hero1-mobile-img { display: none !important; }
 
         /* ── "KOM MED I KLUBBEN" ── */
         .lnd-klub-inner { padding: 3rem 4rem 3rem 3.5rem !important; gap: 4.5rem !important; flex-direction: row !important; }
@@ -476,6 +490,7 @@ export default function Landing() {
 
         @media (max-width: 900px) {
            .lnd-hero1-phones { display: none !important; }
+           .lnd-hero1-mobile-img { display: block !important; }
            .lnd-hero1-section { padding: 4rem 1.5rem 4rem !important; }
            .lnd-hero1-inner { align-items: flex-start !important; }
            .lnd-hero1-copy { flex: 0 0 100% !important; }

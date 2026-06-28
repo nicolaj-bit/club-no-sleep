@@ -54,6 +54,10 @@
           }
         }
       }
+    },
+    "hero1_image_url": {
+      "type": "string",
+      "description": "Billede-URL til hero1 p\u00e5 mobil (landing page)"
     }
   },
   "required": [
