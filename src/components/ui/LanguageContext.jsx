@@ -708,7 +708,7 @@ const translations = {
 
     // PregnancyWeekDetail
     pwdNoDataForWeek: 'Ingen data for uge',
-    pwdHeaderLabel: '🤰 Graviditet',
+    pwdHeaderLabel: 'Graviditet',
     pwdBabyThisWeek: 'Babyen denne uge',
     pwdSize: 'Størrelse',
     pwdWeight: 'Vægt',
@@ -1744,7 +1744,7 @@ const translations = {
 
     // PregnancyWeekDetail
     pwdNoDataForWeek: 'No data for week',
-    pwdHeaderLabel: '🤰 Pregnancy',
+    pwdHeaderLabel: 'Pregnancy',
     pwdBabyThisWeek: 'Baby this week',
     pwdSize: 'Size',
     pwdWeight: 'Weight',
