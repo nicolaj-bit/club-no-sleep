@@ -64,11 +64,9 @@ import Knowledge from './pages/Knowledge';
 import MyData from './pages/MyData';
 import MyQuestions from './pages/MyQuestions';
 import Onboarding from './pages/Onboarding';
-import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
 import QuestionDetail from './pages/QuestionDetail';
 import Settings from './pages/Settings';
-import Shop from './pages/Shop';
 import SleepLog from './pages/SleepLog';
 import SleepAdviceFeedback from './pages/SleepAdviceFeedback';
 import __Layout from './Layout.jsx';
@@ -92,11 +90,9 @@ export const PAGES = {
     "MyData": MyData,
     "MyQuestions": MyQuestions,
     "Onboarding": Onboarding,
-    "ProductDetail": ProductDetail,
     "Profile": Profile,
     "QuestionDetail": QuestionDetail,
     "Settings": Settings,
-    "Shop": Shop,
     "SleepLog": SleepLog,
     "SleepAdviceFeedback": SleepAdviceFeedback,
 }
