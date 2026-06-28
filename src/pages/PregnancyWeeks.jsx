@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen } from 'lucide-
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 import PageHeader from '@/components/ui/PageHeader';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function getPregnancyWeek(dueDateStr) {
   if (!dueDateStr) return null;
@@ -16,6 +17,7 @@ function getPregnancyWeek(dueDateStr) {
 }
 
 function WeekCard({ week, data, isCurrent }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(isCurrent);
 
   return (
@@ -33,11 +35,11 @@ function WeekCard({ week, data, isCurrent }) {
         <div className="flex items-center gap-2.5">
           {isCurrent && (
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--color-cappuccino)', color: '#fff' }}>
-              Nu ✦
+              {t.pregnancyWeeksNow} ✦
             </span>
           )}
           <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>
-            Uge {week}
+            {t.pregnancyWeeksWeekLabel} {week}
           </span>
           {data?.title && (
             <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{data.title}</span>
@@ -55,7 +57,7 @@ function WeekCard({ week, data, isCurrent }) {
           <div className="pt-3 space-y-1">
             <div className="flex items-center gap-1.5 mb-1">
               <Baby className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Babyen</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregnancyWeeksBaby}</span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.baby}</p>
           </div>
@@ -64,7 +66,7 @@ function WeekCard({ week, data, isCurrent }) {
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 mb-1">
               <Heart className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Din krop</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregnancyWeeksYourBody}</span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.mom}</p>
           </div>
@@ -73,7 +75,7 @@ function WeekCard({ week, data, isCurrent }) {
           <div className="rounded-xl p-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <div className="flex items-center gap-1.5 mb-1">
               <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-cappuccino)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-cappuccino)' }}>Tip</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-cappuccino)' }}>{t.pregnancyWeeksTip}</span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{data.tip}</p>
           </div>
@@ -84,7 +86,7 @@ function WeekCard({ week, data, isCurrent }) {
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <BookOpen className="w-4 h-4" />
-            <span>Læs mere om uge {week}</span>
+            <span>{t.pregnancyWeeksReadMore} {week}</span>
           </Link>
         </div>
       )}
@@ -93,6 +95,7 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyWeeks() {
+  const { t } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -130,13 +133,13 @@ export default function PregnancyWeeks() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Graviditet uge for uge" />
+      <PageHeader title={t.pregnancyWeeksTitle} />
 
       <div className="px-4 pt-5 pb-6 space-y-5">
         {/* Week list */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
-            Alle uger
+            {t.pregnancyWeeksAllWeeks}
           </p>
           {loading ? (
             <div className="space-y-3">
