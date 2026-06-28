@@ -127,21 +127,56 @@ export default function Landing() {
       {/* ════════════════════════════════
               HERO 2 — Pris & hvad du får
            ════════════════════════════════ */}
-      <section style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
+      <section className="lnd-paywall-section" style={{ backgroundColor: '#FFFDF9', padding: '5rem 2.5rem' }}>
+        <div style={{ maxWidth: 560, margin: '0 auto' }}>
 
-          <div style={{ background: 'linear-gradient(160deg, #DCC1B0, #C8A882)', borderRadius: 24, padding: '2rem', border: '2px solid #B08D72', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: 14, right: 14, backgroundColor: 'rgba(255,255,255,0.3)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em', padding: '3px 10px', borderRadius: 20 }}>
+          {/* Eyebrow */}
+          <div style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
+            <p style={{ color: '#9A7A6A', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', margin: '0 0 0.7rem' }}>{t.landingMembership}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+              <span style={{ height: 1, width: 36, backgroundColor: '#D4B89A' }} />
+              <svg width="14" height="12" viewBox="0 0 18 16" fill="none">
+                <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5" />
+              </svg>
+              <span style={{ height: 1, width: 36, backgroundColor: '#D4B89A' }} />
+            </div>
+          </div>
+
+          {/* Premium card */}
+          <div className="lnd-paywall-card" style={{
+            background: 'linear-gradient(165deg, #3A2416 0%, #2B1A0F 60%, #1E140A 100%)',
+            borderRadius: 28,
+            padding: '2.6rem 2.2rem 2.2rem',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 30px 70px -20px rgba(58,36,22,0.45), 0 8px 24px -8px rgba(58,36,22,0.25)',
+            border: '1px solid rgba(200,168,130,0.18)'
+          }}>
+            {/* Soft glow accents */}
+            <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,168,130,0.22) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -100, left: -60, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,168,130,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+            {/* Badge */}
+            <div style={{ position: 'absolute', top: 18, right: 18, display: 'flex', alignItems: 'center', gap: 6, backgroundColor: 'rgba(200,168,130,0.16)', border: '1px solid rgba(200,168,130,0.35)', color: '#E8D4BE', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '5px 12px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#C8A882' }} />
               {t.landingFullAccess}
             </div>
 
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>{t.landingMembership}</p>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: '1.4rem' }}>
-              <span style={{ fontSize: '2.8rem', fontWeight: 700, color: '#fff' }}>59 kr.</span>
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>{t.landingPerMonth}</span>
+            {/* Price block */}
+            <div style={{ position: 'relative', zIndex: 1, marginBottom: '1.8rem' }}>
+              <p style={{ color: 'rgba(232,212,190,0.55)', fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.08em', margin: '0 0 0.5rem' }}>CLUB NO SLEEP</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '3.4rem', fontWeight: 500, color: '#F5EFE9', lineHeight: 1 }}>59</span>
+                <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.5rem', fontWeight: 400, color: '#C8A882' }}>kr.</span>
+                <span style={{ color: 'rgba(232,212,190,0.5)', fontSize: '0.82rem', marginLeft: 4 }}>{t.landingPerMonth}</span>
+              </div>
+              <p style={{ color: 'rgba(232,212,190,0.45)', fontSize: '0.72rem', margin: '0.5rem 0 0', fontStyle: 'italic' }}>Ingen binding · Opsig når du vil</p>
             </div>
 
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.8rem', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {/* Divider */}
+            <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(200,168,130,0.3), transparent)', margin: '0 0 1.6rem' }} />
+
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem', display: 'flex', flexDirection: 'column', gap: 13, position: 'relative', zIndex: 1 }}>
               {[
               t.landingFeature1,
               t.landingFeature2,
@@ -151,17 +186,41 @@ export default function Landing() {
               t.landingFeature6,
               t.landingFeature7].
               map((f) =>
-              <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: '0.88rem' }}>
-                  <span style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '0.65rem' }}>✓</span>
+              <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 12, color: '#F0E6D8', fontSize: '0.86rem', lineHeight: 1.4 }}>
+                  <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg, #C8A882, #B08D72)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.5 6.5L5 9L9.5 3.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                   {f}
                 </li>
               )}
             </ul>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button onClick={handleBecomeMember} style={{ width: '100%', backgroundColor: '#fff', color: '#5B3F2B', border: 'none', borderRadius: 14, padding: '14px', fontSize: '0.93rem', fontWeight: 700, cursor: 'pointer' }}>
+            {/* CTA */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, position: 'relative', zIndex: 1 }}>
+              <button onClick={handleBecomeMember} style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #C8A882 0%, #B08D72 100%)',
+                color: '#2B1A0F',
+                border: 'none',
+                borderRadius: 14,
+                padding: '16px',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                letterSpacing: '0.02em',
+                cursor: 'pointer',
+                boxShadow: '0 8px 20px -6px rgba(200,168,130,0.5)',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 12px 26px -6px rgba(200,168,130,0.6)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 20px -6px rgba(200,168,130,0.5)'; }}
+              >
                 {t.landingGetStarted}
               </button>
+              <p style={{ textAlign: 'center', color: 'rgba(232,212,190,0.4)', fontSize: '0.68rem', margin: 0 }}>
+                Betaling via Stripe · Sikker & krypteret
+              </p>
               
 
               
