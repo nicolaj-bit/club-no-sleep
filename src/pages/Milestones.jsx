@@ -5,6 +5,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import MilestoneCamera from '@/components/milestones/MilestoneCamera';
 import TypeSticker from '@/components/milestones/TypeSticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Camera } from 'lucide-react';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
@@ -40,6 +41,7 @@ function normalizeDbFrame(f) {
 }
 
 export default function Milestones() {
+  const { t } = useLanguage();
   const [cameraFrame, setCameraFrame] = useState(null);
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
 
@@ -76,7 +78,7 @@ export default function Milestones() {
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Milepæle" />
+      <PageHeader title={t.milestonesTitle} />
 
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="320px">
         <div className="px-4 pt-2 space-y-8">

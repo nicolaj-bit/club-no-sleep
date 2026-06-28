@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { Upload, Loader2 } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const FEATURE_KEYS = [
   { key: 'graviditet', label: 'Graviditeten uge for uge' },
@@ -58,6 +59,7 @@ function FeatureIconUploader({ featureKey, label, currentUrl, onUploaded }) {
 }
 
 export default function AdminLanding() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [phonesConfig, setPhonesConfig] = useState(null);
   const [iconsConfig, setIconsConfig] = useState(null);
@@ -74,7 +76,7 @@ export default function AdminLanding() {
     const loadData = async () => {
       try {
         const u = await base44.auth.me();
-        if (u?.role !== 'admin') { toast.error('Du skal være admin'); return; }
+        if (u?.role !== 'admin') { toast.error(t.adminLandingAdminRequired); return; }
         setUser(u);
 
         const configs = await base44.entities.AppConfig.list();
@@ -100,7 +102,7 @@ export default function AdminLanding() {
         }
       } catch (e) {
         console.error(e);
-        toast.error('Fejl ved loading');
+        toast.error(t.adminLandingError);
       }
     };
     loadData();
@@ -112,15 +114,15 @@ export default function AdminLanding() {
     try {
       const response = await base44.functions.invoke('shopifySync', { type: 'all' });
       if (response.data?.success) {
-        setShopifyResult({ ok: true, message: `Synkroniseret: ${response.data.synced.products ?? 0} produkter, ${response.data.synced.blogs ?? 0} blogindlæg` });
+        setShopifyResult({ ok: true, message: t.adminLandingSyncResult.replace('{products}', response.data.synced.products ?? 0).replace('{blogs}', response.data.synced.blogs ?? 0) });
         toast.success('Shopify synkroniseret');
       } else {
         setShopifyResult({ ok: false, message: response.data?.error || 'Ukendt fejl' });
-        toast.error('Synkronisering fejlede');
+        toast.error(t.adminLandingSyncFailed);
       }
     } catch (e) {
-      setShopifyResult({ ok: false, message: e?.message || 'Synkronisering fejlede' });
-      toast.error('Synkronisering fejlede');
+      setShopifyResult({ ok: false, message: e?.message || t.adminLandingSyncFailed });
+      toast.error(t.adminLandingSyncFailed);
     } finally {
       setShopifySyncing(false);
     }
@@ -139,9 +141,9 @@ export default function AdminLanding() {
       } else {
         await base44.entities.AppConfig.create(data);
       }
-      toast.success('Telefoner gemt');
+      toast.success(t.save);
     } catch (e) {
-      toast.error('Fejl ved gemning');
+      toast.error(t.adminTermsPrivacyError);
     } finally {
       setLoading(false);
     }
@@ -158,41 +160,41 @@ export default function AdminLanding() {
         const created = await base44.entities.AppConfig.create(data);
         setIconsConfig(created);
       }
-      toast.success('Ikoner gemt');
+      toast.success(t.save);
     } catch (e) {
-      toast.error('Fejl ved gemning');
+      toast.error(t.adminTermsPrivacyError);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!user) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>;
+  if (!user) return <div style={{ padding: '2rem', textAlign: 'center' }}>{t.adminLandingLoading}</div>;
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '2rem' }}>
-      <h1 style={{ marginBottom: '0.25rem' }}>Landing page admin</h1>
+      <h1 style={{ marginBottom: '0.25rem' }}>{t.adminLandingTitle}</h1>
 
       {/* PHONE MOCKUPS */}
-      <h2 style={{ marginTop: '2rem', fontSize: '1.1rem' }}>📱 iPhone mockup billeder</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>Rediger billede-URLer for de to iPhone mockups på forsiden</p>
+      <h2 style={{ marginTop: '2rem', fontSize: '1.1rem' }}>{t.adminLandingPhones}</h2>
+      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingPhonesDesc}</p>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>Telefon A (venstre):</label>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>{t.adminLandingPhoneA}</label>
         <input type="text" value={phoneA} onChange={(e) => setPhoneA(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
         {phoneA && <img src={phoneA} alt="Preview A" style={{ maxWidth: 150, borderRadius: 8 }} />}
       </div>
       <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>Telefon B (højre):</label>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>{t.adminLandingPhoneB}</label>
         <input type="text" value={phoneB} onChange={(e) => setPhoneB(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
         {phoneB && <img src={phoneB} alt="Preview B" style={{ maxWidth: 150, borderRadius: 8 }} />}
       </div>
       <button onClick={handleSavePhones} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
-        {loading ? 'Gemmer...' : 'Gem telefoner'}
+        {loading ? t.saving : t.adminLandingButtonSavePhones}
       </button>
 
       {/* FEATURE ICONS */}
-      <h2 style={{ fontSize: '1.1rem' }}>🖼️ Feature ikoner</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>Upload et billede (PNG/SVG) for hvert feature. Hvis intet billede er valgt vises standard-ikonet.</p>
+      <h2 style={{ fontSize: '1.1rem' }}>{t.adminLandingIcons}</h2>
+      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingIconsDesc}</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
         {FEATURE_KEYS.map(f => (
@@ -207,20 +209,20 @@ export default function AdminLanding() {
       </div>
 
       <button onClick={handleSaveIcons} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>
-        {loading ? 'Gemmer...' : 'Gem ikoner'}
+        {loading ? t.saving : t.adminLandingButtonSaveIcons}
       </button>
 
       {/* SHOPIFY SYNC */}
-      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>🛍️ Shopify-synkronisering</h2>
+      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>{t.adminLandingShopify}</h2>
       <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
-        Henter produkter og blogindlæg fra Shopify ind i appen. Kør denne efter du har sat Shopify-credentials op, eller når du vil opdatere data manuelt.
+        {t.adminLandingShopifyDesc}
       </p>
       <button
         onClick={handleShopifySync}
         disabled={shopifySyncing}
         style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.75rem' }}
       >
-        {shopifySyncing ? 'Synkroniserer...' : 'Synkroniser nu'}
+        {shopifySyncing ? t.adminLandingSyncing : t.adminLandingSyncNow}
       </button>
       {shopifyResult && (
         <p style={{ fontSize: '0.85rem', color: shopifyResult.ok ? '#3A7A3A' : '#a04040', marginBottom: '2rem' }}>
@@ -229,15 +231,15 @@ export default function AdminLanding() {
       )}
 
       {/* SLEEP AGENT PROMPT */}
-      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>🌙 Søvnrådgiver AI — prompt</h2>
+      <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>{t.adminLandingSleepAgent}</h2>
       <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
-        Dette er instrukserne til den AI søvnrådgiver der vises i Søvnlog. Ændr prompten for at tilpasse rådgivningens tone og fokus.
+        {t.adminLandingSleepAgentDesc}
       </p>
       <textarea
         value={sleepAgentPrompt}
         onChange={(e) => setSleepAgentPrompt(e.target.value)}
         rows={12}
-        placeholder="Skriv instrukser til søvnrådgiveren her..."
+        placeholder={t.adminLandingPromptPlaceholder}
         style={{ width: '100%', padding: '0.75rem', borderRadius: 8, border: '1px solid #EDE4DB', fontSize: '0.88rem', lineHeight: 1.6, resize: 'vertical', marginBottom: '0.75rem', fontFamily: 'inherit' }}
       />
       <button
@@ -251,9 +253,9 @@ export default function AdminLanding() {
               const created = await base44.entities.AppConfig.create(data);
               setSleepAgentConfig(created);
             }
-            toast.success('Søvnrådgiver prompt gemt');
+            toast.success(t.save);
           } catch (e) {
-            toast.error('Fejl ved gemning');
+            toast.error(t.adminTermsPrivacyError);
           } finally {
             setLoading(false);
           }
@@ -261,7 +263,7 @@ export default function AdminLanding() {
         disabled={loading}
         style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '2rem' }}
       >
-        {loading ? 'Gemmer...' : 'Gem søvnrådgiver prompt'}
+        {loading ? t.saving : t.adminLandingButtonSavePrompt}
       </button>
     </div>
   );

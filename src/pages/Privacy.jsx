@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Privacy() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,18 +41,18 @@ export default function Privacy() {
       <div style={{ backgroundColor: '#FFF8F3', borderBottom: '1px solid #EDE4DB', padding: '1.5rem 1.5rem', position: 'sticky', top: 0, zIndex: 10 }}>
         <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: 8, color: '#5B3F2B', cursor: 'pointer', padding: 0, fontSize: '1rem' }}>
           <ChevronLeft size={24} />
-          Tilbage
+          {t.privacyBack}
         </button>
       </div>
 
       {/* Content */}
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '2rem 1.5rem', fontSize: '0.95rem', lineHeight: 1.8, color: '#2B1F16', paddingBottom: 'max(3rem, env(safe-area-inset-bottom))' }}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2rem', fontWeight: 400, marginBottom: '1.5rem', color: '#2B1F16' }}>
-          {content?.title || 'Privatlivspolitik'}
+          {content?.title || t.privacyTitle}
         </h1>
 
         {content?.content ? (
-          <div 
+          <div
             dangerouslySetInnerHTML={{ __html: content.content }}
             style={{
               '& p': { marginBottom: '1rem' },
@@ -60,11 +62,11 @@ export default function Privacy() {
             }}
           />
         ) : (
-          <p style={{ color: '#7A665A' }}>Indhold ikke tilgængeligt endnu.</p>
+          <p style={{ color: '#7A665A' }}>{t.privacyContent}</p>
         )}
 
         <p style={{ fontSize: '0.85rem', color: '#7A665A', marginTop: '3rem' }}>
-          Senest opdateret: {content?.updated_date ? new Date(content.updated_date).toLocaleDateString('da-DK') : '—'}
+          {t.privacyLastUpdated} {content?.updated_date ? new Date(content.updated_date).toLocaleDateString('da-DK') : '—'}
         </p>
       </div>
     </div>

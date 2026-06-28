@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 /**
  * AcceptInvite — landing page for invited family members.
@@ -11,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
  * 2. Logged in → call acceptFamilyInvite → create a minimal UserProfile if missing → go to /app
  */
 export default function AcceptInvite() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export default function AcceptInvite() {
 
     if (!inviteId) {
       setStatus('error');
-      setMessage('Ugyldigt invitationslink.');
+      setMessage(t.acceptInviteInvalidLink);
       return;
     }
 
@@ -59,7 +61,7 @@ export default function AcceptInvite() {
         setTimeout(() => navigate('/app', { replace: true }), 2000);
       } catch (e) {
         setStatus('error');
-        setMessage('Noget gik galt. Prøv igen eller kontakt support på hej@clubnosleep.com');
+        setMessage(t.acceptInviteErrorMsg);
       }
     };
 
@@ -73,16 +75,16 @@ export default function AcceptInvite() {
           {status === 'done' ? '🎉' : status === 'error' ? '😔' : '🤍'}
         </p>
         <h1 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '2rem', fontWeight: 400, color: '#2C1A0E', marginBottom: '0.75rem' }}>
-          {status === 'loading' && 'Tjekker invitation…'}
-          {status === 'accepting' && 'Forbinder dig…'}
-          {status === 'done' && 'Du er med i familien!'}
-          {status === 'error' && 'Noget gik galt'}
+          {status === 'loading' && t.acceptInviteChecking}
+          {status === 'accepting' && t.acceptInviteConnecting}
+          {status === 'done' && t.acceptInviteDone}
+          {status === 'error' && t.acceptInviteError}
         </h1>
         <p style={{ color: '#6B4A2F', fontSize: '0.95rem', lineHeight: 1.7 }}>
           {status === 'loading' || status === 'accepting'
-            ? 'Vent venligst et øjeblik…'
+            ? t.acceptInviteWaiting
             : status === 'done'
-            ? 'Du sendes videre til appen nu…'
+            ? t.acceptInviteRedirecting
             : message}
         </p>
         {(status === 'loading' || status === 'accepting') && (

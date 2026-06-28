@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AdminWonderWeeks() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [emojis, setEmojis] = useState({});
   const queryClient = useQueryClient();
@@ -45,14 +47,14 @@ export default function AdminWonderWeeks() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['wonderWeekConfigs']);
-      toast.success('Emojis gemt ✓');
+      toast.success(t.adminWonderWeeksSaved);
     },
   });
 
   if (user?.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Kun for admins</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{t.adminWonderWeeksAdminOnly}</p>
       </div>
     );
   }
@@ -66,13 +68,13 @@ export default function AdminWonderWeeks() {
           </Button>
         </Link>
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          Tigerspring emojis
+          {t.adminWonderWeeksTitle}
         </h1>
       </div>
 
       <div className="px-4 mt-4 space-y-3">
         <p className="text-sm mb-4" style={{ color: 'var(--color-text-muted)' }}>
-          Vælg emoji for hvert tigerspring. De vises på forsiden og i Knowledge-fanen.
+          {t.adminWonderWeeksDesc}
         </p>
 
         {WONDER_WEEKS.map(ww => (
@@ -94,7 +96,7 @@ export default function AdminWonderWeeks() {
 
             <div className="flex-1">
               <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                Tigerspring {ww.number}
+                {t.adminWonderWeeksWonder} {ww.number}
               </p>
               <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {ww.name}
@@ -116,7 +118,7 @@ export default function AdminWonderWeeks() {
           disabled={saveMutation.isPending}
         >
           <Save className="w-4 h-4 mr-2" />
-          Gem alle emojis
+          {t.adminWonderWeeksSave}
         </Button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const EMPTY = {
   milestone_id: '',
@@ -25,6 +26,7 @@ const EMPTY = {
 const CATEGORIES = ['Graviditet', 'Baby', 'Øjeblikke'];
 
 export default function MilestoneFrameEditor() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(null);
   const [isNew, setIsNew] = useState(false);
@@ -43,7 +45,7 @@ export default function MilestoneFrameEditor() {
     onSuccess: () => {
       queryClient.invalidateQueries(['adminMilestoneFrames']);
       queryClient.invalidateQueries(['milestoneFrames']);
-      toast.success('Gemt!');
+      toast.success(t('admin.milestone.toast.saved'));
       setEditing(null);
     },
   });
@@ -53,7 +55,7 @@ export default function MilestoneFrameEditor() {
     onSuccess: () => {
       queryClient.invalidateQueries(['adminMilestoneFrames']);
       queryClient.invalidateQueries(['milestoneFrames']);
-      toast.success('Slettet');
+      toast.success(t('admin.milestone.toast.deleted'));
     },
   });
 
@@ -76,11 +78,11 @@ export default function MilestoneFrameEditor() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
           <h2 className="flex-1 font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
-            {isNew ? 'Ny milepæl' : 'Rediger milepæl'}
+            {isNew ? t('admin.milestone.header.new') : t('admin.milestone.header.edit')}
           </h2>
           <Button size="sm" onClick={() => saveMutation.mutate(editing)} disabled={saveMutation.isPending}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {saveMutation.isPending ? 'Gemmer...' : 'Gem'}
+            {saveMutation.isPending ? t('admin.milestone.form.saving') : t('admin.milestone.form.save')}
           </Button>
         </div>
 
@@ -102,12 +104,12 @@ export default function MilestoneFrameEditor() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>ID (unik nøgle)</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.id')}</Label>
               <Input value={editing.milestone_id} onChange={e => setEditing({ ...editing, milestone_id: e.target.value })}
                 placeholder="fx preg-12" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
             </div>
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Kategori</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.category')}</Label>
               <select value={editing.category} onChange={e => setEditing({ ...editing, category: e.target.value })}
                 className="w-full rounded-md border px-3 py-2 text-sm"
                 style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}>
@@ -118,25 +120,25 @@ export default function MilestoneFrameEditor() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Label (kort)</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.label')}</Label>
               <Input value={editing.label} onChange={e => setEditing({ ...editing, label: e.target.value })}
                 placeholder="fx 1 år" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
             </div>
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Emoji</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.emoji')}</Label>
               <Input value={editing.emoji} onChange={e => setEditing({ ...editing, emoji: e.target.value })}
                 placeholder="🎂" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
             </div>
           </div>
 
           <div className="space-y-1">
-            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Headline (stor tekst på sticker)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.headline')}</Label>
             <Input value={editing.headline} onChange={e => setEditing({ ...editing, headline: e.target.value })}
               placeholder="fx 1 år 🎉" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
           </div>
 
           <div className="space-y-1">
-            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Subline (lille tekst)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.subline')}</Label>
             <Input value={editing.subline} onChange={e => setEditing({ ...editing, subline: e.target.value })}
               placeholder="fx Tillykke med fødselsdagen!" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
           </div>
@@ -144,7 +146,7 @@ export default function MilestoneFrameEditor() {
           {/* Colors */}
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Baggrund</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.bg_color')}</Label>
               <div className="flex items-center gap-2">
                 <input type="color" value={editing.bg_color || '#F5EFE6'} onChange={e => setEditing({ ...editing, bg_color: e.target.value })}
                   className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
@@ -153,7 +155,7 @@ export default function MilestoneFrameEditor() {
               </div>
             </div>
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Accent</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.accent_color')}</Label>
               <div className="flex items-center gap-2">
                 <input type="color" value={editing.accent_color || '#C8A882'} onChange={e => setEditing({ ...editing, accent_color: e.target.value })}
                   className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
@@ -162,7 +164,7 @@ export default function MilestoneFrameEditor() {
               </div>
             </div>
             <div className="space-y-1">
-              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Tekst</Label>
+              <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.text_color')}</Label>
               <div className="flex items-center gap-2">
                 <input type="color" value={editing.text_color || '#2B1F16'} onChange={e => setEditing({ ...editing, text_color: e.target.value })}
                   className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
@@ -174,7 +176,7 @@ export default function MilestoneFrameEditor() {
 
           {/* Sticker image */}
           <div className="space-y-2">
-            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Sticker-billede (erstatter emoji)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.sticker_image')}</Label>
             {editing.sticker_image && (
               <div className="flex items-center gap-3">
                 <img src={editing.sticker_image} alt="sticker" className="w-16 h-16 object-contain rounded-xl border"
@@ -182,20 +184,20 @@ export default function MilestoneFrameEditor() {
                 <button onClick={() => setEditing({ ...editing, sticker_image: '' })}
                   className="text-xs px-3 py-1.5 rounded-full"
                   style={{ backgroundColor: '#fee2e2', color: '#ef4444' }}>
-                  Fjern billede
+                  {t('admin.milestone.form.remove_image')}
                 </button>
               </div>
             )}
             <label className="flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-sm w-fit"
               style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
               <Upload className="w-4 h-4" />
-              {uploading ? 'Uploader...' : 'Upload sticker-billede'}
+              {uploading ? t('admin.milestone.form.uploading') : t('admin.milestone.form.upload_image')}
               <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleUploadImage} />
             </label>
           </div>
 
           <div className="space-y-1">
-            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>Sorteringsrækkefølge</Label>
+            <Label style={{ color: 'var(--color-text-secondary)', fontSize: 12 }}>{t('admin.milestone.form.order')}</Label>
             <Input type="number" value={editing.order ?? 0} onChange={e => setEditing({ ...editing, order: Number(e.target.value) })}
               style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
           </div>
@@ -207,7 +209,7 @@ export default function MilestoneFrameEditor() {
                 backgroundColor: editing.is_active ? '#22c55e20' : 'var(--color-bg-subtle)',
                 color: editing.is_active ? '#16a34a' : 'var(--color-text-muted)'
               }}>
-              {editing.is_active ? '✓ Aktiv' : '○ Skjult'}
+              {editing.is_active ? `✓ ${t('admin.milestone.form.active')}` : `○ ${t('admin.milestone.form.hidden')}`}
             </button>
           </div>
 
@@ -232,16 +234,16 @@ export default function MilestoneFrameEditor() {
         <button onClick={() => { setIsNew(true); setEditing({ ...EMPTY }); }}
           className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-          <Plus className="w-4 h-4" /> Ny milepæl
+          <Plus className="w-4 h-4" /> {t('admin.milestone.list.new_button')}
         </button>
       </div>
 
       {isLoading ? (
-        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('admin.milestone.list.loading')}</p>
       ) : frames.length === 0 ? (
         <div className="text-center py-12 space-y-2">
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen milepæle oprettet endnu i databasen.</p>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Appen bruger de hardcodede milepæle indtil du opretter dem her.</p>
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('admin.milestone.list.empty')}</p>
+          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('admin.milestone.list.empty_hint')}</p>
         </div>
       ) : (
         CATEGORIES.map(cat => grouped[cat]?.length > 0 && (
@@ -259,14 +261,14 @@ export default function MilestoneFrameEditor() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>{frame.headline}</p>
-                    <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>{frame.label} · {frame.is_active ? 'Aktiv' : 'Skjult'}</p>
+                    <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>{frame.label} · {frame.is_active ? t('admin.milestone.list.active') : t('admin.milestone.list.hidden')}</p>
                   </div>
                   <div className="flex gap-1">
                     <button onClick={() => { setIsNew(false); setEditing({ ...frame }); }}
                       className="p-2 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                       <Pencil className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
                     </button>
-                    <button onClick={() => { if (confirm('Slet milepæl?')) deleteMutation.mutate(frame.id); }}
+                    <button onClick={() => { if (confirm(t('admin.milestone.dialog.confirm_delete'))) deleteMutation.mutate(frame.id); }}
                       className="p-2 rounded-xl" style={{ backgroundColor: '#fee2e2' }}>
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </button>

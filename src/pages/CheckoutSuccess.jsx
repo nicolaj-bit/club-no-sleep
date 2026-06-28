@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { CheckCircle, ArrowRight, Smartphone } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { buildAppDeepLink } from '@/lib/nativeAuth';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Capacitor } from '@capacitor/core';
 
 export default function CheckoutSuccess() {
+  const { t } = useLanguage();
   const [isAuth, setIsAuth] = useState(false);
   const [checking, setChecking] = useState(true);
   const [token, setToken] = useState(null);
@@ -82,11 +84,11 @@ export default function CheckoutSuccess() {
         margin: '0 0 0.8rem',
         lineHeight: 1.2,
       }}>
-        Velkommen i klubben! 🌙
+        {t.checkoutSuccessTitle}
       </h1>
 
       <p style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.8, maxWidth: 380, margin: '0 0 2.5rem' }}>
-        Din betaling er gennemført. For at aktivere din konto skal du <strong>oprette en bruger med den samme email du brugte ved betalingen.</strong>
+        {t.checkoutSuccessMessage}
       </p>
 
       {/* Steps */}
@@ -101,9 +103,9 @@ export default function CheckoutSuccess() {
         textAlign: 'left',
       }}>
         {[
-          { step: '1', text: 'Klik på "Opret konto" nedenfor' },
-          { step: '2', text: 'Brug den samme email som ved betalingen' },
-          { step: '3', text: 'Dit abonnement aktiveres automatisk' },
+          { step: '1', text: t.checkoutSuccessStep1 },
+          { step: '2', text: t.checkoutSuccessStep2 },
+          { step: '3', text: t.checkoutSuccessStep3 },
         ].map(({ step, text }) => (
           <div key={step} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: step === '3' ? 0 : '1rem' }}>
             <div style={{
@@ -132,7 +134,7 @@ export default function CheckoutSuccess() {
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             }}
           >
-            Åbn appen <ArrowRight size={18} />
+            {t.checkoutSuccessOpenApp} <ArrowRight size={18} />
           </button>
           {/* Deep link tilbage til native app hvis brugeren kom derfra */}
           {token && !Capacitor.isNativePlatform() && (
@@ -147,7 +149,7 @@ export default function CheckoutSuccess() {
                 marginTop: '0.8rem',
               }}
             >
-              <Smartphone size={18} /> Tilbage til appen
+              <Smartphone size={18} /> {t.checkoutSuccessBackToApp}
             </button>
           )}
         </>
@@ -164,12 +166,12 @@ export default function CheckoutSuccess() {
               marginBottom: '0.8rem',
             }}
           >
-            Opret konto <ArrowRight size={18} />
+            {t.checkoutSuccessCreateAccount} <ArrowRight size={18} />
           </button>
           <p style={{ color: '#9A7A6A', fontSize: '0.78rem' }}>
-            Har du allerede en konto?{' '}
+            {t.checkoutSuccessAlreadyHaveAccount}{' '}
             <button onClick={() => base44.auth.redirectToLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: '#C8A882', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
-              Log ind her
+              {t.checkoutSuccessLoginHere}
             </button>
           </p>
           {/* Deep link tilbage til native app hvis brugeren kom derfra */}
@@ -185,7 +187,7 @@ export default function CheckoutSuccess() {
                 marginTop: '1.2rem',
               }}
             >
-              <Smartphone size={18} /> Tilbage til appen
+              <Smartphone size={18} /> {t.checkoutSuccessBackToApp}
             </button>
           )}
         </>

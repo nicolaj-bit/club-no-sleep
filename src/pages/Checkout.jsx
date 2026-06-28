@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
@@ -31,6 +32,7 @@ const STORE_LABELS = {
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [purchasing, setPurchasing] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -116,17 +118,17 @@ export default function Checkout() {
             <Check className="w-7 h-7" style={{ color: '#3A7A3A' }} />
           </div>
           <h2 className="text-xl font-semibold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            Du har allerede abonnement
+            {t.checkoutAlreadySubscribed}
           </h2>
           <p className="text-sm mb-6" style={{ color: '#7A665A' }}>
-            Du har fuld adgang til alle funktioner.
+            {t.checkoutFullAccess}
           </p>
           <button
             onClick={() => navigate(-1)}
             className="w-full py-3.5 rounded-2xl text-sm font-semibold"
             style={{ backgroundColor: '#5d3a2c', color: '#fff' }}
           >
-            Tilbage til appen
+            {t.checkoutBackToApp}
           </button>
         </div>
       </div>
@@ -138,7 +140,7 @@ export default function Checkout() {
       {/* Top bar */}
       <div className="px-4 pt-4" style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}>
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm" style={{ color: '#5d3a2c' }}>
-          <ArrowLeft className="w-4 h-4" /> Tilbage
+          <ArrowLeft className="w-4 h-4" /> {t.checkoutBack}
         </button>
       </div>
 
@@ -153,21 +155,21 @@ export default function Checkout() {
             <span className="text-2xl font-bold" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
           </div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            Bliv medlem
+            {t.checkoutBeccomeMember}
           </h1>
           <p className="text-sm" style={{ color: '#5d3a2c' }}>
-            59 kr. / måned · Ingen binding · Opsig når som helst
+            {t.checkoutPricing}
           </p>
         </div>
 
         {/* Features */}
         <div className="mb-6 space-y-2.5">
           {[
-            'Fuld adgang til alle tigerspring og milepæle',
-            'Personlig AI-søvnrådgiver',
-            'Kalender med påmindelser',
-            'Mødregruppe og fællesskab',
-            'Babyvenlige caféer i dit område',
+            t.checkoutFeature1,
+            t.checkoutFeature2,
+            t.checkoutFeature3,
+            t.checkoutFeature4,
+            t.checkoutFeature5,
           ].map((feature, i) => (
             <div key={i} className="flex items-center gap-2.5">
               <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(91,63,43,0.1)' }}>
@@ -227,7 +229,7 @@ export default function Checkout() {
         {/* Loading state */}
         {rc.loading && (
           <div className="rounded-xl px-4 py-3 mb-4 text-xs font-medium flex items-center gap-2" style={{ background: 'rgba(100,100,180,0.1)', border: '1px solid rgba(100,100,180,0.2)', color: '#5050a0' }}>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Forbereder {store.name}…
+            <Loader2 className="w-3.5 h-3.5 animate-spin" /> {t.checkoutPreparing?.replace('{store}', store.name)}
           </div>
         )}
 
@@ -240,13 +242,13 @@ export default function Checkout() {
           style={{ backgroundColor: '#3e2a22', color: '#fff' }}
         >
           {purchasing || rc.loading
-            ? <><Loader2 className="w-4 h-4 animate-spin" /> Behandler…</>
-            : <>Abonner — 59 kr./md. →</>}
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutProcessing}</>
+            : <>{t.checkoutSubscribe}</>}
         </motion.button>
 
         {/* Footer */}
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
-          <Lock className="w-3 h-3" /> Sikker betaling via {store.footer} · Ingen binding · Annuller når som helst
+          <Lock className="w-3 h-3" /> {t.checkoutSecure?.replace('{store}', store.footer)}
         </p>
 
         {/* TEMPORÆR: beta-tester / rabatkode-vej via Stripe, mens IAP afventer App Store/Play Console-opsætning */}
@@ -257,8 +259,8 @@ export default function Checkout() {
           style={{ border: '1px solid #C9AA8F', color: '#5d3a2c', backgroundColor: 'transparent' }}
         >
           {testerCheckoutLoading
-            ? <><Loader2 className="w-4 h-4 animate-spin" /> Åbner betaling…</>
-            : <><Ticket className="w-4 h-4" /> Har du en rabatkode? (beta-test)</>}
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutOpeningPayment}</>
+            : <><Ticket className="w-4 h-4" /> {t.checkoutHasDiscountCode}</>}
         </button>
       </div>
     </div>

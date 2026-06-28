@@ -3,16 +3,18 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { Search } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const STATUS_OPTIONS = ['trial', 'active', 'expired'];
 
-const STATUS_LABELS = {
-  trial: { label: 'Trial', bg: '#FFF3CD', color: '#856404' },
-  active: { label: 'Aktiv', bg: '#D4EDDA', color: '#155724' },
-  expired: { label: 'Udløbet', bg: '#F8D7DA', color: '#721C24' },
-};
+const getStatusLabels = (t) => ({
+  trial: { label: t.adminUsersTrial, bg: '#FFF3CD', color: '#856404' },
+  active: { label: t.adminUsersActive, bg: '#D4EDDA', color: '#155724' },
+  expired: { label: t.adminUsersExpired, bg: '#F8D7DA', color: '#721C24' },
+});
 
 export default function AdminUsers() {
+  const { t } = useLanguage();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -46,9 +48,9 @@ export default function AdminUsers() {
       const all = await base44.entities.UserProfile.filter({ user_email: profile.user_email });
       await Promise.all(all.map(p => base44.entities.UserProfile.update(p.id, { subscription_status: newStatus })));
       setProfiles(prev => prev.map(p => p.user_email === profile.user_email ? { ...p, subscription_status: newStatus } : p));
-      toast.success(`${profile.user_email} → ${STATUS_LABELS[newStatus].label}`);
+      toast.success(`${profile.user_email} → ${getStatusLabels(t)[newStatus].label}`);
     } catch {
-      toast.error('Fejl ved opdatering');
+      toast.error(t.adminTermsPrivacyError);
     }
     setUpdating(null);
   };
@@ -60,9 +62,10 @@ export default function AdminUsers() {
     p.display_name?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const STATUS_LABELS = getStatusLabels(t);
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
-      <PageHeader title="Brugere" />
+      <PageHeader title={t.adminUsersTitle} />
 
       <div className="max-w-2xl mx-auto px-4 pt-4 pb-8 space-y-4">
         {/* Søgefelt */}
@@ -72,16 +75,16 @@ export default function AdminUsers() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Søg på email eller navn..."
+            placeholder={t.adminUsersSearch}
             className="flex-1 bg-transparent text-sm outline-none"
             style={{ color: 'var(--color-text-primary)' }}
           />
         </div>
 
         {loading ? (
-          <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+          <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminUsersLoading}</p>
         ) : filtered.length === 0 ? (
-          <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen brugere fundet</p>
+          <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminUsersNoResults}</p>
         ) : (
           <div className="space-y-2">
             {filtered.map(profile => {

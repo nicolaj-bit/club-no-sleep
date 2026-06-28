@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Trash2, ShoppingBag, BookOpen, FileText, Heart } from 'lucide-react';
@@ -10,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 export default function Favorites() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
 
@@ -41,9 +43,9 @@ export default function Favorites() {
     },
     onError: (_err, _id, context) => {
       queryClient.setQueryData(['myFavorites', user?.email], context.previous);
-      toast.error('Noget gik galt');
+      toast.error(t.favoritesError);
     },
-    onSuccess: () => toast.success('Fjernet fra favoritter'),
+    onSuccess: () => toast.success(t.favoritesRemoved),
     onSettled: () => queryClient.invalidateQueries(['myFavorites', user?.email]),
   });
 
@@ -77,7 +79,7 @@ export default function Favorites() {
             </h3>
           </Link>
           <p className="text-xs mt-1 capitalize" style={{ color: 'var(--color-text-muted)' }}>
-            {item.item_type === 'product' ? 'Produkt' : item.item_type === 'blog' ? 'Blogindlæg' : 'Artikel'}
+            {item.item_type === 'product' ? t.favoritesProduct : item.item_type === 'blog' ? t.favoritesBlog : t.favoritesArticle}
           </p>
         </div>
         <button
@@ -107,7 +109,7 @@ export default function Favorites() {
           </button>
         </Link>
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          Favoritter
+          {t.favoritesTitle}
         </h1>
       </div>
 
@@ -121,15 +123,15 @@ export default function Favorites() {
             <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'var(--color-bg-card)' }}>
               <Heart className="w-7 h-7" style={{ color: 'var(--color-text-muted)' }} />
             </div>
-            <p className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>Ingen favoritter endnu</p>
-            <p className="text-sm text-center max-w-xs" style={{ color: 'var(--color-text-muted)' }}>Gem produkter og artikler du kan lide ved at trykke på hjerte-ikonet</p>
+            <p className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.favoritesEmpty}</p>
+            <p className="text-sm text-center max-w-xs" style={{ color: 'var(--color-text-muted)' }}>{t.favoritesEmptyDesc}</p>
           </div>
         ) : (
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full p-1 rounded-2xl mb-4" style={{ background: 'var(--color-bg-card)' }}>
-              <TabsTrigger value="all" className="flex-1 rounded-xl text-xs">Alle ({favorites.length})</TabsTrigger>
-              <TabsTrigger value="products" className="flex-1 rounded-xl text-xs">Produkter ({productFavorites.length})</TabsTrigger>
-              <TabsTrigger value="blog" className="flex-1 rounded-xl text-xs">Blog ({blogFavorites.length})</TabsTrigger>
+              <TabsTrigger value="all" className="flex-1 rounded-xl text-xs">{t.favoritesAll?.replace('{count}', favorites.length)}</TabsTrigger>
+              <TabsTrigger value="products" className="flex-1 rounded-xl text-xs">{t.favoritesProducts?.replace('{count}', productFavorites.length)}</TabsTrigger>
+              <TabsTrigger value="blog" className="flex-1 rounded-xl text-xs">{t.favoritesBlog?.replace('{count}', blogFavorites.length)}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-2">
@@ -137,13 +139,13 @@ export default function Favorites() {
             </TabsContent>
             <TabsContent value="products" className="space-y-2">
               {productFavorites.length === 0
-                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen produkter gemt</p>
+                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.favoritesNoProducts}</p>
                 : productFavorites.map(item => <FavoriteItem key={item.id} item={item} />)
               }
             </TabsContent>
             <TabsContent value="blog" className="space-y-2">
               {blogFavorites.length === 0
-                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen blogindlæg gemt</p>
+                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.favoritesNoBlog}</p>
                 : blogFavorites.map(item => <FavoriteItem key={item.id} item={item} />)
               }
             </TabsContent>

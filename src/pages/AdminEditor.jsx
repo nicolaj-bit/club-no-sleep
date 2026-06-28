@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode', 'WonderWeeksIntro'];
 
@@ -23,6 +24,7 @@ const emptyArticle = { title: '', content: '', category: '', tags: [], is_faq: f
 const emptyLegal = { type: 'faq', title: '', content: '' };
 
 export default function AdminEditor() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('BlogPost');
@@ -86,7 +88,7 @@ export default function AdminEditor() {
     onSuccess: () => {
       queryClient.invalidateQueries(['adminBlogPosts']);
       queryClient.invalidateQueries(['blogPosts']);
-      toast.success('Gemt!');
+      toast.success(t.adminEditorSaved);
       setEditing(null);
     },
   });
@@ -98,19 +100,19 @@ export default function AdminEditor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['adminArticles']);
-      toast.success('Gemt!');
+      toast.success(t.adminEditorSaved);
       setEditing(null);
     },
   });
 
   const deleteBlogMutation = useMutation({
     mutationFn: (id) => base44.entities.BlogPost.delete(id),
-    onSuccess: () => { queryClient.invalidateQueries(['adminBlogPosts']); toast.success('Slettet'); },
+    onSuccess: () => { queryClient.invalidateQueries(['adminBlogPosts']); toast.success(t.adminEditorDeleted); },
   });
 
   const deleteArticleMutation = useMutation({
     mutationFn: (id) => base44.entities.KnowledgeArticle.delete(id),
-    onSuccess: () => { queryClient.invalidateQueries(['adminArticles']); toast.success('Slettet'); },
+    onSuccess: () => { queryClient.invalidateQueries(['adminArticles']); toast.success(t.adminEditorDeleted); },
   });
 
   const saveLegalMutation = useMutation({
@@ -118,12 +120,12 @@ export default function AdminEditor() {
       if (isNew) return base44.entities.LegalContent.create(data);
       return base44.entities.LegalContent.update(editing.id, data);
     },
-    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Gemt!'); setEditing(null); },
+    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success(t.adminEditorSaved); setEditing(null); },
   });
 
   const deleteLegalMutation = useMutation({
     mutationFn: (id) => base44.entities.LegalContent.delete(id),
-    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success('Slettet'); },
+    onSuccess: () => { queryClient.invalidateQueries(['adminLegal']); toast.success(t.adminEditorDeleted); },
   });
 
   useEffect(() => {
@@ -144,7 +146,7 @@ export default function AdminEditor() {
       setWwIntroConfig(created);
     }
     setWwIntroSaving(false);
-    toast.success('Gemt!');
+    toast.success(t.adminEditorSaved);
   };
 
   useEffect(() => {
@@ -167,7 +169,7 @@ export default function AdminEditor() {
     }
     clearSubscriptionCache();
     setDemoSaving(false);
-    toast.success(checked ? 'Demo-tilstand aktiveret — genindlæs appen for at se det' : 'Demo-tilstand deaktiveret');
+    toast.success(checked ? t.adminEditorDemoWarning : 'Demo-tilstand deaktiveret');
   };
 
   useEffect(() => {
@@ -188,7 +190,7 @@ export default function AdminEditor() {
       setSharingConfig(created);
     }
     setShareSaving(false);
-    toast.success('Gemt!');
+    toast.success(t.adminEditorSaved);
   };
 
   const handleSaveHelp = async () => {
@@ -200,7 +202,7 @@ export default function AdminEditor() {
       setHelpConfig(created);
     }
     setHelpSaving(false);
-    toast.success('Gemt!');
+    toast.success(t.adminEditorSaved);
   };
 
   const handleNew = () => {
@@ -222,7 +224,7 @@ export default function AdminEditor() {
   };
 
   const handleDelete = (id) => {
-    if (!confirm('Er du sikker?')) return;
+    if (!confirm(t.areYouSure)) return;
     if (activeTab === 'BlogPost') deleteBlogMutation.mutate(id);
     else if (activeTab === 'KnowledgeArticle') deleteArticleMutation.mutate(id);
     else deleteLegalMutation.mutate(id);
@@ -244,17 +246,17 @@ export default function AdminEditor() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
           <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>
-            {isNew ? 'Nyt indlæg' : 'Rediger'} — {isBlog ? 'Blog' : isLegal ? 'Juridisk indhold' : 'Artikel'}
+            {isNew ? t.adminEditorNewPost : t.adminEditorEditPrefix} — {isBlog ? t.adminEditorBlog : isLegal ? t.adminEditorLegal : t.adminEditorArticle}
           </h1>
           <Button size="sm" onClick={handleSave} disabled={isSaving}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {isSaving ? 'Gemmer...' : 'Gem'}
+            {isSaving ? t.adminEditorSaving : t.save}
           </Button>
         </div>
 
         <div className="p-4 space-y-5 max-w-2xl mx-auto">
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Titel</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorTitleField}</Label>
             <Input
               value={editing.title || ''}
               onChange={e => setEditing({ ...editing, title: e.target.value })}
@@ -266,7 +268,7 @@ export default function AdminEditor() {
           {isBlog && (
             <>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Uddrag (excerpt)</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorExcerpt}</Label>
                 <textarea
                   value={editing.excerpt || ''}
                   onChange={e => setEditing({ ...editing, excerpt: e.target.value })}
@@ -277,7 +279,7 @@ export default function AdminEditor() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Forfatter</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorAuthor}</Label>
                 <Input
                   value={editing.author_name || ''}
                   onChange={e => setEditing({ ...editing, author_name: e.target.value })}
@@ -286,14 +288,14 @@ export default function AdminEditor() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Billede</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorImage}</Label>
                 {editing.featured_image && (
                   <img src={editing.featured_image} alt="preview" className="w-full h-40 object-cover rounded-xl" />
                 )}
                 <label className="flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-sm w-fit"
                   style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
                   <Upload className="w-4 h-4" />
-                  {uploading ? 'Uploader...' : 'Vælg billede'}
+                  {uploading ? t.adminEditorUploading : t.adminEditorSelectImage}
                   <input
                     type="file"
                     accept="image/*"
@@ -311,7 +313,7 @@ export default function AdminEditor() {
                 </label>
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Publiceringsdato</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorPublishDate}</Label>
                 <Input
                   type="date"
                   value={editing.published_date || ''}
@@ -329,14 +331,14 @@ export default function AdminEditor() {
                   }}
                 >
                   {editing.published ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                  {editing.published ? 'Publiceret' : 'Skjult'}
+                  {editing.published ? t.adminEditorPublished : t.adminEditorHidden}
                 </button>
               </div>
             </>
           )}
 
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Kategori</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorCategory}</Label>
             <Input
               value={editing.category || ''}
               onChange={e => setEditing({ ...editing, category: e.target.value })}
@@ -348,7 +350,7 @@ export default function AdminEditor() {
           {!isBlog && !isLegal && (
             <>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Tags (kommasepareret — fx <strong>tigerspring-1</strong>, tigerspring-2)</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorTags}</Label>
                 <Input
                   value={(editing.tags || []).join(', ')}
                   onChange={e => setEditing({ ...editing, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
@@ -360,7 +362,7 @@ export default function AdminEditor() {
                 </p>
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Uddrag (vises i listen)</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorExcerptArticle}</Label>
                 <textarea
                   value={editing.excerpt || ''}
                   onChange={e => setEditing({ ...editing, excerpt: e.target.value })}
@@ -371,7 +373,7 @@ export default function AdminEditor() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Sorteringsrækkefølge</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorOrder}</Label>
                 <Input
                   type="number"
                   value={editing.order ?? 0}
@@ -384,7 +386,7 @@ export default function AdminEditor() {
 
           {isLegal && (
             <div className="space-y-1.5">
-              <Label style={{ color: 'var(--color-text-secondary)' }}>Type</Label>
+              <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorType}</Label>
               <select
                 value={editing.type || 'faq'}
                 onChange={e => setEditing({ ...editing, type: e.target.value })}
@@ -400,7 +402,7 @@ export default function AdminEditor() {
           )}
 
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Indhold</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorContent}</Label>
             <div className="rounded-xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
               <ReactQuill
                 theme="snow"
@@ -426,7 +428,7 @@ export default function AdminEditor() {
 
           <Button onClick={handleSave} disabled={isSaving} className="w-full"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {isSaving ? 'Gemmer...' : 'Gem indlæg'}
+            {isSaving ? t.adminEditorSaving : t.adminEditorSavePost}
           </Button>
         </div>
       </div>
@@ -446,15 +448,15 @@ export default function AdminEditor() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
         </Link>
-        <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>Admin Editor</h1>
+        <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{t.adminEditorTitle}</h1>
         <Link to="/AdminSupport">
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-            <MessageCircle className="w-3.5 h-3.5" /> Support
+            <MessageCircle className="w-3.5 h-3.5" /> {t.adminEditorSupportBtn}
           </button>
         </Link>
         <Link to="/AdminNotifications">
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-            <Bell className="w-3.5 h-3.5" /> Notifikationer
+            <Bell className="w-3.5 h-3.5" /> {t.adminEditorNotificationsBtn}
           </button>
         </Link>
         {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && activeTab !== 'WonderWeeksIntro' && (
@@ -463,7 +465,7 @@ export default function AdminEditor() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
-            <Plus className="w-4 h-4" /> Ny
+            <Plus className="w-4 h-4" /> {t.adminEditorNewBtn}
           </button>
         )}
       </div>
@@ -479,7 +481,7 @@ export default function AdminEditor() {
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
             {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? 'Blog' : tab === 'KnowledgeArticle' ? 'Artikler' : tab === 'LegalContent' ? 'Juridisk' : tab === 'HelpModal' ? 'Hjælp' : tab === 'SharingPage' ? 'Deling' : tab === 'ColorTheme' ? 'Farvetema' : tab === 'Milestones' ? 'Milepæle' : tab === 'DemoMode' ? 'Demo' : 'Tigerspring intro'}
+            {tab === 'BlogPost' ? t.adminEditorBlogTab : tab === 'KnowledgeArticle' ? t.adminEditorArticlesTab : tab === 'LegalContent' ? t.adminEditorLegalTab : tab === 'HelpModal' ? t.adminEditorHelpTab : tab === 'SharingPage' ? t.adminEditorSharingTab : tab === 'ColorTheme' ? t.adminEditorColorTab : tab === 'Milestones' ? t.adminEditorMilestonesTab : tab === 'DemoMode' ? t.adminEditorDemoTab : t.adminEditorWonderWeeksTab}
           </button>
         ))}
       </div>
@@ -487,7 +489,7 @@ export default function AdminEditor() {
       {activeTab === 'SharingPage' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Introtekst på "Deling & adgang"-siden</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorSharingIntro}</Label>
             <textarea
               value={sharingForm.intro_text || ''}
               onChange={e => setSharingForm({ ...sharingForm, intro_text: e.target.value })}
@@ -498,7 +500,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Tekst på invitationsknap</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorSharingButton}</Label>
             <Input
               value={sharingForm.invite_button_label || ''}
               onChange={e => setSharingForm({ ...sharingForm, invite_button_label: e.target.value })}
@@ -508,7 +510,7 @@ export default function AdminEditor() {
           </div>
           <Button onClick={handleSaveSharing} disabled={sharingSaving} className="w-full"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {sharingSaving ? 'Gemmer...' : 'Gem'}
+            {sharingSaving ? t.adminEditorSaving : t.save}
           </Button>
         </div>
       )}
@@ -516,7 +518,7 @@ export default function AdminEditor() {
       {activeTab === 'HelpModal' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Om appen (dansk)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorHelpAboutDa}</Label>
             <textarea
               value={helpForm.help_about_text_da || ''}
               onChange={e => setHelpForm({ ...helpForm, help_about_text_da: e.target.value })}
@@ -526,7 +528,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Om appen (engelsk)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorHelpAboutEn}</Label>
             <textarea
               value={helpForm.help_about_text_en || ''}
               onChange={e => setHelpForm({ ...helpForm, help_about_text_en: e.target.value })}
@@ -536,7 +538,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Kontakt e-mail</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorHelpContact}</Label>
             <Input
               type="email"
               value={helpForm.help_contact_email || ''}
@@ -546,7 +548,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Telefonnummer</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorHelpPhone}</Label>
             <Input
               type="tel"
               value={helpForm.help_phone || ''}
@@ -557,7 +559,7 @@ export default function AdminEditor() {
           </div>
           <Button onClick={handleSaveHelp} disabled={helpSaving} className="w-full"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {helpSaving ? 'Gemmer...' : 'Gem'}
+            {helpSaving ? t.adminEditorSaving : t.save}
           </Button>
         </div>
       )}
@@ -566,7 +568,7 @@ export default function AdminEditor() {
       {activeTab === 'WonderWeeksIntro' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Overskrift</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorWwTitle}</Label>
             <Input
               value={wwIntroForm.title || ''}
               onChange={e => setWwIntroForm({ ...wwIntroForm, title: e.target.value })}
@@ -575,7 +577,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Brødtekst (stor tekst)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorWwBody}</Label>
             <textarea
               value={wwIntroForm.body || ''}
               onChange={e => setWwIntroForm({ ...wwIntroForm, body: e.target.value })}
@@ -586,7 +588,7 @@ export default function AdminEditor() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Fodnotetekst (lille tekst)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminEditorWwFootnote}</Label>
             <textarea
               value={wwIntroForm.footnote || ''}
               onChange={e => setWwIntroForm({ ...wwIntroForm, footnote: e.target.value })}
@@ -598,7 +600,7 @@ export default function AdminEditor() {
           </div>
           <Button onClick={handleSaveWwIntro} disabled={wwIntroSaving} className="w-full"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {wwIntroSaving ? 'Gemmer...' : 'Gem'}
+            {wwIntroSaving ? t.adminEditorSaving : t.save}
           </Button>
         </div>
       )}
@@ -614,19 +616,19 @@ export default function AdminEditor() {
                 <FlaskConical className="w-5 h-5" style={{ color: demoMode ? '#d97706' : 'var(--color-text-muted)' }} />
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>Demo-tilstand</p>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Alle brugere får fuld adgang uden abonnement</p>
+                <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.adminEditorDemoMode}</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorDemoDesc}</p>
               </div>
               <Switch checked={demoMode} onCheckedChange={handleToggleDemoMode} disabled={demoSaving} />
             </div>
             {demoMode && (
               <div className="rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: '#fef3c7', color: '#92400e' }}>
-                ⚠️ Demo-tilstand er <strong>aktiv</strong> — alle brugere har fuld adgang. Husk at slå det fra efter App Store-review.
+                {t.adminEditorDemoWarning}
               </div>
             )}
             {!demoMode && (
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                Bruges typisk til App Store / Google Play review, hvor reviewere ikke har abonnement.
+                {t.adminEditorDemoUsedFor}
               </p>
             )}
           </div>
@@ -635,9 +637,9 @@ export default function AdminEditor() {
 
       <div className="p-4 space-y-2 mt-2">
         {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' || activeTab === 'WonderWeeksIntro' ? null : isLoading ? (
-          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorLoading}</p>
         ) : items.length === 0 ? (
-          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen indlæg endnu</p>
+          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorNoPostsYet}</p>
         ) : (
           items.map(item => (
             <div
@@ -649,7 +651,7 @@ export default function AdminEditor() {
                 <p className="font-medium text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>{item.title}</p>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
                   {activeTab === 'LegalContent' ? (item.type || '—') : (item.category || '—')}
-                  {activeTab === 'BlogPost' && (item.published ? ' · Publiceret' : ' · Skjult')}
+                  {activeTab === 'BlogPost' && (item.published ? ` · ${t.adminEditorPublished}` : ` · ${t.adminEditorHidden}`)}
                 </p>
               </div>
               <div className="flex gap-1">

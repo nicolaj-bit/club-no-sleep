@@ -3,8 +3,10 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Check } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ColorThemePicker() {
+  const { t } = useLanguage();
   const [themes, setThemes] = useState([]);
   const [config, setConfig] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -32,14 +34,14 @@ export default function ColorThemePicker() {
     }
     localStorage.setItem('lalatoto-color-theme-id', selected);
     setSaving(false);
-    toast.success('Farvetema gemt! Brugerne vil se det nye tema ved næste åbning.');
+    toast.success(t('admin.theme_picker.toast.saved'));
   };
 
   return (
     <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
       <div>
-        <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>Vælg appens farvetema</p>
-        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Temaet gælder for alle brugere af appen</p>
+        <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{t('admin.theme_picker.title')}</p>
+        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme_picker.description')}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -83,7 +85,7 @@ export default function ColorThemePicker() {
         className="w-full"
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
       >
-        {saving ? 'Gemmer...' : 'Gem farvetema'}
+        {saving ? t('admin.theme_picker.button.saving') : t('admin.theme_picker.button.save')}
       </Button>
     </div>
   );

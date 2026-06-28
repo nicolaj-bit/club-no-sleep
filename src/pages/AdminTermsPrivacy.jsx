@@ -3,8 +3,10 @@ import { base44 } from '@/api/base44Client';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AdminTermsPrivacy() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [terms, setTerms] = useState(null);
   const [privacy, setPrivacy] = useState(null);
@@ -17,7 +19,7 @@ export default function AdminTermsPrivacy() {
       try {
         const u = await base44.auth.me();
         if (u?.role !== 'admin') {
-          toast.error('Kun admin kan få adgang');
+          toast.error(t.adminTermsPrivacyAdminOnly);
           return;
         }
         setUser(u);
@@ -30,7 +32,7 @@ export default function AdminTermsPrivacy() {
         setTerms(termsResults[0] || { type: 'terms', title: 'Handelsbetingelser', content: '' });
         setPrivacy(privacyResults[0] || { type: 'privacy', title: 'Privatlivspolitik', content: '' });
       } catch (e) {
-        toast.error('Fejl ved hentning af data');
+        toast.error(t.adminTermsPrivacyError);
       } finally {
         setLoading(false);
       }
@@ -54,9 +56,9 @@ export default function AdminTermsPrivacy() {
         await base44.entities.LegalContent.create(current);
       }
       
-      toast.success('Gemt!');
+      toast.success(t.adminTermsPrivacySaved);
     } catch (e) {
-      toast.error('Fejl ved gemning');
+      toast.error(t.adminTermsPrivacyError);
       console.error(e);
     } finally {
       setSaving(false);
@@ -64,11 +66,11 @@ export default function AdminTermsPrivacy() {
   };
 
   if (loading) {
-    return <div style={{ padding: '2rem', textAlign: 'center' }}>Indlæser...</div>;
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>{t.adminTermsPrivacyLoading}</div>;
   }
 
   if (!user || user.role !== 'admin') {
-    return <div style={{ padding: '2rem', textAlign: 'center', color: 'red' }}>Adgang nægtet</div>;
+    return <div style={{ padding: '2rem', textAlign: 'center', color: 'red' }}>{t.adminTermsPrivacyAccess}</div>;
   }
 
   const current = activeTab === 'terms' ? terms : privacy;
@@ -76,7 +78,7 @@ export default function AdminTermsPrivacy() {
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem' }}>
       <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2rem', marginBottom: '2rem' }}>
-        Juridisk indhold
+        {t.adminTermsPrivacyTitle}
       </h1>
 
       {/* Tabs */}
@@ -94,7 +96,7 @@ export default function AdminTermsPrivacy() {
             fontWeight: 500
           }}
         >
-          Handelsbetingelser
+          {t.adminTermsPrivacyTerms}
         </button>
         <button
           onClick={() => setActiveTab('privacy')}
@@ -109,7 +111,7 @@ export default function AdminTermsPrivacy() {
             fontWeight: 500
           }}
         >
-          Privatlivspolitik
+          {t.adminTermsPrivacyPrivacy}
         </button>
       </div>
 
@@ -118,7 +120,7 @@ export default function AdminTermsPrivacy() {
           {/* Title */}
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#2B1F16' }}>
-              Titel
+              {t.adminTermsPrivacyTitleField}
             </label>
             <input
               type="text"
@@ -144,7 +146,7 @@ export default function AdminTermsPrivacy() {
           {/* Content editor */}
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#2B1F16' }}>
-              Indhold
+              {t.adminTermsPrivacyContent}
             </label>
             <ReactQuill
               value={current.content}
@@ -176,7 +178,7 @@ export default function AdminTermsPrivacy() {
               marginTop: '1rem'
             }}
           >
-            {saving ? 'Gemmer...' : 'Gem ændringer'}
+            {saving ? t.adminTermsPrivacySaving : t.save}
           </button>
         </div>
       )}
