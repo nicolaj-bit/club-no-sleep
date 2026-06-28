@@ -2,9 +2,11 @@ import React from 'react';
 import PageHeader from '@/components/ui/PageHeader';
 import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Knowledge() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const handleRefresh = async () => {
@@ -13,7 +15,7 @@ export default function Knowledge() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Tigerspring" />
+      <PageHeader title={t.knowledgeTitle} />
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="px-4 pt-5 pb-6">
           <WonderWeeksTab />

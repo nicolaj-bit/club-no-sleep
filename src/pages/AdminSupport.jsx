@@ -5,8 +5,10 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import PageHeader from '@/components/ui/PageHeader';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AdminSupport() {
+  const { t } = useLanguage();
   const [threads, setThreads] = useState([]);
   const [selected, setSelected] = useState(null);
   const [reply, setReply] = useState('');
@@ -86,7 +88,7 @@ export default function AdminSupport() {
         });
       }
       setReply('');
-      toast.success('Svar sendt!');
+      toast.success(t.adminSupportReplyLabel);
       await loadThreads();
       // Opdater selected
       setSelected(prev => {
@@ -94,7 +96,7 @@ export default function AdminSupport() {
         return updated || prev;
       });
     } catch (e) {
-      toast.error('Fejl ved afsendelse');
+      toast.error(t.adminSupportError);
     } finally {
       setSending(false);
     }
@@ -111,7 +113,7 @@ export default function AdminSupport() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
-      <PageHeader title={`Support${totalUnread > 0 ? ` (${totalUnread})` : ''}`} />
+      <PageHeader title={`${t.adminSupportTitle}${totalUnread > 0 ? ` (${totalUnread})` : ''}`} />
 
       <div className="max-w-2xl mx-auto px-4 pt-4 pb-8">
         {!selected ? (
@@ -119,7 +121,7 @@ export default function AdminSupport() {
           <div className="space-y-2">
             {threads.length === 0 && (
               <p className="text-center py-12 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                Ingen supportbeskeder endnu 🌙
+                {t.adminSupportNoMessages}
               </p>
             )}
             {threads.map((thread) => (
@@ -201,7 +203,7 @@ export default function AdminSupport() {
                 value={reply}
                 onChange={e => setReply(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Skriv et svar..."
+                placeholder={t.writeMessagePlaceholder}
                 className="flex-1 resize-none rounded-xl px-3 py-2 text-sm outline-none"
                 style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)', border: 'none', maxHeight: '80px' }}
               />

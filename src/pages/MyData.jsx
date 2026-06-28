@@ -38,13 +38,13 @@ export default function MyData() {
     } else {
       await base44.entities.LegalContent.create({
         type,
-        title: type === 'terms' ? t.termsTitle : t.privacyTitle,
+        title: type === 'terms' ? t.termsLabel : t.privacyLabel,
         content: '',
         pdf_url: file_url,
       });
     }
     await loadLegalDocs();
-    toast.success(`${t.myDataPdfUploadedFor} ${type === 'terms' ? t.myDataTermsLower : t.myDataPrivacyLower}`);
+    toast.success(`${t.pdfUploadedFor} ${type === 'terms' ? t.termsLabel.toLowerCase() : t.privacyLabel.toLowerCase()}`);
     setUploadingType(null);
   };
 
@@ -57,7 +57,7 @@ export default function MyData() {
     a.href = url;
     a.download = `lalatoto-data-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    toast.success(t.myDataExported);
+    toast.success(t.dataExported);
     setLoading(null);
   };
 
@@ -65,7 +65,7 @@ export default function MyData() {
     setConfirmDialog(null);
     setLoading(type);
     await base44.functions.invoke('gdprDeleteData', { type });
-    toast.success(type === 'all' ? t.myDataAccountDeleted : type === 'chat' ? t.myDataChatDeleted : t.myDataLocationDeleted);
+    toast.success(type === 'all' ? t.accountAndDataDeleted : type === 'chat' ? t.chatHistoryDeleted : t.locationDataDeleted);
     setLoading(null);
     if (type === 'all') {
       base44.auth.logout(createPageUrl('Home'));
@@ -90,8 +90,8 @@ export default function MyData() {
               <Download className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
             </div>
             <div>
-              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.myDataExportTitle}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.myDataExportDesc}</p>
+              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.exportMyData}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.exportMyDataDesc}</p>
             </div>
           </div>
           <Button
@@ -100,7 +100,7 @@ export default function MyData() {
             disabled={loading === 'export'}
             onClick={handleExport}
           >
-            {loading === 'export' ? t.myDataExporting : t.myDataDownloadJson}
+            {loading === 'export' ? t.exporting : t.downloadDataJson}
           </Button>
         </div>
 
@@ -111,8 +111,8 @@ export default function MyData() {
               <MessageSquareX className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
             </div>
             <div>
-              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.myDataDeleteChatTitle}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.myDataDeleteChatDesc}</p>
+              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.deleteChatHistory}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.deleteChatHistoryDesc}</p>
             </div>
           </div>
           <Button
@@ -121,7 +121,7 @@ export default function MyData() {
             disabled={loading === 'chat'}
             onClick={() => setConfirmDialog('chat')}
           >
-            {loading === 'chat' ? t.myDataDeleting : t.myDataDeleteChatBtn}
+            {loading === 'chat' ? t.deleting : t.deleteChatHistory}
           </Button>
         </div>
 
@@ -132,8 +132,8 @@ export default function MyData() {
               <Trash2 className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
             </div>
             <div>
-              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.myDataDeleteLocationTitle}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.myDataDeleteLocationDesc}</p>
+              <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.deleteLocationData}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.deleteLocationDataDesc}</p>
             </div>
           </div>
           <Button
@@ -142,7 +142,7 @@ export default function MyData() {
             disabled={loading === 'location'}
             onClick={() => setConfirmDialog('location')}
           >
-            {loading === 'location' ? t.myDataDeleting : t.myDataDeleteLocationBtn}
+            {loading === 'location' ? t.deleting : t.deleteLocationData}
           </Button>
         </div>
 
@@ -153,8 +153,8 @@ export default function MyData() {
               <AlertTriangle className="w-5 h-5 text-red-500" />
             </div>
             <div>
-              <p className="font-semibold text-red-600">{t.myDataDeleteAccountTitle}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.myDataDeleteAccountDesc}</p>
+              <p className="font-semibold text-red-600">{t.deleteMyAccount}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.deleteMyAccountDesc}</p>
             </div>
           </div>
           <Button
@@ -162,12 +162,12 @@ export default function MyData() {
             disabled={loading === 'all'}
             onClick={() => setConfirmDialog('all')}
           >
-            {loading === 'all' ? t.myDataDeleting : t.myDataDeleteAccountBtn}
+            {loading === 'all' ? t.deleting : t.deleteAccountAndData}
           </Button>
         </div>
 
         <p className="text-xs text-center pb-8" style={{ color: 'var(--color-text-muted)' }}>
-          {t.myDataGdprNote}
+          {t.gdprRightsNote}
         </p>
 
         {/* Admin: PDF upload til juridiske dokumenter */}
@@ -178,14 +178,14 @@ export default function MyData() {
                 <FileText className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
               </div>
               <div>
-                <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.myDataLegalDocsAdmin}</p>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.myDataUploadPdfDesc}</p>
+                <p className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.legalDocsAdmin}</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.legalDocsAdminDesc}</p>
               </div>
             </div>
 
             {[
-              { type: 'terms', label: t.termsTitle },
-              { type: 'privacy', label: t.privacyTitle },
+              { type: 'terms', label: t.termsLabel },
+              { type: 'privacy', label: t.privacyLabel },
             ].map(({ type, label }) => (
               <div key={type} className="rounded-xl p-4 space-y-2" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
@@ -198,13 +198,13 @@ export default function MyData() {
                     style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-accent)', border: '1px solid var(--color-border)' }}
                   >
                     <ExternalLink className="w-3 h-3" />
-                    {t.myDataViewCurrentPdf}
+                    {t.viewCurrentPdf}
                   </a>
                 )}
                 <label className="flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm w-fit"
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}>
                   <Upload className="w-4 h-4" />
-                  {uploadingType === type ? t.uploadingLabel : legalDocs[type]?.pdf_url ? t.myDataReplacePdf : t.myDataUploadPdf}
+                  {uploadingType === type ? t.uploading : legalDocs[type]?.pdf_url ? t.replacePdf : t.uploadPdf}
                   <input
                     type="file"
                     accept="application/pdf"
@@ -223,22 +223,22 @@ export default function MyData() {
       <Dialog open={!!confirmDialog} onOpenChange={() => setConfirmDialog(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t.myDataAreYouSure}</DialogTitle>
+            <DialogTitle>{t.areYouSure}</DialogTitle>
           </DialogHeader>
           <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             {confirmDialog === 'all'
-              ? t.myDataConfirmDeleteAccount
+              ? t.confirmDeleteAllData
               : confirmDialog === 'chat'
-              ? t.myDataConfirmDeleteChat
-              : t.myDataConfirmDeleteLocation}
+              ? t.confirmDeleteChat
+              : t.confirmDeleteLocation}
           </p>
           <div className="flex gap-3 pt-2">
-            <Button variant="outline" className="flex-1" onClick={() => setConfirmDialog(null)}>{t.aboutUsCancel}</Button>
+            <Button variant="outline" className="flex-1" onClick={() => setConfirmDialog(null)}>{t.cancel}</Button>
             <Button
               className="flex-1 bg-red-500 hover:bg-red-600 text-white"
               onClick={() => handleDelete(confirmDialog)}
             >
-              {t.myDataYesDelete}
+              {t.yesDelete}
             </Button>
           </div>
         </DialogContent>

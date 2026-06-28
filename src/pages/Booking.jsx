@@ -12,8 +12,10 @@ import { format, addDays, startOfWeek, isSameDay, isAfter, parseISO } from 'date
 import { da } from 'date-fns/locale';
 import UserAvatar from '@/components/community/UserAvatar';
 import PageHeader from '@/components/ui/PageHeader';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Booking() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const expertId = urlParams.get('expertId');
   
@@ -85,17 +87,17 @@ export default function Booking() {
       return booking;
     },
     onSuccess: () => {
-      toast.success('Booking bekræftet!');
+      toast.success(t.bookingConfirmedToast);
       window.location.href = createPageUrl('MyBookings');
     },
     onError: () => {
-      toast.error('Kunne ikke oprette booking');
+      toast.error(t.bookingCreateError);
     },
   });
 
   // Generate week days
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const dayNames = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'];
+  const dayNames = t.weekdaysShort;
 
   // Get available slots for selected date
   const getAvailableSlots = () => {
@@ -146,7 +148,7 @@ export default function Booking() {
         backUrl={createPageUrl(`ExpertDetail?id=${expertId}`)}
         rightAction={
           <span className="text-sm font-medium pr-1" style={{ color: 'var(--color-text-muted)' }}>
-            Trin {step} af 3
+            {t.bookingStepOf} {step} {t.bookingOf3}
           </span>
         }
       />
@@ -169,7 +171,7 @@ export default function Booking() {
       {/* Step 1: Select Date */}
       {step === 1 && (
         <div className="p-4 space-y-4">
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Vælg dato</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.bookingSelectDate}</h3>
           
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
@@ -230,7 +232,7 @@ export default function Booking() {
             disabled={!selectedDate}
             onClick={() => setStep(2)}
           >
-            Fortsæt
+            {t.bookingContinue}
           </Button>
         </div>
       )}
@@ -245,12 +247,12 @@ export default function Booking() {
             </span>
           </div>
 
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Vælg tidspunkt</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.bookingSelectTime}</h3>
 
           {availableSlots.length === 0 ? (
             <div className="text-center py-8">
               <Clock className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-              <p style={{ color: 'var(--color-text-muted)' }}>Ingen ledige tider denne dag</p>
+              <p style={{ color: 'var(--color-text-muted)' }}>{t.bookingNoSlotsToday}</p>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2">
@@ -272,15 +274,15 @@ export default function Booking() {
 
           <div className="flex gap-2 mt-4">
             <Button variant="outline" onClick={() => setStep(1)}>
-              Tilbage
+              {t.back}
             </Button>
-            <Button 
+            <Button
               className="flex-1"
               style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               disabled={!selectedSlot}
               onClick={() => setStep(3)}
             >
-              Fortsæt
+              {t.bookingContinue}
             </Button>
           </div>
         </div>
@@ -289,7 +291,7 @@ export default function Booking() {
       {/* Step 3: Confirm */}
       {step === 3 && (
         <div className="p-4 space-y-4">
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Bekræft booking</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.bookingConfirmTitle}</h3>
 
           <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             <div className="flex items-center gap-3">
@@ -308,34 +310,34 @@ export default function Booking() {
 
           <div>
             <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-              Noter til eksperten (valgfrit)
+              {t.bookingNotesLabel}
             </label>
             <Textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Beskriv hvad du gerne vil tale om..."
+              placeholder={t.bookingNotesPlaceholder}
               className="mt-2"
               rows={3}
             />
           </div>
 
           <div className="rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-primary)' }}>
-            <span style={{ color: 'var(--color-bg)', opacity: 0.7 }}>Total</span>
+            <span style={{ color: 'var(--color-bg)', opacity: 0.7 }}>{t.bookingTotal}</span>
             <span className="text-xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert?.hourly_rate} kr</span>
           </div>
 
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => setStep(2)}>
-              Tilbage
+              {t.back}
             </Button>
-            <Button 
+            <Button
               className="flex-1 gap-2"
               style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               onClick={() => createBookingMutation.mutate()}
               disabled={createBookingMutation.isPending}
             >
               <Check className="w-5 h-5" />
-              Bekræft booking
+              {t.bookingConfirmBtn}
             </Button>
           </div>
         </div>

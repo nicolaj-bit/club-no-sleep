@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { Moon } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function DarkModeNudge() {
   const { isDark, toggle } = useTheme();
   const [visible, setVisible] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (isDark) return;
@@ -71,9 +73,9 @@ export default function DarkModeNudge() {
               className="flex-1 text-left"
             >
               <p className="text-sm font-medium text-white leading-snug">
-                Vi har skruet lyset ned
+                {t.dimmedLightMessage}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Tryk her for at skifte til mørk tilstand 🌙</p>
+              <p className="text-xs text-gray-400 mt-0.5">{t.tapToSwitchDarkMode}</p>
             </button>
             <button
               onClick={handleDismiss}

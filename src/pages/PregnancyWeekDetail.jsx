@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Baby, Heart, Sparkles, Apple, Activity, AlertCircle } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const WEEK_DATA = {
   4: {
@@ -905,6 +906,7 @@ const WEEK_DATA = {
 };
 
 export default function PregnancyWeekDetail() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const week = parseInt(urlParams.get('week') || '12', 10);
   const data = WEEK_DATA[week];
@@ -915,7 +917,7 @@ export default function PregnancyWeekDetail() {
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Ingen data for uge {week}</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{t.pwdNoDataForWeek} {week}</p>
       </div>
     );
   }
@@ -928,7 +930,7 @@ export default function PregnancyWeekDetail() {
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </Link>
           <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
-            🤰 Graviditet
+            {t.pwdHeaderLabel}
           </span>
           <div className="flex gap-1">
             {prevWeek && (
@@ -961,17 +963,17 @@ export default function PregnancyWeekDetail() {
           <div className="px-4 py-4 space-y-3">
             <div className="flex gap-4">
               <div className="flex-1 rounded-xl p-3 text-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Størrelse</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdSize}</p>
                 <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-text-primary)' }}>{data.baby.size}</p>
               </div>
               <div className="flex-1 rounded-xl p-3 text-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Vægt</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdWeight}</p>
                 <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-text-primary)' }}>{data.baby.weight}</p>
               </div>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.baby.description}</p>
             <div className="space-y-1.5">
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Milepæle</p>
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{t.pwdMilestones}</p>
               {data.baby.milestones.map((m, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <span className="text-xs mt-0.5" style={{ color: 'var(--color-cappuccino)' }}>✦</span>
@@ -990,7 +992,7 @@ export default function PregnancyWeekDetail() {
           <div className="px-4 py-4 space-y-3">
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.mom.body}</p>
             <div className="space-y-1.5">
-              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Typiske symptomer</p>
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{t.pwdTypicalSymptoms}</p>
               {data.mom.symptoms.map((s, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <span className="text-xs mt-0.5" style={{ color: 'var(--color-cappuccino)' }}>•</span>
@@ -1004,7 +1006,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)' }}>
             <Apple className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Kost & ernæring</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.pwdNutritionHeading}</span>
           </div>
           <div className="px-4 py-4">
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.nutrition}</p>
@@ -1014,7 +1016,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)' }}>
             <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Tips til ugen</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.pwdTipsHeading}</span>
           </div>
           <div className="px-4 py-4 space-y-2">
             {data.tips.map((tip, i) => (
@@ -1029,7 +1031,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)' }}>
             <Activity className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Følelser & velvære</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.pwdEmotionalHeading}</span>
           </div>
           <div className="px-4 py-4">
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.emotional}</p>
@@ -1039,7 +1041,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: '#FCA5A5', backgroundColor: '#FFF5F5' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: '#FCA5A5' }}>
             <AlertCircle className="w-4 h-4 text-rose-500" />
-            <span className="text-sm font-semibold text-rose-700">Kontakt jordemoder hvis...</span>
+            <span className="text-sm font-semibold text-rose-700">{t.pwdContactMidwifeIf}</span>
           </div>
           <div className="px-4 py-4">
             <p className="text-sm leading-relaxed text-rose-800">{data.warning}</p>
@@ -1051,7 +1053,7 @@ export default function PregnancyWeekDetail() {
             <Link to={`/PregnancyWeekDetail?week=${prevWeek}`} className="rounded-2xl p-4 flex items-center gap-2 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Forrige</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdPrevious}</p>
                 <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Uge {prevWeek}</p>
               </div>
             </Link>
@@ -1059,7 +1061,7 @@ export default function PregnancyWeekDetail() {
           {nextWeek ? (
             <Link to={`/PregnancyWeekDetail?week=${nextWeek}`} className="rounded-2xl p-4 flex items-center justify-end gap-2 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="text-right">
-                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Næste</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdNext}</p>
                 <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Uge {nextWeek}</p>
               </div>
               <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
@@ -1077,8 +1079,8 @@ export default function PregnancyWeekDetail() {
             style={{ backgroundColor: 'var(--color-primary)', borderColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <div>
-              <p className="text-sm font-semibold">📋 Den Ultimative Pakkeliste</p>
-              <p className="text-xs opacity-80 mt-0.5">Hent gratis PDF fra Lalatoto of Denmark</p>
+              <p className="text-sm font-semibold">{t.pwdPackingListTitle}</p>
+              <p className="text-xs opacity-80 mt-0.5">{t.pwdPackingListSub}</p>
             </div>
             <span className="text-xs font-medium px-3 py-1.5 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Download</span>
           </a>

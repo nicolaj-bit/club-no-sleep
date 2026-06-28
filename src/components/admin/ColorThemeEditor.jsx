@@ -4,15 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, ChevronLeft } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 // The 6 core colors admin picks — all others are derived
 const CORE_COLORS = [
-  { key: 'c_bg',         label: 'Baggrund',    hint: 'Sidens baggrund (lys)' },
-  { key: 'c_card',       label: 'Kort',        hint: 'Kortbaggrund (lys)' },
-  { key: 'c_primary',    label: 'Primær',      hint: 'Knapper & fremhævning' },
-  { key: 'c_accent',     label: 'Accent',      hint: 'Sekundær fremhævning' },
-  { key: 'c_text',       label: 'Tekst',       hint: 'Primær tekstfarve (lys)' },
-  { key: 'c_dark_bg',    label: 'Mørk baggrund', hint: 'Sidens baggrund (mørk)' },
+  { key: 'c_bg',         label: 'admin.theme.colors.bg',    hint: 'admin.theme.colors.bg_hint' },
+  { key: 'c_card',       label: 'admin.theme.colors.card',        hint: 'admin.theme.colors.card_hint' },
+  { key: 'c_primary',    label: 'admin.theme.colors.primary',      hint: 'admin.theme.colors.primary_hint' },
+  { key: 'c_accent',     label: 'admin.theme.colors.accent',      hint: 'admin.theme.colors.accent_hint' },
+  { key: 'c_text',       label: 'admin.theme.colors.text',       hint: 'admin.theme.colors.text_hint' },
+  { key: 'c_dark_bg',    label: 'admin.theme.colors.dark_bg', hint: 'admin.theme.colors.dark_bg_hint' },
 ];
 
 const DEFAULT_CORE = {
@@ -107,6 +108,7 @@ function ThemePreview({ core }) {
 const DEFAULT_THEME_META = { name: '', description: '', is_active: true, order: 0 };
 
 function ThemeForm({ theme, onSave, onCancel, saving }) {
+  const { t } = useLanguage();
   // Extract core colors from existing theme or defaults
   const initCore = theme?.c_bg ? {
     c_bg: theme.c_bg, c_card: theme.c_card, c_primary: theme.c_primary,
@@ -130,18 +132,18 @@ function ThemeForm({ theme, onSave, onCancel, saving }) {
   return (
     <div className="p-4 space-y-5 max-w-lg mx-auto">
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Navn *</label>
+        <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t('admin.theme.form.name')}</label>
         <Input value={name} onChange={e => setName(e.target.value)} placeholder="fx Sand & Chokolade"
           style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
       </div>
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>Beskrivelse</label>
+        <label className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t('admin.theme.form.description')}</label>
         <Input value={description} onChange={e => setDescription(e.target.value)} placeholder="fx Klassisk og lunt"
           style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm font-semibold" style={{ color: 'var(--color-text-secondary)' }}>🎨 6 kernefarver</p>
+        <p className="text-sm font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t('admin.theme.form.core_colors')}</p>
         <div className="grid grid-cols-2 gap-3">
           {CORE_COLORS.map(({ key, label, hint }) => (
             <div key={key} className="flex items-center gap-3 p-2.5 rounded-xl border"
@@ -149,8 +151,8 @@ function ThemeForm({ theme, onSave, onCancel, saving }) {
               <input type="color" value={core[key] || '#000000'} onChange={e => setC(key, e.target.value)}
                 className="w-10 h-10 rounded-lg cursor-pointer border-0 p-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm font-medium leading-tight" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
-                <p className="text-[10px] leading-tight" style={{ color: 'var(--color-text-muted)' }}>{hint}</p>
+                <p className="text-sm font-medium leading-tight" style={{ color: 'var(--color-text-primary)' }}>{t(label)}</p>
+                <p className="text-[10px] leading-tight" style={{ color: 'var(--color-text-muted)' }}>{t(hint)}</p>
                 <p className="text-[10px] font-mono mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{core[key]}</p>
               </div>
             </div>
@@ -159,27 +161,27 @@ function ThemeForm({ theme, onSave, onCancel, saving }) {
       </div>
 
       <div>
-        <p className="text-sm font-semibold mb-2" style={{ color: 'var(--color-text-secondary)' }}>👁 Preview</p>
+        <p className="text-sm font-semibold mb-2" style={{ color: 'var(--color-text-secondary)' }}>{t('admin.theme.form.preview')}</p>
         <ThemePreview core={core} />
       </div>
 
       <div className="flex items-center justify-between">
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} className="rounded" />
-          <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>Aktiv for brugere</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{t('admin.theme.form.active_for_users')}</span>
         </label>
         <div className="flex items-center gap-2">
-          <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Rækkefølge</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme.form.order')}</span>
           <Input type="number" value={order} onChange={e => setOrder(Number(e.target.value))}
             className="w-16 text-center" style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }} />
         </div>
       </div>
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onCancel} className="flex-1">Annuller</Button>
+        <Button variant="outline" onClick={onCancel} className="flex-1">{t('admin.theme.form.cancel')}</Button>
         <Button onClick={handleSave} disabled={saving || !name} className="flex-1"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-          {saving ? 'Gemmer...' : 'Gem tema'}
+          {saving ? t('admin.theme.form.saving') : t('admin.theme.form.save')}
         </Button>
       </div>
     </div>
@@ -187,6 +189,7 @@ function ThemeForm({ theme, onSave, onCancel, saving }) {
 }
 
 export default function ColorThemeEditor() {
+  const { t } = useLanguage();
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
@@ -211,15 +214,15 @@ export default function ColorThemeEditor() {
       await base44.entities.ColorTheme.update(editing.id, form);
     }
     setSaving(false);
-    toast.success('Tema gemt!');
+    toast.success(t('admin.theme.toast.saved'));
     setEditing(null);
     load();
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Slet dette tema?')) return;
+    if (!confirm(t('admin.theme.dialog.confirm_delete'))) return;
     await base44.entities.ColorTheme.delete(id);
-    toast.success('Slettet');
+    toast.success(t('admin.theme.toast.deleted'));
     load();
   };
 
@@ -233,7 +236,7 @@ export default function ColorThemeEditor() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
           <h2 className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>
-            {isNew ? 'Nyt farvetema' : 'Rediger tema'}
+            {isNew ? t('admin.theme.header.new') : t('admin.theme.header.edit')}
           </h2>
         </div>
         <ThemeForm theme={editing} onSave={handleSave} onCancel={() => setEditing(null)} saving={saving} />
@@ -245,20 +248,20 @@ export default function ColorThemeEditor() {
     <div className="p-4 space-y-3 max-w-lg mx-auto mt-2">
       <div className="flex items-center justify-between mb-1">
         <div>
-          <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Farvetemaer</p>
-          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Brugere vælger mellem aktive temaer</p>
+          <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t('admin.theme.list.title')}</p>
+          <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme.list.description')}</p>
         </div>
         <button onClick={() => { setIsNew(true); setEditing({ ...DEFAULT_THEME_META, ...DEFAULT_CORE }); }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-          <Plus className="w-4 h-4" /> Nyt tema
+          <Plus className="w-4 h-4" /> {t('admin.theme.list.new_button')}
         </button>
       </div>
 
       {loading ? (
-        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme.list.loading')}</p>
       ) : themes.length === 0 ? (
-        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen temaer endnu</p>
+        <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme.list.empty')}</p>
       ) : themes.map(theme => (
         <div key={theme.id} className="flex items-center gap-3 p-3 rounded-2xl border"
           style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -272,7 +275,7 @@ export default function ColorThemeEditor() {
             <p className="font-medium text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>{theme.name}</p>
             <p className="text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
               {theme.description || '—'}
-              {!theme.is_active && <span className="text-orange-500 ml-1">· Inaktiv</span>}
+              {!theme.is_active && <span className="text-orange-500 ml-1">· {t('admin.theme.list.inactive')}</span>}
             </p>
           </div>
           <div className="flex gap-1">

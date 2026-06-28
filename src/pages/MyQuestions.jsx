@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, ChevronRight, MessageCircle, Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function MyQuestions() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
 
@@ -29,7 +31,7 @@ export default function MyQuestions() {
     enabled: !!user?.email,
   });
 
-  const statusLabel = { open: 'Åben', answered: 'Besvaret', closed: 'Lukket' };
+  const statusLabel = { open: t.myQuestionsOpen, answered: t.myQuestionsAnswered, closed: t.myQuestionsClosed };
   const statusStyle = {
     answered: { background: '#d1fae5', color: '#065f46' },
     open: { background: '#fef3c7', color: '#92400e' },
@@ -51,13 +53,13 @@ export default function MyQuestions() {
           </button>
         </Link>
         <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          Mine spørgsmål
+          {t.myQuestionsTitle}
         </h1>
         <Link to={createPageUrl('AskQuestion')} className="absolute right-4">
           <button
             className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
             style={{ background: 'var(--color-bg-card)' }}
-            aria-label="Stil et nyt spørgsmål"
+            aria-label={t.myQuestionsAskNew}
           >
             <Plus className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
           </button>
@@ -74,14 +76,14 @@ export default function MyQuestions() {
             <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'var(--color-bg-card)' }}>
               <MessageCircle className="w-7 h-7" style={{ color: 'var(--color-text-muted)' }} />
             </div>
-            <p className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>Ingen spørgsmål endnu</p>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Stil dit første spørgsmål til fællesskabet</p>
+            <p className="text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.myQuestionsEmpty}</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.myQuestionsEmptyDesc}</p>
             <Link to={createPageUrl('AskQuestion')}>
               <button
                 className="mt-1 px-6 py-2.5 rounded-full text-sm font-medium cursor-pointer"
                 style={{ background: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
-                Stil et spørgsmål
+                {t.myQuestionsAskNew}
               </button>
             </Link>
           </div>

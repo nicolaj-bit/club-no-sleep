@@ -56,8 +56,7 @@ function getEntryId(content, section) {
 }
 
 // Inline edit wrapper — shows pencil on hover, saves on check
-function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, richText = false, initialValue = '' }) {
-  const { t } = useLanguage();
+function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, richText = false, initialValue = '', t }) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
   const [saving, setSaving] = useState(false);
@@ -74,7 +73,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
     setSaving(false);
     setEditing(false);
     onSaved();
-    toast.success(t.aboutUsSaved);
+    toast.success(t.saved);
   };
 
   if (!isAdmin) return <>{children}</>;
@@ -86,7 +85,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
           onClick={() => setEditing(true)}
           className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover/edit:opacity-100 transition-opacity shadow"
           style={{ backgroundColor: 'var(--color-accent)', color: '#fff' }}
-          title={`${t.aboutUsEditLabel} ${label}`}
+          title={`${t.editLabelPrefix} ${label}`}
         >
           <Pencil className="w-3.5 h-3.5" />
         </button>
@@ -100,10 +99,10 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
           }
           <div className="flex gap-2">
             <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white" style={{ backgroundColor: 'var(--color-accent)' }}>
-              <Check className="w-3.5 h-3.5" /> {saving ? t.saving : t.aboutUsSaveBtn}
+              <Check className="w-3.5 h-3.5" /> {saving ? t.saving : t.save}
             </button>
             <button onClick={() => { setEditing(false); setValue(initialValue); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-              <X className="w-3.5 h-3.5" /> {t.aboutUsCancel}
+              <X className="w-3.5 h-3.5" /> {t.cancel}
             </button>
           </div>
         </div>
@@ -112,8 +111,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
   );
 }
 
-function PersonCard({ person, openId, setOpenId }) {
-  const { t } = useLanguage();
+function PersonCard({ person, openId, setOpenId, t }) {
   const isOpen = openId === person.name;
   return (
     <div className="rounded-2xl overflow-hidden border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
@@ -129,7 +127,7 @@ function PersonCard({ person, openId, setOpenId }) {
           </a>
         )}
         <button onClick={() => setOpenId(isOpen ? null : person.name)} className="flex items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--color-accent)' }}>
-          {person.facts.length} {t.aboutUsFunFacts}
+          {person.facts.length} {t.funFactsAboutMe}
           {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
         {isOpen && (
@@ -148,8 +146,8 @@ function PersonCard({ person, openId, setOpenId }) {
 }
 
 export default function AboutUs() {
-  const { t } = useLanguage();
   const { isDark } = useTheme();
+  const { t } = useLanguage();
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -206,10 +204,10 @@ export default function AboutUs() {
         <Link to={createPageUrl('Community')}>
           <Button variant="ghost" size="icon" className="-ml-2"><ChevronLeft className="w-5 h-5" /></Button>
         </Link>
-        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsTitle}</h1>
+        <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.meetTheFamily}</h1>
         {isAdmin && (
           <span className="ml-auto text-xs px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-accent)' }}>
-            ✏️ {t.aboutUsClickToEdit}
+            {t.adminEditHint}
           </span>
         )}
       </header>
@@ -228,6 +226,7 @@ export default function AboutUs() {
               />
             </div>
             <EditableBlock
+              t={t}
               label="historietekst"
               section="story"
               entryId={getEntryId(content, 'story')}
@@ -249,13 +248,13 @@ export default function AboutUs() {
 
         {/* Contact info */}
         <section className="rounded-2xl p-5 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsContactUs}</h2>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>{t.contactUs}</h2>
           <div className="space-y-3">
             <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <Phone className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <EditableBlock label="telefon" section="contact_phone" entryId={getEntryId(content, 'contact_phone')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactPhone}>
+              <EditableBlock label="telefon" section="contact_phone" entryId={getEntryId(content, 'contact_phone')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactPhone} t={t}>
                 <span>{contactPhone}</span>
               </EditableBlock>
             </a>
@@ -263,7 +262,7 @@ export default function AboutUs() {
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <Mail className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <EditableBlock label="email" section="contact_email" entryId={getEntryId(content, 'contact_email')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactEmail}>
+              <EditableBlock label="email" section="contact_email" entryId={getEntryId(content, 'contact_email')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactEmail} t={t}>
                 <span>{contactEmail}</span>
               </EditableBlock>
             </a>
@@ -271,24 +270,24 @@ export default function AboutUs() {
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <Clock className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <EditableBlock label="åbningstider" section="contact_hours" entryId={getEntryId(content, 'contact_hours')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactHours}>
+              <EditableBlock label="åbningstider" section="contact_hours" entryId={getEntryId(content, 'contact_hours')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactHours} t={t}>
                 <span>{contactHours}</span>
               </EditableBlock>
             </div>
           </div>
-          <EditableBlock label="note" section="contact_note" entryId={getEntryId(content, 'contact_note')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactNote}>
+          <EditableBlock label="note" section="contact_note" entryId={getEntryId(content, 'contact_note')} isAdmin={isAdmin} onSaved={refetch} initialValue={contactNote} t={t}>
             <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{contactNote}</p>
           </EditableBlock>
         </section>
 
         {/* Support chat */}
         <section className="rounded-2xl p-5 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>{t.aboutUsWriteToUs} 💬</h2>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--color-text-primary)' }}>{t.writeToUs}</h2>
           {currentUser ? (
             <UserSupportChat user={currentUser} />
           ) : (
             <p className="text-sm text-center py-6" style={{ color: 'var(--color-text-muted)' }}>
-              {t.aboutUsLoginToMessage}
+              {t.loginToMessage}
             </p>
           )}
         </section>

@@ -10,17 +10,20 @@ import { Label } from '@/components/ui/label';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { toast } from 'sonner';
 import PageHeader from '@/components/ui/PageHeader';
-
-const categories = [
-  'Generelt',
-  'Pleje',
-  'Udstyr',
-  'Sundhed',
-  'Træning',
-  'Andet',
-];
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AskQuestion() {
+  const { t } = useLanguage();
+
+  const categories = [
+    t.askQuestionCategoryGeneral,
+    t.askQuestionCategoryCare,
+    t.askQuestionCategoryEquipment,
+    t.askQuestionCategoryHealth,
+    t.askQuestionCategoryTraining,
+    t.askQuestionCategoryOther,
+  ];
+
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [form, setForm] = useState({ title: '', content: '', category: '' });
@@ -51,18 +54,18 @@ export default function AskQuestion() {
       });
     },
     onSuccess: () => {
-      toast.success('Spørgsmål oprettet');
+      toast.success(t.askQuestionCreated);
       window.location.href = createPageUrl('Knowledge');
     },
     onError: () => {
-      toast.error('Kunne ikke oprette spørgsmål');
+      toast.error(t.askQuestionCreateError);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim() || !form.content.trim()) {
-      toast.error('Udfyld venligst alle felter');
+      toast.error(t.askQuestionFillAllFields);
       return;
     }
     createMutation.mutate();
@@ -70,12 +73,12 @@ export default function AskQuestion() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Stil et spørgsmål" backUrl={createPageUrl('Knowledge')} />
+      <PageHeader title={t.askQuestionTitle} backUrl={createPageUrl('Knowledge')} />
 
       <form onSubmit={handleSubmit} className="p-4 space-y-6">
         {/* Category picker */}
         <div className="space-y-2">
-          <Label style={{ color: 'var(--color-text-secondary)' }}>Kategori</Label>
+          <Label style={{ color: 'var(--color-text-secondary)' }}>{t.askQuestionCategoryLabel}</Label>
           <button
             type="button"
             onClick={() => setShowCategorySheet(true)}
@@ -86,30 +89,30 @@ export default function AskQuestion() {
               color: form.category ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
             }}
           >
-            <span>{form.category || 'Vælg kategori'}</span>
+            <span>{form.category || t.askQuestionChooseCategory}</span>
             <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
           </button>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="title" style={{ color: 'var(--color-text-secondary)' }}>Titel</Label>
+          <Label htmlFor="title" style={{ color: 'var(--color-text-secondary)' }}>{t.askQuestionTitleLabel}</Label>
           <Input
             id="title"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
-            placeholder="Hvad vil du gerne vide?"
+            placeholder={t.askQuestionTitlePlaceholder}
             maxLength={100}
           />
           <p className="text-xs text-right" style={{ color: 'var(--color-text-muted)' }}>{form.title.length}/100</p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="content" style={{ color: 'var(--color-text-secondary)' }}>Uddyb dit spørgsmål</Label>
+          <Label htmlFor="content" style={{ color: 'var(--color-text-secondary)' }}>{t.askQuestionContentLabel}</Label>
           <Textarea
             id="content"
             value={form.content}
             onChange={(e) => setForm({ ...form, content: e.target.value.slice(0, 2000) })}
-            placeholder="Beskriv dit spørgsmål i detaljer..."
+            placeholder={t.askQuestionContentPlaceholder}
             rows={6}
             maxLength={2000}
           />
@@ -118,7 +121,7 @@ export default function AskQuestion() {
 
         <div className="rounded-xl p-3 flex gap-2 text-sm" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
           <span>🤖</span>
-          <p><strong>Du chatter med en AI-assistent.</strong> Den kan generere forkerte oplysninger og erstatter ikke professionel rådgivning fra læge eller sundhedspersonale.</p>
+          <p><strong>{t.askQuestionAiDisclaimerBold}</strong> {t.askQuestionAiDisclaimerRest}</p>
         </div>
 
         <Button
@@ -128,7 +131,7 @@ export default function AskQuestion() {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           <Send className="w-5 h-5" />
-          Send spørgsmål
+          {t.askQuestionSendBtn}
         </Button>
       </form>
 
@@ -136,7 +139,7 @@ export default function AskQuestion() {
       <BottomSheet
         open={showCategorySheet}
         onOpenChange={setShowCategorySheet}
-        title="Vælg kategori"
+        title={t.askQuestionChooseCategory}
       >
         <div className="py-2">
           {categories.map((cat) => (

@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import UserAvatar from '@/components/community/UserAvatar';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ExpertDetail() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const expertId = urlParams.get('id');
 
@@ -46,12 +48,12 @@ export default function ExpertDetail() {
   if (!expert) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Ekspert ikke fundet</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{t.expertDetailNotFound}</p>
       </div>
     );
   }
 
-  const dayNames = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
+  const dayNames = [t.weekdaysShort[6], t.weekdaysShort[0], t.weekdaysShort[1], t.weekdaysShort[2], t.weekdaysShort[3], t.weekdaysShort[4], t.weekdaysShort[5]];
   const groupedAvailability = availability.reduce((acc, slot) => {
     if (!acc[slot.day_of_week]) acc[slot.day_of_week] = [];
     acc[slot.day_of_week].push(slot);
@@ -68,7 +70,7 @@ export default function ExpertDetail() {
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>Ekspert profil</span>
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.expertDetailProfile}</span>
           <div className="w-9" />
         </div>
       </header>
@@ -106,7 +108,7 @@ export default function ExpertDetail() {
         {/* Specialties */}
         {expert.specialties?.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Specialer</h3>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{t.expertDetailSpecialties}</h3>
             <div className="flex flex-wrap gap-2">
               {expert.specialties.map((specialty, i) => (
                 <span
@@ -124,17 +126,17 @@ export default function ExpertDetail() {
         {/* Bio */}
         {expert.bio && (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Om</h3>
+            <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{t.expertDetailAbout}</h3>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{expert.bio}</p>
           </div>
         )}
 
         {/* Availability */}
         <div className="mt-6">
-          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Tilgængelighed</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>{t.expertDetailAvailability}</h3>
           <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
             {Object.entries(groupedAvailability).length === 0 ? (
-              <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>Ingen tider sat op</p>
+              <p className="text-sm text-center" style={{ color: 'var(--color-text-muted)' }}>{t.expertDetailNoTimes}</p>
             ) : (
               Object.entries(groupedAvailability)
                 .sort(([a], [b]) => Number(a) - Number(b))
@@ -159,8 +161,8 @@ export default function ExpertDetail() {
         {/* Price */}
         <div className="mt-6 rounded-xl p-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-primary)' }}>
           <div>
-            <p className="text-sm" style={{ color: 'var(--color-bg)', opacity: 0.7 }}>Konsultation</p>
-            <p className="text-2xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert.hourly_rate} kr<span className="text-base font-normal"> / time</span></p>
+            <p className="text-sm" style={{ color: 'var(--color-bg)', opacity: 0.7 }}>{t.expertDetailConsultation}</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--color-bg)' }}>{expert.hourly_rate} kr<span className="text-base font-normal"> {t.expertDetailPerHour}</span></p>
           </div>
           <CheckCircle className="w-6 h-6 text-emerald-400" />
         </div>
@@ -171,7 +173,7 @@ export default function ExpertDetail() {
         <Link to={createPageUrl(`Booking?expertId=${expertId}`)}>
           <Button className="w-full h-12 rounded-full text-base font-semibold gap-2" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
             <Calendar className="w-5 h-5" />
-            Book konsultation
+            {t.expertDetailBookConsultation}
           </Button>
         </Link>
       </div>

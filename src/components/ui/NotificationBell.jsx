@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function getReadKey(email) {
   return `lalatoto-read-notifications-${email || 'anonymous'}`;
@@ -49,6 +50,7 @@ export default function NotificationBell({ userEmail }) {
   const [open, setOpen] = useState(false);
   const [readIds, setReadIds] = useState(() => getReadIds(userEmail));
   const ref = useRef(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const load = async () => {
@@ -134,9 +136,9 @@ export default function NotificationBell({ userEmail }) {
           style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
         >
           <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--color-border)' }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Notifikationer</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.notificationsHeading}</p>
             {notifications.length > 0 && (
-              <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{notifications.length} beskeder</span>
+              <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{notifications.length} {t.messagesCountSuffix}</span>
             )}
           </div>
 
@@ -144,7 +146,7 @@ export default function NotificationBell({ userEmail }) {
             {notifications.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" style={{ color: 'var(--color-text-muted)' }} />
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen notifikationer endnu</p>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.noNotificationsYet}</p>
               </div>
             ) : (
               notifications.map((n, i) => {

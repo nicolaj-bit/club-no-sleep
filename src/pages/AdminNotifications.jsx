@@ -8,17 +8,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
-const TRIGGER_TYPES = [
-  { value: 'manual', label: 'Manuelt', description: 'Send kun ved at klikke "Send nu"', icon: Send },
-  { value: 'scheduled', label: 'Planlagt tid', description: 'Send automatisk på et bestemt tidspunkt', icon: Clock },
-  { value: 'calendar_event', label: 'Ny kalenderaftale', description: 'Send når der oprettes en ny aftale i kalenderen', icon: Calendar },
-  { value: 'new_blog', label: 'Nyt blogindlæg', description: 'Send når der publiceres et nyt blogindlæg', icon: BookOpen },
-  { value: 'sleep_log', label: 'Søvnlog gemt', description: 'Send når en søvnlog er gemt', icon: Moon },
-  { value: 'new_question', label: 'Nyt spørgsmål', description: 'Send når en bruger stiller et nyt spørgsmål', icon: MessageSquare },
+const getTriggerTypes = (t) => [
+  { value: 'manual', label: t.adminNotificationsManual, description: t.adminNotificationsManualDesc, icon: Send },
+  { value: 'scheduled', label: t.adminNotificationsScheduled, description: t.adminNotificationsScheduledDesc, icon: Clock },
+  { value: 'calendar_event', label: t.adminNotificationsCalendar, description: t.adminNotificationsCalendarDesc, icon: Calendar },
+  { value: 'new_blog', label: t.adminNotificationsBlog, description: t.adminNotificationsBlogDesc, icon: BookOpen },
+  { value: 'sleep_log', label: t.adminNotificationsSleep, description: t.adminNotificationsSleepDesc, icon: Moon },
+  { value: 'new_question', label: t.adminNotificationsQuestion, description: t.adminNotificationsQuestionDesc, icon: MessageSquare },
 ];
 
-const DAYS = ['Søn', 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
+const getDays = (t) => [t.daySun, 'Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør'];
 
 const emptyRule = {
   name: '',
@@ -33,6 +34,7 @@ const emptyRule = {
 };
 
 export default function AdminNotifications() {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [editing, setEditing] = useState(null);
@@ -59,7 +61,7 @@ export default function AdminNotifications() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['pushRules']);
-      toast.success('Regel gemt!');
+      toast.success(t.save);
       setEditing(null);
     },
   });
@@ -68,7 +70,7 @@ export default function AdminNotifications() {
     mutationFn: (id) => base44.entities.PushNotificationRule.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['pushRules']);
-      toast.success('Slettet');
+      toast.success(t.adminEditorDeleted);
     },
   });
 
@@ -92,7 +94,8 @@ export default function AdminNotifications() {
 
   // ── EDIT VIEW ──────────────────────────────────────────────
   if (editing) {
-    const triggerInfo = TRIGGER_TYPES.find(t => t.value === editing.trigger_type);
+    const TRIGGER_TYPES = getTriggerTypes(t);
+    const triggerInfo = TRIGGER_TYPES.find(tr => tr.value === editing.trigger_type);
 
     return (
       <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -102,37 +105,37 @@ export default function AdminNotifications() {
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
           <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>
-            {isNew ? 'Ny notifikationsregel' : 'Rediger regel'}
+            {isNew ? t.adminNotificationsNew : t.adminNotificationsEdit}
           </h1>
           <Button size="sm" onClick={() => saveMutation.mutate(editing)} disabled={saveMutation.isPending}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {saveMutation.isPending ? 'Gemmer...' : 'Gem'}
+            {saveMutation.isPending ? t.adminEditorSaving : t.save}
           </Button>
         </div>
 
         <div className="p-4 space-y-5 max-w-lg mx-auto">
           {/* Name */}
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Navn (intern)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminNotificationsName}</Label>
             <Input
               value={editing.name}
               onChange={e => setEditing({ ...editing, name: e.target.value })}
-              placeholder="fx Morgenopdatering"
+              placeholder={t.adminNotificationsNamePlaceholder}
               style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)', borderColor: 'var(--color-border)' }}
             />
           </div>
 
           {/* Trigger type */}
           <div className="space-y-2">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Trigger — hvornår sendes den?</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminNotificationsTrigger}</Label>
             <div className="space-y-2">
-              {TRIGGER_TYPES.map(t => {
-                const Icon = t.icon;
-                const selected = editing.trigger_type === t.value;
+              {TRIGGER_TYPES.map(tr => {
+                const Icon = tr.icon;
+                const selected = editing.trigger_type === tr.value;
                 return (
                   <button
-                    key={t.value}
-                    onClick={() => setEditing({ ...editing, trigger_type: t.value })}
+                    key={tr.value}
+                    onClick={() => setEditing({ ...editing, trigger_type: tr.value })}
                     className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-all"
                     style={{
                       backgroundColor: selected ? 'var(--color-primary)' : 'var(--color-bg-card)',
@@ -141,8 +144,8 @@ export default function AdminNotifications() {
                   >
                     <Icon className="w-4 h-4 flex-shrink-0" style={{ color: selected ? 'var(--color-bg)' : 'var(--color-accent)' }} />
                     <div>
-                      <p className="text-sm font-medium" style={{ color: selected ? 'var(--color-bg)' : 'var(--color-text-primary)' }}>{t.label}</p>
-                      <p className="text-xs" style={{ color: selected ? 'rgba(255,255,255,0.7)' : 'var(--color-text-muted)' }}>{t.description}</p>
+                      <p className="text-sm font-medium" style={{ color: selected ? 'var(--color-bg)' : 'var(--color-text-primary)' }}>{tr.label}</p>
+                      <p className="text-xs" style={{ color: selected ? 'rgba(255,255,255,0.7)' : 'var(--color-text-muted)' }}>{tr.description}</p>
                     </div>
                   </button>
                 );
@@ -154,7 +157,7 @@ export default function AdminNotifications() {
           {editing.trigger_type === 'scheduled' && (
             <div className="space-y-4 p-4 rounded-2xl border" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}>
               <div className="space-y-1.5">
-                <Label style={{ color: 'var(--color-text-secondary)' }}>Tidspunkt (dansk tid)</Label>
+                <Label style={{ color: 'var(--color-text-secondary)' }}>{t.adminNotificationsScheduled}</Label>
                 <Input
                   type="time"
                   value={editing.schedule_time || '09:00'}
@@ -165,7 +168,7 @@ export default function AdminNotifications() {
               <div className="space-y-1.5">
                 <Label style={{ color: 'var(--color-text-secondary)' }}>Ugedage (tom = alle dage)</Label>
                 <div className="flex gap-2 flex-wrap">
-                  {DAYS.map((day, i) => {
+                  {getDays(t).map((day, i) => {
                     const active = (editing.schedule_days || []).includes(i);
                     return (
                       <button
@@ -213,7 +216,7 @@ export default function AdminNotifications() {
 
           {/* Message */}
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Besked</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.pushNotificationSenderMessage}</Label>
             <textarea
               value={editing.message}
               onChange={e => setEditing({ ...editing, message: e.target.value })}
@@ -226,7 +229,7 @@ export default function AdminNotifications() {
 
           {/* URL */}
           <div className="space-y-1.5">
-            <Label style={{ color: 'var(--color-text-secondary)' }}>Link ved klik (valgfrit)</Label>
+            <Label style={{ color: 'var(--color-text-secondary)' }}>{t.pushNotificationSenderLink}</Label>
             <Input
               value={editing.url || ''}
               onChange={e => setEditing({ ...editing, url: e.target.value })}
@@ -276,7 +279,7 @@ export default function AdminNotifications() {
 
           <Button onClick={() => saveMutation.mutate(editing)} disabled={saveMutation.isPending} className="w-full"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}>
-            {saveMutation.isPending ? 'Gemmer...' : 'Gem regel'}
+            {saveMutation.isPending ? t.adminEditorSaving : t.save}
           </Button>
         </div>
       </div>
@@ -284,6 +287,7 @@ export default function AdminNotifications() {
   }
 
   // ── LIST VIEW ──────────────────────────────────────────────
+  const TRIGGER_TYPES = getTriggerTypes(t);
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
       <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b backdrop-blur-xl"
@@ -294,7 +298,7 @@ export default function AdminNotifications() {
           </button>
         </Link>
         <div className="flex-1">
-          <h1 className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>Push-notifikationer</h1>
+          <h1 className="font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{t.adminNotificationsTitle}</h1>
           <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Regler & automatiske udsendelser</p>
         </div>
         <button
@@ -302,13 +306,13 @@ export default function AdminNotifications() {
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
-          <Plus className="w-4 h-4" /> Ny regel
+          <Plus className="w-4 h-4" /> {t.adminEditorNewBtn}
         </button>
       </div>
 
       <div className="p-4 space-y-3">
         {isLoading ? (
-          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>Indlæser...</p>
+          <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorLoading}</p>
         ) : rules.length === 0 ? (
           <div className="text-center py-12">
             <Bell className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
@@ -349,7 +353,7 @@ export default function AdminNotifications() {
                     style={{ color: 'var(--color-accent)' }}
                   >
                     <Send className="w-3.5 h-3.5" />
-                    {sending === rule.id ? 'Sender...' : 'Send nu'}
+                    {sending === rule.id ? t.sending : t.adminLandingSyncNow}
                   </button>
                   <div className="w-px" style={{ backgroundColor: 'var(--color-border)' }} />
                   <button
@@ -357,11 +361,11 @@ export default function AdminNotifications() {
                     className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-opacity active:opacity-60"
                     style={{ color: 'var(--color-text-secondary)' }}
                   >
-                    <Pencil className="w-3.5 h-3.5" /> Rediger
+                    <Pencil className="w-3.5 h-3.5" /> {t.adminEditorEditPrefix}
                   </button>
                   <div className="w-px" style={{ backgroundColor: 'var(--color-border)' }} />
                   <button
-                    onClick={() => { if (confirm('Slet denne regel?')) deleteMutation.mutate(rule.id); }}
+                    onClick={() => { if (confirm(t.areYouSure)) deleteMutation.mutate(rule.id); }}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-opacity active:opacity-60 text-red-500"
                   >
                     <Trash2 className="w-3.5 h-3.5" /> Slet
