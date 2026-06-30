@@ -438,6 +438,28 @@ export default function SleepLog() {
             )}
           </Card>
 
+          {/* Mood */}
+          <Card>
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.moodBeforeBed} />
+            <div className="flex flex-wrap gap-2">
+              {MOODS.map(m => {
+                const active = form.bedtime_mood === m.value;
+                return (
+                  <button
+                    key={m.value}
+                    onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
+                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
+                    style={active
+                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
+                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
+                  >
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+
           {/* Night wakings */}
           <Card>
             <SectionTitle icon={<Moon className="w-4 h-4 opacity-40" />} title={t.nightWakings} />
@@ -566,28 +588,6 @@ export default function SleepLog() {
                   <button
                     key={m.value}
                     onClick={() => setForm(f => ({ ...f, sleep_method: f.sleep_method === m.value ? '' : m.value }))}
-                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
-                    style={active
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
-                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
-                  >
-                    {m.label}
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Mood */}
-          <Card>
-            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.moodBeforeBed} />
-            <div className="flex flex-wrap gap-2">
-              {MOODS.map(m => {
-                const active = form.bedtime_mood === m.value;
-                return (
-                  <button
-                    key={m.value}
-                    onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
                     className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
                     style={active
                       ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
