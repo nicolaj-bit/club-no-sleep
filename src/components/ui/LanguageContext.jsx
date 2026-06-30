@@ -450,7 +450,7 @@ const translations = {
     save: 'Gem',
     cancel: 'Annuller',
     funFactsAboutMe: 'fun facts om mig',
-    meetTheFamily: 'Mød familien',
+    meetTheFamily: 'Os bag appen',
     adminEditHint: '✏️ Rediger ved at klikke',
     contactUs: 'Kontakt os',
     writeToUs: 'Skriv til os 💬',
