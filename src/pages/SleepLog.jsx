@@ -134,6 +134,7 @@ export default function SleepLog() {
     { value: 'lidt_træt', label: t.moodLittleTired },
     { value: 'meget_træt', label: t.moodVeryTired },
     { value: 'overtræt', label: t.moodOvertired },
+    { value: 'urolig', label: t.moodRestless },
   ];
   const WAKING_METHODS = [t.wakingMethodNursing, t.wakingMethodBottle, t.wakingMethodRocking, t.wakingMethodSing, t.wakingMethodPram, t.wakingMethodSelf];
   const [user, setUser] = useState(null);
