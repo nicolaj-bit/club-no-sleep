@@ -33,7 +33,7 @@ function getGreeting(lang, name) {
   const hour = new Date().getHours();
   let greeting;
   if (hour >= 5 && hour < 12) greeting = lang === 'da' ? 'Godmorgen' : 'Good morning';
-  else if (hour >= 12 && hour < 17) greeting = lang === 'da' ? 'Godeftermiddag' : 'Good afternoon';
+  else if (hour >= 12 && hour < 17) greeting = lang === 'da' ? 'God eftermiddag' : 'Good afternoon';
   else if (hour >= 17 && hour < 21) greeting = lang === 'da' ? 'Godaften' : 'Good evening';
   else greeting = lang === 'da' ? 'Godnat' : 'Good night';
   return { greeting, name };
