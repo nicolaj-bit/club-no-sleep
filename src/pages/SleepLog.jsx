@@ -658,7 +658,6 @@ export default function SleepLog() {
               className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
-              <Sparkles className="w-4 h-4 text-amber-600" />
               {t.getAiAdvice}
             </button>
           </div>
