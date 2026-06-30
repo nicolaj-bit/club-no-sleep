@@ -461,6 +461,19 @@ export default function SleepLog() {
             </div>
           </Card>
 
+          {/* Sleep method */}
+          <Card>
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
+            <input
+              type="text"
+              value={form.sleep_method}
+              onChange={(e) => setForm(f => ({ ...f, sleep_method: e.target.value }))}
+              placeholder={t.howDidBabyFallAsleep}
+              className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none"
+              style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            />
+          </Card>
+
           {/* Night wakings */}
           <Card>
             <SectionTitle icon={<Moon className="w-4 h-4 opacity-40" />} title={t.nightWakings} />
@@ -577,19 +590,6 @@ export default function SleepLog() {
                 <Plus className="w-4 h-4" /> {t.addNap}
               </button>
             )}
-          </Card>
-
-          {/* Sleep method */}
-          <Card>
-            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
-            <input
-              type="text"
-              value={form.sleep_method}
-              onChange={(e) => setForm(f => ({ ...f, sleep_method: e.target.value }))}
-              placeholder={t.howDidBabyFallAsleep}
-              className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none"
-              style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-            />
           </Card>
 
           {/* Notes */}
