@@ -201,7 +201,7 @@ export default function Shop() {
           ) : (
             <div className="grid grid-cols-2 gap-4">
               {filteredProducts.map(product => {
-                const translated = Array.isArray(translations) ? translations.find(tr => tr.id === product.id) : translations?.[product.id];
+                const translated = translations?.[product.id];
                 const displayProduct = lang === 'en' && translated ? { ...product, ...translated } : product;
                 return (
                   <ProductCard key={product.id} product={displayProduct} />

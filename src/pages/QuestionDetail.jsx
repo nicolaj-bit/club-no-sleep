@@ -117,15 +117,11 @@ export default function QuestionDetail() {
 
   const translations = useTranslation(itemsToTranslate);
 
-  const translatedQuestion = Array.isArray(translations)
-    ? translations.find(t => t.id === 'q')
-    : null;
+  const translatedQuestion = translations?.q || null;
 
-  const translatedAnswers = Array.isArray(translations)
-    ? Object.fromEntries(
-        translations.filter(t => t.id?.startsWith('a')).map(t => [t.id, t])
-      )
-    : {};
+  const translatedAnswers = Object.fromEntries(
+    Object.entries(translations || {}).filter(([id]) => id.startsWith('a'))
+  );
 
   if (loadingQuestion) {
     return (
