@@ -582,23 +582,14 @@ export default function SleepLog() {
           {/* Sleep method */}
           <Card>
             <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
-            <div className="flex flex-wrap gap-2">
-              {SLEEP_METHODS.map(m => {
-                const active = form.sleep_method === m.value;
-                return (
-                  <button
-                    key={m.value}
-                    onClick={() => setForm(f => ({ ...f, sleep_method: f.sleep_method === m.value ? '' : m.value }))}
-                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
-                    style={active
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
-                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
-                  >
-                    {m.label}
-                  </button>
-                );
-              })}
-            </div>
+            <input
+              type="text"
+              value={form.sleep_method}
+              onChange={(e) => setForm(f => ({ ...f, sleep_method: e.target.value }))}
+              placeholder={t.howDidBabyFallAsleep}
+              className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none"
+              style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            />
           </Card>
 
           {/* Notes */}
