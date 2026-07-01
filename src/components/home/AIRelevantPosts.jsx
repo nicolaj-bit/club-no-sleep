@@ -32,6 +32,9 @@ export default function AIRelevantPosts({ profile, allPosts }) {
   const [relevantPosts, setRelevantPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Ensure relevantPosts is always an array
+  const safeRelevantPosts = Array.isArray(relevantPosts) ? relevantPosts : [];
+
   useEffect(() => {
     if (!Array.isArray(allPosts) || allPosts.length === 0) {
       setRelevantPosts([]);
@@ -95,7 +98,7 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
         </div>
       ) : (
         <div className="space-y-3">
-          {(relevantPosts || []).map(post => (
+          {safeRelevantPosts.map(post => (
             <BlogCard key={post.id} post={post} variant="default" />
           ))}
         </div>
