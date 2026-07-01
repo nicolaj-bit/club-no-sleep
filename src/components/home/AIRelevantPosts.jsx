@@ -31,8 +31,6 @@ export default function AIRelevantPosts({ profile, allPosts }) {
   const { t } = useLanguage();
   const [relevantPosts, setRelevantPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Ensure relevantPosts is always an array
   const safeRelevantPosts = Array.isArray(relevantPosts) ? relevantPosts : [];
 
   useEffect(() => {
@@ -45,7 +43,7 @@ export default function AIRelevantPosts({ profile, allPosts }) {
     const context = getContext(profile);
 
     if (!context) {
-      setRelevantPosts((allPosts || []).slice(0, 3));
+      setRelevantPosts(allPosts.slice(0, 3));
       setLoading(false);
       return;
     }
