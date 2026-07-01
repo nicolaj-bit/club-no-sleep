@@ -27,6 +27,7 @@ export function ActiveProfileProvider({ children }) {
       if (!email) { setLoading(false); return; }
 
       const profiles = await base44.entities.UserProfile.filter({ user_email: email });
+      if (!Array.isArray(profiles)) throw new Error('profiles not an array');
       setAllProfiles(profiles);
 
       const savedId = localStorage.getItem('active_profile_id');

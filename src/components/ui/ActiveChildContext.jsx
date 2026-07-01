@@ -25,6 +25,7 @@ export function ActiveChildProvider({ children: reactChildren }) {
       if (!user) { setLoading(false); return; }
 
       const list = await base44.entities.Child.filter({ user_email: user.email }, 'order', 20);
+      if (!Array.isArray(list)) throw new Error('children list not an array');
       setChildren(list);
 
       if (list.length > 0) {
