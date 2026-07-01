@@ -22,7 +22,7 @@ export default function ActiveMomsCard() {
         // Live: mødre der er online lige nu
         base44.entities.UserProfile.filter({ profile_label: 'mor', is_online: true }).then(profiles => {
           setCount(profiles.length);
-          setAvatars(profiles.filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
+          setAvatars((profiles || []).filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
         }).catch(() => setCount(0));
       } else {
         // Dagtid: mødre der var aktive i den seneste live-periode (har last_active indenfor de seneste 10 timer)
@@ -34,7 +34,7 @@ export default function ActiveMomsCard() {
             return new Date(p.last_active) >= since;
           });
           setCount(active.length);
-          setAvatars(active.filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
+          setAvatars((active || []).filter(p => p.profile_image).slice(0, 3).map(p => p.profile_image));
         }).catch(() => setCount(0));
       }
     };
