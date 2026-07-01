@@ -49,6 +49,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Club No Sleep bruger din placering til at vise babyvenlige caféer og fagpersoner i nærheden af dig.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
