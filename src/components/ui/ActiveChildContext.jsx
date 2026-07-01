@@ -37,7 +37,8 @@ export function ActiveChildProvider({ children: reactChildren }) {
         }
       }
     } catch (e) {
-      console.log('Could not load children:', e);
+      console.error('Could not load children - error details:', e?.message || String(e));
+      setChildren([]);
     } finally {
       setLoading(false);
     }
