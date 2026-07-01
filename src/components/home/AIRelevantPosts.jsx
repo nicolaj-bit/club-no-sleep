@@ -33,17 +33,21 @@ export default function AIRelevantPosts({ profile, allPosts }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!allPosts || allPosts.length === 0) return;
-
-    const context = getContext(profile);
-
-    if (!context) {
-      setRelevantPosts(allPosts.slice(0, 3));
+    if (!Array.isArray(allPosts) || allPosts.length === 0) {
+      setRelevantPosts([]);
       setLoading(false);
       return;
     }
 
-    const postSummaries = allPosts.map((p, i) => `${i}: "${p.title}" (kategori: ${p.category || 'ukendt'})`).join('\n');
+    const context = getContext(profile);
+
+    if (!context) {
+      setRelevantPosts((allPosts || []).slice(0, 3));
+      setLoading(false);
+      return;
+    }
+
+    const postSummaries = (allPosts || []).map((p, i) => `${i}: "${p.title}" (kategori: ${p.category || 'ukendt'})`).join('\n');
 
     base44.integrations.Core.InvokeLLM({
       prompt: `Du er en hjælpsom assistent til en mor/far-app om babyer og graviditet.
@@ -63,13 +67,13 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
     }).then(res => {
       const indices = res?.indices || [];
       const selected = indices
-        .filter(i => i >= 0 && i < allPosts.length)
+        .filter(i => i >= 0 && i < (allPosts?.length || 0))
         .slice(0, 3)
         .map(i => allPosts[i]);
-      setRelevantPosts(selected.length > 0 ? selected : allPosts.slice(0, 3));
+      setRelevantPosts(selected.length > 0 ? selected : (allPosts || []).slice(0, 3));
       setLoading(false);
     }).catch(() => {
-      setRelevantPosts(allPosts.slice(0, 3));
+      setRelevantPosts((allPosts || []).slice(0, 3));
       setLoading(false);
     });
   }, [allPosts?.length, profile?.child_birthdate, profile?.child_due_date]);
