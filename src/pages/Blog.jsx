@@ -79,7 +79,7 @@ export default function Blog() {
     return activeCategories[idx - 1]?.label || activeCategory;
   })();
 
-  const filteredPosts = posts.filter(p => {
+  const filteredPosts = (posts || []).filter(p => {
     const displayTitle = getTranslated(postTranslations, p.id, 'title', p.title);
     const matchesSearch = !search ||
       displayTitle?.toLowerCase().includes(search.toLowerCase()) ||
@@ -89,7 +89,7 @@ export default function Blog() {
   });
 
   const featuredPost = filteredPosts[0];
-  const otherPosts = filteredPosts.slice(1);
+  const otherPosts = (filteredPosts || []).slice(1);
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries(['blogPosts']);

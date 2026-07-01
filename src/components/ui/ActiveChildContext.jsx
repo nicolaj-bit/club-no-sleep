@@ -25,6 +25,7 @@ export function ActiveChildProvider({ children: reactChildren }) {
       if (!user) { setLoading(false); return; }
 
       const list = await base44.entities.Child.filter({ user_email: user.email }, 'order', 20);
+      if (!Array.isArray(list)) throw new Error('children list not an array');
       setChildren(list);
 
       if (list.length > 0) {
@@ -36,7 +37,8 @@ export function ActiveChildProvider({ children: reactChildren }) {
         }
       }
     } catch (e) {
-      console.log('Could not load children:', e);
+      console.error('Could not load children - error details:', e?.message || String(e));
+      setChildren([]);
     } finally {
       setLoading(false);
     }

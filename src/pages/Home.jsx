@@ -193,7 +193,7 @@ export default function Home() {
       {user && <SleepAdviceCard userEmail={user.email} />}
 
       {/* AI-curated blog posts */}
-      <AIRelevantPosts profile={profile} allPosts={posts} />
+      {Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
     </div>
     </PullToRefresh>
   );
