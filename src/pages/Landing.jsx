@@ -28,7 +28,7 @@ export default function Landing() {
     const loadPhoneUrls = async () => {
       try {
         const configs = await base44.entities.AppConfig.list();
-        const landingConfig = configs.find(c => c.key === 'landing_phones');
+        const landingConfig = Array.isArray(configs) && configs.find(c => c.key === 'landing_phones');
         if (landingConfig) {
           setPhoneUrls({
             a: landingConfig.phone_a_url || 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/6ad3f328a_2025-06-08at191643-1(1).png',

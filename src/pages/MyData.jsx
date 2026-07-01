@@ -23,6 +23,10 @@ export default function MyData() {
 
   const loadLegalDocs = async () => {
     const results = await base44.entities.LegalContent.list();
+    if (!Array.isArray(results)) {
+      setLegalDocs({ terms: null, privacy: null });
+      return;
+    }
     const terms = results.find(r => r.type === 'terms') || null;
     const privacy = results.find(r => r.type === 'privacy') || null;
     setLegalDocs({ terms, privacy });

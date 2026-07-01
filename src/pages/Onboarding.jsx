@@ -51,6 +51,7 @@ export default function Onboarding() {
       .catch(() => redirectToLogin('/Onboarding'));
 
     base44.entities.LegalContent.list().then(items => {
+      if (!Array.isArray(items)) items = [];
       const terms = items.find(i => i.type === 'terms');
       const privacy = items.find(i => i.type === 'privacy');
       setLegalContent({

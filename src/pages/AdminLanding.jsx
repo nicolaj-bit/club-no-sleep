@@ -80,6 +80,10 @@ export default function AdminLanding() {
         setUser(u);
 
         const configs = await base44.entities.AppConfig.list();
+        if (!Array.isArray(configs)) {
+          toast.error(t.adminLandingError);
+          return;
+        }
         const landingConfig = configs.find(c => c.key === 'landing_phones');
         if (landingConfig) {
           setPhonesConfig(landingConfig);
