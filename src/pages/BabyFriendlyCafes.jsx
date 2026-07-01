@@ -199,16 +199,16 @@ export default function BabyFriendlyCafes() {
             {showTipForm && (
               <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
-                  Tips os om en babyvenlig café, så kigger vi på den og tilføjer den til listen 💛
+                  Fortæl os, hvis du kender en babyvenlig café, så vi kan tilføje den til listen. Jo flere jo bedre!
                 </p>
                 <Textarea
-                  placeholder="Café info — hjemmeside, Instagram, navn og adresse *"
+                  placeholder="Caféens navn og hjemmeside eller Instagram profil"
                   value={tipData.cafeInfo}
                   onChange={(e) => setTipData({ ...tipData, cafeInfo: e.target.value })}
                   className="min-h-20"
                 />
                 <Textarea
-                  placeholder="Hvorfor er den god til babyer?"
+                  placeholder="Hvad kan du særligt godt lide ved netop dette sted?"
                   value={tipData.whyGood}
                   onChange={(e) => setTipData({ ...tipData, whyGood: e.target.value })}
                   className="min-h-20"
@@ -372,7 +372,7 @@ export default function BabyFriendlyCafes() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-1.5 text-xs font-medium"
-                                  style={{ color: '#E1306C' }}
+                                  style={{ color: 'var(--color-accent)' }}
                                 >
                                   <Instagram className="w-4 h-4" />
                                   Instagram
@@ -441,7 +441,7 @@ export default function BabyFriendlyCafes() {
                           {(cafe.instagram || cafe.facebook || cafe.website) && (
                             <div className="flex gap-3 mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                               {cafe.instagram && (
-                                <a href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#E1306C' }}>
+                                <a href={cafe.instagram.startsWith('http') ? cafe.instagram : `https://instagram.com/${cafe.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--color-accent)' }}>
                                   <Instagram className="w-4 h-4" /> Instagram
                                 </a>
                               )}

@@ -34,7 +34,6 @@ export default function BottomNav() {
     && new Date(activeProfile.child_due_date) > new Date();
 
   const menuItemsConfig = [
-    { key: 'shop', icon: ShoppingBag, page: 'Shop' },
     { key: 'blog', icon: BookOpen, page: 'Blog' },
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },

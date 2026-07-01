@@ -49,8 +49,8 @@ export default function Favorites() {
     onSettled: () => queryClient.invalidateQueries(['myFavorites', user?.email]),
   });
 
-  const productFavorites = favorites.filter(f => f.item_type === 'product');
   const blogFavorites = favorites.filter(f => f.item_type === 'blog');
+  const nonProductFavorites = favorites.filter(f => f.item_type !== 'product');
 
   const typeIcon = { product: ShoppingBag, blog: BookOpen, article: FileText };
   const typeLink = { product: 'ProductDetail', blog: 'BlogPost', article: 'ArticleDetail' };
@@ -129,19 +129,12 @@ export default function Favorites() {
         ) : (
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full p-1 rounded-2xl mb-4" style={{ background: 'var(--color-bg-card)' }}>
-              <TabsTrigger value="all" className="flex-1 rounded-xl text-xs">{t.favoritesAll?.replace('{count}', favorites.length)}</TabsTrigger>
-              <TabsTrigger value="products" className="flex-1 rounded-xl text-xs">{t.favoritesProducts?.replace('{count}', productFavorites.length)}</TabsTrigger>
+              <TabsTrigger value="all" className="flex-1 rounded-xl text-xs">{t.favoritesAll?.replace('{count}', nonProductFavorites.length)}</TabsTrigger>
               <TabsTrigger value="blog" className="flex-1 rounded-xl text-xs">{t.favoritesBlog?.replace('{count}', blogFavorites.length)}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-2">
-              {favorites.map(item => <FavoriteItem key={item.id} item={item} />)}
-            </TabsContent>
-            <TabsContent value="products" className="space-y-2">
-              {productFavorites.length === 0
-                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.favoritesNoProducts}</p>
-                : productFavorites.map(item => <FavoriteItem key={item.id} item={item} />)
-              }
+              {nonProductFavorites.map(item => <FavoriteItem key={item.id} item={item} />)}
             </TabsContent>
             <TabsContent value="blog" className="space-y-2">
               {blogFavorites.length === 0

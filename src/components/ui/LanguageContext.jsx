@@ -134,7 +134,7 @@ const translations = {
 
     // Blog
     blogTitle: 'Søg og find svar',
-    searchBlog: 'Søg indlæg...',
+    searchBlog: 'Hvad vil du vide mere om?',
     noPosts: 'Ingen indlæg fundet',
     allCategories: 'Alle',
 
@@ -199,14 +199,14 @@ const translations = {
     addNap: 'Tilføj lur',
     bedtime: 'Sengetid',
     fellAsleep: 'Faldt i søvn',
-    wokeUp: 'Vågnede',
+    wokeUp: 'Stod op',
     date: 'Dato',
     ageMonths: 'Alder (måneder)',
     agePlaceholder: 'f.eks. 8',
     saveSleepLog: 'Gem søvnlog',
     saving: 'Gemmer...',
     sleepLogSaved: 'Søvnlog gemt ✓',
-    getAiAdvice: 'Få AI-råd til søvnen',
+    getAiAdvice: 'Få vejledning til søvnen',
     updateAiAdvice: 'Opdater AI-råd',
     updateAnalysis: 'Opdater analyse',
     aiAnalyzing: 'AI-eksperten analyserer jeres søvndata…',
@@ -230,6 +230,7 @@ const translations = {
     moodLittleTired: 'Lidt træt',
     moodVeryTired: 'Meget træt',
     moodOvertired: 'Overtræt',
+    moodRestless: 'Urolig',
     wakingMethodNursing: 'Amning',
     wakingMethodBottle: 'Flaske',
     wakingMethodRocking: 'Vugning',
@@ -450,7 +451,7 @@ const translations = {
     save: 'Gem',
     cancel: 'Annuller',
     funFactsAboutMe: 'fun facts om mig',
-    meetTheFamily: 'Mød familien',
+    meetTheFamily: 'Os bag appen',
     adminEditHint: '✏️ Rediger ved at klikke',
     contactUs: 'Kontakt os',
     writeToUs: 'Skriv til os 💬',
@@ -708,7 +709,7 @@ const translations = {
 
     // PregnancyWeekDetail
     pwdNoDataForWeek: 'Ingen data for uge',
-    pwdHeaderLabel: '🤰 Graviditet',
+    pwdHeaderLabel: 'Graviditet',
     pwdBabyThisWeek: 'Babyen denne uge',
     pwdSize: 'Størrelse',
     pwdWeight: 'Vægt',
@@ -1170,7 +1171,7 @@ const translations = {
 
     // Blog
     blogTitle: 'Search and find answers',
-    searchBlog: 'Search posts...',
+    searchBlog: 'What would you like to know more about?',
     noPosts: 'No posts found',
     allCategories: 'All',
 
@@ -1235,14 +1236,14 @@ const translations = {
     addNap: 'Add nap',
     bedtime: 'Bedtime',
     fellAsleep: 'Fell asleep',
-    wokeUp: 'Woke up',
+    wokeUp: 'Got up',
     date: 'Date',
     ageMonths: 'Age (months)',
     agePlaceholder: 'e.g. 8',
     saveSleepLog: 'Save sleep log',
     saving: 'Saving...',
     sleepLogSaved: 'Sleep log saved ✓',
-    getAiAdvice: 'Get AI sleep advice',
+    getAiAdvice: 'Get sleep guidance',
     updateAiAdvice: 'Update AI advice',
     updateAnalysis: 'Update analysis',
     aiAnalyzing: 'The AI expert is analysing your sleep data…',
@@ -1266,6 +1267,7 @@ const translations = {
     moodLittleTired: 'A little tired',
     moodVeryTired: 'Very tired',
     moodOvertired: 'Overtired',
+    moodRestless: 'Restless',
     wakingMethodNursing: 'Nursing',
     wakingMethodBottle: 'Bottle',
     wakingMethodRocking: 'Rocking',
@@ -1744,7 +1746,7 @@ const translations = {
 
     // PregnancyWeekDetail
     pwdNoDataForWeek: 'No data for week',
-    pwdHeaderLabel: '🤰 Pregnancy',
+    pwdHeaderLabel: 'Pregnancy',
     pwdBabyThisWeek: 'Baby this week',
     pwdSize: 'Size',
     pwdWeight: 'Weight',

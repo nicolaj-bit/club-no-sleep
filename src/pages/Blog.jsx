@@ -67,7 +67,6 @@ export default function Blog() {
   };
 
   const categories = [
-    allLabel,
     ...activeCategories.map(c =>
       getTranslated(categoryTranslations, c.id, 'label', c.label)
     )
@@ -117,7 +116,7 @@ export default function Blog() {
                   placeholder={t.searchBlog}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 bg-slate-50 border-0"
+                  className="pl-9 bg-transparent border-0"
                   autoFocus
                 />
               </div>

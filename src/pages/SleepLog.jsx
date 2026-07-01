@@ -134,6 +134,7 @@ export default function SleepLog() {
     { value: 'lidt_træt', label: t.moodLittleTired },
     { value: 'meget_træt', label: t.moodVeryTired },
     { value: 'overtræt', label: t.moodOvertired },
+    { value: 'urolig', label: t.moodRestless },
   ];
   const WAKING_METHODS = [t.wakingMethodNursing, t.wakingMethodBottle, t.wakingMethodRocking, t.wakingMethodSing, t.wakingMethodPram, t.wakingMethodSelf];
   const [user, setUser] = useState(null);
@@ -438,6 +439,41 @@ export default function SleepLog() {
             )}
           </Card>
 
+          {/* Mood */}
+          <Card>
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.moodBeforeBed} />
+            <div className="flex flex-wrap gap-2">
+              {MOODS.map(m => {
+                const active = form.bedtime_mood === m.value;
+                return (
+                  <button
+                    key={m.value}
+                    onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
+                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
+                    style={active
+                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
+                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
+                  >
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+
+          {/* Sleep method */}
+          <Card>
+            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
+            <input
+              type="text"
+              value={form.sleep_method}
+              onChange={(e) => setForm(f => ({ ...f, sleep_method: e.target.value }))}
+              placeholder={t.howDidBabyFallAsleep}
+              className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none"
+              style={{ backgroundColor: 'var(--color-bg)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+            />
+          </Card>
+
           {/* Night wakings */}
           <Card>
             <SectionTitle icon={<Moon className="w-4 h-4 opacity-40" />} title={t.nightWakings} />
@@ -556,50 +592,6 @@ export default function SleepLog() {
             )}
           </Card>
 
-          {/* Sleep method */}
-          <Card>
-            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.howDidBabyFallAsleep} />
-            <div className="flex flex-wrap gap-2">
-              {SLEEP_METHODS.map(m => {
-                const active = form.sleep_method === m.value;
-                return (
-                  <button
-                    key={m.value}
-                    onClick={() => setForm(f => ({ ...f, sleep_method: f.sleep_method === m.value ? '' : m.value }))}
-                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
-                    style={active
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
-                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
-                  >
-                    {m.label}
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Mood */}
-          <Card>
-            <SectionTitle icon={<Clock className="w-4 h-4" />} title={t.moodBeforeBed} />
-            <div className="flex flex-wrap gap-2">
-              {MOODS.map(m => {
-                const active = form.bedtime_mood === m.value;
-                return (
-                  <button
-                    key={m.value}
-                    onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
-                    className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
-                    style={active
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
-                      : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
-                  >
-                    {m.label}
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-
           {/* Notes */}
           <Card>
             <SectionTitle icon={<BookOpen className="w-4 h-4" />} title={t.notes} />
@@ -666,7 +658,6 @@ export default function SleepLog() {
               className="w-full py-4 rounded-2xl font-semibold text-sm transition-all flex items-center justify-center gap-2 border"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
             >
-              <Sparkles className="w-4 h-4 text-amber-600" />
               {t.getAiAdvice}
             </button>
           </div>
