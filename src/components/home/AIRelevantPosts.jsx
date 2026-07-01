@@ -91,7 +91,7 @@ Vælg de 3 mest relevante indlæg for denne bruger baseret på deres situation. 
         </div>
       ) : (
         <div className="space-y-3">
-          {relevantPosts.map(post => (
+          {(relevantPosts || []).map(post => (
             <BlogCard key={post.id} post={post} variant="default" />
           ))}
         </div>
