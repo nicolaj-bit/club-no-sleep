@@ -15,8 +15,13 @@ npm ci
 echo "Building web app..."
 npm run build
 
+echo "Debug: workspace contents"
+pwd
+ls -la "$CI_WORKSPACE"
+ls -la "$CI_WORKSPACE/ios"
+
 echo "Syncing Capacitor iOS project..."
-npx cap sync ios
+npx cap sync
 
 echo "Installing CocoaPods dependencies..."
 cd "$CI_WORKSPACE/ios/App"
