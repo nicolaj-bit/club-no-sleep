@@ -16,6 +16,10 @@ export default function SleepAdviceCard({ userEmail }) {
 
     // First check how many logs exist — only call AI if 5+
     base44.entities.SleepLog.filter({ user_email: userEmail }, '-date', 10).then(logs => {
+      if (!Array.isArray(logs)) {
+        setLoading(false);
+        return;
+      }
       setLogsCount(logs.length);
       if (logs.length < 5) {
         setLoading(false);
