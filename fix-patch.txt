@@ -1,0 +1,1 @@
+Search for all .map( calls on potentially undefined variables and wrap with (x || [])

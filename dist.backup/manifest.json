@@ -1,0 +1,24 @@
+{
+  "name": "Club No Sleep",
+  "short_name": "Club No Sleep",
+  "description": "Din digitale babybog. Søvnlog, tigerspring, kalender og fællesskab for forældre.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF6F1",
+  "theme_color": "#FAF6F1",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/9d5022047_Ikon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/9d5022047_Ikon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
