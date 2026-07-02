@@ -64,12 +64,6 @@ export default function Checkout() {
   const isActive = profile?.subscription_status === 'active';
 
   const handlePurchase = async () => {
-    // På web/WebView (ikke-native) kan RevenueCat ikke indlæse offerings,
-    // så vi falder automatisk tilbage til Stripe checkout i systembrowseren.
-    if (!rc.isNative) {
-      return handleTesterCheckout();
-    }
-
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
       setError(`Abonnementet kunne ikke indlæses fra ${store.name}. Tjek din internetforbindelse og prøv igen.`);
