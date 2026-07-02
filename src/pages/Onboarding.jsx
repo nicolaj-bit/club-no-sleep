@@ -17,6 +17,7 @@ export default function Onboarding() {
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(-1);
   const hasPaid = new URLSearchParams(window.location.search).get('subscription') === 'success';
+  const [hasStripeSub, setHasStripeSub] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -47,6 +48,10 @@ export default function Onboarding() {
           display_name: u.full_name || '',
           username: (u.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, ''),
         }));
+        // Tjek om brugeren allerede har betalt via Stripe (landing page)
+        base44.functions.invoke('verifySubscription', {})
+          .then(res => { if (res.data?.active) setHasStripeSub(true); })
+          .catch(() => {});
       })
       .catch(() => redirectToLogin('/Onboarding'));
 
@@ -60,6 +65,13 @@ export default function Onboarding() {
       });
     });
   }, []);
+
+  // Hvis Stripe-subscription opdages mens brugeren er ved plan-steppet, spring over
+  useEffect(() => {
+    if (hasStripeSub && step === 3 && !saving) {
+      handleFinish('paid');
+    }
+  }, [hasStripeSub, step]);
 
   const setField = (key, value) => {
     setForm(f => ({ ...f, [key]: value }));
@@ -512,7 +524,11 @@ export default function Onboarding() {
                   return;
                 }
                 setDateError('');
-                setStep(3);
+                if (hasStripeSub || hasPaid) {
+                  handleFinish('paid');
+                } else {
+                  setStep(3);
+                }
               }
             }}
           >

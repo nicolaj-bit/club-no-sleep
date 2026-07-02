@@ -48,6 +48,15 @@ export default function SubscriptionGate({ children }) {
         return;
       }
 
+      // Synkroniser Stripe-abonnement for tilbagevendende brugere
+      const profile = profiles[0];
+      if (profile.subscription_status !== 'active') {
+        try {
+          await base44.functions.invoke('verifySubscription', {});
+          clearSubscriptionCache();
+        } catch {}
+      }
+
       // Everyone gets access — premium content is locked inside components
       setStatus('ok');
     } catch {
