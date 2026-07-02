@@ -16,7 +16,7 @@ export default function PushNotificationSender() {
 
   const handleSend = async () => {
     if (!title || !message) {
-      toast.error(t('admin.push.toast.error_empty'));
+      toast.error(t.pushNotificationSenderError);
       return;
     }
     setSending(true);
@@ -24,12 +24,12 @@ export default function PushNotificationSender() {
     setSending(false);
 
     if (res.data?.success) {
-      toast.success(t('admin.push.toast.success', { count: res.data.recipients ?? 'alle' }));
+      toast.success(t.pushNotificationSenderSuccess.replace('{recipients}', res.data.recipients ?? 'alle'));
       setTitle('');
       setMessage('');
       setUrl('');
     } else {
-      toast.error(t('admin.push.toast.error'));
+      toast.error(t.pushNotificationSenderFailed);
     }
   };
 
@@ -38,11 +38,11 @@ export default function PushNotificationSender() {
       style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
       <div className="flex items-center gap-2">
         <Bell className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-        <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>{t('admin.push.title')}</h2>
+        <h2 className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>{t.pushNotificationSenderTitle}</h2>
       </div>
 
       <div className="space-y-1.5">
-        <Label style={{ color: 'var(--color-text-secondary)' }}>{t('admin.push.form.title')}</Label>
+        <Label style={{ color: 'var(--color-text-secondary)' }}>{t.pushNotificationSenderTitleLabel}</Label>
         <Input
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -52,7 +52,7 @@ export default function PushNotificationSender() {
       </div>
 
       <div className="space-y-1.5">
-        <Label style={{ color: 'var(--color-text-secondary)' }}>{t('admin.push.form.message')}</Label>
+        <Label style={{ color: 'var(--color-text-secondary)' }}>{t.pushNotificationSenderMessage}</Label>
         <textarea
           value={message}
           onChange={e => setMessage(e.target.value)}
@@ -64,7 +64,7 @@ export default function PushNotificationSender() {
       </div>
 
       <div className="space-y-1.5">
-        <Label style={{ color: 'var(--color-text-secondary)' }}>{t('admin.push.form.link')}</Label>
+        <Label style={{ color: 'var(--color-text-secondary)' }}>{t.pushNotificationSenderLink}</Label>
         <Input
           value={url}
           onChange={e => setUrl(e.target.value)}
@@ -80,7 +80,7 @@ export default function PushNotificationSender() {
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
       >
         <Send className="w-4 h-4" />
-        {sending ? t('admin.push.button.sending') : t('admin.push.button.send')}
+        {sending ? t.pushNotificationSenderSending : t.pushNotificationSenderButton}
       </Button>
     </div>
   );
