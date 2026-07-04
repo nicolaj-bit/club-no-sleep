@@ -9,6 +9,11 @@
     "blocked_email": {
       "type": "string",
       "description": "Den der er blokeret"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -17,10 +22,16 @@
   ],
   "rls": {
     "create": {
-      "data.blocker_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.blocker_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
