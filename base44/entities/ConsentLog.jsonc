@@ -22,6 +22,11 @@
     "ip_address": {
       "type": "string",
       "description": "Valgfri IP-adresse"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -32,10 +37,16 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
