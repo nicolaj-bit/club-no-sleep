@@ -38,6 +38,11 @@
     "admin_note": {
       "type": "string",
       "description": "Admin note"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -48,10 +53,16 @@
   ],
   "rls": {
     "create": {
-      "data.reporter_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.reporter_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "user_condition": {
