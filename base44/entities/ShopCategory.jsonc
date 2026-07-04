@@ -27,6 +27,11 @@
       "type": "boolean",
       "default": true,
       "description": "Om kategorien vises i appen"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

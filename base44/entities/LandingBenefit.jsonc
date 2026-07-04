@@ -29,6 +29,11 @@
     "section_subline": {
       "type": "string",
       "description": "Sektionens undertitel (kun f\u00f8rste post bruges)"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

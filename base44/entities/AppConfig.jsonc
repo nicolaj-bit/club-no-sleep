@@ -58,6 +58,11 @@
     "hero1_image_url": {
       "type": "string",
       "description": "Billede-URL til hero1 p\u00e5 mobil (landing page)"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

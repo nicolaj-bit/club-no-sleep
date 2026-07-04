@@ -23,6 +23,11 @@
       "type": "boolean",
       "default": true,
       "description": "Om fanen er synlig"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

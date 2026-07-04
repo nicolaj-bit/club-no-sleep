@@ -9,6 +9,11 @@
     "emoji": {
       "type": "string",
       "description": "Emoji for dette tigerspring"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

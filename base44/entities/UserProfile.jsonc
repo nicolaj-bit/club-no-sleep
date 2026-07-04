@@ -151,6 +151,11 @@
         "partner"
       ],
       "description": "Om brugeren er den prim\u00e6re (betalende) eller inviteret partner"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

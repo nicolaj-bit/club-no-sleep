@@ -56,6 +56,11 @@
       "type": "boolean",
       "default": true,
       "description": "Om milep\u00e6len vises"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

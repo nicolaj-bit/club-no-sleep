@@ -38,6 +38,11 @@
       "type": "number",
       "default": 0,
       "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

@@ -60,6 +60,11 @@
       "type": "string",
       "format": "date-time",
       "description": "Senest trigget tidspunkt"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

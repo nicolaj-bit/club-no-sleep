@@ -9,6 +9,11 @@
     "subtext": {
       "type": "string",
       "description": "Br\u00f8dtekst"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [],

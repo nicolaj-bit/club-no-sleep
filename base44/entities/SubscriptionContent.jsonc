@@ -54,6 +54,11 @@
         }
       },
       "description": "Liste af features"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [],

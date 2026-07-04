@@ -33,6 +33,11 @@
       "type": "boolean",
       "default": false,
       "description": "Vis som knap (CTA) i stedet for link"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

@@ -21,6 +21,11 @@
     "is_available": {
       "type": "boolean",
       "default": true
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

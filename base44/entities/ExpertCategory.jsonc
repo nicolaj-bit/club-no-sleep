@@ -19,6 +19,11 @@
       "type": "boolean",
       "default": true,
       "description": "Om kategorien vises"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [

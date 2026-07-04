@@ -18,6 +18,11 @@
       "type": "boolean",
       "default": true,
       "description": "Om notifikationen er aktiv"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
