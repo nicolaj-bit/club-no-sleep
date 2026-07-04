@@ -58,6 +58,11 @@
       ],
       "default": "pending",
       "description": "Status p\u00e5 invitation"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -67,10 +72,16 @@
   ],
   "rls": {
     "create": {
-      "data.inviter_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.inviter_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
