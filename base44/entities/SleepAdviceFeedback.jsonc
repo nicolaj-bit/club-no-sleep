@@ -40,6 +40,11 @@
     "log_summary": {
       "type": "string",
       "description": "Kort opsummering af m\u00f8nsteret der udl\u00f8ste forslaget"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -50,10 +55,16 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "$or": [
