@@ -254,7 +254,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-sm text-white/75 max-w-xs"
           >
-            Din digitale følgesvend som forælder
+            Alene sammen
           </motion.p>
         </div>
       </div>
