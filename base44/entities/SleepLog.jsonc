@@ -94,6 +94,11 @@
     "parent_note": {
       "type": "string",
       "description": "Noter fra for\u00e6lder"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -102,10 +107,16 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "data.user_email": "{{user.email}}"
