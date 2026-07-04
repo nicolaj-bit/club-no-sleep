@@ -36,6 +36,11 @@
     "baby_kicks_count": {
       "type": "number",
       "description": "Antal sparkekicks noteret"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Valgfri beskrivelse"
     }
   },
   "required": [
@@ -44,10 +49,16 @@
   ],
   "rls": {
     "create": {
-      "data.user_email": "{{user.email}}",
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "$and": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "isAuthenticated": true
+          }
+        }
+      ]
     },
     "read": {
       "data.user_email": "{{user.email}}"
