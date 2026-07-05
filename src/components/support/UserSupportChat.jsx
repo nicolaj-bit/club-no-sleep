@@ -10,7 +10,7 @@ export default function UserSupportChat({ user }) {
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
-  const bottomRef = useRef(null);
+  const scrollContainerRef = useRef(null);
 
   const loadMessages = async () => {
     try {
@@ -45,7 +45,8 @@ export default function UserSupportChat({ user }) {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = scrollContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   const handleSend = async () => {
@@ -92,7 +93,7 @@ export default function UserSupportChat({ user }) {
   return (
     <div className="flex flex-col" style={{ height: '420px' }}>
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 px-1 py-2">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto space-y-3 px-1 py-2">
         {messages.length === 0 && (
           <p className="text-center text-sm py-8" style={{ color: 'var(--color-text-muted)' }}>
             Ingen beskeder endnu. Send os en besked — vi svarer hurtigt! 🌙
@@ -127,7 +128,6 @@ export default function UserSupportChat({ user }) {
             )}
           </div>
         ))}
-        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

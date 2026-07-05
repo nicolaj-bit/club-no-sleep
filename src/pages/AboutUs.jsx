@@ -166,10 +166,6 @@ export default function AboutUs() {
     queryFn: () => base44.entities.AboutContent.list('order', 100),
   });
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const refetch = () => queryClient.invalidateQueries({ queryKey: ['aboutContent'] });
 
   const sara = {
