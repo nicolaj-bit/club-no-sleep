@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
-import { ChevronDown, ChevronUp, Baby, Heart, Sparkles, BookOpen } from 'lucide-react';
+import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 import PageHeader from '@/components/ui/PageHeader';
@@ -39,11 +39,8 @@ function WeekCard({ week, data, isCurrent }) {
             </span>
           )}
           <span className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>
-            {t.pregnancyWeeksWeekLabel} {week}
+            {data.title || `${t.pregnancyWeeksWeekLabel} ${week}`}
           </span>
-          {data?.title && (
-            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{data.title}</span>
-          )}
         </div>
         {open
           ? <ChevronUp className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
@@ -53,32 +50,9 @@ function WeekCard({ week, data, isCurrent }) {
 
       {open && (
         <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
-          {/* Baby */}
-          <div className="pt-3 space-y-1">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Baby className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregnancyWeeksBaby}</span>
-            </div>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.baby}</p>
-          </div>
-
-          {/* Mom */}
-          <div className="space-y-1">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Heart className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregnancyWeeksYourBody}</span>
-            </div>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.mom}</p>
-          </div>
-
-          {/* Tip */}
-          <div className="rounded-xl p-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-            <div className="flex items-center gap-1.5 mb-1">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-cappuccino)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-cappuccino)' }}>{t.pregnancyWeeksTip}</span>
-            </div>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{data.tip}</p>
-          </div>
+          <p className="pt-3 text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            {data.mainText[0]}
+          </p>
 
           <Link
             to={`/PregnancyWeekDetail?week=${week}`}
