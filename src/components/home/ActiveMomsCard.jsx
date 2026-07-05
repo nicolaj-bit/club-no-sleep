@@ -47,9 +47,7 @@ export default function ActiveMomsCard() {
   const displayCount = count ?? '...';
   const extra = (count ?? 0) > 3 ? count - 3 : 0;
 
-  const label = isLive
-    ? (lang === 'da' ? 'MØDRE VÅGER LIGE NU' : 'MOMS AWAKE RIGHT NOW')
-    : (lang === 'da' ? 'MØDRE VÅGNE I NAT' : 'MOMS AWAKE LAST NIGHT');
+  const label = lang === 'da' ? 'Et lys i mørket' : 'A light in the dark';
 
   const headline = isLive
     ? (lang === 'da' ? `Der er ${displayCount} mødre vågne` : `${displayCount} moms are awake`)
@@ -70,7 +68,7 @@ export default function ActiveMomsCard() {
         className="rounded-2xl px-4 py-3"
         style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: '1px solid var(--color-border)' }}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="text-[13px] font-medium italic mb-1.5" style={{ color: 'var(--color-accent)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
           {label}
         </p>
         <div className="flex items-center justify-between gap-3">
