@@ -275,7 +275,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <DialogContent className="max-h-[90vh] flex flex-col p-0 gap-0">
+          <DialogContent className="max-h-[90vh] flex flex-col p-0 gap-0" style={{ backgroundColor: isDark ? '#171311' : undefined }}>
             <DialogHeader className="px-6 pt-6 pb-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <DialogTitle style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{t.editProfile}</DialogTitle>
             </DialogHeader>
