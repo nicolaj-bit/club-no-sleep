@@ -101,7 +101,7 @@ export default function ActiveMomsCard() {
                     ))}
                     <div
                       className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-semibold"
-                      style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
+                      style={{ borderColor: 'var(--color-bg-card)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
                     >
                       +{count - 3}
                     </div>
@@ -109,9 +109,9 @@ export default function ActiveMomsCard() {
                 ) : (
                   <div
                     className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-semibold"
-                    style={{ borderColor: 'var(--color-bg-card)', backgroundColor: '#EDE4D8', color: '#5C3D2E' }}
-                  >
-                    +{count}
+                    style={{ borderColor: 'var(--color-bg-card)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                         >
+                           +{count}
                   </div>
                 )}
               </div>

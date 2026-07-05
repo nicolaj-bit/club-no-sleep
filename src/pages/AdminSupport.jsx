@@ -183,7 +183,7 @@ export default function AdminSupport() {
                   )}
                   {msg.admin_reply && (
                     <div className="flex justify-end">
-                      <div className="max-w-[80%] rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm" style={{ background: 'var(--color-primary)', color: '#fff' }}>
+                      <div className="max-w-[80%] rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm" style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}>
                         <p>{msg.admin_reply}</p>
                         <p className="text-xs mt-1 opacity-70 text-right">
                           {msg.replied_at ? format(new Date(msg.replied_at), 'HH:mm', { locale: da }) : ''}
@@ -211,7 +211,7 @@ export default function AdminSupport() {
                 onClick={handleReply}
                 disabled={sending || !reply.trim()}
                 className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-opacity disabled:opacity-40"
-                style={{ background: 'var(--color-primary)', color: '#fff' }}
+                style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
               >
                 <Send className="w-4 h-4" />
               </button>

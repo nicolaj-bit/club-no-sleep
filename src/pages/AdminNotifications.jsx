@@ -328,7 +328,7 @@ export default function AdminNotifications() {
                 style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
                 <div className="flex items-center gap-3 px-4 py-3">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: rule.is_active ? 'var(--color-bg-subtle)' : '#f1f1f1' }}>
+                    style={{ backgroundColor: rule.is_active ? 'var(--color-bg-subtle)' : 'var(--color-bg-subtle)' }}>
                     <Icon className="w-4 h-4" style={{ color: rule.is_active ? 'var(--color-accent)' : 'var(--color-text-muted)' }} />
                   </div>
                   <div className="flex-1 min-w-0">

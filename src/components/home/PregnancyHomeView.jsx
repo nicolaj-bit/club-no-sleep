@@ -78,14 +78,14 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
             {/* Left: text */}
             <div className="flex-1 p-5 flex flex-col justify-between z-10">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: '#808072' }}>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: 'var(--color-text-muted)' }}>
                   {childName && activeChild?.birthdate ? childName.toUpperCase() + ' · ' : ''}{lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
                 </p>
                 <div className="flex items-baseline gap-1.5 mb-0.5">
-                  <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: '#2B1F16', lineHeight: 1 }}>
+                  <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)', lineHeight: 1 }}>
                     {pregnancy.weeksLeft}
                   </span>
-                  <span className="text-2xl font-light" style={{ color: '#2B1F16', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                  <span className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                     {lang === 'da' ? 'uger' : 'weeks'}
                   </span>
                 </div>
@@ -97,8 +97,8 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
                 className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mt-4 self-start"
                 style={{ backgroundColor: 'rgba(255,255,255,0.75)' }}
               >
-                <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#808072' }} />
-                <span className="text-xs font-medium whitespace-nowrap" style={{ color: '#2B1F16' }}>
+                <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+                <span className="text-xs font-medium whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>
                   {lang === 'da'
                     ? `Du er i uge ${pregnancy.currentWeek} (${pregnancy.currentWeek - 1}+${pregnancy.daysRem || 0})`
                     : `Week ${pregnancy.currentWeek}`}
@@ -117,7 +117,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
               {/* Fade to left */}
               <div
                 className="absolute inset-0"
-                style={{ background: 'linear-gradient(to right, #F0EBE3 0%, transparent 40%)' }}
+                style={{ background: 'linear-gradient(to right, var(--color-bg-card) 0%, transparent 40%)' }}
               />
             </div>
           </div>

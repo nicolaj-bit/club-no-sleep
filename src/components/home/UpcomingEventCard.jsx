@@ -49,25 +49,25 @@ export default function UpcomingEventCard({ userEmail }) {
       >
 
         <div className="flex items-center justify-between mb-3">
-          <CalendarDays className="w-5 h-5" style={{ color: '#5C3D2E' }} />
-          <span className="text-[10px] font-medium uppercase tracking-wide" style={{ color: '#7A665A' }}>
+          <CalendarDays className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
+          <span className="text-[10px] font-medium uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
             {format(new Date(), lang === 'en' ? 'EEE d. MMM' : 'EEE d. MMM', { locale: lang === 'en' ? enUS : da })}
           </span>
         </div>
-        <p className="text-xs font-medium mb-1" style={{ color: '#7A665A' }}>
+        <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>
           {lang === 'da' ? 'Næste aftale' : 'Next appointment'}
         </p>
         {loading ? (
           <div className="h-7 w-20 rounded-lg animate-pulse bg-black/10" />
         ) : event ? (
           <>
-            <p className="text-sm font-bold leading-snug line-clamp-2" style={{ color: '#2B1F16' }}>{event.title}</p>
-            <p className="text-xs mt-1" style={{ color: '#7A665A' }}>
+            <p className="text-sm font-bold leading-snug line-clamp-2" style={{ color: 'var(--color-text-primary)' }}>{event.title}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
               {getDateLabel(event.start_datetime)} · {format(parseISO(event.start_datetime), 'HH:mm')}
             </p>
           </>
         ) : (
-          <p className="text-sm mt-1" style={{ color: '#7A665A' }}>
+          <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
             {lang === 'da' ? 'Tilføj aftale →' : 'Add appointment →'}
           </p>
         )}

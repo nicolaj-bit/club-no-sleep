@@ -36,22 +36,22 @@ function FeatureIconUploader({ featureKey, label, currentUrl, onUploaded }) {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', border: '1px solid #EDE4DB', borderRadius: 10, backgroundColor: '#FAF6F1' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', border: '1px solid var(--color-border)', borderRadius: 10, backgroundColor: 'var(--color-bg-card)' }}>
       <div
         onClick={() => inputRef.current?.click()}
-        style={{ width: 64, height: 64, borderRadius: 12, backgroundColor: '#EBD8C4', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0, border: '1.5px dashed #C9AA8F' }}
+        style={{ width: 64, height: 64, borderRadius: 12, backgroundColor: 'var(--color-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0, border: '1.5px dashed var(--color-accent)' }}
       >
         {uploading ? (
-          <Loader2 size={22} color="#8B6A50" className="animate-spin" />
+          <Loader2 size={22} color="var(--color-text-muted)" className="animate-spin" />
         ) : currentUrl ? (
           <img src={currentUrl} alt={label} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         ) : (
-          <Upload size={20} color="#8B6A50" />
+          <Upload size={20} color="var(--color-text-muted)" />
         )}
       </div>
       <div style={{ flex: 1 }}>
-        <p style={{ margin: 0, fontWeight: 600, fontSize: '0.88rem', color: '#2B1F16' }}>{label}</p>
-        <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: '#7A665A' }}>{currentUrl ? 'Klik for at skifte billede' : 'Klik for at uploade PNG'}</p>
+        <p style={{ margin: 0, fontWeight: 600, fontSize: '0.88rem', color: 'var(--color-text-primary)' }}>{label}</p>
+        <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{currentUrl ? 'Klik for at skifte billede' : 'Klik for at uploade PNG'}</p>
       </div>
       <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style={{ display: 'none' }} onChange={handleFile} />
     </div>

@@ -24,7 +24,7 @@ function ExpertAvatar({ src, name }) {
       className="relative shrink-0 flex items-center justify-center rounded-2xl overflow-hidden"
       style={{
         width: 72, height: 72,
-        background: 'linear-gradient(145deg, #F3EDE4 0%, #E8D9C8 100%)',
+        background: 'linear-gradient(145deg, var(--color-bg-subtle) 0%, var(--color-accent-warm) 100%)',
         border: '2px solid var(--color-border)',
       }}
     >

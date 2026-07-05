@@ -82,14 +82,14 @@ export default function AdminTermsPrivacy() {
       </h1>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 12, marginBottom: '2rem', borderBottom: '1px solid #EDE4DB', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: '2rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem' }}>
         <button
           onClick={() => setActiveTab('terms')}
           style={{
             padding: '0.75rem 1.5rem',
             border: 'none',
-            backgroundColor: activeTab === 'terms' ? '#5B3F2B' : 'transparent',
-            color: activeTab === 'terms' ? '#fff' : '#5B3F2B',
+            backgroundColor: activeTab === 'terms' ? 'var(--color-primary)' : 'transparent',
+            color: activeTab === 'terms' ? 'var(--color-primary-foreground)' : 'var(--color-primary)',
             cursor: 'pointer',
             borderRadius: 4,
             fontSize: '0.9rem',
@@ -103,8 +103,8 @@ export default function AdminTermsPrivacy() {
           style={{
             padding: '0.75rem 1.5rem',
             border: 'none',
-            backgroundColor: activeTab === 'privacy' ? '#5B3F2B' : 'transparent',
-            color: activeTab === 'privacy' ? '#fff' : '#5B3F2B',
+            backgroundColor: activeTab === 'privacy' ? 'var(--color-primary)' : 'transparent',
+            color: activeTab === 'privacy' ? 'var(--color-primary-foreground)' : 'var(--color-primary)',
             cursor: 'pointer',
             borderRadius: 4,
             fontSize: '0.9rem',

@@ -84,7 +84,7 @@ function EditableBlock({ label, entryId, section, isAdmin, onSaved, children, ri
         <button
           onClick={() => setEditing(true)}
           className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover/edit:opacity-100 transition-opacity shadow"
-          style={{ backgroundColor: 'var(--color-accent)', color: '#fff' }}
+          style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-primary-foreground)' }}
           title={`${t.editLabelPrefix} ${label}`}
         >
           <Pencil className="w-3.5 h-3.5" />

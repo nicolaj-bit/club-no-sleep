@@ -37,10 +37,10 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
     <div
       style={{
         width: dim, height: dim, flexShrink: 0,
-        background: 'linear-gradient(145deg, #F3EDE4 0%, #E8D9C8 100%)',
+        background: 'linear-gradient(145deg, var(--color-bg-subtle) 0%, var(--color-accent-warm) 100%)',
         borderRadius: size === 'lg' ? 20 : 10,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        border: '1.5px solid #C8A882',
+        border: '1.5px solid var(--color-accent)',
         boxShadow: size === 'lg' ? '0 4px 16px rgba(160,120,90,0.18)' : '0 1px 4px rgba(160,120,90,0.15)',
       }}
     >
@@ -211,7 +211,7 @@ export default function AIChat() {
         className="flex items-center gap-3 px-4 py-3"
         style={{
           paddingTop: 'max(40px, env(safe-area-inset-top, 40px))',
-          background: 'linear-gradient(135deg, #C8A882, #8B5E3C)',
+          background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))',
         }}
       >
         <Link
