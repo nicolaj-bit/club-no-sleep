@@ -30,7 +30,7 @@ const DEFAULTS = {
   partner_julie_link: 'https://desmaojeblikke.dk',
   partner_julie_facts: ['Jeg har altid elsket at tage billeder.', 'Jeg købte mit første spejlrefleks kamera for mine konfirmationspenge.', 'Jeg er uddannet pædagog, med speciale i skole- og fritidspædagogik.'],
   contact_phone: '+45 72 15 66 86',
-  contact_email: 'kundeservice@lalatoto.dk',
+  contact_email: 'Hello@clubnosleep.com',
   contact_hours: 'Man–tors 9–15 · Fre 9–14',
   contact_note: 'Alle henvendelser besvares inden for 24 timer på hverdage.',
 };
