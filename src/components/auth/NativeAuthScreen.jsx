@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Moon, LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from 'lucide-react';
+import { LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
@@ -232,10 +232,14 @@ export default function NativeAuthScreen({ resetToken } = {}) {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="w-20 h-20 rounded-3xl flex items-center justify-center mb-5"
+            className="w-20 h-20 rounded-3xl flex items-center justify-center mb-5 overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)' }}
           >
-            <Moon className="w-10 h-10 text-white" />
+            <img
+              src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/4d581f250_Ikon.png"
+              alt="Club No Sleep"
+              className="w-full h-full object-contain"
+            />
           </motion.div>
 
           <motion.h1
