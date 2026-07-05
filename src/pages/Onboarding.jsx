@@ -194,7 +194,7 @@ export default function Onboarding() {
               <div className="text-center">
                 <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-accent)' }}>Velkommen til</p>
                 <h1 className="text-4xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '-0.01em' }}>
-                  CLUB NO SLEEP
+                  Club No Sleep
                 </h1>
               </div>
 
