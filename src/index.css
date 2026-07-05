@@ -137,33 +137,12 @@
   }
 
   html.dark {
-    background-color: #1F1A17 !important;
-    color: #F5EFE9 !important;
+    background-color: var(--color-bg, #1F1A17) !important;
+    color: var(--color-text-primary, #F5EFE9) !important;
   }
   html.dark body {
-    background-color: #1F1A17 !important;
-    color: #F5EFE9 !important;
-  }
-  html.dark * {
-    --color-bg:            #1F1A17;
-    --color-bg-card:       #2A231F;
-    --color-bg-subtle:     #2A231F;
-    --color-border:        #3A312B;
-    --color-text-primary:  #F5EFE9;
-    --color-text-secondary:#B7A79A;
-    --color-text-muted:    #8A7A6E;
-    --color-primary:       #C29A73;
-    --color-primary-light: #D8B89A;
-    --color-accent:        #C29A73;
-    --color-accent-soft:   #D8B89A;
-    --color-accent-warm:   #EADCCC;
-    --color-brown-dark:    #3A2B22;
-    --color-brown-light:   #8A6B55;
-    --color-cappuccino:    #8A6B55;
-    --color-card-warm:     #2A231F;
-    --color-card-mid:      #3A2B22;
-    --color-nav-bg:        #2A231F;
-    --color-divider:       #3A312B;
+    background-color: var(--color-bg, #1F1A17) !important;
+    color: var(--color-text-primary, #F5EFE9) !important;
   }
 
   button, a, [role="button"], nav, [data-nav] {
@@ -257,23 +236,23 @@
 
 /* ── Global dark-mode overrides — comprehensive ── */
 
-/* Inputs */
+/* Inputs — use theme variables so custom themes are respected */
 .dark input,
 .dark textarea,
 .dark select {
-  background-color: #2A231F !important;
-  border-color: #3A312B !important;
-  color: #F5EFE9 !important;
+  background-color: var(--color-bg-card) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-primary) !important;
 }
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #8A7A6E !important;
+  color: var(--color-text-muted) !important;
 }
 
 /* White backgrounds → dark card */
 .dark .bg-white,
 .dark [class*="bg-white"] {
-  background-color: #2A231F !important;
+  background-color: var(--color-bg-card) !important;
 }
 
 /* Light gray/slate/zinc backgrounds → dark surfaces */
@@ -283,17 +262,17 @@
 .dark .bg-slate-100,
 .dark .bg-zinc-50,
 .dark .bg-zinc-100 {
-  background-color: #1F1A17 !important;
+  background-color: var(--color-bg) !important;
 }
 .dark .bg-gray-200,
 .dark .bg-slate-200,
 .dark .bg-zinc-200 {
-  background-color: #2A231F !important;
+  background-color: var(--color-bg-card) !important;
 }
 .dark [class*="bg-gray"],
 .dark [class*="bg-slate"],
 .dark [class*="bg-zinc"] {
-  background-color: #2A231F !important;
+  background-color: var(--color-bg-card) !important;
 }
 
 /* Borders */
@@ -302,7 +281,7 @@
 .dark [class*="border-gray"],
 .dark [class*="border-slate"],
 .dark [class*="border-zinc"] {
-  border-color: #3A312B !important;
+  border-color: var(--color-border) !important;
 }
 
 /* Light text colors → light brand text */
@@ -312,7 +291,7 @@
 .dark .text-slate-800,
 .dark .text-zinc-900,
 .dark .text-zinc-800 {
-  color: #F5EFE9 !important;
+  color: var(--color-text-primary) !important;
 }
 .dark .text-gray-700,
 .dark .text-gray-600,
@@ -320,7 +299,7 @@
 .dark .text-slate-600,
 .dark .text-zinc-700,
 .dark .text-zinc-600 {
-  color: #B7A79A !important;
+  color: var(--color-text-secondary) !important;
 }
 .dark .text-gray-500,
 .dark .text-gray-400,
@@ -328,24 +307,24 @@
 .dark .text-slate-400,
 .dark .text-zinc-500,
 .dark .text-zinc-400 {
-  color: #8A7A6E !important;
+  color: var(--color-text-muted) !important;
 }
 
 /* Rings / focus rings */
 .dark [class*="ring-gray"],
 .dark [class*="ring-slate"],
 .dark [class*="ring-zinc"] {
-  --tw-ring-color: #3A312B !important;
+  --tw-ring-color: var(--color-border) !important;
 }
 
 /* Divide / space borders */
 .dark [class*="divide-gray"],
 .dark [class*="divide-slate"] {
-  border-color: #3A312B !important;
+  border-color: var(--color-border) !important;
 }
 
 /* Placeholder color for shadcn inputs */
 .dark input[placeholder]::placeholder,
 .dark textarea[placeholder]::placeholder {
-  color: #8A7A6E !important;
+  color: var(--color-text-muted) !important;
 }

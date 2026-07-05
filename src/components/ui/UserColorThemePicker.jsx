@@ -11,21 +11,6 @@ const DEFAULT_THEME = {
   preview_dot: '#B08D72',
 };
 
-function applyDefaultTheme() {
-  const root = document.documentElement;
-  // Fjern alle inline CSS var overrides — lad index.css tage over
-  const vars = [
-    '--color-bg', '--color-bg-card', '--color-bg-subtle', '--color-border',
-    '--color-primary', '--color-accent', '--color-cappuccino',
-    '--color-text-primary', '--color-text-secondary', '--color-text-muted',
-    '--color-divider', '--color-primary-light',
-  ];
-  vars.forEach(v => root.style.removeProperty(v));
-  document.body.style.removeProperty('background-color');
-  document.body.style.removeProperty('color');
-  document.documentElement.style.removeProperty('background-color');
-}
-
 export default function UserColorThemePicker() {
   const { colorTheme, setColorTheme } = useTheme();
   const [themes, setThemes] = useState([]);
@@ -38,14 +23,8 @@ export default function UserColorThemePicker() {
   const isDefault = !colorTheme || colorTheme === '__default__';
 
   const handleSelect = (theme) => {
-    if (theme.id === '__default__') {
-      // Nulstil til standard – fjern inline overrides og gem valget
-      applyDefaultTheme();
-      localStorage.setItem('lalatoto-color-theme-id', '__default__');
-      setColorTheme('__default__', null);
-    } else {
-      setColorTheme(theme.id, theme);
-    }
+    // setColorTheme('__default__') nulstiller automatisk alle inline overrides
+    setColorTheme(theme.id === '__default__' ? '__default__' : theme.id, theme.id === '__default__' ? null : theme);
   };
 
   return (
