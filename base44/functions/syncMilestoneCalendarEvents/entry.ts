@@ -145,14 +145,16 @@ Deno.serve(async (req) => {
 
       const toCreate = [];
 
-      // ── Aldersbaserede milepæle (barn er født — har birthdate) ──
-      if (child.birthdate) {
+      // ── Aldersbaserede milepæle ──
+      // Bruger fødselsdato hvis barnet er født, ellers terminsdato (estimeret)
+      const ageBaseDate = child.birthdate || child.due_date;
+      if (ageBaseDate) {
         for (const m of AGE_MILESTONES) {
           if (existingIds.has(m.milestone_id)) { skipped++; continue; }
-          const eventDate = addDays(child.birthdate, m.days);
+          const eventDate = addDays(ageBaseDate, m.days);
           toCreate.push({
             title: `${m.emoji} ${m.headline}`,
-            description: `${child.name} fylder ${m.headline.toLowerCase()} — fang øjeblikket med en milepæls-sticker i appen! 📸`,
+            description: `${child.name} — ${m.headline}. Fang øjeblikket med en milepæls-sticker i appen! 📸`,
             start_datetime: `${eventDate}T09:00:00`,
             end_datetime: `${eventDate}T09:30:00`,
             user_email: email,
