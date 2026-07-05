@@ -118,7 +118,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
             onClick={handleSave}
             disabled={saving || deleting}
             className="w-full"
-            style={{ background: 'var(--color-primary)', color: '#fff' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
           >
             {saving ? 'Gemmer…' : editChild ? 'Gem ændringer' : 'Tilføj barn'}
           </Button>

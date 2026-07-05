@@ -186,13 +186,13 @@ export default function BabyFriendlyCafes() {
               style={{ backgroundColor: 'var(--color-primary)', borderRadius: '1rem' }}
             >
               <div className="flex items-center gap-2">
-                <Lightbulb className="w-4 h-4" style={{ color: '#fff' }} />
-                <span className="font-medium text-sm" style={{ color: '#fff' }}>Kender du en god café?</span>
+                <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
+                <span className="font-medium text-sm" style={{ color: 'var(--color-primary-foreground)' }}>Kender du en god café?</span>
               </div>
               {showTipForm ? (
-                <ChevronUp className="w-4 h-4" style={{ color: '#fff' }} />
+                <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
               ) : (
-                <ChevronDown className="w-4 h-4" style={{ color: '#fff' }} />
+                <ChevronDown className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
               )}
             </button>
 
@@ -215,7 +215,7 @@ export default function BabyFriendlyCafes() {
                 />
                 <Button
                   className="w-full"
-                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
                   onClick={handleSendTip}
                   disabled={tipSending}
                 >
@@ -290,7 +290,7 @@ export default function BabyFriendlyCafes() {
                 </Button>
                 <Button
                   className="flex-1"
-                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
                   onClick={handleAddCafe}
                   disabled={addCafeMutation.isPending}
                 >

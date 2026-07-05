@@ -151,9 +151,9 @@ export default function Profile() {
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
 
   // Card background: matcher menu-knapper præcist
-  const cardBg = isDark ? '#3A2B22' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
-  const cardBgSolid = isDark ? '#3A2B22' : '#F0EBE3'; // fallback for border-b rows
-  const cardBorder = isDark ? '#3A312B' : '#E8DDD2';
+  const cardBg = isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
+  const cardBgSolid = isDark ? 'var(--color-bg-card)' : '#F0EBE3'; // fallback for border-b rows
+  const cardBorder = isDark ? 'var(--color-border)' : '#E8DDD2';
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries();
@@ -228,14 +228,14 @@ export default function Profile() {
                   {profile?.profile_image
                     ? <img src={profile.profile_image} alt={displayName} className="w-full h-full object-cover" />
                     : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-semibold" style={{ background: isDark ? '#3A2B22' : '#DCC1B0', color: isDark ? '#F5EFE9' : '#5B3F2B' }}>
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-semibold" style={{ background: isDark ? 'var(--color-bg-subtle)' : '#DCC1B0', color: 'var(--color-text-primary)' }}>
                         {displayName?.[0]?.toUpperCase()}
                       </div>
                     )
                   }
                 </div>
                 {/* Kamera-ikon */}
-                <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: isDark ? '#3A312B' : '#EDE4DB' }}>
+                <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: isDark ? 'var(--color-border)' : '#EDE4DB' }}>
                   <Camera className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
@@ -243,10 +243,10 @@ export default function Profile() {
 
               {/* Tekst */}
               <div className="flex-1 min-w-0 pl-1">
-                <p style={{ color: '#3A2B1E', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.75rem', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
+                <p style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.75rem', lineHeight: 1.1, letterSpacing: '-0.01em' }}>
                   {displayName}
                 </p>
-                <p className="mt-1.5" style={{ color: '#9A7A62', fontSize: '0.72rem', letterSpacing: '0.03em', fontStyle: 'italic' }}>
+                <p className="mt-1.5" style={{ color: 'var(--color-text-secondary)', fontSize: '0.72rem', letterSpacing: '0.03em', fontStyle: 'italic' }}>
                   {lang === 'da' ? 'Dit rum, kun for dig' : 'Your space, just for you'}
                 </p>
 
@@ -390,9 +390,9 @@ export default function Profile() {
               >
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: activeChild?.id === child.id ? 'linear-gradient(135deg, #C8A882, #A0785A)' : 'var(--color-bg-subtle)' }}
+                  style={{ background: activeChild?.id === child.id ? 'var(--color-primary)' : 'var(--color-bg-subtle)' }}
                 >
-                  <Baby className="w-4 h-4" style={{ color: activeChild?.id === child.id ? '#fff' : 'var(--color-text-muted)' }} />
+                  <Baby className="w-4 h-4" style={{ color: activeChild?.id === child.id ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)' }} />
                 </div>
                 <div>
                   <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
@@ -456,7 +456,7 @@ export default function Profile() {
             const inner = (
               <>
                 <div className="flex items-center justify-between">
-                  <Icon className="w-5 h-5" style={{ color: '#B08D72' }} />
+                  <Icon className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
                   <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                 </div>
                 <div>
@@ -500,7 +500,7 @@ export default function Profile() {
             className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity border-b text-left"
             style={{ background: cardBgSolid, borderColor: cardBorder }}
           >
-            <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>FAQ, {lang === 'da' ? 'kontakt & support' : 'contact & support'}</p>
@@ -513,7 +513,7 @@ export default function Profile() {
             className="flex items-center gap-3 px-5 py-4 border-b"
             style={{ background: cardBgSolid, borderColor: cardBorder }}
           >
-            <MapPin className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <MapPin className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.shareLocation}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
@@ -529,11 +529,11 @@ export default function Profile() {
             className="w-full flex items-center gap-3 px-5 py-4 active:opacity-70 transition-opacity"
             style={{ background: cardBgSolid }}
           >
-            <Globe className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+            <Globe className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <div className="flex-1 text-left">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.language}</p>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-full mr-1" style={{ background: isDark ? '#2A2A2A' : '#EDE4DB', color: 'var(--color-text-muted)' }}>
+            <span className="text-xs px-2.5 py-1 rounded-full mr-1" style={{ background: isDark ? 'var(--color-bg-subtle)' : '#EDE4DB', color: 'var(--color-text-muted)' }}>
               {lang === 'en' ? '🇬🇧 English' : '🇩🇰 Dansk'}
             </span>
             <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
@@ -574,34 +574,34 @@ export default function Profile() {
               className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
-                backgroundColor: isDark ? '#121212' : '#FFFFFF',
+                backgroundColor: 'var(--color-bg-card)',
                 boxShadow: '0 -4px 40px rgba(44,26,14,0.12)',
               }}
             >
-              <div className="flex items-center justify-between px-6 pt-5 pb-4">
+              <div className="!mx-0 flex items-center justify-between px-6 pt-5 pb-4">
                 <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
                   {t.helpAndContact}
                 </span>
-                <button onClick={() => setHelpOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}>
+                <button onClick={() => setHelpOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
               </div>
               <div className="px-4 pb-5 flex flex-col gap-2.5">
-                <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
+                <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                   <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>{t.aboutApp}</p>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                     {lang === 'da' ? (helpConfig?.help_about_text_da || 'LALATOTO er din digitale følgesvend som forælder.') : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent.')}
                   </p>
                 </div>
-                <a href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
-                  <Mail className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+                <a href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <Mail className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
                   <div>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.writeToUs}</p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_contact_email || 'hej@lalatoto.dk'}</p>
                   </div>
                 </a>
-                <a href={`tel:${helpConfig?.help_phone || ''}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: isDark ? '#1A1A1A' : '#F3E9E1' }}>
-                  <Phone className="w-5 h-5 flex-shrink-0" style={{ color: '#B08D72' }} />
+                <a href={`tel:${helpConfig?.help_phone || ''}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                  <Phone className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
                   <div>
                     <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.callUs}</p>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{helpConfig?.help_phone || ''}</p>
@@ -664,13 +664,13 @@ export default function Profile() {
               className="fixed left-4 right-4 z-50 rounded-3xl overflow-hidden"
               style={{
                 bottom: 'calc(max(16px, env(safe-area-inset-bottom)) + 72px)',
-                backgroundColor: isDark ? '#121212' : '#FFFFFF',
+                backgroundColor: 'var(--color-bg-card)',
                 boxShadow: '0 -4px 40px rgba(44,26,14,0.12)',
               }}
             >
-              <div className="flex items-center justify-between px-6 pt-5 pb-4">
+              <div className="!mx-0 flex items-center justify-between px-6 pt-5 pb-4">
                 <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>{t.chooseLanguage}</span>
-                <button onClick={() => setLangSheetOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: isDark ? '#2A2A2A' : '#F0E9E0' }}>
+                <button onClick={() => setLangSheetOpen(false)} className="w-7 h-7 rounded-full flex items-center justify-center active:opacity-50" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
               </div>
@@ -682,10 +682,10 @@ export default function Profile() {
                       key={option.code}
                       onClick={() => { setLang(option.code); setLangSheetOpen(false); }}
                       className="flex items-center gap-4 px-5 py-4 rounded-2xl text-left active:scale-95 transition-transform"
-                      style={{ backgroundColor: active ? (isDark ? '#FFFFFF' : '#5B3F2B') : (isDark ? '#1A1A1A' : '#F3E9E1') }}
+                      style={{ backgroundColor: active ? 'var(--color-primary)' : 'var(--color-bg-subtle)' }}
                     >
                       <span className="text-2xl">{option.flag}</span>
-                      <span className="text-[15px] font-medium flex-1" style={{ color: active ? '#FFFFFF' : (isDark ? '#CCCCCC' : '#4A2E1A') }}>
+                      <span className="text-[15px] font-medium flex-1" style={{ color: active ? 'var(--color-primary-foreground)' : 'var(--color-text-primary)' }}>
                         {option.label}
                       </span>
                       {active && <div className="w-2 h-2 rounded-full bg-white" />}

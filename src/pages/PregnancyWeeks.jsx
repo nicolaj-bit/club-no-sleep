@@ -34,7 +34,7 @@ function WeekCard({ week, data, isCurrent }) {
       >
         <div className="flex items-center gap-2.5">
           {isCurrent && (
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--color-cappuccino)', color: '#fff' }}>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--color-cappuccino)', color: 'var(--color-primary-foreground)' }}>
               {t.pregnancyWeeksNow} ✦
             </span>
           )}

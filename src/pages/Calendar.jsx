@@ -122,8 +122,8 @@ export default function Calendar() {
           <button
             onClick={prefillTime}
             className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
-            <Plus className="w-5 h-5 text-white" />
+            style={{ background: 'var(--color-primary)' }}>
+            <Plus className="w-5 h-5" style={{ color: 'var(--color-primary-foreground)' }} />
           </button>
         }
       />
@@ -131,13 +131,13 @@ export default function Calendar() {
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="500px">
       {/* Month navigation */}
       <div className="px-5 mb-4 flex items-center justify-between">
-        <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}>
+        <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
         <h2 className="text-base font-semibold capitalize" style={{ color: 'var(--color-text-primary)' }}>
           {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
         </h2>
-        <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}>
+        <button onClick={() => setCurrentMonth((m) => addMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
           <ChevronRight className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
       </div>
@@ -252,7 +252,8 @@ export default function Calendar() {
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="rounded-t-3xl fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-[#111111] flex flex-col"
+            className="rounded-t-3xl fixed bottom-0 left-0 right-0 z-50 flex flex-col"
+            style={{ backgroundColor: 'var(--color-bg-card)' }}
             style={{ maxHeight: '92dvh', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
             
               {/* Fixed header */}
@@ -277,7 +278,7 @@ export default function Calendar() {
                         onClick={() => setForm(f => ({ ...f, category: cat.key }))}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                         style={form.category === cat.key
-                          ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                          ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
                           : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
                       >
                         {cat.emoji} {cat.label}

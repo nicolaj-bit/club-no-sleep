@@ -69,9 +69,9 @@ export default function SleepAdviceFeedback() {
     }
   };
 
-  const bg = isDark ? '#000' : '#F7F2EC';
-  const cardBg = isDark ? '#111' : '#fff';
-  const border = isDark ? '#2A2A2A' : '#F0E9E0';
+  const bg = 'var(--color-bg)';
+  const cardBg = 'var(--color-bg-card)';
+  const border = 'var(--color-border)';
 
   if (loading) {
     return (
@@ -127,7 +127,7 @@ export default function SleepAdviceFeedback() {
           <Link
             to="/SleepLog"
             className="mt-2 px-5 py-2 rounded-full text-sm font-medium"
-            style={{ background: isDark ? '#fff' : '#2C1A0E', color: isDark ? '#000' : '#fff' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
           >
             {t.sleepAdviceFeedbackBackToLog}
           </Link>
@@ -146,17 +146,17 @@ export default function SleepAdviceFeedback() {
                 className="flex items-start gap-3 px-4 py-3 rounded-2xl text-left transition-all active:scale-95"
                 style={{
                   background: selected === opt.value
-                    ? isDark ? '#fff' : '#2C1A0E'
-                    : isDark ? '#1A1A1A' : '#F7F2EC',
-                  border: `1.5px solid ${selected === opt.value ? (isDark ? '#fff' : '#2C1A0E') : border}`,
+                    ? 'var(--color-primary)'
+                    : 'var(--color-bg-subtle)',
+                  border: `1.5px solid ${selected === opt.value ? 'var(--color-primary)' : border}`,
                 }}
               >
                 <span className="text-base mt-0.5">{opt.label.split(' ')[0]}</span>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: selected === opt.value ? (isDark ? '#000' : '#fff') : 'var(--color-text-primary)' }}>
+                  <p className="text-sm font-medium" style={{ color: selected === opt.value ? 'var(--color-primary-foreground)' : 'var(--color-text-primary)' }}>
                     {opt.label.split(' ').slice(1).join(' ')}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: selected === opt.value ? (isDark ? '#444' : 'rgba(255,255,255,0.7)') : 'var(--color-text-muted)' }}>
+                  <p className="text-xs mt-0.5" style={{ color: selected === opt.value ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)' }}>
                     {opt.desc}
                   </p>
                 </div>
@@ -171,7 +171,7 @@ export default function SleepAdviceFeedback() {
             rows={3}
             className="w-full rounded-2xl px-4 py-3 text-sm resize-none outline-none"
             style={{
-              background: isDark ? '#1A1A1A' : '#F7F2EC',
+              background: 'var(--color-bg-subtle)',
               color: 'var(--color-text-primary)',
               border: `1px solid ${border}`,
             }}
@@ -181,7 +181,7 @@ export default function SleepAdviceFeedback() {
             onClick={handleSubmit}
             disabled={!selected || saving}
             className="w-full mt-4 py-3 rounded-2xl text-sm font-semibold transition-opacity disabled:opacity-40"
-            style={{ background: isDark ? '#fff' : '#2C1A0E', color: isDark ? '#000' : '#fff' }}
+            style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
           >
             {saving ? t.saving : t.sleepAdviceFeedbackSendBtn}
           </button>

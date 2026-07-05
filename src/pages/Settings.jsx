@@ -17,11 +17,11 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 import LegalModal from '@/components/landing/LegalModal';
 
 // Brand-farver fra style guide – matcher menu-knapper præcist
-const CARD_BG_LIGHT_SOLID = '#F0EBE3';
-const CARD_BG_DARK    = '#3A2B22';
-const BORDER_LIGHT    = '#E8DDD2';
-const BORDER_DARK     = '#3A312B';
-const ICON_COLOR      = '#C29A73';
+const CARD_BG_LIGHT_SOLID = 'var(--color-bg-card)';
+const CARD_BG_DARK    = 'var(--color-bg-card)';
+const BORDER_LIGHT    = 'var(--color-border)';
+const BORDER_DARK     = 'var(--color-border)';
+const ICON_COLOR      = 'var(--color-accent)';
 
 export default function Settings() {
   const { isDark, toggle } = useTheme();
@@ -49,7 +49,7 @@ export default function Settings() {
   });
   const [notifSaving, setNotifSaving] = useState(false);
 
-  const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
+  const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))';
   const cardBgSolid = isDark ? CARD_BG_DARK : CARD_BG_LIGHT_SOLID;
   const cardBorder = isDark ? BORDER_DARK  : BORDER_LIGHT;
 
@@ -122,7 +122,7 @@ export default function Settings() {
         <Link to={createPageUrl('Profile')} className="absolute left-4">
           <button
             className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-            style={{ background: isDark ? CARD_BG_DARK : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: `1px solid ${cardBorder}` }}
+            style={{ background: isDark ? CARD_BG_DARK : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: `1px solid ${cardBorder}` }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
           </button>
@@ -191,10 +191,10 @@ export default function Settings() {
               style={{
                 background: !isDark ? 'var(--color-accent)' : 'transparent',
                 borderColor: !isDark ? 'var(--color-accent)' : cardBorder,
-                color: !isDark ? '#fff' : 'var(--color-text-muted)',
+                color: !isDark ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)',
               }}
             >
-              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? '#fff' : 'var(--color-text-muted)' }} />
+              <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)' }} />
               {t.light}
             </button>
             <button

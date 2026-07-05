@@ -229,7 +229,7 @@ export default function Community() {
                 onClick={() => setActiveTab(tab.value)}
                 className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
                 style={isActive
-                  ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', boxShadow: '0 2px 12px rgba(160,120,90,0.35)' }
+                  ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)', boxShadow: '0 2px 12px rgba(160,120,90,0.35)' }
                   : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
               >
                 <Icon className="w-4 h-4" />
@@ -245,7 +245,7 @@ export default function Community() {
           {/* Far-profil blokeringsbesked for community-tabs */}
           {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-              <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}>
+              <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'var(--color-primary)' }}>
                 <Lock className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
@@ -335,7 +335,7 @@ export default function Community() {
                   <span>{t.you}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#C8A882' }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }} />
                   <span>{t.othersActive}</span>
                 </div>
               </div>

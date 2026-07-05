@@ -203,7 +203,7 @@ export default function Practitioners() {
                 />
                 <Button
                   className="w-full"
-                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
                   onClick={handleSendTip}
                   disabled={tipSending}
                 >
@@ -218,7 +218,7 @@ export default function Practitioners() {
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
               className="w-full gap-2"
-              style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
             >
               <Plus className="w-4 h-4" />
               Tilføj behandler
@@ -268,7 +268,7 @@ export default function Practitioners() {
                 </Button>
                 <Button
                   className="flex-1"
-                  style={{ backgroundColor: 'var(--color-primary)', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
                   onClick={handleAddExpert}
                   disabled={addExpertMutation.isPending}
                 >
@@ -287,7 +287,7 @@ export default function Practitioners() {
                   onClick={() => setExpertCategory(cat.value)}
                   className="flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-95"
                   style={expertCategory === cat.value
-                    ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+                    ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
                     : { backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
                 >
                   {cat.label}

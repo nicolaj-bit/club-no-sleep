@@ -33,7 +33,7 @@ export default function ChildSwitcher({ compact = false }) {
             window.location.reload();
           }}
           className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white"
-          style={{ background: 'linear-gradient(135deg, #C8A882, #A07850)' }}
+          style={{ background: 'var(--color-primary)' }}
         >
           <LogIn className="w-3.5 h-3.5" />
           Log ind
