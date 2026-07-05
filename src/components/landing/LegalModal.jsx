@@ -50,7 +50,7 @@ export default function LegalModal({ type, title, onClose }) {
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="relative w-full sm:max-w-2xl flex flex-col"
           style={{
-            backgroundColor: '#FFFDF9',
+            backgroundColor: 'var(--color-bg-card)',
             maxHeight: '90vh',
             borderRadius: '20px 20px 0 0',
           }}
@@ -59,7 +59,7 @@ export default function LegalModal({ type, title, onClose }) {
           {/* Sticky header */}
           <div
             className="flex items-center justify-between px-6 py-5 border-b flex-shrink-0"
-            style={{ borderColor: '#EDE4DB' }}
+            style={{ borderColor: 'var(--color-border)' }}
           >
             <h2
               className="text-lg font-semibold tracking-wide"
@@ -70,7 +70,7 @@ export default function LegalModal({ type, title, onClose }) {
             <button
               onClick={onClose}
               className="w-8 h-8 flex items-center justify-center rounded-full flex-shrink-0"
-              style={{ backgroundColor: '#F0E8DF', color: '#5B3F2B' }}
+              style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
             >
               <X className="w-4 h-4" />
             </button>
@@ -82,7 +82,7 @@ export default function LegalModal({ type, title, onClose }) {
               <div className="flex justify-center py-12">
                 <div
                   className="w-6 h-6 rounded-full border-2 animate-spin"
-                  style={{ borderColor: '#EDE4DB', borderTopColor: '#C8A882' }}
+                  style={{ borderColor: 'var(--color-border)', borderTopColor: 'var(--color-accent)' }}
                 />
               </div>
             ) : content?.content ? (
@@ -121,7 +121,7 @@ export default function LegalModal({ type, title, onClose }) {
           margin-top: 2rem;
           margin-bottom: 0.75rem;
           padding-top: 0.5rem;
-          border-top: 1px solid #EDE4DB;
+          border-top: 1px solid var(--color-border);
         }
         .legal-content h3 {
           font-size: 1rem;

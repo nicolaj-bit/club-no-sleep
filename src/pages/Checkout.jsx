@@ -112,21 +112,21 @@ export default function Checkout() {
 
   if (isActive) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: '#f3efe9' }}>
-        <div className="w-full max-w-sm rounded-3xl p-8 text-center" style={{ backgroundColor: '#fff', border: '1px solid #EDE4DB' }}>
+      <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="w-full max-w-sm rounded-3xl p-8 text-center" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
           <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(100,180,100,0.15)' }}>
             <Check className="w-7 h-7" style={{ color: '#3A7A3A' }} />
           </div>
-          <h2 className="text-xl font-semibold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          <h2 className="text-xl font-semibold mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
             {t.checkoutAlreadySubscribed}
           </h2>
-          <p className="text-sm mb-6" style={{ color: '#7A665A' }}>
+          <p className="text-sm mb-6" style={{ color: 'var(--color-text-secondary)' }}>
             {t.checkoutFullAccess}
           </p>
           <button
             onClick={() => navigate(-1)}
             className="w-full py-3.5 rounded-2xl text-sm font-semibold"
-            style={{ backgroundColor: '#5d3a2c', color: '#fff' }}
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
           >
             {t.checkoutBackToApp}
           </button>
@@ -136,10 +136,10 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f3efe9' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Top bar */}
       <div className="px-4 pt-4" style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm" style={{ color: '#5d3a2c' }}>
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm" style={{ color: 'var(--color-text-primary)' }}>
           <ArrowLeft className="w-4 h-4" /> {t.checkoutBack}
         </button>
       </div>
@@ -150,14 +150,14 @@ export default function Checkout() {
         <div className="mb-6">
           <div
             className="w-14 h-14 rounded-2xl mb-4 flex items-center justify-center"
-            style={{ backgroundColor: '#5d3a2c' }}
+            style={{ backgroundColor: 'var(--color-primary)' }}
           >
-            <span className="text-2xl font-bold" style={{ color: '#fff', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
+            <span className="text-2xl font-bold" style={{ color: 'var(--color-primary-foreground)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
           </div>
-          <h1 className="text-2xl font-bold mb-1" style={{ color: '#5d3a2c', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
             {t.checkoutBeccomeMember}
           </h1>
-          <p className="text-sm" style={{ color: '#5d3a2c' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             {t.checkoutPricing}
           </p>
         </div>
@@ -172,10 +172,10 @@ export default function Checkout() {
             t.checkoutFeature5,
           ].map((feature, i) => (
             <div key={i} className="flex items-center gap-2.5">
-              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(91,63,43,0.1)' }}>
-                <Check className="w-3 h-3" style={{ color: '#5d3a2c' }} />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <p className="text-sm" style={{ color: '#5d3a2c' }}>{feature}</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{feature}</p>
             </div>
           ))}
         </div>
@@ -184,7 +184,7 @@ export default function Checkout() {
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
-            style={{ backgroundColor: '#5d3a2c', border: '2px solid #5d3a2c' }}
+            style={{ backgroundColor: 'var(--color-primary)', border: '2px solid var(--color-primary)' }}
           >
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -204,9 +204,9 @@ export default function Checkout() {
             </div>
             <div
               className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-              style={{ backgroundColor: '#C9AA8F' }}
+              style={{ backgroundColor: 'var(--color-accent-soft)' }}
             >
-              <Check className="w-3.5 h-3.5" style={{ color: '#5d3a2c' }} />
+              <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-primary)' }} />
             </div>
           </div>
         </div>
@@ -239,7 +239,7 @@ export default function Checkout() {
           onClick={handlePurchase}
           disabled={purchasing || rc.loading}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
-          style={{ backgroundColor: '#3e2a22', color: '#fff' }}
+          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
         >
           {purchasing || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutProcessing}</>
@@ -247,7 +247,7 @@ export default function Checkout() {
         </motion.button>
 
         {/* Footer */}
-        <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: '#7A665A' }}>
+        <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>
           <Lock className="w-3 h-3" /> {t.checkoutSecure?.replace('{store}', store.footer)}
         </p>
 
@@ -256,7 +256,7 @@ export default function Checkout() {
           onClick={handleTesterCheckout}
           disabled={testerCheckoutLoading}
           className="w-full mt-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
-          style={{ border: '1px solid #C9AA8F', color: '#5d3a2c', backgroundColor: 'transparent' }}
+          style={{ border: '1px solid var(--color-accent-soft)', color: 'var(--color-text-primary)', backgroundColor: 'transparent' }}
         >
           {testerCheckoutLoading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutOpeningPayment}</>

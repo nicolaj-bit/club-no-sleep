@@ -54,7 +54,7 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
               {/* Viewfinder area */}
               <div
                 className="w-full relative flex items-center justify-center"
-                style={{ backgroundColor: '#F5EFE8', aspectRatio: '1 / 1' }}
+                style={{ backgroundColor: 'var(--color-bg-subtle)', aspectRatio: '1 / 1' }}
               >
                 {/* Corner marks */}
                 <div className="absolute top-3 left-3" style={{ width: cornerSize, height: cornerSize, borderLeft: `${cornerThickness}px solid ${frame.accentColor}`, borderTop: `${cornerThickness}px solid ${frame.accentColor}`, borderRadius: '2px 0 0 0' }} />
@@ -73,7 +73,7 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
               {/* Label below */}
               <div
                 className="w-full px-3 py-2 text-center"
-                style={{ backgroundColor: '#F5EFE8' }}
+                style={{ backgroundColor: 'var(--color-bg-subtle)' }}
               >
                 <p
                   style={{

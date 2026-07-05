@@ -255,7 +255,9 @@
   margin: 2em 0;
 }
 
-/* ── Global dark-mode card/input overrides ── */
+/* ── Global dark-mode overrides — comprehensive ── */
+
+/* Inputs */
 .dark input,
 .dark textarea,
 .dark select {
@@ -263,15 +265,87 @@
   border-color: #3A312B !important;
   color: #F5EFE9 !important;
 }
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #8A7A6E !important;
+}
 
+/* White backgrounds → dark card */
 .dark .bg-white,
 .dark [class*="bg-white"] {
   background-color: #2A231F !important;
 }
 
+/* Light gray/slate/zinc backgrounds → dark surfaces */
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-zinc-50,
+.dark .bg-zinc-100 {
+  background-color: #1F1A17 !important;
+}
+.dark .bg-gray-200,
+.dark .bg-slate-200,
+.dark .bg-zinc-200 {
+  background-color: #2A231F !important;
+}
+.dark [class*="bg-gray"],
+.dark [class*="bg-slate"],
+.dark [class*="bg-zinc"] {
+  background-color: #2A231F !important;
+}
+
+/* Borders */
 .dark .border-gray-200,
 .dark .border-slate-200,
 .dark [class*="border-gray"],
-.dark [class*="border-slate"] {
+.dark [class*="border-slate"],
+.dark [class*="border-zinc"] {
   border-color: #3A312B !important;
+}
+
+/* Light text colors → light brand text */
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-zinc-900,
+.dark .text-zinc-800 {
+  color: #F5EFE9 !important;
+}
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-slate-700,
+.dark .text-slate-600,
+.dark .text-zinc-700,
+.dark .text-zinc-600 {
+  color: #B7A79A !important;
+}
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-slate-500,
+.dark .text-slate-400,
+.dark .text-zinc-500,
+.dark .text-zinc-400 {
+  color: #8A7A6E !important;
+}
+
+/* Rings / focus rings */
+.dark [class*="ring-gray"],
+.dark [class*="ring-slate"],
+.dark [class*="ring-zinc"] {
+  --tw-ring-color: #3A312B !important;
+}
+
+/* Divide / space borders */
+.dark [class*="divide-gray"],
+.dark [class*="divide-slate"] {
+  border-color: #3A312B !important;
+}
+
+/* Placeholder color for shadcn inputs */
+.dark input[placeholder]::placeholder,
+.dark textarea[placeholder]::placeholder {
+  color: #8A7A6E !important;
 }

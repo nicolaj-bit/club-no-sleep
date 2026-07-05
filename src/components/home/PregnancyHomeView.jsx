@@ -73,7 +73,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
         <Link to={`/PregnancyWeekDetail?week=${pregnancy.currentWeek}`} className="block mx-5 mb-4">
           <div
             className="rounded-3xl overflow-hidden relative flex"
-            style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', minHeight: 190 }}
+            style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', minHeight: 190 }}
           >
             {/* Left: text */}
             <div className="flex-1 p-5 flex flex-col justify-between z-10">

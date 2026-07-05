@@ -12,7 +12,6 @@ export default function CheckoutSuccess() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Læs token fra URL eller localStorage (brugeren kom muligvis fra native app)
     const urlToken = new URLSearchParams(window.location.search).get('access_token');
     if (urlToken) {
       localStorage.setItem('base44_access_token', urlToken);
@@ -36,15 +35,10 @@ export default function CheckoutSuccess() {
   };
 
   const handleOpenApp = () => {
-    if (Capacitor.isNativePlatform()) {
-      window.location.href = '/app?subscription=success';
-    } else {
-      window.location.href = '/app?subscription=success';
-    }
+    window.location.href = '/app?subscription=success';
   };
 
   const handleOpenNativeApp = () => {
-    // Deep link tilbage til native app med token
     const dl = token ? buildAppDeepLink({ access_token: token }) : 'clubnosleep://auth';
     window.location.href = dl;
   };
@@ -52,7 +46,8 @@ export default function CheckoutSuccess() {
   return (
     <div style={{
       minHeight: '100dvh',
-      backgroundColor: '#F5EDE0',
+      backgroundColor: 'var(--color-bg)',
+      color: 'var(--color-text-primary)',
       fontFamily: "'Inter', -apple-system, sans-serif",
       display: 'flex',
       flexDirection: 'column',
@@ -68,10 +63,10 @@ export default function CheckoutSuccess() {
       {/* Success icon */}
       <div style={{
         width: 80, height: 80, borderRadius: '50%',
-        backgroundColor: '#C8A882',
+        backgroundColor: 'var(--color-accent)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         marginBottom: '1.8rem',
-        boxShadow: '0 8px 32px rgba(200,168,130,0.4)',
+        boxShadow: '0 8px 32px rgba(200,168,130,0.3)',
       }}>
         <CheckCircle size={40} color="#fff" />
       </div>
@@ -80,22 +75,22 @@ export default function CheckoutSuccess() {
         fontFamily: "'Cormorant Garamond', Georgia, serif",
         fontSize: '2.4rem',
         fontWeight: 400,
-        color: '#1E140A',
+        color: 'var(--color-text-primary)',
         margin: '0 0 0.8rem',
         lineHeight: 1.2,
       }}>
         {t.checkoutSuccessTitle}
       </h1>
 
-      <p style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.8, maxWidth: 380, margin: '0 0 2.5rem' }}>
+      <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.93rem', lineHeight: 1.8, maxWidth: 380, margin: '0 0 2.5rem' }}>
         {t.checkoutSuccessMessage}
       </p>
 
       {/* Steps */}
       <div style={{
-        backgroundColor: '#FFFDF9',
+        backgroundColor: 'var(--color-bg-card)',
         borderRadius: 20,
-        border: '1px solid #E2D0BC',
+        border: '1px solid var(--color-border)',
         padding: '1.5rem',
         maxWidth: 380,
         width: '100%',
@@ -110,13 +105,13 @@ export default function CheckoutSuccess() {
           <div key={step} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: step === '3' ? 0 : '1rem' }}>
             <div style={{
               width: 32, height: 32, borderRadius: '50%',
-              backgroundColor: '#C8A882',
+              backgroundColor: 'var(--color-accent)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0, color: '#fff', fontSize: '0.85rem', fontWeight: 700,
             }}>
               {step}
             </div>
-            <p style={{ color: '#3A2416', fontSize: '0.88rem', margin: 0, lineHeight: 1.5 }}>{text}</p>
+            <p style={{ color: 'var(--color-text-primary)', fontSize: '0.88rem', margin: 0, lineHeight: 1.5 }}>{text}</p>
           </div>
         ))}
       </div>
@@ -128,7 +123,7 @@ export default function CheckoutSuccess() {
             onClick={handleOpenApp}
             style={{
               width: '100%', maxWidth: 380,
-              backgroundColor: '#3A2416', color: '#fff',
+              backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)',
               border: 'none', borderRadius: 14, padding: '16px',
               fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -136,14 +131,13 @@ export default function CheckoutSuccess() {
           >
             {t.checkoutSuccessOpenApp} <ArrowRight size={18} />
           </button>
-          {/* Deep link tilbage til native app hvis brugeren kom derfra */}
           {token && !Capacitor.isNativePlatform() && (
             <button
               onClick={handleOpenNativeApp}
               style={{
                 width: '100%', maxWidth: 380,
-                backgroundColor: 'transparent', color: '#5B3F2B',
-                border: '2px solid #C8A882', borderRadius: 14, padding: '14px',
+                backgroundColor: 'transparent', color: 'var(--color-text-primary)',
+                border: '2px solid var(--color-accent)', borderRadius: 14, padding: '14px',
                 fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 marginTop: '0.8rem',
@@ -159,7 +153,7 @@ export default function CheckoutSuccess() {
             onClick={handleCreateAccount}
             style={{
               width: '100%', maxWidth: 380,
-              backgroundColor: '#3A2416', color: '#fff',
+              backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)',
               border: 'none', borderRadius: 14, padding: '16px',
               fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -168,20 +162,19 @@ export default function CheckoutSuccess() {
           >
             {t.checkoutSuccessCreateAccount} <ArrowRight size={18} />
           </button>
-          <p style={{ color: '#9A7A6A', fontSize: '0.78rem' }}>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: '0.78rem' }}>
             {t.checkoutSuccessAlreadyHaveAccount}{' '}
-            <button onClick={() => base44.auth.redirectToLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: '#C8A882', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
+            <button onClick={() => base44.auth.redirectToLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
               {t.checkoutSuccessLoginHere}
             </button>
           </p>
-          {/* Deep link tilbage til native app hvis brugeren kom derfra */}
           {token && (
             <button
               onClick={handleOpenNativeApp}
               style={{
                 width: '100%', maxWidth: 380,
-                backgroundColor: 'transparent', color: '#5B3F2B',
-                border: '2px solid #C8A882', borderRadius: 14, padding: '14px',
+                backgroundColor: 'transparent', color: 'var(--color-text-primary)',
+                border: '2px solid var(--color-accent)', borderRadius: 14, padding: '14px',
                 fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 marginTop: '1.2rem',

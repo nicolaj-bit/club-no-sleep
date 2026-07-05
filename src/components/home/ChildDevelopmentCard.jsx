@@ -143,7 +143,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
     <Link to={createPageUrl('Knowledge')} className="block mx-5 mb-4 active:opacity-80">
       <div
         className="rounded-2xl px-4 py-3 flex items-center gap-3"
-        style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
+        style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: '1px solid var(--color-border)' }}
       >
         <Baby className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>

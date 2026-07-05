@@ -501,7 +501,7 @@ export default function Onboarding() {
         {/* Bottom nav — vises kun fra step 0+ */}
         {step >= 0 && <div className="px-6 py-8 space-y-3">
           {step === 2 && dateError && (
-            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: '#FEE2E2', color: '#B91C1C', border: '1px solid #FECACA' }}>
+            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'rgba(239,68,68,0.1)', color: '#F87171', border: '1px solid rgba(239,68,68,0.2)' }}>
               {dateError}
             </div>
           )}

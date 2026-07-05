@@ -96,13 +96,22 @@ function SectionTitle({ icon, title }) {
 }
 
 function Chip({ label, color }) {
-  const colors = {
-    blue: { backgroundColor: '#EFF6FF', color: '#1D4ED8' },
-    green: { backgroundColor: '#F0FDF4', color: '#15803D' },
-    yellow: { backgroundColor: '#FEFCE8', color: '#A16207' },
-    red: { backgroundColor: '#FEF2F2', color: '#B91C1C' },
-    brown: { backgroundColor: '#F3E9E1', color: '#5B3F2B' },
-  };
+  const { isDark } = useTheme();
+  const colors = isDark
+    ? {
+        blue: { backgroundColor: 'rgba(59,130,246,0.15)', color: '#93C5FD' },
+        green: { backgroundColor: 'rgba(34,197,94,0.15)', color: '#86EFAC' },
+        yellow: { backgroundColor: 'rgba(234,179,8,0.15)', color: '#FDE68A' },
+        red: { backgroundColor: 'rgba(239,68,68,0.15)', color: '#FCA5A5' },
+        brown: { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-accent)' },
+      }
+    : {
+        blue: { backgroundColor: '#EFF6FF', color: '#1D4ED8' },
+        green: { backgroundColor: '#F0FDF4', color: '#15803D' },
+        yellow: { backgroundColor: '#FEFCE8', color: '#A16207' },
+        red: { backgroundColor: '#FEF2F2', color: '#B91C1C' },
+        brown: { backgroundColor: '#F3E9E1', color: '#5B3F2B' },
+      };
   return (
     <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={colors[color] || colors.blue}>
       {label}

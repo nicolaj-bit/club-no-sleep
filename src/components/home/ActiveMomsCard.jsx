@@ -68,7 +68,7 @@ export default function ActiveMomsCard() {
     <Link to={createPageUrl('Community')} className="block active:opacity-70">
       <div
         className="rounded-2xl px-4 py-3"
-        style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
+        style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: '1px solid var(--color-border)' }}
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
           {label}

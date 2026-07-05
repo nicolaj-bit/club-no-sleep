@@ -69,18 +69,18 @@ export default function AcceptInvite() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#FAF6F1', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <div style={{ maxWidth: 400, width: '100%', textAlign: 'center' }}>
         <p style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
           {status === 'done' ? '🎉' : status === 'error' ? '😔' : '🤍'}
         </p>
-        <h1 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '2rem', fontWeight: 400, color: '#2C1A0E', marginBottom: '0.75rem' }}>
+        <h1 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '2rem', fontWeight: 400, color: 'var(--color-text-primary)', marginBottom: '0.75rem' }}>
           {status === 'loading' && t.acceptInviteChecking}
           {status === 'accepting' && t.acceptInviteConnecting}
           {status === 'done' && t.acceptInviteDone}
           {status === 'error' && t.acceptInviteError}
         </h1>
-        <p style={{ color: '#6B4A2F', fontSize: '0.95rem', lineHeight: 1.7 }}>
+        <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: 1.7 }}>
           {status === 'loading' || status === 'accepting'
             ? t.acceptInviteWaiting
             : status === 'done'
@@ -89,7 +89,7 @@ export default function AcceptInvite() {
         </p>
         {(status === 'loading' || status === 'accepting') && (
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid #DCC1B0', borderTopColor: '#5C3317', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ width: 32, height: 32, borderRadius: '50%', border: '3px solid var(--color-accent-soft)', borderTopColor: 'var(--color-primary)', animation: 'spin 0.8s linear infinite' }} />
           </div>
         )}
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
