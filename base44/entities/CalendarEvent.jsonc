@@ -24,28 +24,26 @@
       "type": "string",
       "description": "Ejers email"
     },
+    "family_id": {
+      "type": "string",
+      "description": "Familie-ID for partnerdeling"
+    },
     "category": {
       "type": "string",
       "enum": [
         "jordemoder",
         "scanning",
         "l\u00e6ge",
-        "legeaftale",
+        "sundhedsplejerske",
+        "osteopat",
+        "barselscaf\u00e9",
         "m\u00f8dregruppe",
         "vaccination",
-        "milep\u00e6l",
+        "f\u00f8dselsforberedelse",
         "andet"
       ],
       "default": "andet",
       "description": "Aftalekategori"
-    },
-    "milestone_id": {
-      "type": "string",
-      "description": "Reference til milep\u00e6l ID (fx 'age-1m') \u2014 bruges til at undg\u00e5 dubletter"
-    },
-    "child_id": {
-      "type": "string",
-      "description": "Reference til barn (bruges ved milep\u00e6le)"
     },
     "notify_day_before": {
       "type": "boolean",
@@ -95,6 +93,9 @@
       "$or": [
         {
           "data.user_email": "{{user.email}}"
+        },
+        {
+          "data.family_id": "{{user.family_id}}"
         },
         {
           "user_condition": {
