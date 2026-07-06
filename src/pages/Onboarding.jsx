@@ -226,10 +226,10 @@ export default function Onboarding() {
               {/* Velkomstbesked */}
               <div className="rounded-3xl p-5 text-center max-w-xs" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
                 <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  "Hej! Vi er Sara og Nicolaj — og vi har selv siddet oppe om natten med sovnige øjne og en baby på armen.
+                  "Velkommen til. Vi er så glade for, at du er her.
                 </p>
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  CLUB NO SLEEP er lavet til jer. Vi glæder os til at følge dig."
+                  Natteensomhed findes. Og den kan føles tung, når resten af verden sover, og man selv sidder vågen i mørket. Det ved vi, fordi vi selv var igennem en lang og ensom periode, da vi blev forældre til en baby med uro i søvnen."
                 </p>
                 <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>— Sara & Nicolaj</p>
               </div>
