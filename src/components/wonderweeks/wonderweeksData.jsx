@@ -231,8 +231,8 @@ export const wonderWeeks = WONDER_WEEKS;
  * Wonder Weeks bruger terminsdato som udgangspunkt
  */
 export function getAgeInWeeks(dueDate, birthDate) {
-  // Brug fødselsdato som primær reference (terminsdato som fallback for bagudkompatibilitet)
-  const referenceDate = birthDate ? new Date(birthDate) : (dueDate ? new Date(dueDate) : null);
+  // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
+  const referenceDate = dueDate ? new Date(dueDate) : null;
   if (!referenceDate) return null;
   const today = new Date();
   const diffMs = today - referenceDate;
