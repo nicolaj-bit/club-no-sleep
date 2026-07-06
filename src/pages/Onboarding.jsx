@@ -30,7 +30,7 @@ export default function Onboarding() {
   const [form, setForm] = useState({
     username: '',
     display_name: '',
-    profile_label: 'mor',
+    profile_label: '',
     city: '',
     profile_image: '',
     child_birthdate: '',
@@ -82,6 +82,7 @@ export default function Onboarding() {
     const newErrors = {};
     if (!form.username.trim()) newErrors.username = t.errorChooseUsername;
     else if (form.username.length < 3) newErrors.username = t.errorUsernameMin;
+    if (!form.profile_label) newErrors.profile_label = 'Du skal vælge om du er kvinde eller mand';
     if (!form.accept_terms) newErrors.accept_terms = t.errorAcceptTerms;
     if (!form.accept_privacy) newErrors.accept_privacy = t.errorAcceptPrivacy;
     setErrors(newErrors);
@@ -326,6 +327,43 @@ export default function Onboarding() {
                     ? <p className="text-xs text-red-500">{errors.username}</p>
                     : <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.usernameHint}</p>
                   }
+                </div>
+
+                {/* Køn */}
+                <div className="space-y-2">
+                  <Label>Er du kvinde eller mand?</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setField('profile_label', 'mor')}
+                      className="rounded-2xl p-4 text-center transition-all border-2"
+                      style={{
+                        borderColor: form.profile_label === 'mor' ? 'var(--color-accent)' : 'var(--color-border)',
+                        background: form.profile_label === 'mor' ? 'var(--color-accent-warm)' : 'var(--color-bg-subtle)',
+                      }}
+                    >
+                      <span className="text-2xl block mb-1">👩</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kvinde</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setField('profile_label', 'far')}
+                      className="rounded-2xl p-4 text-center transition-all border-2"
+                      style={{
+                        borderColor: form.profile_label === 'far' ? 'var(--color-accent)' : 'var(--color-border)',
+                        background: form.profile_label === 'far' ? 'var(--color-accent-warm)' : 'var(--color-bg-subtle)',
+                      }}
+                    >
+                      <span className="text-2xl block mb-1">👨</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Mand</span>
+                    </button>
+                  </div>
+                  {form.profile_label === 'far' && (
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                      Som mand har du ikke adgang til community-funktionen, men du får fuld adgang til søvnlog, viden og kalender.
+                    </p>
+                  )}
+                  {errors.profile_label && <p className="text-xs text-red-500">{errors.profile_label}</p>}
                 </div>
 
                 {/* Betingelser */}
