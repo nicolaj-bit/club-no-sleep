@@ -234,7 +234,7 @@ export default function Onboarding() {
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
                   Club No Sleep er den trøst, vi selv manglede. Sammen med appens andre funktioner håber vi, at den kan være med til at gøre din tid med graviditet, baby eller små børn lidt lettere og lidt mindre alene."
                 </p>
-                <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>— Sara & Nicolaj</p>
+                <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>Kærligst,<br />Sara & Nicolaj</p>
               </div>
             </div>
 
