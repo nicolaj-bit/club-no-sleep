@@ -431,6 +431,9 @@ export default function Onboarding() {
                 {childMode === 'fodt' && (
                   <div className="space-y-4">
                     <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                      Hvis du både er gravid og har et barn, som du ønsker at registrere i appen, vælg da "Jeg er gravid" og tilføj senere barnet under din profil i appen.
+                    </p>
+                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                       Terminsdatoen bruges til at beregne tigerspring mens fødselsdatoen blandt andet bruges til at beregne milepæle og give korrekt søvnvejledning.
                     </p>
                     <div className="space-y-2">
