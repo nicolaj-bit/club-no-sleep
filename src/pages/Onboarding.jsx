@@ -198,28 +198,14 @@ export default function Onboarding() {
                 </h1>
               </div>
 
-              {/* Billeder af Sara & Nicolaj */}
-              <div className="flex items-end gap-4 mt-2">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2" style={{ borderColor: 'var(--color-accent-soft)' }}>
-                    <img
-                      src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face"
-                      alt="Sara"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Sara</p>
-                </div>
-                <div className="w-10 h-px mb-12" style={{ background: 'var(--color-border)' }} />
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2" style={{ borderColor: 'var(--color-accent-soft)' }}>
-                    <img
-                      src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face"
-                      alt="Nicolaj"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Nicolaj</p>
+              {/* Billede af Sara & Nicolaj */}
+              <div className="flex justify-center mt-2">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-2" style={{ borderColor: 'var(--color-accent-soft)' }}>
+                  <img
+                    src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/04db681c4_Velkommentil.png"
+                    alt="Sara & Nicolaj"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
 
