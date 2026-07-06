@@ -229,7 +229,10 @@ export default function Onboarding() {
                   "Velkommen til. Vi er så glade for, at du er her.
                 </p>
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  Natteensomhed findes. Og den kan føles tung, når resten af verden sover, og man selv sidder vågen i mørket. Det ved vi, fordi vi selv var igennem en lang og ensom periode, da vi blev forældre til en baby med uro i søvnen."
+                  Natteensomhed findes. Og den kan føles tung, når resten af verden sover, og man selv sidder vågen i mørket. Det ved vi, fordi vi selv var igennem en lang og ensom periode, da vi blev forældre til en baby med uro i søvnen.
+                </p>
+                <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
+                  Club No Sleep er den trøst, vi selv manglede. Sammen med appens andre funktioner håber vi, at den kan være med til at gøre din tid med graviditet, baby eller små børn lidt lettere og lidt mindre alene."
                 </p>
                 <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>— Sara & Nicolaj</p>
               </div>
