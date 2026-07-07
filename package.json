@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@base44/sdk": "^0.8.36",
-    "@base44/vite-plugin": "^1.0.26",
+    "@base44/vite-plugin": "^1.0.28",
     "@capacitor-community/apple-sign-in": "^7.1.0",
     "@capacitor/android": "^8.4.1",
     "@capacitor/app": "^8.1.0",
