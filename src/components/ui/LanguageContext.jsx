@@ -239,7 +239,7 @@ const translations = {
     wakingMethodSelf: 'Sov selv',
 
     // AIChat
-    aiChatTitle: 'Baby & Søvn Ekspert',
+    aiChatTitle: 'Online hjælper',
     aiOnline: 'AI-assistent · Online',
     aiGreeting: 'Hej! Jeg er her for dig 🤍',
     aiSubtitle: 'Ekspert i babysøvn, amning og barnets udvikling. Spørg mig om alt!',
@@ -1276,7 +1276,7 @@ const translations = {
     wakingMethodSelf: 'Self-settled',
 
     // AIChat
-    aiChatTitle: 'Baby & Sleep Expert',
+    aiChatTitle: 'Online helper',
     aiOnline: 'AI assistant · Online',
     aiGreeting: 'Hi! I am here for you 🤍',
     aiSubtitle: 'Expert in baby sleep, breastfeeding and child development. Ask me anything!',
