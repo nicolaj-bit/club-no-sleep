@@ -70,6 +70,7 @@ export default function AIChat() {
   const [iconConfig, setIconConfig] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [mode, setMode] = useState(null); // null | 'encouragement' | 'question'
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
   const urlParams = new URLSearchParams(window.location.search);
@@ -186,10 +187,10 @@ export default function AIChat() {
     }
   }, [input]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || !conversation || isLoading) return;
-    const text = input.trim();
-    setInput('');
+  const sendMessage = async (overrideText) => {
+    const text = (overrideText || input).trim();
+    if (!text || !conversation || isLoading) return;
+    if (!overrideText) setInput('');
     setIsLoading(true);
     await base44.agents.addMessage(conversation, { role: 'user', content: text });
   };
@@ -248,7 +249,7 @@ export default function AIChat() {
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="100%">
 
         {/* Empty state */}
-        {visibleMessages.length === 0 && !isLoading && (
+        {visibleMessages.length === 0 && !isLoading && mode === null && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
             <div className="relative">
               <AIAvatar size="lg" iconUrl={iconUrl} />
@@ -275,22 +276,30 @@ export default function AIChat() {
               </p>
             </div>
 
-            {/* Suggestion chips */}
-            <div className="w-full max-w-sm space-y-2 mt-2">
-              {[t.aiSuggestion1, t.aiSuggestion2, t.aiSuggestion3].map(q => (
-                <button
-                  key={q}
-                  onClick={() => setInput(q)}
-                  className="w-full text-left text-sm px-4 py-3 rounded-2xl border transition-colors cursor-pointer"
-                  style={{
-                    backgroundColor: 'var(--color-bg-card)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-secondary)',
-                  }}
-                >
-                  {q}
-                </button>
-              ))}
+            {/* Entry-point buttons */}
+            <div className="w-full max-w-sm space-y-3 mt-4">
+              <button
+                onClick={() => { setMode('encouragement'); sendMessage('Jeg har brug for opmuntring'); }}
+                className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--color-bg-card)',
+                  borderColor: 'var(--color-accent)',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                Jeg har brug for opmuntring
+              </button>
+              <button
+                onClick={() => setMode('question')}
+                className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
+                style={{
+                  backgroundColor: 'var(--color-bg-card)',
+                  borderColor: 'var(--color-accent)',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                Jeg har spørgsmål
+              </button>
             </div>
           </div>
         )}
@@ -350,7 +359,7 @@ export default function AIChat() {
       </div>
 
       {/* Input bar */}
-      {hasSubscription && (
+      {hasSubscription && (mode !== null || visibleMessages.length > 0) && (
       <div
         className="px-4 pt-3 pb-6 border-t"
         style={{
