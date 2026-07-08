@@ -35,5 +35,6 @@
   "selected_workspace_skill_ids": [],
   "telegram_greeting": "",
   "line_greeting": "",
+  "allow_anonymous_access": false,
   "name": "baby_expert"
 }
