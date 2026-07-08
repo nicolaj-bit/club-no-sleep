@@ -269,14 +269,28 @@ export default function AIChat() {
           background: 'linear-gradient(135deg, var(--color-accent), var(--color-primary))',
         }}
       >
-        <Link
-          to={createPageUrl('Home')}
+        <button
+          onClick={() => {
+            if (mode !== null || visibleMessages.length > 0) {
+              if (unsubRef.current) {
+                unsubRef.current();
+                unsubRef.current = null;
+              }
+              setConversation(null);
+              setMessages([]);
+              setMode(null);
+              setInput('');
+              setIsLoading(false);
+            } else {
+              window.history.back();
+            }
+          }}
           className="p-1.5 rounded-full cursor-pointer"
           style={{ color: 'rgba(255,255,255,0.9)' }}
           aria-label={t.backLabel}
         >
           <ArrowLeft className="w-5 h-5" />
-        </Link>
+        </button>
 
         <div className="flex items-center gap-2 flex-1">
           <div className="relative">
