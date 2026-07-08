@@ -184,36 +184,6 @@ export default function Calendar() {
       />
 
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="500px">
-        {/* Status banner */}
-        {calendarMode !== 'none' && (
-          <div className="mx-5 mb-4 rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: calendarMode === 'pregnancy' ? '#C29A73' : '#D8B89A' }}>
-                <span className="w-3 h-3 rounded-full bg-white/80" />
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-                  {calendarMode === 'pregnancy' ? (lang === 'en' ? 'Pregnancy mode' : 'Graviditetsmode') : (lang === 'en' ? 'Baby mode' : 'Babymode')}
-                </p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                  {calendarMode === 'pregnancy'
-                    ? (lang === 'en' ? `Week ${pregnancyWeek}` : `Uge ${pregnancyWeek}`)
-                    : (lang === 'en' ? `${babyAgeMonths} months old` : `${babyAgeMonths} måneder gammel`)}
-                </p>
-              </div>
-            </div>
-            {currentWW && currentWW.status !== 'complete' && (
-              <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
-                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                  {currentWW.status === 'active'
-                    ? (lang === 'en' ? `Wonder week ${currentWW.number} — active now` : `Tigerspring ${currentWW.number} — aktiv nu`)
-                    : (lang === 'en' ? `Wonder week ${currentWW.number} in ${currentWW.weeksUntil} weeks` : `Tigerspring ${currentWW.number} om ${currentWW.weeksUntil} uger`)}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Month navigation */}
         <div className="px-5 mb-4 flex items-center justify-between">
           <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
