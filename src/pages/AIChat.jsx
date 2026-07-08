@@ -106,18 +106,31 @@ export default function AIChat() {
     setUploading(false);
   };
 
-  useEffect(() => {
-    const init = async () => {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (!isAuth) return;
+  const unsubRef = useRef(null);
 
-      const conv = await base44.agents.createConversation({
-        agent_name: 'baby_expert',
-        metadata: { name: 'Baby & Søvn Chat' }
-      });
-      setConversation(conv);
-      setMessages(conv.messages || []);
+  const startChat = async (agentName, initialMessage) => {
+    if (unsubRef.current) {
+      unsubRef.current();
+      unsubRef.current = null;
+    }
 
+    const isAuth = await base44.auth.isAuthenticated();
+    if (!isAuth) return;
+
+    const conv = await base44.agents.createConversation({
+      agent_name: agentName,
+      metadata: { name: agentName === 'encouragement' ? 'Opmuntring Chat' : 'Baby & Søvn Chat' }
+    });
+    setConversation(conv);
+    setMessages(conv.messages || []);
+
+    const unsubscribe = base44.agents.subscribeToConversation(conv.id, (data) => {
+      setMessages(data.messages || []);
+      setIsLoading(false);
+    });
+    unsubRef.current = unsubscribe;
+
+    if (agentName === 'baby_expert') {
       if (withLogs) {
         try {
           const user = await base44.auth.me();
@@ -162,17 +175,18 @@ export default function AIChat() {
           console.log('Could not load diary data');
         }
       }
+    }
 
-      const unsubscribe = base44.agents.subscribeToConversation(conv.id, (data) => {
-        setMessages(data.messages || []);
-        setIsLoading(false);
-      });
-      return unsubscribe;
+    if (initialMessage) {
+      setIsLoading(true);
+      await base44.agents.addMessage(conv, { role: 'user', content: initialMessage });
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (unsubRef.current) unsubRef.current();
     };
-
-    let unsub;
-    init().then(fn => { unsub = fn; });
-    return () => { if (unsub) unsub(); };
   }, []);
 
   useEffect(() => {
@@ -279,7 +293,7 @@ export default function AIChat() {
             {/* Entry-point buttons */}
             <div className="w-full max-w-sm space-y-3 mt-4">
               <button
-                onClick={() => { setMode('encouragement'); sendMessage('Jeg har brug for opmuntring'); }}
+                onClick={() => { setMode('encouragement'); startChat('encouragement', 'Jeg har brug for opmuntring'); }}
                 className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
                 style={{
                   backgroundColor: 'var(--color-bg-card)',
@@ -290,7 +304,7 @@ export default function AIChat() {
                 Jeg har brug for opmuntring
               </button>
               <button
-                onClick={() => setMode('question')}
+                onClick={() => { setMode('question'); startChat('baby_expert'); }}
                 className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
                 style={{
                   backgroundColor: 'var(--color-bg-card)',
