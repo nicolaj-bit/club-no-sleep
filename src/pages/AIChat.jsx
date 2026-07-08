@@ -315,7 +315,7 @@ export default function AIChat() {
             {/* Entry-point buttons */}
             <div className="w-full max-w-sm space-y-3 mt-4">
               <button
-                onClick={() => { setMode('encouragement'); startChat('encouragement', 'Jeg har brug for vejledning'); }}
+                onClick={() => { setMode('encouragement'); startChat('encouragement', 'Jeg har brug for opmuntring'); }}
                 className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
                 style={{
                   backgroundColor: 'var(--color-bg-card)',
@@ -323,7 +323,7 @@ export default function AIChat() {
                   color: 'var(--color-text-primary)',
                 }}
               >
-                Jeg har brug for vejledning
+                Jeg har brug for opmuntring
               </button>
               <button
                 onClick={() => { setMode('question'); startChat('baby_expert'); }}
