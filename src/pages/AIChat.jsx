@@ -11,6 +11,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { AI_AVATARS } from '@/components/aichat/aiAvatars';
+import BottomNav from '@/components/ui/BottomNav';
 
 // Branded LALATOTO AI avatar
 function AIAvatar({ size = 'sm', iconUrl = null }) {
@@ -257,6 +258,8 @@ export default function AIChat() {
   };
 
   const visibleMessages = messages.filter(m => m.role !== 'tool');
+
+  const showSelectionNav = mode === null && visibleMessages.length === 0;
 
   return (
     <div className="flex flex-col h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -537,6 +540,8 @@ export default function AIChat() {
           )}
         </DialogContent>
       </Dialog>
+
+      {showSelectionNav && <BottomNav />}
     </div>
   );
 }
