@@ -139,7 +139,7 @@ export default function Checkout() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Top bar */}
       <div className="px-4 pt-4" style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm" style={{ color: 'var(--color-text-primary)' }}>
+        <button onClick={() => navigate('/app')} className="flex items-center gap-1 text-sm" style={{ color: 'var(--color-text-primary)' }}>
           <ArrowLeft className="w-4 h-4" /> {t.checkoutBack}
         </button>
       </div>
