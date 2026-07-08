@@ -35,5 +35,7 @@
   "whatsapp_greeting": "",
   "telegram_greeting": "",
   "line_greeting": "",
+  "selected_workspace_skill_ids": [],
+  "allow_anonymous_access": false,
   "name": "encouragement"
 }
