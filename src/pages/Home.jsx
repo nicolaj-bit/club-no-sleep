@@ -34,14 +34,16 @@ function getDailyAffirmationIndex() {
 function getGreeting(lang, name) {
   const hour = new Date().getHours();
   let greeting;
-  if (hour >= 5 && hour < 12) {
+  if (hour >= 6 && hour < 9) {
     greeting = lang === 'da' ? 'Godmorgen' : 'Good morning';
-  } else if (hour >= 12 && hour < 17) {
+  } else if (hour >= 9 && hour < 12) {
+    greeting = lang === 'da' ? 'God formiddag' : 'Good morning';
+  } else if (hour >= 12 && hour < 18) {
     greeting = lang === 'da' ? 'God eftermiddag' : 'Good afternoon';
-  } else if (hour >= 17 && hour < 21) {
+  } else if (hour >= 18 && hour < 23) {
     greeting = lang === 'da' ? 'Godaften' : 'Good evening';
   } else {
-    greeting = lang === 'da' ? 'Godnat' : 'Good night';
+    greeting = lang === 'da' ? 'Jeg ser dig' : 'I see you';
   }
   return `${greeting}, ${name} `;
 }
