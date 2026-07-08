@@ -307,11 +307,8 @@ export default function AIChat() {
               )}
             </div>
             <div>
-              <h2 className="text-2xl font-light mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                {t.aiGreeting}
-              </h2>
-              <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--color-text-muted)' }}>
-                {t.aiSubtitle}
+              <p className="text-lg font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                Hvordan kan jeg hjælpe lige nu?
               </p>
             </div>
 
