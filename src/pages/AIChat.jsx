@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Send, Pencil, Upload } from 'lucide-react';
+import { ArrowLeft, Send, Pencil, Upload, Check } from 'lucide-react';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
@@ -71,6 +74,25 @@ export default function AIChat() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [mode, setMode] = useState(null); // null | 'encouragement' | 'question'
+  const { activeProfile, refreshProfiles } = useActiveProfile();
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
+  const aiName = activeProfile?.ai_assistant_name || t.aiChatTitle;
+
+  const handleSaveName = async () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed || !activeProfile) return;
+    setSavingName(true);
+    try {
+      await base44.entities.UserProfile.update(activeProfile.id, { ai_assistant_name: trimmed });
+      await refreshProfiles();
+      setEditingName(false);
+    } catch (e) {
+      console.log('Could not save name');
+    }
+    setSavingName(false);
+  };
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
   const urlParams = new URLSearchParams(window.location.search);
@@ -249,7 +271,10 @@ export default function AIChat() {
             )}
           </div>
           <div>
-            <p className="text-base text-white font-light" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>{t.aiChatTitle}</p>
+            <button onClick={() => { setNameInput(activeProfile?.ai_assistant_name || ''); setEditingName(true); }} className="flex items-center gap-1.5 text-base text-white font-light active:opacity-70" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.04em' }}>
+              {aiName}
+              <Pencil className="w-3 h-3 opacity-60" />
+            </button>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block" />
               <p className="text-xs text-white/70">{t.aiOnline}</p>
@@ -419,6 +444,31 @@ export default function AIChat() {
         </p>
       </div>
       )}
+
+      <Dialog open={editingName} onOpenChange={setEditingName}>
+        <DialogContent className="max-w-xs">
+          <DialogHeader>
+            <DialogTitle>Navngiv din hjælper</DialogTitle>
+          </DialogHeader>
+          <input
+            type="text"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSaveName(); }}
+            placeholder={t.aiChatTitle}
+            maxLength={30}
+            autoFocus
+            className="w-full px-3 py-2 rounded-xl border text-sm outline-none"
+            style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
+          />
+          <DialogFooter className="flex-row gap-2">
+            <Button variant="outline" onClick={() => setEditingName(false)} className="flex-1">Annuller</Button>
+            <Button onClick={handleSaveName} disabled={!nameInput.trim() || savingName} className="flex-1">
+              {savingName ? '...' : 'Gem'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -152,6 +152,11 @@
       ],
       "description": "Om brugeren er den prim\u00e6re (betalende) eller inviteret partner"
     },
+    "ai_assistant_name": {
+      "type": "string",
+      "maxLength": 30,
+      "description": "Brugerdefineret navn p\u00e5 AI-hj\u00e6lperen"
+    },
     "description": {
       "type": "string",
       "maxLength": 1000,
