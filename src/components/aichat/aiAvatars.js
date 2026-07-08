@@ -2,7 +2,7 @@ export const AI_AVATARS = [
   {
     id: 'woman1',
     label: 'Kvinde',
-    url: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/377d16b7b_generated_image.png',
+    url: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/56795bf6b_generated_image.png',
   },
   {
     id: 'woman2',
@@ -12,7 +12,7 @@ export const AI_AVATARS = [
   {
     id: 'man1',
     label: 'Mand',
-    url: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/cd57ca737_generated_image.png',
+    url: 'https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/d8e9f7a3b_generated_image.png',
   },
   {
     id: 'man2',
