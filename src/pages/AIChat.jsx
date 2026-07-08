@@ -454,7 +454,7 @@ export default function AIChat() {
           </button>
         </div>
         <p className="text-center text-xs mt-2 px-4" style={{ color: 'var(--color-text-muted)' }}>
-          {t.aiDisclaimer}
+          AI-assistenten kan støtte og vejlede, men ved bekymring bør du altid kontakte læge eller sundhedsplejerske
         </p>
       </div>
       )}
