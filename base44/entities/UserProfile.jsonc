@@ -157,6 +157,10 @@
       "maxLength": 30,
       "description": "Brugerdefineret navn p\u00e5 AI-hj\u00e6lperen"
     },
+    "ai_assistant_avatar": {
+      "type": "string",
+      "description": "URL til valgt AI-assistent avatar"
+    },
     "description": {
       "type": "string",
       "maxLength": 1000,

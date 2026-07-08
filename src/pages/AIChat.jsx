@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import { AI_AVATARS } from '@/components/aichat/aiAvatars';
 
 // Branded LALATOTO AI avatar
 function AIAvatar({ size = 'sm', iconUrl = null }) {
@@ -78,7 +79,11 @@ export default function AIChat() {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [savingName, setSavingName] = useState(false);
+  const [pickingAvatar, setPickingAvatar] = useState(false);
+  const [savingAvatar, setSavingAvatar] = useState(false);
   const aiName = activeProfile?.ai_assistant_name || t.aiChatTitle;
+  const userAvatar = activeProfile?.ai_assistant_avatar;
+  const avatarUrl = userAvatar || iconUrl;
 
   const handleSaveName = async () => {
     const trimmed = nameInput.trim();
@@ -92,6 +97,19 @@ export default function AIChat() {
       console.log('Could not save name');
     }
     setSavingName(false);
+  };
+
+  const handleSelectAvatar = async (url) => {
+    if (!activeProfile) return;
+    setSavingAvatar(true);
+    try {
+      await base44.entities.UserProfile.update(activeProfile.id, { ai_assistant_avatar: url });
+      await refreshProfiles();
+      setPickingAvatar(false);
+    } catch (e) {
+      console.log('Could not save avatar');
+    }
+    setSavingAvatar(false);
   };
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
@@ -262,7 +280,7 @@ export default function AIChat() {
 
         <div className="flex items-center gap-2 flex-1">
           <div className="relative">
-            <AIAvatar size="sm" iconUrl={iconUrl} />
+            <AIAvatar size="sm" iconUrl={avatarUrl} />
             {isAdmin && (
               <label className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow">
                 <Pencil className="w-2.5 h-2.5" style={{ color: '#8B5E3C' }} />
@@ -291,20 +309,19 @@ export default function AIChat() {
         {visibleMessages.length === 0 && !isLoading && mode === null && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
             <div className="relative">
-              <AIAvatar size="lg" iconUrl={iconUrl} />
-              {isAdmin && (
-                <label
-                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
-                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
-                >
-                  {uploading ? (
-                    <div className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <Upload className="w-3.5 h-3.5 text-white" />
-                  )}
-                  <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={handleIconUpload} />
-                </label>
-              )}
+              <AIAvatar size="lg" iconUrl={avatarUrl} />
+              <button
+                onClick={() => setPickingAvatar(true)}
+                className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+                style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                aria-label="Vælg avatar"
+              >
+                {savingAvatar ? (
+                  <div className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Pencil className="w-3.5 h-3.5 text-white" />
+                )}
+              </button>
             </div>
             <div>
               <p className="text-lg font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
@@ -345,7 +362,7 @@ export default function AIChat() {
           const isUser = msg.role === 'user';
           return (
             <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
-              {!isUser && <AIAvatar size="sm" iconUrl={iconUrl} />}
+              {!isUser && <AIAvatar size="sm" iconUrl={avatarUrl} />}
               <div
                 className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${
                   isUser
@@ -376,7 +393,7 @@ export default function AIChat() {
         {/* Loading dots */}
         {isLoading && (
           <div className="flex items-end gap-2 justify-start">
-            <AIAvatar size="sm" iconUrl={iconUrl} />
+            <AIAvatar size="sm" iconUrl={avatarUrl} />
             <div
               className="rounded-2xl rounded-bl-md border px-4 py-3 shadow-sm"
               style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
@@ -464,6 +481,46 @@ export default function AIChat() {
               {savingName ? '...' : 'Gem'}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Avatar picker */}
+      <Dialog open={pickingAvatar} onOpenChange={setPickingAvatar}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Vælg din hjælper</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-3 gap-3 py-2">
+            {AI_AVATARS.map((av) => {
+              const isSelected = userAvatar === av.url;
+              return (
+                <button
+                  key={av.id}
+                  onClick={() => handleSelectAvatar(av.url)}
+                  disabled={savingAvatar}
+                  className="relative aspect-square rounded-2xl overflow-hidden border-2 transition-all cursor-pointer disabled:opacity-50"
+                  style={{
+                    borderColor: isSelected ? 'var(--color-accent)' : 'var(--color-border)',
+                    boxShadow: isSelected ? '0 0 0 2px var(--color-accent-soft)' : 'none',
+                  }}
+                >
+                  <img src={av.url} alt={av.label} className="w-full h-full object-cover" />
+                  {isSelected && (
+                    <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: 'var(--color-accent)' }}>
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {userAvatar && (
+            <DialogFooter>
+              <Button variant="outline" onClick={() => handleSelectAvatar('')} disabled={savingAvatar} className="w-full">
+                Nulstil til standard
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
     </div>
