@@ -1,45 +1,58 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-// Wonder weeks timing in weeks from due date
+// Wonder weeks timing in weeks from DUE DATE (never from birth date)
 const WONDER_WEEKS = [
-  { number: 1, week: 5, name: 'Tigerspring 1 – Sansernes verden' },
-  { number: 2, week: 8, name: 'Tigerspring 2 – Mønstre' },
-  { number: 3, week: 12, name: 'Tigerspring 3 – Overgange' },
-  { number: 4, week: 19, name: 'Tigerspring 4 – Begivenheder' },
-  { number: 5, week: 26, name: 'Tigerspring 5 – Relationer' },
-  { number: 6, week: 37, name: 'Tigerspring 6 – Kategorier' },
-  { number: 7, week: 46, name: 'Tigerspring 7 – Sekvenser' },
-  { number: 8, week: 55, name: 'Tigerspring 8 – Programmer' },
-  { number: 9, week: 64, name: 'Tigerspring 9 – Principper' },
-  { number: 10, week: 75, name: 'Tigerspring 10 – Systemer' },
+  { number: 1, week: 5, name: 'Sansernes verden' },
+  { number: 2, week: 8, name: 'Monstre' },
+  { number: 3, week: 12, name: 'Overgange' },
+  { number: 4, week: 19, name: 'Begivenheder' },
+  { number: 5, week: 26, name: 'Relationer' },
+  { number: 6, week: 37, name: 'Kategorier' },
+  { number: 7, week: 46, name: 'Sekvenser' },
+  { number: 8, week: 55, name: 'Programmer' },
+  { number: 9, week: 71, name: 'Principper' },
+  { number: 10, week: 75, name: 'Systemer' },
 ];
+
+const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
+const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
 function getAgeInDays(dueDateStr) {
   const due = new Date(dueDateStr);
+  due.setHours(0, 0, 0, 0);
   const now = new Date();
-  const diffMs = now - due;
-  return Math.floor(diffMs / (24 * 60 * 60 * 1000));
+  now.setHours(0, 0, 0, 0);
+  return Math.round((now - due) / (24 * 60 * 60 * 1000));
 }
 
-// Opret in-app notifikation i AppNotification entiteten
-async function createInAppNotification(base44, email, title, message, leap) {
+async function createInAppNotification(base44, email, title, message) {
   await base44.asServiceRole.entities.AppNotification.create({
     title,
     message,
-    emoji: '🌟',
     link: '/Knowledge',
     target_emails: [email],
     published_at: new Date().toISOString(),
   });
 }
 
-// Send email fallback for iOS users
-async function sendEmailFallback(base44, email, leapName) {
-  await base44.asServiceRole.integrations.Core.SendEmail({
-    to: email,
-    subject: `🌟 ${leapName} starter i morgen!`,
-    body: `<p>Hej! Dit barn starter på <strong>${leapName}</strong> i morgen.</p><p>Læs om hvad du kan forvente på <a href="https://app.lalatoto.dk/Knowledge">LALATOTO</a>.</p>`,
+async function sendPush(email, title, message) {
+  if (!ONESIGNAL_APP_ID || !REST_API_KEY) return false;
+  const body = {
+    app_id: ONESIGNAL_APP_ID,
+    include_aliases: { external_id: [email] },
+    target_channel: 'push',
+    headings: { da: title, en: title },
+    contents: { da: message, en: message },
+  };
+  const res = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Key ${REST_API_KEY}`,
+    },
+    body: JSON.stringify(body),
   });
+  return res.ok;
 }
 
 Deno.serve(async (req) => {
@@ -47,33 +60,45 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const profiles = await base44.asServiceRole.entities.UserProfile.list();
 
-    let notificationsSent = 0;
+    let sent = 0;
 
     for (const profile of profiles) {
       if (!profile.wonderweeks_notifications) continue;
+      if (!profile.user_email) continue;
 
-      const dateStr = profile.child_due_date || profile.child_birthdate;
-      if (!dateStr) continue;
+      // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
+      const dueDate = profile.child_due_date;
+      if (!dueDate) continue;
 
-      const ageDays = getAgeInDays(dateStr);
-      const tomorrowWeeks = Math.floor((ageDays + 1) / 7);
-      const leap = WONDER_WEEKS.find(ww => ww.week === tomorrowWeeks && (ageDays + 1) % 7 === 0);
-      if (!leap) continue;
+      const ageDays = getAgeInDays(dueDate);
+      if (ageDays < 0) continue;
 
-      const title = `🌟 ${leap.name}`;
-      const message = `Dit barn starter på ${leap.name} i morgen! Læs om hvad du kan forvente.`;
+      const ageWeeks = Math.floor(ageDays / 7);
 
-      // Opret in-app notifikation (vises i klokken i appen)
-      await createInAppNotification(base44, profile.user_email, title, message, leap);
+      for (const ww of WONDER_WEEKS) {
+        // 7 dage før start: én notifikation
+        if (ageWeeks === ww.week - 1) {
+          const title = 'Et nyt tigerspring nærmer sig';
+          const message = 'Baby kan være på vej ind i en periode, hvor verden bliver lidt større. Læs mere i appen.';
+          await createInAppNotification(base44, profile.user_email, title, message);
+          await sendPush(profile.user_email, title, message);
+          console.log(`Tigerspring approaching sent til ${profile.user_email}: ${ww.name}`);
+          sent++;
+        }
 
-      // Send email som backup
-      await sendEmailFallback(base44, profile.user_email, leap.name);
-
-      console.log(`Notifikation sendt til ${profile.user_email}: in-app=true, email=true`);
-      notificationsSent++;
+        // På startdagen: én notifikation
+        if (ageWeeks === ww.week) {
+          const title = 'Tigerspring';
+          const message = 'Der ligger en ny udviklingsguide klar til jer.';
+          await createInAppNotification(base44, profile.user_email, title, message);
+          await sendPush(profile.user_email, title, message);
+          console.log(`Tigerspring start sent til ${profile.user_email}: ${ww.name}`);
+          sent++;
+        }
+      }
     }
 
-    return Response.json({ success: true, notificationsSent });
+    return Response.json({ success: true, sent });
   } catch (error) {
     console.error('checkWonderWeeks error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });

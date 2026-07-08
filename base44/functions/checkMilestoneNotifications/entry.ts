@@ -1,83 +1,80 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-// Milestone definitions: { milestone_id, category, label, headline }
-// We map age-based milestones to exact age thresholds
+// Age milestones — calculated from BIRTH DATE
+// One notification on the date child reaches that age
 const AGE_MILESTONES = [
-  // Uger (fra fødsel)
-  { milestone_id: 'age-1w',  days: 7,   headline: '1 uge gammel',          emoji: '🤍' },
-  { milestone_id: 'age-2w',  days: 14,  headline: '2 uger gammel',          emoji: '🤍' },
-  { milestone_id: 'age-3w',  days: 21,  headline: '3 uger gammel',          emoji: '🤍' },
-  // Måneder
-  { milestone_id: 'age-1m',  days: 30,  headline: '1 måned gammel',         emoji: '🌙' },
-  { milestone_id: 'age-2m',  days: 61,  headline: '2 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-3m',  days: 91,  headline: '3 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-4m',  days: 122, headline: '4 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-5m',  days: 152, headline: '5 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-6m',  days: 183, headline: '6 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-7m',  days: 213, headline: '7 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-8m',  days: 244, headline: '8 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-9m',  days: 274, headline: '9 måneder gammel',        emoji: '🌙' },
-  { milestone_id: 'age-10m', days: 305, headline: '10 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-11m', days: 335, headline: '11 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-12m', days: 365, headline: '12 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-13m', days: 396, headline: '13 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-14m', days: 426, headline: '14 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-15m', days: 457, headline: '15 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-16m', days: 487, headline: '16 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-17m', days: 518, headline: '17 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-18m', days: 548, headline: '18 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-19m', days: 579, headline: '19 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-20m', days: 609, headline: '20 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-21m', days: 640, headline: '21 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-22m', days: 670, headline: '22 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-23m', days: 701, headline: '23 måneder gammel',       emoji: '🌙' },
-  { milestone_id: 'age-24m', days: 731, headline: '24 måneder gammel',       emoji: '🌙' },
-  // Fødselsdage
-  { milestone_id: 'age-1y',  days: 365, headline: '1 års fødselsdag',        emoji: '🎂' },
-  { milestone_id: 'age-2y',  days: 730, headline: '2 års fødselsdag',        emoji: '🎂' },
-  { milestone_id: 'age-3y',  days: 1095,headline: '3 års fødselsdag',        emoji: '🎂' },
+  { milestone_id: 'age-1m',  months: 1,  headline: '1 måned gammel' },
+  { milestone_id: 'age-2m',  months: 2,  headline: '2 måneder gammel' },
+  { milestone_id: 'age-3m',  months: 3,  headline: '3 måneder gammel' },
+  { milestone_id: 'age-4m',  months: 4,  headline: '4 måneder gammel' },
+  { milestone_id: 'age-5m',  months: 5,  headline: '5 måneder gammel' },
+  { milestone_id: 'age-6m',  months: 6,  headline: '6 måneder gammel' },
+  { milestone_id: 'age-7m',  months: 7,  headline: '7 måneder gammel' },
+  { milestone_id: 'age-8m',  months: 8,  headline: '8 måneder gammel' },
+  { milestone_id: 'age-9m',  months: 9,  headline: '9 måneder gammel' },
+  { milestone_id: 'age-10m', months: 10, headline: '10 måneder gammel' },
+  { milestone_id: 'age-11m', months: 11, headline: '11 måneder gammel' },
+  { milestone_id: 'age-13m', months: 13, headline: '13 måneder gammel' },
+  { milestone_id: 'age-14m', months: 14, headline: '14 måneder gammel' },
+  { milestone_id: 'age-15m', months: 15, headline: '15 måneder gammel' },
+  { milestone_id: 'age-16m', months: 16, headline: '16 måneder gammel' },
+  { milestone_id: 'age-17m', months: 17, headline: '17 måneder gammel' },
+  { milestone_id: 'age-18m', months: 18, headline: '18 måneder gammel' },
+  { milestone_id: 'age-19m', months: 19, headline: '19 måneder gammel' },
+  { milestone_id: 'age-20m', months: 20, headline: '20 måneder gammel' },
+  { milestone_id: 'age-21m', months: 21, headline: '21 måneder gammel' },
+  { milestone_id: 'age-22m', months: 22, headline: '22 måneder gammel' },
+  { milestone_id: 'age-23m', months: 23, headline: '23 måneder gammel' },
 ];
 
-// Pregnancy milestones based on weeks pregnant
+// Birthday milestones — from BIRTH DATE, annual
+const BIRTHDAY_MILESTONES = [
+  { milestone_id: 'age-1y', years: 1 },
+  { milestone_id: 'age-2y', years: 2 },
+  { milestone_id: 'age-3y', years: 3 },
+];
+
+// Pregnancy milestones — from DUE DATE, on first day of relevant week
 const PREGNANCY_MILESTONES = [
-  { milestone_id: 'preg-4',  weeks: 4,  headline: '4 uger i maven',   emoji: '🌿' },
-  { milestone_id: 'preg-8',  weeks: 8,  headline: '8 uger i maven',   emoji: '🌿' },
-  { milestone_id: 'preg-12', weeks: 12, headline: '12 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-16', weeks: 16, headline: '16 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-20', weeks: 20, headline: '20 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-24', weeks: 24, headline: '24 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-28', weeks: 28, headline: '28 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-32', weeks: 32, headline: '32 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-36', weeks: 36, headline: '36 uger i maven',  emoji: '🌿' },
-  { milestone_id: 'preg-40', weeks: 40, headline: '40 uger i maven',  emoji: '🎉' },
-  { milestone_id: 'preg-41', weeks: 41, headline: '41 uger i maven',  emoji: '🧸' },
-  { milestone_id: 'preg-42', weeks: 42, headline: '42 uger i maven',  emoji: '🧸' },
+  { milestone_id: 'preg-4',  weeks: 4 },
+  { milestone_id: 'preg-8',  weeks: 8 },
+  { milestone_id: 'preg-12', weeks: 12 },
+  { milestone_id: 'preg-16', weeks: 16 },
+  { milestone_id: 'preg-20', weeks: 20 },
+  { milestone_id: 'preg-24', weeks: 24 },
+  { milestone_id: 'preg-28', weeks: 28 },
+  { milestone_id: 'preg-32', weeks: 32 },
+  { milestone_id: 'preg-36', weeks: 36 },
+  { milestone_id: 'preg-40', weeks: 40 },
 ];
 
-const ONESIGNAL_APP_ID = '71bec506-d231-47da-aa17-f8790b335a32';
+const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 
-function daysSince(dateStr) {
-  const d = new Date(dateStr);
+function isSameDayAsMonthOffset(dateStr, monthsToAdd) {
+  const base = new Date(dateStr);
+  base.setHours(0, 0, 0, 0);
+  const target = new Date(base.getFullYear(), base.getMonth() + monthsToAdd, base.getDate());
+  target.setHours(0, 0, 0, 0);
   const now = new Date();
-  return Math.floor((now - d) / (24 * 60 * 60 * 1000));
+  now.setHours(0, 0, 0, 0);
+  return target.getTime() === now.getTime();
+}
+
+function isSameDayAsYearOffset(dateStr, yearsToAdd) {
+  const base = new Date(dateStr);
+  base.setHours(0, 0, 0, 0);
+  const target = new Date(base.getFullYear() + yearsToAdd, base.getMonth(), base.getDate());
+  target.setHours(0, 0, 0, 0);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return target.getTime() === now.getTime();
 }
 
 // LMP = terminsdato - 280 dage (40 uger)
-// Uger gravid = dage siden LMP / 7
-function weeksPregnantFromDueDate(dueDateStr) {
-  const due = new Date(dueDateStr);
-  const lmp = new Date(due.getTime() - 280 * 24 * 60 * 60 * 1000);
-  const now = new Date();
-  return Math.floor((now - lmp) / (7 * 24 * 60 * 60 * 1000));
-}
-
-// Er det præcis starten på en given graviditetsuge i dag?
-// Dvs. dage siden LMP er nøjagtigt weeks * 7
 function isTodayStartOfWeek(dueDateStr, weeks) {
   const due = new Date(dueDateStr);
   const lmp = new Date(due.getTime() - 280 * 24 * 60 * 60 * 1000);
   const now = new Date();
-  // Sæt begge til midnat for sammenligning
   const lmpMidnight = new Date(lmp.getFullYear(), lmp.getMonth(), lmp.getDate());
   const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const daysSinceLmp = Math.round((nowMidnight - lmpMidnight) / (24 * 60 * 60 * 1000));
@@ -113,10 +110,10 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
-    // Hent alle børn
-    const children = await base44.asServiceRole.entities.Child.list();
-    // Hent alle profiler (for user_email)
-    const profiles = await base44.asServiceRole.entities.UserProfile.list();
+    const [children, profiles] = await Promise.all([
+      base44.asServiceRole.entities.Child.list(),
+      base44.asServiceRole.entities.UserProfile.list(),
+    ]);
 
     const profileByEmail = {};
     for (const p of profiles) {
@@ -124,34 +121,40 @@ Deno.serve(async (req) => {
     }
 
     let sent = 0;
-    const today = new Date().toISOString().slice(0, 10);
 
     for (const child of children) {
       const email = child.user_email;
       if (!email) continue;
 
-      // ── Aldersbaserede milepæle (barn er født) ──
+      // ── Aldersbaserede milepæle (fra fødselsdato) ──
       if (child.birthdate) {
-        const ageDays = daysSince(child.birthdate);
-
+        // Month milestones (1-11, 13-23)
         for (const m of AGE_MILESTONES) {
-          if (ageDays === m.days) {
-            const title = `${m.emoji} ${m.headline}`;
-            const message = `${child.name} er ${m.headline.toLowerCase()} i dag! Fang øjeblikket med en milepæls-sticker 📸`;
+          if (isSameDayAsMonthOffset(child.birthdate, m.months)) {
+            const title = `Baby er ${m.months} måneder i dag`;
+            const message = 'Der ligger nye milepæle klar i appen.';
+            const ok = await sendPush(email, title, message, apiKey);
+            if (ok) sent++;
+          }
+        }
+
+        // Birthday milestones (1, 2, 3 years)
+        for (const b of BIRTHDAY_MILESTONES) {
+          if (isSameDayAsYearOffset(child.birthdate, b.years)) {
+            const title = 'I dag er det babys fødselsdag';
+            const message = 'Gem dagen med en milepæl, hvis du har lyst.';
             const ok = await sendPush(email, title, message, apiKey);
             if (ok) sent++;
           }
         }
       }
 
-      // ── Graviditets-milepæle (barn ikke født endnu – har terminsdato) ──
-      // Bruger terminsdato til at beregne præcis graviditetsuge.
-      // Notifikation sendes den dag en ny graviditetsuge starter.
+      // ── Graviditets-milepæle (fra terminsdato) ──
       if (!child.birthdate && child.due_date) {
         for (const m of PREGNANCY_MILESTONES) {
           if (isTodayStartOfWeek(child.due_date, m.weeks)) {
-            const title = `${m.emoji} ${m.headline}`;
-            const message = `Du er nu ${m.weeks} uger gravid! Fang øjeblikket med en milepæls-sticker 📸`;
+            const title = `Uge ${m.weeks}`;
+            const message = 'Der ligger en ny milepæl klar i appen.';
             const ok = await sendPush(email, title, message, apiKey);
             if (ok) sent++;
           }

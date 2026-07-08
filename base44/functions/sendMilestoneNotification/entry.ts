@@ -9,7 +9,6 @@ Deno.serve(async (req) => {
     const { milestone_id } = await req.json();
     if (!milestone_id) return Response.json({ error: 'milestone_id required' }, { status: 400 });
 
-    // Find notifikationstekst for denne milepæl
     const notifications = await base44.asServiceRole.entities.MilestoneNotification.filter({
       milestone_id,
       is_active: true,
@@ -23,7 +22,6 @@ Deno.serve(async (req) => {
     const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
     const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
-    // Send OneSignal push (Android only — iOS understøtter ikke web push)
     const pushBody = {
       app_id: ONESIGNAL_APP_ID,
       include_aliases: { external_id: [user.email] },
@@ -46,7 +44,6 @@ Deno.serve(async (req) => {
     const data = await res.json();
     console.log('OneSignal response:', JSON.stringify(data));
 
-    // Send email som fallback (dækker iOS-brugere)
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: user.email,
       subject: notif.title,

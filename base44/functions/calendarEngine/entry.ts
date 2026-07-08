@@ -6,7 +6,7 @@ const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
 // Wonder weeks — weeks from due date (NOT birth date)
 const WONDER_WEEKS = [
   { number: 1, week: 5, name: 'Sansernes verden' },
-  { number: 2, week: 8, name: 'Mønstre' },
+  { number: 2, week: 8, name: 'Monstre' },
   { number: 3, week: 12, name: 'Overgange' },
   { number: 4, week: 19, name: 'Begivenheder' },
   { number: 5, week: 26, name: 'Relationer' },
@@ -16,6 +16,9 @@ const WONDER_WEEKS = [
   { number: 9, week: 71, name: 'Principper' },
   { number: 10, week: 75, name: 'Systemer' },
 ];
+
+// Pregnancy milestone weeks — specific weeks with milestone content
+const PREGNANCY_MILESTONE_WEEKS = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40];
 
 function getPregnancyWeek(dueDateStr, onDate) {
   const due = new Date(dueDateStr);
@@ -64,54 +67,92 @@ function daysSince(dateStr) {
 }
 
 // Check if today is an age milestone (X months or X years from birth)
+// Birth date controls: actual age, age milestones, birthdays
 function getTodayAgeMilestone(birthDateStr) {
   if (!birthDateStr) return null;
 
-  // Months 1-23 (skip 12 = birthday)
-  for (let m = 1; m <= 23; m++) {
-    if (m === 12) continue;
+  // Months 1-11
+  for (let m = 1; m <= 11; m++) {
     if (isSameDayAsMonthOffset(birthDateStr, m)) {
       return {
         type: 'age_milestone',
-        title: m === 6 ? 'Baby er 6 måneder i dag 🌟' : `Baby er ${m} måneder i dag 🌙`,
+        title: `Baby er ${m} måneder i dag`,
         message: 'Der ligger nye milepæle klar i appen.',
         link: '/Milestones',
-        emoji: m === 6 ? '🌟' : '🌙',
       };
     }
   }
 
-  // Birthdays (1, 2, 3 years)
-  for (let y = 1; y <= 3; y++) {
-    if (isSameDayAsYearOffset(birthDateStr, y)) {
+  // 1 year (birthday)
+  if (isSameDayAsYearOffset(birthDateStr, 1)) {
+    return {
+      type: 'birthday',
+      title: 'I dag er det babys fødselsdag',
+      message: 'Gem dagen med en milepæl, hvis du har lyst.',
+      link: '/Milestones',
+    };
+  }
+
+  // Months 13-23
+  for (let m = 13; m <= 23; m++) {
+    if (isSameDayAsMonthOffset(birthDateStr, m)) {
       return {
-        type: 'birthday',
-        title: `Baby er ${y} år i dag 🎂`,
-        message: 'Gem dagen med en milepæl, hvis du har lyst.',
+        type: 'age_milestone',
+        title: `Baby er ${m} måneder i dag`,
+        message: 'Der ligger nye milepæle klar i appen.',
         link: '/Milestones',
-        emoji: '🎂',
       };
     }
+  }
+
+  // 2 years (birthday)
+  if (isSameDayAsYearOffset(birthDateStr, 2)) {
+    return {
+      type: 'birthday',
+      title: 'I dag er det babys fødselsdag',
+      message: 'Gem dagen med en milepæl, hvis du har lyst.',
+      link: '/Milestones',
+    };
+  }
+
+  // 3 years (birthday)
+  if (isSameDayAsYearOffset(birthDateStr, 3)) {
+    return {
+      type: 'birthday',
+      title: 'I dag er det babys fødselsdag',
+      message: 'Gem dagen med en milepæl, hvis du har lyst.',
+      link: '/Milestones',
+    };
   }
 
   return null;
 }
 
-// Check if today is the start of a wonder week (always from due date)
-function getTodayWonderWeek(dueDateStr) {
+// Check if today is 7 days before a wonder week starts, or the start of a wonder week
+// Tigerspring beregnes ALTID ud fra terminsdato
+function getTodayWonderWeekEvent(dueDateStr) {
   if (!dueDateStr) return null;
   const ageDays = daysSince(dueDateStr);
   if (ageDays < 0) return null;
   const ageWeeks = Math.floor(ageDays / 7);
 
   for (const ww of WONDER_WEEKS) {
-    if (ageWeeks === ww.week) {
+    // 7 days before start
+    if (ageWeeks === ww.week - 1) {
       return {
-        type: 'wonder_week',
-        title: 'Et nyt tigerspring nærmer sig 🌟',
+        type: 'wonder_week_approaching',
+        title: 'Et nyt tigerspring nærmer sig',
         message: 'Baby kan være på vej ind i en periode, hvor verden bliver lidt større. Læs mere i appen.',
         link: '/Knowledge',
-        emoji: '🌟',
+      };
+    }
+    // On start day
+    if (ageWeeks === ww.week) {
+      return {
+        type: 'wonder_week_start',
+        title: 'Tigerspring',
+        message: 'Der ligger en ny udviklingsguide klar til jer.',
+        link: '/Knowledge',
       };
     }
   }
@@ -145,11 +186,10 @@ async function sendPush(email, title, message, link) {
   }
 }
 
-async function createInApp(base44, email, title, message, emoji, link) {
+async function createInApp(base44, email, title, message, link) {
   await base44.asServiceRole.entities.AppNotification.create({
     title,
     message,
-    emoji: emoji || '🗓️',
     link: link || '/Calendar',
     target_emails: [email],
     published_at: new Date().toISOString(),
@@ -177,6 +217,17 @@ Deno.serve(async (req) => {
 
     console.log(`[calendarEngine] Profiles: ${profiles.length}, Children: ${children.length}, Events: ${allEvents.length}`);
 
+    // Build lookup maps
+    const profileByEmail = {};
+    const familyMap = {};
+    for (const p of profiles) {
+      if (p.user_email) profileByEmail[p.user_email] = p;
+      if (p.family_id && p.user_email) {
+        if (!familyMap[p.family_id]) familyMap[p.family_id] = [];
+        familyMap[p.family_id].push(p);
+      }
+    }
+
     let sent = 0;
     const processed = new Set();
 
@@ -192,20 +243,26 @@ Deno.serve(async (req) => {
       const bornChild = userChildren.find(c => c.birthdate);
       const anyChildWithDueDate = userChildren.find(c => c.due_date);
 
+      // Terminsdato: used for pregnancy weeks, pregnancy milestones, tigerspring, corrected age
       const dueDate = unbornChild?.due_date || anyChildWithDueDate?.due_date || profile.child_due_date;
+      // Fødselsdato: used for actual age, age milestones, birthdays, month markers
       const birthDate = bornChild?.birthdate || profile.child_birthdate;
 
       const isPregnant = dueDate && !birthDate;
       const isBaby = !!birthDate;
 
       // ── Pregnancy week notification (pregnancy mode only) ──
-      if (isPregnant && profile.notif_pregnancy_weekly !== false) {
+      // One notification on first day of new pregnancy week
+      if (isPregnant && dueDate && profile.notif_pregnancy_weekly !== false) {
         if (isPregnancyWeekStart(dueDate, now)) {
           const week = getPregnancyWeek(dueDate, now);
           if (week >= 4 && week <= 42) {
-            const title = 'Ny uge i graviditeten 🤰';
-            const message = `Du er nu i uge ${week}. Der ligger en lille opdatering klar til dig.`;
-            await createInApp(base44, email, title, message, '🤰', '/PregnancyWeeks');
+            const isMilestoneWeek = PREGNANCY_MILESTONE_WEEKS.includes(week);
+            const title = isMilestoneWeek ? `Uge ${week}` : 'Ny graviditetsuge';
+            const message = isMilestoneWeek
+              ? 'Der ligger en ny milepæl klar i appen.'
+              : `Uge ${week} ligger klar til dig i appen.`;
+            await createInApp(base44, email, title, message, '/PregnancyWeeks');
             await sendPush(email, title, message, '/PregnancyWeeks');
             sent++;
             console.log(`[calendarEngine] Pregnancy week ${week} notification sent to ${email}`);
@@ -214,10 +271,11 @@ Deno.serve(async (req) => {
       }
 
       // ── Age milestone notification (baby mode only) ──
-      if (isBaby && profile.notif_pregnancy_weekly !== false) {
+      // Birth date controls: one notification on the date child reaches that age
+      if (isBaby && birthDate && profile.notif_pregnancy_weekly !== false) {
         const milestone = getTodayAgeMilestone(birthDate);
         if (milestone) {
-          await createInApp(base44, email, milestone.title, milestone.message, milestone.emoji, milestone.link);
+          await createInApp(base44, email, milestone.title, milestone.message, milestone.link);
           await sendPush(email, milestone.title, milestone.message, milestone.link);
           sent++;
           console.log(`[calendarEngine] Age milestone notification sent to ${email}: ${milestone.title}`);
@@ -225,13 +283,15 @@ Deno.serve(async (req) => {
       }
 
       // ── Wonder week notification (always from due date) ──
+      // Two notifications per leap: 7 days before + on start day
+      // No daily notifications during the period
       if (dueDate && profile.wonderweeks_notifications !== false) {
-        const ww = getTodayWonderWeek(dueDate);
+        const ww = getTodayWonderWeekEvent(dueDate);
         if (ww) {
-          await createInApp(base44, email, ww.title, ww.message, ww.emoji, ww.link);
+          await createInApp(base44, email, ww.title, ww.message, ww.link);
           await sendPush(email, ww.title, ww.message, ww.link);
           sent++;
-          console.log(`[calendarEngine] Wonder week notification sent to ${email}`);
+          console.log(`[calendarEngine] Wonder week notification sent to ${email}: ${ww.type}`);
         }
       }
 
@@ -244,22 +304,48 @@ Deno.serve(async (req) => {
 
           // Day before
           if (eventDateStr === tomorrowStr && !event.notify_day_before_sent) {
-            const title = 'Du har en aftale i morgen 🗓️';
+            const title = 'Du har en aftale i morgen';
             const message = `${event.title} kl. ${timeStr}`;
-            await createInApp(base44, email, title, message, '🗓️', '/Calendar');
+            await createInApp(base44, email, title, message, '/Calendar');
             await sendPush(email, title, message, '/Calendar');
             await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_day_before_sent: true });
             sent++;
+
+            // Partner notification if event is shared (has family_id)
+            if (event.family_id) {
+              const partners = (familyMap[event.family_id] || []).filter(p => p.user_email !== email);
+              const ownerName = profile.display_name || profile.username || 'En';
+              for (const partner of partners) {
+                const pTitle = `${ownerName} har delt en aftale med dig`;
+                const pMessage = `${event.title} kl. ${timeStr}`;
+                await createInApp(base44, partner.user_email, pTitle, pMessage, '/Calendar');
+                await sendPush(partner.user_email, pTitle, pMessage, '/Calendar');
+                sent++;
+              }
+            }
           }
 
           // Same day
           if (eventDateStr === todayStr && !event.notify_same_day_sent) {
-            const title = 'Du har en aftale i dag 📅';
+            const title = 'Du har en aftale i dag';
             const message = `${event.title} kl. ${timeStr}`;
-            await createInApp(base44, email, title, message, '📅', '/Calendar');
+            await createInApp(base44, email, title, message, '/Calendar');
             await sendPush(email, title, message, '/Calendar');
             await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_same_day_sent: true });
             sent++;
+
+            // Partner notification if event is shared (has family_id)
+            if (event.family_id) {
+              const partners = (familyMap[event.family_id] || []).filter(p => p.user_email !== email);
+              const ownerName = profile.display_name || profile.username || 'En';
+              for (const partner of partners) {
+                const pTitle = `${ownerName} har delt en aftale med dig`;
+                const pMessage = `${event.title} kl. ${timeStr}`;
+                await createInApp(base44, partner.user_email, pTitle, pMessage, '/Calendar');
+                await sendPush(partner.user_email, pTitle, pMessage, '/Calendar');
+                sent++;
+              }
+            }
           }
         }
       }
