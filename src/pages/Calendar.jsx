@@ -53,19 +53,27 @@ export default function Calendar() {
   const [form, setForm] = useState({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
 
   const CATEGORIES = [
-    { key: 'jordemoder', label: lang === 'en' ? 'Midwife' : 'Jordemoder', emoji: '🤱' },
-    { key: 'scanning', label: lang === 'en' ? 'Scan' : 'Scanning', emoji: '🔬' },
-    { key: 'læge', label: lang === 'en' ? 'Doctor' : 'Læge', emoji: '🩺' },
-    { key: 'sundhedsplejerske', label: lang === 'en' ? 'Health nurse' : 'Sundhedsplejerske', emoji: '👩‍⚕️' },
-    { key: 'osteopat', label: lang === 'en' ? 'Osteopath' : 'Osteopat', emoji: '💆' },
-    { key: 'barselscafé', label: lang === 'en' ? 'Maternity café' : 'Barselscafé', emoji: '☕' },
-    { key: 'mødregruppe', label: lang === 'en' ? 'Mom group' : 'Mødregruppe', emoji: '👩‍👧' },
-    { key: 'vaccination', label: lang === 'en' ? 'Vaccination' : 'Vaccination', emoji: '💉' },
-    { key: 'fødselsforberedelse', label: lang === 'en' ? 'Birth prep' : 'Fødselsforberedelse', emoji: '🤰' },
-    { key: 'andet', label: lang === 'en' ? 'Other' : 'Andet', emoji: '📅' },
+    { key: 'jordemoder', label: lang === 'en' ? 'Midwife' : 'Jordemoder', color: '#C29A73' },
+    { key: 'scanning', label: lang === 'en' ? 'Scan' : 'Scanning', color: '#8B5E3C' },
+    { key: 'læge', label: lang === 'en' ? 'Doctor' : 'Læge', color: '#B08D72' },
+    { key: 'sundhedsplejerske', label: lang === 'en' ? 'Health nurse' : 'Sundhedsplejerske', color: '#D8B89A' },
+    { key: 'osteopat', label: lang === 'en' ? 'Osteopath' : 'Osteopat', color: '#A0785A' },
+    { key: 'barselscafé', label: lang === 'en' ? 'Maternity café' : 'Barselscafé', color: '#C8A882' },
+    { key: 'mødregruppe', label: lang === 'en' ? 'Mom group' : 'Mødregruppe', color: '#7A665A' },
+    { key: 'vaccination', label: lang === 'en' ? 'Vaccination' : 'Vaccination', color: '#5B3F2B' },
+    { key: 'fødselsforberedelse', label: lang === 'en' ? 'Birth prep' : 'Fødselsforberedelse', color: '#DCC1B0' },
+    { key: 'andet', label: lang === 'en' ? 'Other' : 'Andet', color: '#B7A79A' },
   ];
 
-  const getCategoryEmoji = (cat) => CATEGORIES.find(c => c.key === cat)?.emoji ?? '📅';
+  const getCategoryColor = (cat) => CATEGORIES.find(c => c.key === cat)?.color ?? '#B7A79A';
+  const getItemColor = (item) => {
+    if (item.id) return getCategoryColor(item.category);
+    if (item.type === 'pregnancy_week') return '#C29A73';
+    if (item.type === 'wonder_week') return '#8B5E3C';
+    if (item.type === 'age_milestone') return '#D8B89A';
+    if (item.type === 'birthday') return '#B08D72';
+    return '#B7A79A';
+  };
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -148,9 +156,17 @@ export default function Calendar() {
   const renderDayDot = (day) => {
     const items = allItemsOnDay(day);
     if (items.length === 0) return null;
-    // Show emoji of first item as indicator
-    const firstEmoji = items[0].emoji || getCategoryEmoji(items[0].category);
-    return <span className="text-[9px] leading-none">{firstEmoji}</span>;
+    const dots = items.slice(0, 3);
+    return (
+      <div className="flex items-center gap-0.5 justify-center">
+        {dots.map((item, i) => (
+          <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getItemColor(item) }} />
+        ))}
+        {items.length > 3 && (
+          <span className="text-[8px] leading-none ml-0.5" style={{ color: 'var(--color-text-muted)' }}>+</span>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -172,8 +188,8 @@ export default function Calendar() {
         {calendarMode !== 'none' && (
           <div className="mx-5 mb-4 rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                {calendarMode === 'pregnancy' ? '🤰' : '👶'}
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: calendarMode === 'pregnancy' ? '#C29A73' : '#D8B89A' }}>
+                <span className="w-3 h-3 rounded-full bg-white/80" />
               </div>
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
@@ -190,8 +206,8 @@ export default function Calendar() {
               <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--color-border)' }}>
                 <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                   {currentWW.status === 'active'
-                    ? (lang === 'en' ? `🌟 Wonder week ${currentWW.number} — active now` : `🌟 Tigerspring ${currentWW.number} — aktiv nu`)
-                    : (lang === 'en' ? `🌟 Wonder week ${currentWW.number} in ${currentWW.weeksUntil} weeks` : `🌟 Tigerspring ${currentWW.number} om ${currentWW.weeksUntil} uger`)}
+                    ? (lang === 'en' ? `Wonder week ${currentWW.number} — active now` : `Tigerspring ${currentWW.number} — aktiv nu`)
+                    : (lang === 'en' ? `Wonder week ${currentWW.number} in ${currentWW.weeksUntil} weeks` : `Tigerspring ${currentWW.number} om ${currentWW.weeksUntil} uger`)}
                 </p>
               </div>
             )}
@@ -274,8 +290,8 @@ export default function Calendar() {
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
                   onClick={() => isDynamic && handleItemClick(item)}
                 >
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-                    {isUserEvent ? getCategoryEmoji(item.category) : item.emoji}
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: getItemColor(item) }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>
@@ -355,7 +371,7 @@ export default function Calendar() {
                           ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
                           : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
                       >
-                        {cat.emoji} {cat.label}
+                        <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: cat.color }} /> {cat.label}
                       </button>
                     ))}
                   </div>
@@ -399,7 +415,7 @@ export default function Calendar() {
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      {lang === 'da' ? '📲 Dagen før' : '📲 Day before'}
+                      {lang === 'da' ? 'Dagen før' : 'Day before'}
                     </span>
                     <Switch
                       checked={form.notify_day_before}
@@ -408,7 +424,7 @@ export default function Calendar() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      {lang === 'da' ? '⏰ 30 min før' : '⏰ 30 min before'}
+                      {lang === 'da' ? '30 min før' : '30 min before'}
                     </span>
                     <Switch
                       checked={form.notify_30min_before}
