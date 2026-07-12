@@ -116,7 +116,7 @@ export const PREGNANCY_WEEKS = {
       "Hvis {{motherName}} stadig er træt, kvalm eller følelsesmæssigt fyldt op, er det ikke fordi hun 'hænger fast' i symptomerne. Kroppen arbejder stadig intenst. Det kan betyde meget, at du ikke forventer, at hun bare er tilbage til normalen endnu."
     ],
     nextStepText: [
-      "Overvej om I har lyst til at skrive graviditetsdagbog. Det kan være en rigtig fin måde at få styr på alle tankerne, og så er det et fint minde at sidde med senere i livet. Hvis lysten er der, men du ikke helt ved, hvor du skal starte, så findes der bøger til formål, som kan hjælpe dig i gang."
+      "Overvej om I har lyst til at skrive graviditetsdagbog. Det kan være en rigtig fin måde at få styr på alle tankerne, og så er det et fint minde at sidde med senere i livet. Hvis lysten er der, men du ikke helt ved, hvor du skal starte, så findes der bøger til formålet, som kan hjælpe dig i gang."
     ],
     linkUrl: null
   },
