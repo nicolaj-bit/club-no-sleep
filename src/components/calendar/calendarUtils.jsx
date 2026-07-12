@@ -147,10 +147,11 @@ export function getDynamicItemsForDay(dueDate, birthDate, day) {
     if (week >= 4 && week <= 42) {
       items.push({
         type: 'pregnancy_week',
+        week,
         title: `Graviditetsuge ${week}`,
         headline: `Uge ${week}`,
         message: 'Der ligger en lille opdatering klar til dig.',
-        link: '/PregnancyWeeks',
+        link: `/PregnancyWeekDetail?week=${week}`,
       });
     }
   }
