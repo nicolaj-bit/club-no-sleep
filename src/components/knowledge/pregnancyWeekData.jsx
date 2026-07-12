@@ -352,7 +352,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} bærer baby fysisk, men I kan begge begynde at bære tankerne om den familie, I er ved at skabe. Det kan være fint at tale om barndomsminder, og det vil for de fleste betyde meget, hvis du tager initiativ til at snakke om baby. På denne måde mærker hun også, at Jeres nye forældreskab også fylder i dine tanker."
     ],
     nextStepText: [
-      "Tal om hvad som I husker som de bedste minder fra jeres egen barndom, og hvordan I kan videreføre det til jeres eget barn. Det behøver ikke være de helt store ting, men kan være små minder, som har betydet noget. Minder som at din mor gav dig strømper på under dynen om morgenen, eller at din far læste godnathistorie med sjove stemmer om aftenen."
+      "Tal om hvad I husker som de bedste minder fra jeres egen barndom, og hvordan I kan videreføre det til jeres eget barn. Det behøver ikke være de helt store ting, men kan være små minder, som har betydet noget. Minder som at din mor gav dig strømper på under dynen om morgenen, eller at din far læste godnathistorie med sjove stemmer om aftenen."
     ],
     linkUrl: null
   },
