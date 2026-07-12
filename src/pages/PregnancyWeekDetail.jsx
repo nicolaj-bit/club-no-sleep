@@ -138,24 +138,6 @@ export default function PregnancyWeekDetail() {
           </div>
         </div>
 
-        {/* PDF download for week 37 */}
-        {week === 37 && (
-          <a
-            href="https://media.base44.com/files/public/699f47a86e7e0a874d1159ed/34c43112a_DenUltimativepakkelistetilhospitalstasken.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-            className="flex items-center justify-between w-full rounded-2xl p-4 border"
-            style={{ backgroundColor: 'var(--color-primary)', borderColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-          >
-            <div>
-              <p className="text-sm font-semibold">{t.pwdPackingListTitle}</p>
-              <p className="text-xs opacity-80 mt-0.5">{t.pwdPackingListSub}</p>
-            </div>
-            <span className="text-xs font-medium px-3 py-1.5 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Download</span>
-          </a>
-        )}
-
         {/* Prev/Next navigation */}
         <div className="grid grid-cols-2 gap-3 pt-2">
           {prevWeek ? (

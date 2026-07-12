@@ -135,7 +135,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Mange vælger at dele nyhederne efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyhederne. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måder at fortælle nyheden på! {{link}}."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/sådan-indretter-du-puslebordet"
+    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/saadan-indretter-du-puslebordet"
   },
   12: {
     title: "Uge 12",
@@ -269,7 +269,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Tal om, om I ønsker at arrangere en 'gender reveal party' eller på anden måde gøre noget ud af at afsløre kønnet. Klik {{link}} hvor vi har samlet en række søde, sjove og festlige måde at afsløre kønnet på."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/fine-måder-at-afsløre-babys-køn"
+    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/fine-maader-at-afsloere-babys-koen"
   },
   20: {
     title: "Uge 20",
@@ -504,9 +504,9 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan måske have svingende overskud til praktiske ting. Hjælp med at gøre hjemmet klar på en rolig måde. Det handler ikke om at alting skal stå knivskarpt, men om at skabe en tryg base."
     ],
     nextStepText: [
-      "Brug den næste uges tid på at gøre puslepladsen klar. Det er ikke fordi, at der er behov for det helt store, men det er rart at have et praktisk sted, hvor baby ligger rart og alting er lige ved hånden. Ønsker I inspiration til en hyggelig og praktisk pusleplads så kig her."
+      "Brug den næste uges tid på at gøre puslepladsen klar. Det er ikke fordi, at der er behov for det helt store, men det er rart at have et praktisk sted, hvor baby ligger rart og alting er lige ved hånden. Ønsker I inspiration til en hyggelig og praktisk pusleplads så kig {{link}}."
     ],
-    linkUrl: null
+    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/saadan-indretter-du-puslebordet"
   },
   35: {
     title: "Uge 35",
