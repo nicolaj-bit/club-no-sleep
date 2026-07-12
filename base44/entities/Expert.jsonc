@@ -47,6 +47,18 @@
     "city": {
       "type": "string"
     },
+    "address": {
+      "type": "string",
+      "description": "Adresse"
+    },
+    "instagram": {
+      "type": "string",
+      "description": "Instagram URL"
+    },
+    "website": {
+      "type": "string",
+      "description": "Hjemmeside URL"
+    },
     "rating": {
       "type": "number",
       "description": "Gennemsnitlig rating (1-5)"
@@ -73,7 +85,6 @@
     }
   },
   "required": [
-    "user_email",
     "name",
     "title"
   ],
