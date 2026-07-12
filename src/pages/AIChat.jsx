@@ -82,6 +82,7 @@ export default function AIChat() {
   const [savingName, setSavingName] = useState(false);
   const [pickingAvatar, setPickingAvatar] = useState(false);
   const [savingAvatar, setSavingAvatar] = useState(false);
+  const [restoringChat, setRestoringChat] = useState(true);
   const aiName = activeProfile?.ai_assistant_name || t.aiChatTitle;
   const userAvatar = activeProfile?.ai_assistant_avatar;
   const avatarUrl = userAvatar || iconUrl;
@@ -130,6 +131,48 @@ export default function AIChat() {
     }).catch(() => {});
     // Check admin
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
+
+    // Restore most recent conversation with messages
+    const loadRecentConversation = async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) { setRestoringChat(false); return; }
+
+        const conversations = await base44.agents.listConversations({});
+        if (!conversations || conversations.length === 0) { setRestoringChat(false); return; }
+
+        // Sort by date, most recent first
+        conversations.sort((a, b) => {
+          const dateA = new Date(a.updated_date || a.created_date || 0);
+          const dateB = new Date(b.updated_date || b.created_date || 0);
+          return dateB - dateA;
+        });
+
+        // Check the most recent conversations for one with messages
+        for (const convMeta of conversations.slice(0, 5)) {
+          const fullConv = await base44.agents.getConversation(convMeta.id);
+          const hasVisibleMessages = (fullConv.messages || []).filter(m => m.role !== 'tool').length > 0;
+          if (hasVisibleMessages) {
+            if (unsubRef.current) unsubRef.current();
+            setConversation(fullConv);
+            setMessages(fullConv.messages || []);
+            setMode(fullConv.agent_name === 'encouragement' ? 'encouragement' : 'question');
+            const unsubscribe = base44.agents.subscribeToConversation(fullConv.id, (data) => {
+              setMessages(data.messages || []);
+              setIsLoading(false);
+            });
+            unsubRef.current = unsubscribe;
+            setRestoringChat(false);
+            return;
+          }
+        }
+        setRestoringChat(false);
+      } catch (e) {
+        console.log('Could not load recent conversation');
+        setRestoringChat(false);
+      }
+    };
+    loadRecentConversation();
   }, []);
 
   const handleIconUpload = async (e) => {
@@ -322,8 +365,15 @@ export default function AIChat() {
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="100%">
 
+        {/* Loading state while restoring recent conversation */}
+        {restoringChat && visibleMessages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <div className="w-8 h-8 border-2 border-stone-300 border-t-[#C8A882] rounded-full animate-spin" />
+          </div>
+        )}
+
         {/* Empty state */}
-        {visibleMessages.length === 0 && !isLoading && mode === null && (
+        {!restoringChat && visibleMessages.length === 0 && !isLoading && mode === null && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16 gap-4">
             <div className="relative">
               <AIAvatar size="lg" iconUrl={avatarUrl} />
@@ -429,7 +479,7 @@ export default function AIChat() {
       </div>
 
       {/* Input bar */}
-      {hasSubscription && (mode !== null || visibleMessages.length > 0) && (
+      {hasSubscription && !restoringChat && (mode !== null || visibleMessages.length > 0) && (
       <div
         className="px-4 pt-3 pb-6 border-t"
         style={{
