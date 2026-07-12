@@ -473,7 +473,7 @@ export const PREGNANCY_WEEKS = {
       "Selvom det er {{motherName}}, som har den største opgave foran sig i forbindelse med fødslen, så har du også en vigtig rolle. Det kan være rart at tale om, hvordan du bedst kan støtte hende (og dig selv), inden I står midt i det."
     ],
     nextStepText: [
-      "Tal om hvilken rolle partneren skal have under fødslen. Hvor lidt eller hvor meget ønsker i, at partneren skal deltage? Er der øvelser, som er en hjælp for den fødende? Massage, akupunktur eller ord? Er det partneren som klipper navlesnoren, hvis det bliver en mulighed? Det er meget forskelligt fra par til par, hvor deltagende partneren er. Det vigtigste er, at I har fået snakket om det på forhånd er on the same page."
+      "Tal om hvilken rolle partneren skal have under fødslen. Hvor lidt eller hvor meget ønsker i, at partneren skal deltage? Er der øvelser, som er en hjælp for den fødende? Massage, akupunktur eller ord? Er det partneren som klipper navlesnoren, hvis det bliver en mulighed? Det er meget forskelligt fra par til par, hvor deltagende partneren er. Det vigtigste er, at I har fået snakket om det på forhånd så i har samme forventning."
     ],
     linkUrl: null
   },
