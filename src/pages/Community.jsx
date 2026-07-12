@@ -271,7 +271,7 @@ export default function Community() {
                   </div>
                   <div>
                     <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.location}</p>
-                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.findNearby}</p>
+                    <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Se mødre nær dig</p>
                   </div>
                 </div>
                 {locationEnabled ? (
