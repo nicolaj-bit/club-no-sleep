@@ -54,7 +54,7 @@ export const PREGNANCY_WEEKS = {
   7: {
     title: "Uge 7",
     mainText: [
-      "I uge 7 sker der meget inde i det lille univers, du bærer rundt på. Baby er cirka på størrelse med et lille blåbær, og kroppen begynder langsomt at tage mere form. Smaa anlæg til arme og ben er på vej, og hovedet fylder stadig en stor del af det hele.",
+      "I uge 7 sker der meget inde i det lille univers, du bærer rundt på. Baby er cirka på størrelse med et lille blåbær, og kroppen begynder langsomt at tage mere form. Små anlæg til arme og ben er på vej, og hovedet fylder stadig en stor del af det hele.",
       "Det kan lyde lidt vildt, at noget på størrelse med et blåbær allerede kan lave så meget ballade i kroppen. Men det kan det.",
       "Måske er kvalmen taget til. Måske er du sulten og utilpas på samme tid, hvilket er en ret træls kombination. Måske er du så træt, at en tur fra sofæn til køkkenet føles som en lille ekspedition. Måske græder du over en reklame, en rugbrødsmad eller ingenting.",
       "Hormonerne pumper derudaf, kroppen bygger noget stort, og du prøver bare at være et menneske imens og få hverdagen til at fungere.",
@@ -74,7 +74,7 @@ export const PREGNANCY_WEEKS = {
       "Baby er nu cirka på størrelse med en hindbær. Stadig lille nok til at være helt usynlig udefra, men stor nok til at fylde ret meget i dit indre landskab.",
       "De små arme og ben udvikler sig videre, og ansigtet begynder langsomt at tage form. Det er stadig meget tidligt, men kroppen er i fuld gang med at bygge et lille menneske fra bunden. Ret imponerende, når man tænker på, at du måske samtidig bare prøver at overleve lugten af opvaskemaskinen.",
       "Mange mærker stadig kvalme, træthed, ømme bryster, humørsvingninger og en ret ny relation til mad. Måske har du cravings. Måske har du anticravings, hvor alt du plejede at kunne lide, pludselig får dig til at løbe hen til vasken.",
-      "Det kan være en lidt mærkelig tid. Du føles måske meget gravid, men ser ikke gravid ud. Og det kan gøre det svært for andre at forstaa, hvor meget der faktisk sker.",
+      "Det kan være en lidt mærkelig tid. Du føles måske meget gravid, men ser ikke gravid ud. Og det kan gøre det svært for andre at forstå, hvor meget der faktisk sker.",
       "Men din krop ved det.",
       "Den arbejder stille, intenst og hele tiden."
     ],
@@ -82,7 +82,7 @@ export const PREGNANCY_WEEKS = {
       "Selvom graviditeten stadig er usynlig for andre, kan den fylde meget for {{motherName}}. Det kan betyde noget, at du tager det alvorligt, også før maven kommer. Det kan måske virke som om, at I ikke snakker om andet, når I er alene, men husk på, at for {{motherName}} fylder graviditeten helt naturligt rigtig meget, og hvis I stadig holder nyheden hemmelig, så er du den eneste, som hun kan dele sine tanker, bekymringer, begejstring og alt derimellem med."
     ],
     nextStepText: [
-      "Hvis I ikke allerede har gjort det, kan det være et godt tidspunkt at få styr på første lægebesøg og de næste aftaler i graviditeten. Anvend eventuelt kalenderen i denne app og husk at slaa til, at den maa deles med din partner, så I begge får påmindelser om aftalerne."
+      "Hvis I ikke allerede har gjort det, kan det være et godt tidspunkt at få styr på første lægebesøg og de næste aftaler i graviditeten. Anvend eventuelt kalenderen i denne app og husk at slå til, at den må deles med din partner, så I begge får påmindelser om aftalerne."
     ],
     linkUrl: null
   },
@@ -99,7 +99,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan godt føle sig lidt fanget mellem at være gravid og endnu ikke rigtig kunne vise det. Det kan være en sårbar tid, hvor hun både har brug for ro, forståelse og at du tager hendes symptomer alvorligt, selvom maven endnu ikke fylder."
     ],
     nextStepText: [
-      "Overvej om det er for Jer at tage mavebilleder undervejs i graviditeten. Det kan være et hyggeligt minde at se tilbage på, men det skal samtidig føles trygt og naturligt. Anvend eventuelt milepælsfiltrene i appen. Her har du også mulighed for at slaa påmindelser til, hvis du vil mindes om, at det er tid til et nyt mavebillede."
+      "Overvej om det er for Jer at tage mavebilleder undervejs i graviditeten. Det kan være et hyggeligt minde at se tilbage på, men det skal samtidig føles trygt og naturligt. Anvend eventuelt milepælsfiltrene i appen. Her har du også mulighed for at slå påmindelser til, hvis du vil mindes om, at det er tid til et nyt mavebillede."
     ],
     linkUrl: null
   },
@@ -107,7 +107,7 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 10",
     mainText: [
       "Baby er cirka på størrelse med et jordbær, og selvom det stadig er meget småt, er der sket enormt meget. Mange af de vigtigste anlæg i kroppen er på plads, og nu handler udviklingen mere og mere om at vokse, forfine og styrke det hele.",
-      "Smaa fingre og tæer begynder at blive tydeligere. Ansigtet udvikler sig, og kroppen begynder langsomt at få mere form. Det lille liv inde i dig er stadig alt for lille til, at du kan mærke bevægelser, men der er allerede aktivitet.",
+      "Små fingre og tæer begynder at blive tydeligere. Ansigtet udvikler sig, og kroppen begynder langsomt at få mere form. Det lille liv inde i dig er stadig alt for lille til, at du kan mærke bevægelser, men der er allerede aktivitet.",
       "For dig kan uge 10 føles som en fortsættelse af de seneste uger. Måske er kvalmen stadig en trofast og rigtig træls følgesvend. Måske er trætheden så tung, at du næsten ikke kan genkende dig selv. Måske er du begyndt at tælle ned til, at første trimester snart er bag dig.",
       "Det er også helt normalt, hvis du bliver lidt mere utålmodig nu. Du er måske træt af at gå med hemmeligheden selv, og alligevel er der stadig lidt uger endnu til første scanning, og til at maven tydeligt kan ses udefra.",
       "Graviditeten kan godt føles både meget virkelig og meget uvirkelig på samme tid."
@@ -144,7 +144,7 @@ export const PREGNANCY_WEEKS = {
       "Hvis I skal til 12 ugers scanning, kan det være første gang, I virkelig ser baby på en skærm. Et lille bankende hjerte. En lille krop. Måske en bevægelse, der får det hele til at føles meget virkeligt på een gang.",
       "For nogle bliver denne uge fyldt med lettelse. For andre vækker den nervøsitet. Måske har du ventet på at nå hertil, før du turde tro lidt mere på det. Måske har du allerede knyttet dig dybt. Måske føles det stadig lidt uvirkeligt.",
       "I kroppen kan symptomerne begynde at lette for nogle, mens andre stadig kæmper med kvalme, træthed og en krop, der føles som om den har sit eget lille styresystem.",
-      "Det er ikke en konkurrence om at nyde det mest. Det er en stor overgang, og du maa gerne lande i den i dit eget tempo."
+      "Det er ikke en konkurrence om at nyde det mest. Det er en stor overgang, og du må gerne lande i den i dit eget tempo."
     ],
     partnerText: [
       "For {{motherName}} kan uge 12 være følsesfuld på mange made. Måske er hun lettet, nervøs, rørt eller helt flad bagefter. Giv plads til, at scanningen ikke bare er en aftale i kalenderen, men et øjeblik der kan sidde i kroppen længe efter."
@@ -275,17 +275,17 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 20",
     mainText: [
       "Uge 20 føles for mange som en stor milepæl. Halvvejs. Baby er cirka på størrelse med en banan, og kroppen er i fuld gang med at vokse, øve sig og blive mere klar til livet udenfor maven.",
-      "Hvis I skal til 20 ugers scanning, kan det være en meget særlig oplevelse. Her bliver baby gennemgået mere grundigt, og mange mærker, at graviditeten bliver endnu mere virkelig bagefter. En lille profil på skærmen. Smaa hænder. Måske en fod. Måske en baby, der absolut ikke gider ligge samarbejdsvilligt. Måske går I derfra med folelsen af allerede at have fået en fornemmelse af babys personlighed.",
+      "Hvis I skal til 20 ugers scanning, kan det være en meget særlig oplevelse. Her bliver baby gennemgået mere grundigt, og mange mærker, at graviditeten bliver endnu mere virkelig bagefter. En lille profil på skærmen. Små hænder. Måske en fod. Måske en baby, der absolut ikke gider ligge samarbejdsvilligt. Måske går I derfra med folelsen af allerede at have fået en fornemmelse af babys personlighed.",
       "Baby kan nu begynde at høre lyde og stemmer. Mest dæmpet og filtreret gennem kroppen, men din stemme er allerede en del af babys lille verden. Måske er det lidt rørende at tænke på, at noget så hverdagsagtigt som din stemme, din latter eller lyden af dig, der går rundt derhjemme, allerede kan blive genkendeligt.",
       "For nogle er denne uge fyldt med lettelse. For andre også med nervøsitet. Begge dele giver mening. Det er et stort tidspunkt i graviditeten.",
       "Du kan måske mærke baby mere tydeligt nu, men det varierer meget. Placering af moderkagen, din krop og om du har været gravid før kan alt sammen spille ind. Det vigtigste er ikke at sammenligne for meget med andre.",
-      "Uge 20 kan også aabne for større tanker. Ikke kun om babyudstyr og navne, men om familie, værdier og det liv, I gerne vil skabe."
+      "Uge 20 kan også åbne for større tanker. Ikke kun om babyudstyr og navne, men om familie, værdier og det liv, I gerne vil skabe."
     ],
     partnerText: [
       "Baby kan begynde at høre stemmer nu, og {{motherName}} bærer allerede meget af babys lydverden i sig. Hvis du taler til maven, synger lidt eller bare siger hej, er det ikke fjollet. Det er derimod en lille begyndelse på en hel særlig kontakt mellem dig og baby. Hvis du gør det regelmæssigt vil du endda kunnne opleve, at baby med tiden 'svarer' fx med et lille spark."
     ],
     nextStepText: [
-      "Tal aabent og kærligt om hvilke værdier I ønsker at tage med fra Jeres egen opdragelse. Måske er der elementer fra Jeres egen barndom, som I husker som særligt værdifulde. Måske er der også elementer I ønsker at bryde med."
+      "Tal åbent og kærligt om hvilke værdier I ønsker at tage med fra Jeres egen opdragelse. Måske er der elementer fra Jeres egen barndom, som I husker som særligt værdifulde. Måske er der også elementer I ønsker at bryde med."
     ],
     linkUrl: null
   },
@@ -309,13 +309,13 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 22",
     mainText: [
       "Baby er cirka på størrelse med en papaya, og der er efterhånden mere baby at forholde sig til. Kroppen vokser, sanserne udvikler sig, og baby kan måske reagere på lyd og bevægelse på små made.",
-      "Det kan være, du mærker mere liv nu. Smaa puf, skub eller bevægelser, der bliver mere genkendelige. Nogle dage kan der være mere aktivitet end andre, og i denne periode er der stadig god plads derinde til at vende og dreje sig.",
+      "Det kan være, du mærker mere liv nu. Små puf, skub eller bevægelser, der bliver mere genkendelige. Nogle dage kan der være mere aktivitet end andre, og i denne periode er der stadig god plads derinde til at vende og dreje sig.",
       "Din egen krop kan også begynde at kræve lidt mere opmærksomhed. Måske er huden på maven begyndt at stramme. Måske kommer der halsbrand, ømme ligamenter eller en følse af, at kroppen har brug for en anden slags tempo end før.",
       "Det er også ofte omkring denne tid, at babyting begynder at dukke op i tankerne. Hvad har man egentlig brug for? Hvad er nødvendigt? Hvad er bare virkelig nuttet? Og hvorfor findes der så meget?!",
       "Det kan hurtigt blive overvældende. Men baby har ikke brug for alt. Baby har brug for tryghed, nærhed, mad, søvn, omsorg og nogle få gode ting, der fungerer i jeres hverdag."
     ],
     partnerText: [
-      "Det kan være en stor hjælp for {{motherName}}, hvis projekt babyudstyr bliver en fælles opgave. Både for at gøre opgaven mere overskuelig, men også for at vise interesse. Måske du kunne foreslaa en tur til en børneudstyrsbutik?"
+      "Det kan være en stor hjælp for {{motherName}}, hvis projekt babyudstyr bliver en fælles opgave. Både for at gøre opgaven mere overskuelig, men også for at vise interesse. Måske du kunne foreslå en tur til en børneudstyrsbutik?"
     ],
     nextStepText: [
       "Overvej hvilke babyting I faktisk har brug for, og hvad I gerne vil vente med. Er der eventuelt udstyr eller tøj som kan gå i arv fra søskende eller familie? Kan noget kobes brugt? Og er der ting som kan vente, indtil I rent faktisk ved om behovet opståer? Klik {{link}} for at se en komplet indkøbsliste til den første tid."
@@ -326,10 +326,10 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 23",
     mainText: [
       "Baby er nu cirka på størrelse med en aubergine. Der er stadig masser af udvikling i gang, men baby begynder at føles mere og mere som et lille menneske, der faktisk bor derinde og ikke bare som en ide, man taler om.",
-      "Bevægelserne kan måske mærkes mere tydeligt nu. Smaa puf, skub eller en følse af, at nogen lige vender sig rundt indefra. Det kan stadig variere meget fra dag til dag, men måske begynder du at genkende babys små mønstre.",
+      "Bevægelserne kan måske mærkes mere tydeligt nu. Små puf, skub eller en følse af, at nogen lige vender sig rundt indefra. Det kan stadig variere meget fra dag til dag, men måske begynder du at genkende babys små mønstre.",
       "Kroppen kan også begynde at føles mere gravid på den praktiske made. Måske kommer der mere tyngde, flere toiletbesøg, lidt halsbrand eller folelsen af, at du ikke helt kan sidde, ligge eller rejse dig lige så elegant som før. Baby vokser, og det gør dit behov for pauser måske også.",
       "Det kan også være, at tankerne om fødslen begynder at melde sig lidt mere nu. Ikke nødvendigvis på en dramatisk made, men som små spørgsmål. Hvordan mon det bliver? Hvad har jeg brug for? Hvad vil jeg gerne vide mere om?",
-      "Det kan være rart at aabne døren til de tanker stille og roligt, før det hele kommer tættere på."
+      "Det kan være rart at åbne døren til de tanker stille og roligt, før det hele kommer tættere på."
     ],
     partnerText: [
       "For {{motherName}} kan fødslen begynde at fylde lidt mere i tankerne, også selvom der stadig er god tid. Det kan være en stor støtte, hvis du går nysgerrigt ind i samtalen sammen med hende, i stedet for at tænke, at det først er relevant senere."
@@ -349,7 +349,7 @@ export const PREGNANCY_WEEKS = {
       "Nogle gange begynder forældreskabet allerede der. I de små tanker om, hvad et godt barndomsminde egentlig er."
     ],
     partnerText: [
-      "{{motherName}} bærer baby fysisk, men I kan begge begynde at bære tankerne om den familie, I er ved at skabe. Det kan være fint at tale om barndomsminder, og det vil for de fleste betyde meget, hvis du tager initiativ til at snakke om baby. Paa denne made mærker hun også, at Jeres nye forældreskab også fylder i dine tanker."
+      "{{motherName}} bærer baby fysisk, men I kan begge begynde at bære tankerne om den familie, I er ved at skabe. Det kan være fint at tale om barndomsminder, og det vil for de fleste betyde meget, hvis du tager initiativ til at snakke om baby. På denne made mærker hun også, at Jeres nye forældreskab også fylder i dine tanker."
     ],
     nextStepText: [
       "Tal om hvad som I husker som de bedste minder fra jeres egen barndom, og hvordan I kan videreføre det til jeres eget barn. Det behøver ikke være de helt store ting, men kan være små minder, som har betydet noget. Minder som at din mor gav dig strømper på under dynen om morgenen, eller at din far læste godnathistorie med sjove stemmer om aftenen."
@@ -397,7 +397,7 @@ export const PREGNANCY_WEEKS = {
       "Kroppen kan begynde at føles tungere, og du bliver måske hurtigere forpustet eller mere træt end før. Det giver god mening. Din krop arbejder hele tiden, også når du selv synes, du ikke laver noget."
     ],
     partnerText: [
-      "{{motherName}} kan måske mærke graviditeten mere fysisk nu. Det kan være en stor hjælp, hvis du tager lidt mere praktisk ansvar uden at vente på at blive spurgt. Smaa ting kan føles meget store, når kroppen er tung."
+      "{{motherName}} kan måske mærke graviditeten mere fysisk nu. Det kan være en stor hjælp, hvis du tager lidt mere praktisk ansvar uden at vente på at blive spurgt. Små ting kan føles meget store, når kroppen er tung."
     ],
     nextStepText: [
       "Tal om, om I ønsker Jer en sidste getaway sammen, inden I bliver et familiemedlem rigere. At stå på tærsklen til at gå fra to til tre kan føles som en ret stor ting, og for nogle er det helt rigtig at snuppe en spa-date, en overnatning, en forlænget weekend eller lignende sammen bare Jer to."
@@ -408,8 +408,8 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 28",
     mainText: [
       "Baby er cirka på størrelse med en aubergine og du er nu godt på vej ind i den sidste del af graviditeten. Baby vokser, tager mere på og begynder at fylde godt i maven. Bevægelserne kan føles tydeligere, og nogle gange kan du måske næsten se dem udenpå maven. Det kan være en ret vild oplevelse for din partner også.",
-      "Baby kan aabne og lukke øjnene, og hjernen udvikler sig hurtigt. Der er stadig vigtige uger tilbage, men det lille menneske derinde bliver mere og mere klar til verden udenfor.",
-      "For dig kan tredje trimester føles som et skift. Måske bliver søvnen lettere forstyrret, kroppen tungere og behovet for pauser større. Du maa gerne sænke tempøt lidt."
+      "Baby kan åbne og lukke øjnene, og hjernen udvikler sig hurtigt. Der er stadig vigtige uger tilbage, men det lille menneske derinde bliver mere og mere klar til verden udenfor.",
+      "For dig kan tredje trimester føles som et skift. Måske bliver søvnen lettere forstyrret, kroppen tungere og behovet for pauser større. Du må gerne sænke tempøt lidt."
     ],
     partnerText: [
       "{{motherName}} kan måske have brug for mere ro og mere hjælp nu, også selvom hun ikke altid beder om det. Det er helt normalt hvis hendes søvn begynder at blive påvirket nu, og det kan påvirket overskud i dagtimerne. Måske hun har brug for, at du reder op på sofæn til en dejlig middagslur."
@@ -429,7 +429,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} er måske både spændt, træt, glad og lidt overvældet. Det kan være en stor gave, hvis du kan være rolig, kærlig og stabil, også når følelserne skifter hurtigt."
     ],
     nextStepText: [
-      "Tag en aaben snak om dåb versus navngivning. I Danmark skal babyer navngives før de er et halvt aar, og dette kan gøres ved enten dåb i folkekirken eller navngivning i sognet hvor barnet bor. Der er altså massere af tid til at beslutte sig, men det kan være en god ide at lufte Jeres tanker inden baby kommer til verden."
+      "Tag en aaben snak om dåb versus navngivning. I Danmark skal babyer navngives før de er et halvt år, og dette kan gøres ved enten dåb i folkekirken eller navngivning i sognet hvor barnet bor. Der er altså massere af tid til at beslutte sig, men det kan være en god ide at lufte Jeres tanker inden baby kommer til verden."
     ],
     linkUrl: null
   },
@@ -489,7 +489,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan have brug for, at du er med til at tænke praktisk fremad. Det er en stor tryghed at vide, at I er to om at sikre praktikken omkring fødslen. Hvad gør I, hvis fødslen går i gang? Hvem ringer I til? Hvad skal være klar?"
     ],
     nextStepText: [
-      "Tal om hvad der skal ske, når fødslen går i gang? Hvem tager sig af eventuelle søskende eller kæledyr? Hvordan kommer I til hospitalet, hvis det er her, at fødslen skal foregaa? Hvad skal klargøres, hvis det er en hjemmefødsel? Har I vigtige telefonnumre lige ved hånden?"
+      "Tal om hvad der skal ske, når fødslen går i gang? Hvem tager sig af eventuelle søskende eller kæledyr? Hvordan kommer I til hospitalet, hvis det er her, at fødslen skal foregå? Hvad skal klargøres, hvis det er en hjemmefødsel? Har I vigtige telefonnumre lige ved hånden?"
     ],
     linkUrl: null
   },
@@ -512,7 +512,7 @@ export const PREGNANCY_WEEKS = {
     title: "Uge 35",
     mainText: [
       "Baby er cirka på størrelse med en honningmelon og nærmere sig sin fødselsvægt, men vokser stadig. Kroppen bliver rundere, og der er mindre plads til de store bevægelser. Måske føles det mere som stræk derinde, og maven kan se helt ud-af-form-agtig ud, når baby møver rundt.",
-      "Maven er nok svær at overse nu, og måske får du flere kommentarer fra andre. Folk mener det ofte kærligt, men det kan godt føles som meget. Du maa gerne sige fra, hvis du ikke orker mere smalltalk om maven eller berøring.",
+      "Maven er nok svær at overse nu, og måske får du flere kommentarer fra andre. Folk mener det ofte kærligt, men det kan godt føles som meget. Du må gerne sige fra, hvis du ikke orker mere smalltalk om maven eller berøring.",
       "For dig kan de sidste uger føles som en blanding af ventetid, træthed og forventning."
     ],
     partnerText: [
@@ -564,7 +564,7 @@ export const PREGNANCY_WEEKS = {
       "Omverdenen begynder måske også at skrive mere. 'Er der sket noget?' 'Nogen baby?' Det kan være kærligt ment, men det kan også være trættende, når man selv går og venter."
     ],
     partnerText: [
-      "{{motherName}} kan have brug for, at du hjælper med at passe på boblen. I behøver ikke svare alle med det samme. I maa gerne lave jeres egne små regler for kontakt, besøg og opdateringer."
+      "{{motherName}} kan have brug for, at du hjælper med at passe på boblen. I behøver ikke svare alle med det samme. I må gerne lave jeres egne små regler for kontakt, besøg og opdateringer."
     ],
     nextStepText: [
       "Tal om hvem I ønsker skal besøge jer på hospitalet, hvis nogen, og om og af hvem I ønsker besøg den første tid hjemme. Der kan være mange forventninger fra familien til den første tid, og måske også fra Jer selv. Mærk efter hvad I egentlig har lyst til, og husk på, at det er Jer som i sidste ende bestemmer."
@@ -574,7 +574,7 @@ export const PREGNANCY_WEEKS = {
   39: {
     title: "Uge 39",
     mainText: [
-      "Baby er cirka på størrelse med en vandmelon og nu er det tæt på. Baby er klar til at møde jer, men bestemmer stadig selv timingen sammen med kroppen. Det kan føles som at stå med hånden på dørhåndtaget uden at vide, hvornår døren aabner.",
+      "Baby er cirka på størrelse med en vandmelon og nu er det tæt på. Baby er klar til at møde jer, men bestemmer stadig selv timingen sammen med kroppen. Det kan føles som at stå med hånden på dørhåndtaget uden at vide, hvornår døren åbner.",
       "Måske er du tung, øm, træt eller bare meget klar. Måske får du pludselig energi til at ordne skuffer, vaske babytøj eller rydde op i noget, ingen andre kan forstå vigtigheden af. Redebygning ER en ting!",
       "Prøv at give dig selv lov til at være i det uden at analysere alt. De sidste dage kan være stille, mærkelige, intense men også magiske."
     ],
@@ -591,7 +591,7 @@ export const PREGNANCY_WEEKS = {
     mainText: [
       "Baby er cirka på størrelse med et lille halloweengræskar og terminsugen er her. Den dato, I måske har talt om i månedsvis, ståer nu lige foran jer eller er måske allerede kommet. Men termin er ikke en udløbsdato. Det er et pejlemærke.",
       "Baby er færdigudviklet, men det er stadig helt almindeligt, at fødslen ikke starter præcis på terminsdagen. Det kan kræve tålmodighed, og det er helt okay, hvis du ikke har ret meget af den tilbage.",
-      "Din krop arbejder på sin egen made. Måske tydeligt, måske stille. Du maa gerne være både taknemmelig, utålmodig, spændt og virkelig træt."
+      "Din krop arbejder på sin egen made. Måske tydeligt, måske stille. Du må gerne være både taknemmelig, utålmodig, spændt og virkelig træt."
     ],
     partnerText: [
       "{{motherName}} kan være i en ret særlig tilstand nu. Måske har hun brug for nærhed, måske for plads, måske for distraktion, måske for ro. Det kan skifte. Din opgave er ikke at fa fødslen til at ske, men at være et trygt sted, mens I venter."
