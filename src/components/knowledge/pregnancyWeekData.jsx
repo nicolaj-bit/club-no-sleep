@@ -133,7 +133,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan godt være mere nervøs, end hun viser. Den første scanning kan fylde meget, fordi graviditeten pludselig bliver mere virkelig. Det kan hjælpe, at du ikke kun spørger praktisk, men også giver plads til de bekymringer der måtte fylde."
     ],
     nextStepText: [
-      "Mange vælger at dele nyhederne efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyhederne. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måde at fortælde nyhederne på! {{link}}."
+      "Mange vælger at dele nyhederne efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyhederne. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måder at fortælle nyheden på! {{link}}."
     ],
     linkUrl: "https://www.lalatoto.dk/blogs/bloggen/sådan-indretter-du-puslebordet"
   },
