@@ -535,7 +535,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan have brug for hjælp til at lukke løse ender. Hospitalstaske, snacks, oplader, tøj til baby og alt det praktiske kan fylde meget i hovedet, indtil det er pakket."
     ],
     nextStepText: [
-      "Det er et godt tidspunkt nu at sørg for, at hospitalstasken er pakket, så det ikke fylder i hovedet de næste par uger. Vi har udarbejdet den ultimative liste {{link}} med ting til både mor, partner og baby."
+      "Det er et godt tidspunkt nu at sørge for, at hospitalstasken er pakket, så det ikke fylder i hovedet de næste par uger. Vi har udarbejdet den ultimative liste {{link}} med ting til både mor, partner og baby."
     ],
     linkUrl: "https://www.lalatoto.dk/blogs/bloggen/pakkeliste-hospitalstasken-skal-ogsa-indeholde-de-vigtigste-ting-til-din-partner"
   },
