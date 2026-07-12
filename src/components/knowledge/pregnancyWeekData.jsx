@@ -519,7 +519,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan måske føle sig mere sårbar nu. Hjælp med at beskytte hendes ro, hvis verden bliver lidt for støjende. Nogle gange er kærlighed også at skabe lidt fred omkring hende."
     ],
     nextStepText: [
-      "Find de første babyting frem og vask det, I gerne vil have klar. Det anbefales at vaske nyt tøj og andre tekstiler inden brug, og nu er et godt tidspunkt at begynde at klargør babys lille garderobe, sengetøj, stofbleer osv. Jeres tørresnor har aldrig været så nuttet som nu!"
+      "Find de første babyting frem og vask det, I gerne vil have klar. Det anbefales at vaske nyt tøj og andre tekstiler inden brug, og nu er et godt tidspunkt at begynde at klargøre babys lille garderobe, sengetøj, stofbleer osv. Jeres tørresnor har aldrig været så nuttet som nu!"
     ],
     linkUrl: null
   },
