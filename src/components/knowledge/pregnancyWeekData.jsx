@@ -135,7 +135,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Mange vælger at dele nyhederne efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyhederne. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måder at fortælle nyheden på! {{link}}."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/saadan-indretter-du-puslebordet"
+    linkUrl: "6a3fb793d12af43cc22f0dfd"
   },
   12: {
     title: "Uge 12",
@@ -269,7 +269,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Tal om, om I ønsker at arrangere en 'gender reveal party' eller på anden måde gøre noget ud af at afsløre kønnet. Klik {{link}} hvor vi har samlet en række søde, sjove og festlige måde at afsløre kønnet på."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/fine-maader-at-afsloere-babys-koen"
+    linkUrl: "6a3fb7938339384cb485e17a"
   },
   20: {
     title: "Uge 20",
@@ -303,7 +303,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Tal om navne, ikke for at beslutte noget, men bare for at mærke efter, hvad I hver især kan lide. Nogle har kendt det rigtige navn hele deres voksne liv. Andre finder først det helt rigtige navn, når baby ligger i deres arme. Nogle laver lange lister. Andre opkalder baby efter en person, som har betydet meget for dem. Uanset hvor I står, så er der god tid endnu til at finde det helt rigtige navn. Klik {{link}} hvor vi har samlet en lang række navne. Både de populære, de usædvanlige og de lidt skøre."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/hvad-skal-barnet-hedde"
+    linkUrl: "6a3fb79337e57d5793f350eb"
   },
   22: {
     title: "Uge 22",
@@ -320,7 +320,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Overvej hvilke babyting I faktisk har brug for, og hvad I gerne vil vente med. Er der eventuelt udstyr eller tøj som kan gå i arv fra søskende eller familie? Kan noget købes brugt? Og er der ting som kan vente, indtil I rent faktisk ved om behovet opstår? Klik {{link}} for at se en komplet indkøbsliste til den første tid."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/huskeliste-og-indkobsliste-til-baby-dette-skal-du-bruge-til-din-guldklump"
+    linkUrl: "6a3fb79518193a74479ff92e"
   },
   23: {
     title: "Uge 23",
@@ -460,7 +460,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Lav en liste over hvad der mangler af det vigtigste til baby, og hvad der kan vente. Man kan hurtig købe sig fattig i alverdens ting. Og selvom det kan være hyggeligt at fylde huset med babyudstyr, så kan det være en fordel at vente med visse produkter, til baby er ankommet og I kender jeres behov. Hvis I har brug for et hurtigt overblik, så læs {{link}}, hvor vi har lavet en indkøbsliste til den første tid med baby."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/huskeliste-og-indkobsliste-til-baby-dette-skal-du-bruge-til-din-guldklump"
+    linkUrl: "6a3fb79518193a74479ff92e"
   },
   32: {
     title: "Uge 32",
@@ -506,7 +506,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Brug den næste uges tid på at gøre puslepladsen klar. Det er ikke fordi, at der er behov for det helt store, men det er rart at have et praktisk sted, hvor baby ligger rart og alting er lige ved hånden. Ønsker I inspiration til en hyggelig og praktisk pusleplads så kig {{link}}."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/saadan-indretter-du-puslebordet"
+    linkUrl: "6a3fb793d12af43cc22f0dfd"
   },
   35: {
     title: "Uge 35",
@@ -537,7 +537,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Det er et godt tidspunkt nu at sørge for, at hospitalstasken er pakket, så det ikke fylder i hovedet de næste par uger. Vi har udarbejdet den ultimative liste {{link}} med ting til både mor, partner og baby."
     ],
-    linkUrl: "https://www.lalatoto.dk/blogs/bloggen/pakkeliste-hospitalstasken-skal-ogsa-indeholde-de-vigtigste-ting-til-din-partner"
+    linkUrl: "6a3fb7948b6042cdca049cb0"
   },
   37: {
     title: "Uge 37",

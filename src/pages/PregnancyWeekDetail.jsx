@@ -19,9 +19,9 @@ function renderRichText(text, motherName, linkUrl) {
     <React.Fragment key={i}>
       {part}
       {i < parts.length - 1 && linkUrl && (
-        <a href={linkUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>
+        <Link to={`/BlogPost?id=${linkUrl}`} style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>
           her
-        </a>
+        </Link>
       )}
     </React.Fragment>
   ));
