@@ -400,7 +400,7 @@ export const PREGNANCY_WEEKS = {
       "{{motherName}} kan måske mærke graviditeten mere fysisk nu. Det kan være en stor hjælp, hvis du tager lidt mere praktisk ansvar uden at vente på at blive spurgt. Små ting kan føles meget store, når kroppen er tung."
     ],
     nextStepText: [
-      "Tal om, om I ønsker Jer en sidste getaway sammen, inden I bliver et familiemedlem rigere. At stå på tærsklen til at gå fra to til tre kan føles som en ret stor ting, og for nogle er det helt rigtig at snuppe en spa-date, en overnatning, en forlænget weekend eller lignende sammen bare Jer to."
+      "Tal om, om I ønsker Jer en sidste getaway sammen, inden I bliver et familiemedlem rigere. At stå på tærsklen til at blive forældre, hvad end det er førstegang eller I har prøvet det før, så kan det føles som en ret stor ting, og for nogle er det helt rigtig at snuppe en spa-date, en overnatning, en forlænget weekend eller lignende sammen bare Jer to."
     ],
     linkUrl: null
   },
