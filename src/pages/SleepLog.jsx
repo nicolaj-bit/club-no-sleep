@@ -64,7 +64,7 @@ function TimeInput({ label, value, onChange }) {
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none transition-all"
+        className="sleep-time-input w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none transition-all text-center"
         style={{
           backgroundColor: 'var(--color-bg)',
           borderColor: 'var(--color-border)',

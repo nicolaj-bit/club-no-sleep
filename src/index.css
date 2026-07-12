@@ -161,6 +161,30 @@
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #C29A73; border-radius: 2px; }
 
+/* ── Sleep time input: hide native clock icon & placeholder ── */
+.sleep-time-input::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+.sleep-time-input::-webkit-clear-button {
+  display: none;
+  -webkit-appearance: none;
+}
+.sleep-time-input:invalid::-webkit-datetime-edit {
+  color: transparent;
+}
+.sleep-time-input::-webkit-datetime-edit-text,
+.sleep-time-input::-webkit-datetime-edit-hour-field,
+.sleep-time-input::-webkit-datetime-edit-minute-field,
+.sleep-time-input::-webkit-datetime-edit-ampm-field {
+  color: inherit;
+}
+.sleep-time-input:invalid::-webkit-datetime-edit-hour-field,
+.sleep-time-input:invalid::-webkit-datetime-edit-minute-field,
+.sleep-time-input:invalid::-webkit-datetime-edit-text {
+  color: transparent;
+}
+
 /* ── Article / prose content styling ── */
 .article-content {
   font-size: 1rem;
