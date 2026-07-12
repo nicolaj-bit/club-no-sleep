@@ -55,6 +55,8 @@
 	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Vi bruger denne tilladelse til at levere relevante notifikationer og forbedre din oplevelse i appen.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
