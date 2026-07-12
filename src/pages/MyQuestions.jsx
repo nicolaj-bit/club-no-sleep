@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, ChevronRight, MessageCircle, Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function MyQuestions() {
   const { t } = useLanguage();
@@ -45,26 +46,21 @@ export default function MyQuestions() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="pt-8 pb-4 px-6 text-center relative flex items-center justify-center">
-        <Link to={createPageUrl('Profile')} className="absolute left-4">
-          <button className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer" style={{ background: 'var(--color-bg-card)' }}>
-            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-          </button>
-        </Link>
-        <h1 className="text-2xl" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-          {t.myQuestionsTitle}
-        </h1>
-        <Link to={createPageUrl('AskQuestion')} className="absolute right-4">
-          <button
-            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-            style={{ background: 'var(--color-bg-card)' }}
-            aria-label={t.myQuestionsAskNew}
-          >
-            <Plus className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-          </button>
-        </Link>
-      </div>
+      <PageHeader
+        title={t.myQuestionsTitle}
+        backUrl={createPageUrl('Profile')}
+        rightAction={
+          <Link to={createPageUrl('AskQuestion')}>
+            <button
+              className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
+              style={{ background: 'var(--color-bg-card)' }}
+              aria-label={t.myQuestionsAskNew}
+            >
+              <Plus className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
+            </button>
+          </Link>
+        }
+      />
 
       <div className="px-4 mt-2">
         {isLoading ? (

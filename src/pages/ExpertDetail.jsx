@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function ExpertDetail() {
   const { t } = useLanguage();
@@ -62,18 +63,7 @@ export default function ExpertDetail() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl border-b px-4 py-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center justify-between">
-          <Link to={createPageUrl('Community')}>
-            <Button variant="ghost" size="icon" className="-ml-2">
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.expertDetailProfile}</span>
-          <div className="w-9" />
-        </div>
-      </header>
+      <PageHeader title={t.expertDetailProfile} backUrl={createPageUrl('Community')} />
 
       {/* Profile */}
       <div className="p-4">

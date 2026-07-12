@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import PullToRefresh from '@/components/ui/PullToRefresh';
+import PageHeader from '@/components/ui/PageHeader';
 import { Plus, Trash2, Moon, Sun, Clock, ChevronLeft, Sparkles, BookOpen, RefreshCw, X, Send, ArrowLeft } from 'lucide-react';
 import { useScrollDirection } from '@/components/ui/useScrollDirection';
 import { Link, useNavigate } from 'react-router-dom';
@@ -349,30 +350,19 @@ export default function SleepLog() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
 
-      {/* Header */}
-      <div
-        className="sticky top-0 z-10 border-b px-4 pt-10 pb-2 flex items-center justify-between transition-transform duration-300"
-        style={{
-          background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
-          borderColor: isDark ? 'var(--color-border)' : '#E8DDD2',
-          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <Link to={createPageUrl('Home')} className="p-1.5 rounded-full" style={{ color: 'var(--color-text-secondary)' }}>
-            <ChevronLeft className="w-5 h-5" />
-          </Link>
-          <h1 className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}>{t.sleepLogTitle}</h1>
-        </div>
-        <button
-          onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
-          style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2', color: 'var(--color-text-secondary)' }}
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          {view === 'log' ? t.historyBtn : t.logTodayBtn}
-        </button>
-      </div>
+      <PageHeader
+        title={t.sleepLogTitle}
+        rightAction={
+          <button
+            onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
+            style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2', color: 'var(--color-text-secondary)' }}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            {view === 'log' ? t.historyBtn : t.logTodayBtn}
+          </button>
+        }
+      />
 
       {view === 'history' ? (
         <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />

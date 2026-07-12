@@ -12,6 +12,8 @@ export default function PageHeader({
   rightAction,
   className,
   transparent = false,
+  showBack = true,
+  scrollHide = true,
 }) {
   const navigate = useNavigate();
   const { isDark } = useTheme();
@@ -19,44 +21,37 @@ export default function PageHeader({
   const visible = useScrollDirection(8);
 
   return (
-    <header
-      className={cn('sticky top-0 z-40 backdrop-blur-xl border-b transition-transform duration-300 shadow-sm', className)}
+    <div
+      className={cn('sticky top-0 z-10 border-b px-4 pb-2 flex items-center justify-between transition-transform duration-300', className)}
       style={{
-        transform: visible ? 'translateY(0)' : 'translateY(-110%)',
-        ...(transparent
-          ? {}
-          : {
-              background: isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
-              borderColor: isDark ? 'var(--color-border)' : '#E8DDD2',
-              paddingTop: 'env(safe-area-inset-top, 0px)',
-            }),
+        background: transparent ? 'transparent' : (isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)'),
+        borderColor: transparent ? 'transparent' : (isDark ? 'var(--color-border)' : '#E8DDD2'),
+        transform: scrollHide ? (visible ? 'translateY(0)' : 'translateY(-100%)') : 'translateY(0)',
+        paddingTop: 'max(40px, env(safe-area-inset-top, 0px))',
       }}
     >
-      <div className="flex items-center justify-between gap-2 px-4 py-1.5">
       <div className="flex items-center gap-2 min-w-0 flex-1">
-        <button
-          onClick={handleBack}
-          className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
-          style={isDark
-            ? { background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }
-            : { background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2' }}
-        >
-          <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-        </button>
+        {showBack && (
+          <button
+            onClick={handleBack}
+            className="p-1.5 rounded-full flex-shrink-0 active:opacity-60"
+            style={{ color: 'var(--color-text-secondary)' }}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
         {title && (
           <h1
-            className="text-sm font-semibold truncate"
-            style={{ color: 'var(--color-text-primary)' }}
+            className="text-2xl font-light truncate"
+            style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}
           >
             {title}
           </h1>
         )}
-        </div>
-
-        {rightAction && (
-          <div className="flex items-center gap-1 flex-shrink-0">{rightAction}</div>
-        )}
       </div>
-    </header>
+      {rightAction && (
+        <div className="flex items-center gap-1.5 flex-shrink-0">{rightAction}</div>
+      )}
+    </div>
   );
 }

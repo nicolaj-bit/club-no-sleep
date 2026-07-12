@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function MyData() {
   const { t } = useLanguage();
@@ -78,13 +79,7 @@ export default function MyData() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-4 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
-        <Link to={createPageUrl('Profile')} className="p-2 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-          <ArrowLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
-        </Link>
-        <h1 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.myDataPrivacy}</h1>
-      </div>
+      <PageHeader title={t.myDataPrivacy} backUrl={createPageUrl('Profile')} />
 
       <div className="p-4 space-y-4 max-w-lg mx-auto">
         {/* Export */}

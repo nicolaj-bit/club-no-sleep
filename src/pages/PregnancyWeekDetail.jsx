@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Heart, Sparkles, BookOpen } from 'lucide-rea
 import { base44 } from '@/api/base44Client';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import PageHeader from '@/components/ui/PageHeader';
 
 function renderRichText(text, motherName, linkUrl) {
   const displayName = motherName || 'hun';
@@ -71,14 +72,10 @@ export default function PregnancyWeekDetail() {
 
   return (
     <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <div className="px-4 py-3 flex items-center justify-between">
-          <Link to="/PregnancyWeeks" className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-          </Link>
-          <span className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
-            {t.pwdHeaderLabel}
-          </span>
+      <PageHeader
+        title={t.pwdHeaderLabel}
+        backUrl="/PregnancyWeeks"
+        rightAction={
           <div className="flex gap-1">
             {prevWeek && (
               <Link to={`/PregnancyWeekDetail?week=${prevWeek}`} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
@@ -91,8 +88,8 @@ export default function PregnancyWeekDetail() {
               </Link>
             )}
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <div className="px-4 pt-5 space-y-5">
         {/* Title */}

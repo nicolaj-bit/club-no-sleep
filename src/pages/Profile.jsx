@@ -27,6 +27,7 @@ import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -164,12 +165,7 @@ export default function Profile() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen pb-10" style={{ background: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="pt-10 pb-3 px-5 flex items-center justify-between">
-        <h1 className="text-4xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-          {t.profileTitle}
-        </h1>
-      </div>
+      <PageHeader title={t.profileTitle} showBack={false} />
 
       <div className="px-4 space-y-3">
 

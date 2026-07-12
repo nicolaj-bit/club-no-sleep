@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import LegalModal from '@/components/landing/LegalModal';
+import PageHeader from '@/components/ui/PageHeader';
 
 // Brand-farver fra style guide – matcher menu-knapper præcist
 const CARD_BG_LIGHT_SOLID = 'var(--color-bg-card)';
@@ -117,23 +118,7 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="pt-8 pb-4 px-5 flex items-center justify-center relative">
-        <Link to={createPageUrl('Profile')} className="absolute left-4">
-          <button
-            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-            style={{ background: isDark ? CARD_BG_DARK : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: `1px solid ${cardBorder}` }}
-          >
-            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
-          </button>
-        </Link>
-        <h1
-          className="text-3xl font-light"
-          style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '0.06em' }}
-        >
-          {t.settingsTitle}
-        </h1>
-      </div>
+      <PageHeader title={t.settingsTitle} backUrl={createPageUrl('Profile')} />
 
       <div className="px-4 space-y-4 mt-2">
 

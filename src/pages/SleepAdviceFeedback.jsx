@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { CheckCircle, ThumbsUp, ThumbsDown, RefreshCw, AlertCircle, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function SleepAdviceFeedback() {
   const { isDark } = useTheme();
@@ -92,12 +93,8 @@ export default function SleepAdviceFeedback() {
   }
 
   return (
-    <div className="min-h-screen pb-10 px-4 pt-6" style={{ background: bg }}>
-      {/* Back */}
-      <Link to="/SleepLog" className="flex items-center gap-1 mb-6" style={{ color: 'var(--color-text-muted)' }}>
-        <ChevronLeft className="w-4 h-4" />
-        <span className="text-sm">{t.sleepLog}</span>
-      </Link>
+    <div className="min-h-screen pb-10 px-4" style={{ background: bg }}>
+      <PageHeader title={t.sleepLog} backUrl="/SleepLog" />
 
       {/* AI Advice card */}
       <div className="rounded-3xl p-5 mb-5" style={{ background: cardBg, border: `1px solid ${border}` }}>

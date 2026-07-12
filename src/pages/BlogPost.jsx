@@ -15,6 +15,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { enUS } from 'date-fns/locale';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function BlogPost() {
   const { isDark } = useTheme();
@@ -164,45 +165,31 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Sticky header — appears on scroll up */}
-      <div
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 transition-all duration-300"
-        style={{
-          backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(250,246,241,0.92)',
-          backdropFilter: 'blur(12px)',
-          borderBottom: `1px solid var(--color-border)`,
-          transform: headerVisible ? 'translateY(0)' : 'translateY(-100%)',
-          paddingTop: 'max(12px, env(safe-area-inset-top))',
-        }}
-      >
-        <Link to={createPageUrl('Blog')}>
-          <button className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-            <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
-          </button>
-        </Link>
-        <p className="text-sm font-semibold truncate mx-3 flex-1 text-center" style={{ color: 'var(--color-text-primary)' }}>
-          {translated?.title || post?.title || ''}
-        </p>
-        <div className="flex gap-2">
-          {user && (
+      <PageHeader
+        title={translated?.title || post?.title || ''}
+        backUrl={createPageUrl('Blog')}
+        rightAction={
+          <div className="flex gap-2">
+            {user && (
+              <button
+                className="w-9 h-9 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                onClick={() => saveMutation.mutate()}
+                disabled={saveMutation.isPending}
+              >
+                <Bookmark className="w-4 h-4" style={{ fill: isSaved ? 'currentColor' : 'none', color: 'var(--color-text-primary)' }} />
+              </button>
+            )}
             <button
               className="w-9 h-9 rounded-full flex items-center justify-center"
               style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-              onClick={() => saveMutation.mutate()}
-              disabled={saveMutation.isPending}
+              onClick={handleShare}
             >
-              <Bookmark className="w-4 h-4" style={{ fill: isSaved ? 'currentColor' : 'none', color: 'var(--color-text-primary)' }} />
+              <Share2 className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
             </button>
-          )}
-          <button
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-            onClick={handleShare}
-          >
-            <Share2 className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
-          </button>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {/* Hero */}
       <div className="relative">
