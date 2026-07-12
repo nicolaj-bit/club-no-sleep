@@ -335,7 +335,7 @@ export default function Calendar() {
                       <button
                         key={cat.key}
                         type="button"
-                        onClick={() => setForm(f => ({ ...f, category: cat.key }))}
+                        onClick={() => setForm(f => ({ ...f, category: cat.key, title: cat.key === 'andet' ? '' : cat.label }))}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                         style={form.category === cat.key
                           ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
