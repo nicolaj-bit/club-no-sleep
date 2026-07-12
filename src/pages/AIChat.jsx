@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Send, Pencil, Upload, Check } from 'lucide-react';
+import { ArrowLeft, Send, Pencil, Upload, Check, History } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -83,6 +83,9 @@ export default function AIChat() {
   const [pickingAvatar, setPickingAvatar] = useState(false);
   const [savingAvatar, setSavingAvatar] = useState(false);
   const [restoringChat, setRestoringChat] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyList, setHistoryList] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const aiName = activeProfile?.ai_assistant_name || t.aiChatTitle;
   const userAvatar = activeProfile?.ai_assistant_avatar;
   const avatarUrl = userAvatar || iconUrl;
@@ -132,7 +135,7 @@ export default function AIChat() {
     // Check admin
     base44.auth.me().then(u => { if (u?.role === 'admin') setIsAdmin(true); }).catch(() => {});
 
-    // Restore most recent conversation with messages
+    // Restore most recent conversation with messages (only if within 24 hours)
     const loadRecentConversation = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
@@ -148,8 +151,14 @@ export default function AIChat() {
           return dateB - dateA;
         });
 
-        // Check the most recent conversations for one with messages
+        const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+        const now = Date.now();
+
+        // Check the most recent conversations for one with messages within 24h
         for (const convMeta of conversations.slice(0, 5)) {
+          const convDate = new Date(convMeta.updated_date || convMeta.created_date || 0);
+          if (now - convDate.getTime() > TWENTY_FOUR_HOURS) break;
+
           const fullConv = await base44.agents.getConversation(convMeta.id);
           const hasVisibleMessages = (fullConv.messages || []).filter(m => m.role !== 'tool').length > 0;
           if (hasVisibleMessages) {
@@ -174,6 +183,58 @@ export default function AIChat() {
     };
     loadRecentConversation();
   }, []);
+
+  const loadHistory = async () => {
+    setLoadingHistory(true);
+    try {
+      const conversations = await base44.agents.listConversations({});
+      if (!conversations) { setHistoryList([]); return; }
+      conversations.sort((a, b) => {
+        const dateA = new Date(a.updated_date || a.created_date || 0);
+        const dateB = new Date(b.updated_date || b.created_date || 0);
+        return dateB - dateA;
+      });
+      // Build previews — only conversations with visible messages
+      const previews = [];
+      for (const convMeta of conversations.slice(0, 30)) {
+        try {
+          const fullConv = await base44.agents.getConversation(convMeta.id);
+          const visible = (fullConv.messages || []).filter(m => m.role !== 'tool');
+          if (visible.length === 0) continue;
+          const firstUser = visible.find(m => m.role === 'user');
+          previews.push({
+            id: convMeta.id,
+            agent_name: convMeta.agent_name,
+            updated_date: convMeta.updated_date || convMeta.created_date,
+            messageCount: visible.length,
+            preview: firstUser?.content?.slice(0, 80) || visible[0].content?.slice(0, 80) || '…',
+          });
+        } catch (e) { /* skip */ }
+      }
+      setHistoryList(previews);
+    } catch (e) {
+      console.log('Could not load history');
+    }
+    setLoadingHistory(false);
+  };
+
+  const openHistoryConversation = async (convId) => {
+    try {
+      const fullConv = await base44.agents.getConversation(convId);
+      if (unsubRef.current) unsubRef.current();
+      setConversation(fullConv);
+      setMessages(fullConv.messages || []);
+      setMode(fullConv.agent_name === 'encouragement' ? 'encouragement' : 'question');
+      const unsubscribe = base44.agents.subscribeToConversation(fullConv.id, (data) => {
+        setMessages(data.messages || []);
+        setIsLoading(false);
+      });
+      unsubRef.current = unsubscribe;
+      setShowHistory(false);
+    } catch (e) {
+      console.log('Could not open conversation');
+    }
+  };
 
   const handleIconUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -359,6 +420,15 @@ export default function AIChat() {
             </div>
           </div>
         </div>
+
+        <button
+          onClick={() => { setShowHistory(true); loadHistory(); }}
+          className="p-2 rounded-full cursor-pointer active:opacity-70"
+          style={{ color: 'rgba(255,255,255,0.9)' }}
+          aria-label="Historik"
+        >
+          <History className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Messages area */}
@@ -588,6 +658,53 @@ export default function AIChat() {
               </Button>
             </DialogFooter>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* History dialog */}
+      <Dialog open={showHistory} onOpenChange={setShowHistory}>
+        <DialogContent className="max-w-sm max-h-[70vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Historik</DialogTitle>
+          </DialogHeader>
+          <div className="overflow-y-auto flex-1 -mx-2 px-2">
+            {loadingHistory && (
+              <div className="flex items-center justify-center py-8">
+                <div className="w-6 h-6 border-2 border-stone-300 border-t-[#C8A882] rounded-full animate-spin" />
+              </div>
+            )}
+            {!loadingHistory && historyList.length === 0 && (
+              <p className="text-center text-sm py-8" style={{ color: 'var(--color-text-muted)' }}>
+                Ingen tidligere samtaler
+              </p>
+            )}
+            {!loadingHistory && historyList.map((conv) => (
+              <button
+                key={conv.id}
+                onClick={() => openHistoryConversation(conv.id)}
+                className="w-full text-left p-3 rounded-xl border mb-2 transition-all cursor-pointer active:opacity-70"
+                style={{
+                  backgroundColor: 'var(--color-bg-card)',
+                  borderColor: 'var(--color-border)',
+                }}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-medium" style={{ color: 'var(--color-accent)' }}>
+                    {conv.agent_name === 'encouragement' ? 'Opmuntring' : 'Baby & Søvn'}
+                  </span>
+                  <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {conv.updated_date ? new Date(conv.updated_date).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+                  </span>
+                </div>
+                <p className="text-sm line-clamp-2" style={{ color: 'var(--color-text-secondary)' }}>
+                  {conv.preview}
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                  {conv.messageCount} beskeder
+                </p>
+              </button>
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
 
