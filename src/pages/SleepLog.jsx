@@ -58,13 +58,13 @@ function SleepAIAvatar({ size = 'sm' }) {
 
 function TimeInput({ label, value, onChange }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex-1 min-w-0 flex flex-col gap-1.5">
       <label className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{label}</label>
       <input
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="sleep-time-input w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none transition-all text-center"
+        className="sleep-time-input w-full px-2 py-2.5 rounded-xl border text-sm focus:outline-none text-center"
         style={{
           backgroundColor: 'var(--color-bg)',
           borderColor: 'var(--color-border)',
@@ -428,7 +428,7 @@ export default function SleepLog() {
           {/* Night sleep */}
           <Card>
             <SectionTitle icon={<Moon className="w-4 h-4" />} title={t.nightSleep} />
-            <div className="grid grid-cols-3 gap-3">
+            <div className="flex gap-3">
               <TimeInput label={t.bedtime} value={form.bedtime} onChange={(v) => setForm(f => ({ ...f, bedtime: v }))} />
               <TimeInput label={t.fellAsleep} value={form.sleep_time} onChange={(v) => setForm(f => ({ ...f, sleep_time: v }))} />
               <TimeInput label={t.wokeUp} value={form.wake_time} onChange={(v) => setForm(f => ({ ...f, wake_time: v }))} />
