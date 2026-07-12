@@ -318,7 +318,7 @@ export const PREGNANCY_WEEKS = {
       "Det kan være en stor hjælp for {{motherName}}, hvis projekt babyudstyr bliver en fælles opgave. Både for at gøre opgaven mere overskuelig, men også for at vise interesse. Måske du kunne foreslå en tur til en børneudstyrsbutik?"
     ],
     nextStepText: [
-      "Overvej hvilke babyting I faktisk har brug for, og hvad I gerne vil vente med. Er der eventuelt udstyr eller tøj som kan gå i arv fra søskende eller familie? Kan noget kobes brugt? Og er der ting som kan vente, indtil I rent faktisk ved om behovet opstår? Klik {{link}} for at se en komplet indkøbsliste til den første tid."
+      "Overvej hvilke babyting I faktisk har brug for, og hvad I gerne vil vente med. Er der eventuelt udstyr eller tøj som kan gå i arv fra søskende eller familie? Kan noget købes brugt? Og er der ting som kan vente, indtil I rent faktisk ved om behovet opstår? Klik {{link}} for at se en komplet indkøbsliste til den første tid."
     ],
     linkUrl: "https://www.lalatoto.dk/blogs/bloggen/huskeliste-og-indkobsliste-til-baby-dette-skal-du-bruge-til-din-guldklump"
   },
