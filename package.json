@@ -15,7 +15,7 @@
     "cap:open:android": "npx cap open android"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.38",
+    "@base44/sdk": "^0.8.39",
     "@base44/vite-plugin": "^1.0.30",
     "@capacitor-community/apple-sign-in": "^7.1.0",
     "@capacitor/android": "^8.4.1",
