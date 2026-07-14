@@ -31,6 +31,7 @@ import Privacy from './pages/Privacy';
 import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
+import PullRequests from './pages/PullRequests';
 import NativeAuthGate from './components/auth/NativeAuthGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
 
@@ -143,6 +144,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminTermsPrivacy" element={<LayoutWrapper currentPageName="AdminTermsPrivacy"><AdminTermsPrivacy /></LayoutWrapper>} />
         <Route path="/Checkout" element={<Checkout />} />
         <Route path="/CheckoutSuccess" element={<CheckoutSuccess />} />
+        <Route path="/PullRequests" element={<LayoutWrapper currentPageName="PullRequests"><PullRequests /></LayoutWrapper>} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
