@@ -1,11 +1,11 @@
 const isNode = typeof window === 'undefined';
 const windowObj = isNode ? { localStorage: new Map() } : window;
 const storage = windowObj.localStorage;
- 
+
 const toSnakeCase = (str) => {
 	return str.replace(/([A-Z])/g, '_$1').toLowerCase();
 }
- 
+
 const getAppParamValue = (paramName, { defaultValue = undefined, removeFromUrl = false } = {}) => {
 	if (isNode) {
 		return defaultValue;
@@ -33,7 +33,7 @@ const getAppParamValue = (paramName, { defaultValue = undefined, removeFromUrl =
 	}
 	return null;
 }
- 
+
 const getAppParams = () => {
 	if (getAppParamValue("clear_access_token") === 'true') {
 		storage.removeItem('base44_access_token');
@@ -47,8 +47,8 @@ const getAppParams = () => {
 		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || "https://clubnosleep.com" }),
 	}
 }
- 
- 
+
+
 export const appParams = {
 	...getAppParams()
 }
