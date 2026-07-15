@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
       user = await base44.asServiceRole.entities.User.create({
         email,
         full_name: fullName || email.split('@')[0],
+        role: 'user',
       });
     }
 
