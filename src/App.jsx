@@ -65,16 +65,16 @@ function isNativeApp() {
 }
 
 function RootRoute() {
-  const hostname = window.location.hostname || '';
-
-  // clubnosleep.com → Landing page (marketing site) — altid, uanset platform
-  if (hostname.includes('clubnosleep')) {
-    return <Landing />;
-  }
-
-  // Native app (App Store / Google Play) → go directly to app (sign-up page shown by NativeAuthGate)
+  // Native app (App Store / Google Play) → altid direkte til appen (login vises af NativeAuthGate)
   if (isNativeApp()) {
     return <Navigate to="/app" replace />;
+  }
+
+  const hostname = window.location.hostname || '';
+
+  // clubnosleep.com på web → Landing page (marketing site)
+  if (hostname.includes('clubnosleep')) {
+    return <Landing />;
   }
 
   // lalatoto.base44.app and others → go directly to app (sign-up page shown by NativeAuthGate)
