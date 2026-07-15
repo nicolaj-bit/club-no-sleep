@@ -21,6 +21,8 @@ Deno.serve(async (req) => {
       audience: APPLE_BUNDLE_ID,
     });
 
+    console.log('[appleNativeLogin] payload aud:', payload.aud, 'iss:', payload.iss, 'email:', payload.email);
+
     const email = payload.email;
     if (!email || typeof email !== 'string') {
       return Response.json({ error: 'Apple-token indeholder ingen email' }, { status: 400 });
@@ -43,6 +45,6 @@ Deno.serve(async (req) => {
     return Response.json({ access_token });
   } catch (e) {
     console.error('[appleNativeLogin] error:', e);
-    return Response.json({ error: e?.message || 'Apple login mislykkedes' }, { status: 401 });
+    return Response.json({ error: String(e?.message || e) }, { status: 401 });
   }
 });

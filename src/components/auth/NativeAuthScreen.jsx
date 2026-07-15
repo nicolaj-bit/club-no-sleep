@@ -208,7 +208,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       }
     } catch (e) {
       console.error('[NativeAuthScreen] Apple login error:', e);
-      setError(e?.message || 'Apple login mislykkedes. Prøv igen.');
+      setError(e?.response?.data?.error || e?.message || 'Apple login mislykkedes. Prøv igen.');
       setLoading(false);
     }
   };
