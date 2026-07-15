@@ -11,6 +11,7 @@ const config: CapacitorConfig = {
       'clubnosleep.com',
       'app.base44.com',
       'base44.app',
+      'appleid.apple.com',
     ],
   },
   ios: {
