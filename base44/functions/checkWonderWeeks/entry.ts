@@ -59,41 +59,55 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const profiles = await base44.asServiceRole.entities.UserProfile.list();
+    const children = await base44.asServiceRole.entities.Child.list();
+
+    // Opt-in pr. bruger
+    const notifByOwner = new Map();
+    for (const p of profiles) {
+      notifByOwner.set(p.user_email, p.wonderweeks_notifications === true);
+    }
+
+    // Grupper børn pr. user_email
+    const childrenByOwner = new Map();
+    for (const child of children) {
+      if (!child.user_email || !child.due_date) continue;
+      if (!childrenByOwner.has(child.user_email)) {
+        childrenByOwner.set(child.user_email, []);
+      }
+      childrenByOwner.get(child.user_email).push(child);
+    }
 
     let sent = 0;
 
-    for (const profile of profiles) {
-      if (!profile.wonderweeks_notifications) continue;
-      if (!profile.user_email) continue;
+    for (const [email, kids] of childrenByOwner) {
+      // Skip hvis brugeren ikke har slået tigerspring-notifikationer til
+      if (!notifByOwner.get(email)) continue;
 
-      // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
-      const dueDate = profile.child_due_date;
-      if (!dueDate) continue;
+      for (const child of kids) {
+        // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
+        const ageDays = getAgeInDays(child.due_date);
+        if (ageDays < 0) continue;
 
-      const ageDays = getAgeInDays(dueDate);
-      if (ageDays < 0) continue;
+        for (const ww of WONDER_WEEKS) {
+          // Præcis én dag: dagen før tigerspringet starter
+          if (ageDays === (ww.week - 1) * 7) {
+            const title = 'Et nyt tigerspring nærmer sig';
+            const message = 'Baby kan være på vej ind i en periode, hvor verden bliver lidt større. Læs mere i appen.';
+            await createInAppNotification(base44, email, title, message);
+            await sendPush(email, title, message);
+            console.log(`Tigerspring approaching sent til ${email}: ${ww.name} (child ${child.id})`);
+            sent++;
+          }
 
-      const ageWeeks = Math.floor(ageDays / 7);
-
-      for (const ww of WONDER_WEEKS) {
-        // 7 dage før start: én notifikation
-        if (ageWeeks === ww.week - 1) {
-          const title = 'Et nyt tigerspring nærmer sig';
-          const message = 'Baby kan være på vej ind i en periode, hvor verden bliver lidt større. Læs mere i appen.';
-          await createInAppNotification(base44, profile.user_email, title, message);
-          await sendPush(profile.user_email, title, message);
-          console.log(`Tigerspring approaching sent til ${profile.user_email}: ${ww.name}`);
-          sent++;
-        }
-
-        // På startdagen: én notifikation
-        if (ageWeeks === ww.week) {
-          const title = 'Tigerspring';
-          const message = 'Der ligger en ny udviklingsguide klar til jer.';
-          await createInAppNotification(base44, profile.user_email, title, message);
-          await sendPush(profile.user_email, title, message);
-          console.log(`Tigerspring start sent til ${profile.user_email}: ${ww.name}`);
-          sent++;
+          // Præcis én dag: startdagen
+          if (ageDays === ww.week * 7) {
+            const title = 'Tigerspring';
+            const message = 'Der ligger en ny udviklingsguide klar til jer.';
+            await createInAppNotification(base44, email, title, message);
+            await sendPush(email, title, message);
+            console.log(`Tigerspring start sent til ${email}: ${ww.name} (child ${child.id})`);
+            sent++;
+          }
         }
       }
     }
