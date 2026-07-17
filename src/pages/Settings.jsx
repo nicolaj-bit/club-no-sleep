@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
@@ -72,7 +73,7 @@ export default function Settings() {
           });
         }
       } catch {
-        base44.auth.redirectToLogin();
+        showInAppLogin('/Settings');
       }
     };
     loadUser();

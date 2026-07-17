@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -32,7 +33,7 @@ export default function AcceptInvite() {
       if (!isAuth) {
         // Save invite id and redirect to login/signup
         sessionStorage.setItem('pending_invite_id', inviteId);
-        base44.auth.redirectToLogin(`/AcceptInvite?invite=${inviteId}`);
+        showInAppLogin(`/AcceptInvite?invite=${inviteId}`);
         return;
       }
 

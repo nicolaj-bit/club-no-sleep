@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle } from 'lucide-react';
@@ -47,9 +48,9 @@ export default function AdminEditor() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      if (u?.role !== 'admin') base44.auth.redirectToLogin();
+      if (u?.role !== 'admin') showInAppLogin();
       else setUser(u);
-    }).catch(() => base44.auth.redirectToLogin());
+    }).catch(() => showInAppLogin());
   }, []);
 
   const { data: blogPosts = [], isLoading: loadingBlogs } = useQuery({

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, UserPlus, Trash2, Check, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -62,7 +63,7 @@ export default function FamilyInvite() {
         setInvites(data);
         if (configs[0]) setPageConfig(configs[0]);
       } catch {
-        base44.auth.redirectToLogin();
+        showInAppLogin('/FamilyInvite');
       } finally {
         setLoading(false);
       }

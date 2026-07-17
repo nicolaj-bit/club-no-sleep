@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Save } from 'lucide-react';
@@ -17,7 +18,7 @@ export default function AdminWonderWeeks() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => base44.auth.redirectToLogin());
+    base44.auth.me().then(setUser).catch(() => showInAppLogin('/AdminWonderWeeks'));
   }, []);
 
   const { data: configs = [], isLoading } = useQuery({

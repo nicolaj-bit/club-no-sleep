@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Plus, Pencil, Trash2, Send, Bell, Clock, Calendar, BookOpen, Moon, MessageSquare, ToggleLeft, ToggleRight, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,9 +44,9 @@ export default function AdminNotifications() {
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      if (u?.role !== 'admin') base44.auth.redirectToLogin();
+      if (u?.role !== 'admin') showInAppLogin();
       else setUser(u);
-    }).catch(() => base44.auth.redirectToLogin());
+    }).catch(() => showInAppLogin());
   }, []);
 
   const { data: rules = [], isLoading } = useQuery({

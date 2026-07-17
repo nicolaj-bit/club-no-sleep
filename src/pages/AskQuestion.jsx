@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { createPageUrl } from '@/utils';
 import { Send, ChevronDown, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,7 +38,7 @@ export default function AskQuestion() {
         const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
         if (profiles.length > 0) setUserProfile(profiles[0]);
       } catch {
-        base44.auth.redirectToLogin();
+        showInAppLogin('/AskQuestion');
       }
     };
     loadUser();

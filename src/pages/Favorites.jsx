@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,7 @@ export default function Favorites() {
         const u = await base44.auth.me();
         setUser(u);
       } catch {
-        base44.auth.redirectToLogin();
+        showInAppLogin('/Favorites');
       }
     };
     loadUser();

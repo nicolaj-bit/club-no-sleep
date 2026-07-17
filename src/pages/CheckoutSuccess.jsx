@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle, ArrowRight, Smartphone } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { buildAppDeepLink } from '@/lib/nativeAuth';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Capacitor } from '@capacitor/core';
@@ -31,7 +32,7 @@ export default function CheckoutSuccess() {
   }, []);
 
   const handleCreateAccount = () => {
-    base44.auth.redirectToLogin('/CheckoutSuccess');
+    showInAppLogin('/CheckoutSuccess');
   };
 
   const handleOpenApp = () => {
@@ -164,7 +165,7 @@ export default function CheckoutSuccess() {
           </button>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '0.78rem' }}>
             {t.checkoutSuccessAlreadyHaveAccount}{' '}
-            <button onClick={() => base44.auth.redirectToLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
+            <button onClick={() => showInAppLogin('/CheckoutSuccess')} style={{ background: 'none', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, padding: 0 }}>
               {t.checkoutSuccessLoginHere}
             </button>
           </p>

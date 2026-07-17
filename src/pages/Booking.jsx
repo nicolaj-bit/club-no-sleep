@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, ChevronRight, Check, Calendar as CalendarIcon, Clock } from 'lucide-react';
@@ -35,7 +36,7 @@ export default function Booking() {
         const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
         if (profiles.length > 0) setUserProfile(profiles[0]);
       } catch {
-        base44.auth.redirectToLogin();
+        showInAppLogin('/Booking');
       }
     };
     loadUser();

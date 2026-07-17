@@ -5,6 +5,17 @@ import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 
 export default function NativeAuthScreen({ resetToken } = {}) {
+  // Efter login: navigér til post_login_redirect hvis sat, ellers /app
+  const navigateAfterLogin = () => {
+    const redirect = localStorage.getItem('post_login_redirect');
+    if (redirect) {
+      localStorage.removeItem('post_login_redirect');
+      window.location.href = redirect;
+    } else {
+      window.location.href = '/app';
+    }
+  };
+
   const [mode, setMode] = useState(resetToken ? 'reset' : 'login'); // login | signup | verify | forgot | reset
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,8 +48,8 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       // Gem token i localStorage så SDK + NativeAuthGate kan bruge det efter reload
       localStorage.setItem('base44_access_token', access_token);
 
-      // Alle brugere får adgang — genindlæs appen
-      window.location.reload();
+      // Navigér til post-login redirect eller /app
+      navigateAfterLogin();
     } catch (e) {
       console.error('[NativeAuthScreen] Login error:', e);
       setError(e?.message || 'Login mislykkedes. Tjek email og adgangskode.');
@@ -89,7 +100,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
         throw new Error('Login mislykkedes efter bekræftelse');
       }
       localStorage.setItem('base44_access_token', access_token);
-      window.location.reload();
+      navigateAfterLogin();
     } catch (e) {
       console.error('[NativeAuthScreen] Verify OTP error:', e);
       setError(e?.message || 'Koden er forkert eller udløbet. Prøv igen.');

@@ -52,8 +52,8 @@ export default function Landing() {
   }, []);
 
   const handleLogin = async () => {
-    const { redirectToLogin } = await import('@/lib/nativeAuth');
-    redirectToLogin('/app');
+    const { showInAppLogin } = await import('@/lib/showInAppLogin');
+    showInAppLogin('/app');
   };
 
   return (

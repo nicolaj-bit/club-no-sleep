@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { toast } from 'sonner';
 import { CheckCircle, ThumbsUp, ThumbsDown, RefreshCw, AlertCircle, ChevronLeft } from 'lucide-react';
@@ -32,7 +33,7 @@ export default function SleepAdviceFeedback() {
 
       try {
         const isAuth = await base44.auth.isAuthenticated();
-        if (!isAuth) { base44.auth.redirectToLogin(); return; }
+        if (!isAuth) { showInAppLogin('/SleepAdviceFeedback'); return; }
 
         const records = await base44.entities.SleepAdviceFeedback.filter({});
         const found = records.find(r => r.id === id);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { redirectToLogin } from '@/lib/nativeAuth';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -53,7 +53,7 @@ export default function Onboarding() {
           .then(res => { if (res.data?.active) setHasStripeSub(true); })
           .catch(() => {});
       })
-      .catch(() => redirectToLogin('/Onboarding'));
+      .catch(() => showInAppLogin('/Onboarding'));
 
     base44.entities.LegalContent.list().then(items => {
       if (!Array.isArray(items)) items = [];

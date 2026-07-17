@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { redirectToLogin as nativeRedirectToLogin } from '@/lib/nativeAuth';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 
 const AuthContext = createContext();
 
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    nativeRedirectToLogin(window.location.href);
+    showInAppLogin(window.location.pathname + window.location.search);
   };
 
   return (

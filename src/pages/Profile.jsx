@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { showInAppLogin } from '@/lib/showInAppLogin';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -139,7 +140,7 @@ export default function Profile() {
             : 'Log in or create an account to save your data and become a member.'}
         </p>
         <button
-          onClick={() => base44.auth.redirectToLogin('/Profile')}
+          onClick={() => showInAppLogin('/Profile')}
           className="w-full max-w-xs py-4 rounded-2xl text-base font-semibold"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
