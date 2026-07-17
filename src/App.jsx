@@ -35,6 +35,7 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import NativeAuthGate from './components/auth/NativeAuthGate';
 import AccessGate from './components/auth/AccessGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
+import SwipeBackGesture from './components/SwipeBackGesture';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -164,6 +165,7 @@ function App() {
       <Router>
         <PublicOrAuth />
         <InAppBrowserLinkHandler />
+        <SwipeBackGesture />
       </Router>
       <Toaster />
     </QueryClientProvider>
