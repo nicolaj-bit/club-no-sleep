@@ -146,7 +146,7 @@ export default function Home() {
       {user && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
 
       {/* Færdiggør profil banner — kun hvis ingen profil */}
-      {!profile && (
+      {user && !profile && (
         <div className="mx-5 mb-4">
           <Link
             to="/Profile"
@@ -194,8 +194,8 @@ export default function Home() {
       {/* AI Sleep Advice — only shown when 5+ logs exist */}
       {user && <SleepAdviceCard userEmail={user.email} />}
 
-      {/* AI-curated blog posts */}
-      {Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
+      {/* AI-curated blog posts — skjules for gæster */}
+      {user && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
     </div>
     </PullToRefresh>
   );
