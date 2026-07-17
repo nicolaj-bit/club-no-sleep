@@ -403,7 +403,17 @@ export default function Settings() {
             <Label htmlFor="delete-confirm">{t.typeToConfirmDelete}</Label>
             <Input id="delete-confirm" value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
           </div>
-          <Button variant="destructive" className="w-full" disabled={deleteConfirm !== t.deleteConfirmWord} onClick={() => base44.auth.logout('/')}>
+          <Button variant="destructive" className="w-full" disabled={deleteConfirm !== t.deleteConfirmWord} onClick={async () => {
+            try {
+              const { Capacitor } = await import('@capacitor/core');
+              if (Capacitor.isNativePlatform()) {
+                const mod = await import('@onesignal/capacitor-plugin');
+                const OneSignal = mod.default ?? mod.OneSignal;
+                await OneSignal.logout();
+              }
+            } catch {}
+            base44.auth.logout('/');
+          }}>
             <Trash2 className="w-4 h-4 mr-2" />
             {t.deletePermanently}
           </Button>

@@ -538,7 +538,17 @@ export default function Profile() {
 
         {/* Log out */}
         <button
-          onClick={() => base44.auth.logout('/')}
+          onClick={async () => {
+            try {
+              const { Capacitor } = await import('@capacitor/core');
+              if (Capacitor.isNativePlatform()) {
+                const mod = await import('@onesignal/capacitor-plugin');
+                const OneSignal = mod.default ?? mod.OneSignal;
+                await OneSignal.logout();
+              }
+            } catch {}
+            base44.auth.logout('/');
+          }}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
           style={{ background: cardBg, border: `1px solid ${cardBorder}`, color: 'var(--color-text-muted)' }}
         >
