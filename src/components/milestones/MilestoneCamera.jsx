@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook } from 'lucide-react';
+import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Camera, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import TypeSticker from './TypeSticker';
 
@@ -221,6 +221,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [cameraError, setCameraError] = useState(null);
 
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
@@ -239,14 +240,29 @@ export default function MilestoneCamera({ frame, onClose }) {
   const startCamera = useCallback(async (facing = facingMode) => {
     if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
     setCameraReady(false);
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1920 } },
-      audio: false,
-    });
-    streamRef.current = stream;
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.onloadedmetadata = () => setCameraReady(true);
+    setCameraError(null);
+    try {
+      // Prøv både kamera og mikrofon; fald tilbage til kun kamera hvis mikrofon nægtes
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1920 } },
+          audio: true,
+        });
+      } catch (e) {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: facing, width: { ideal: 1920 }, height: { ideal: 1920 } },
+          audio: false,
+        });
+      }
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => setCameraReady(true);
+      }
+    } catch (e) {
+      setCameraError(e);
+      console.error('MilestoneCamera: kunne ikke starte kamera:', e.message);
     }
   }, [facingMode]);
 
@@ -369,54 +385,88 @@ export default function MilestoneCamera({ frame, onClose }) {
     <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: '#000' }}>
       <canvas ref={canvasRef} className="hidden" />
 
+      {/* File input — altid tilgængelig så galleri virker selv ved kamerafejl */}
+      <input ref={fileInputRef} type="file" accept="image/*" capture={false} className="hidden" onChange={handleFileUpload} />
+
       {/* ── CAMERA MODE ── */}
       {mode === 'camera' && (
         <div className="relative h-full flex flex-col">
-          <video
-            ref={videoRef}
-            autoPlay playsInline muted
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
-          />
-
-          {/* Live sticker overlay */}
-          <div className="absolute bottom-28 left-5 pointer-events-none">
-            <TypeSticker headline={cleanHeadline} date={dateStr} size={200} />
-          </div>
-
-          {/* Top bar */}
-          <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={onClose}><X className="w-6 h-6 text-white drop-shadow" /></button>
-            <p className="text-white font-semibold text-sm drop-shadow">{frame.label}</p>
-            <button onClick={flipCamera}><SwitchCamera className="w-6 h-6 text-white drop-shadow" /></button>
-          </div>
-
-          {/* Shutter row */}
-          <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-10 pb-16">
-            <div className="flex flex-col items-center gap-1">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
-                style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
-              >
-                <ImageIcon className="w-5 h-5 text-white" />
-              </button>
-              <span className="text-white/60 text-xs">Galleri</span>
+          {cameraError ? (
+            <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+              <AlertCircle className="w-12 h-12 text-white/60 mb-4" />
+              <p className="text-white font-semibold text-lg mb-2">Kameraet er ikke tilgængeligt</p>
+              <p className="text-white/60 text-sm mb-8">Giv appen adgang til kameraet i dine indstillinger, eller vælg et billede fra dit galleri.</p>
+              <div className="flex flex-col gap-3 w-full max-w-xs">
+                <button
+                  onClick={() => startCamera()}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
+                  style={{ backgroundColor: '#fff', color: '#2B1F16' }}
+                >
+                  <Camera className="w-4 h-4" /> Prøv igen
+                </button>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
+                  style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
+                >
+                  <ImageIcon className="w-4 h-4" /> Vælg fra galleri
+                </button>
+                <button
+                  onClick={onClose}
+                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold text-white/60"
+                >
+                  Luk
+                </button>
+              </div>
             </div>
-            <input ref={fileInputRef} type="file" accept="image/*" capture={false} className="hidden" onChange={handleFileUpload} />
+          ) : (
+            <>
+              <video
+                ref={videoRef}
+                autoPlay playsInline muted
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+              />
 
-            <div className="flex flex-col items-center gap-1">
-              <button
-                onClick={capturePhoto}
-                disabled={!cameraReady}
-                className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
-                style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
-              >
-                <div className="w-14 h-14 rounded-full bg-white" />
-              </button>
-            </div>
-            <div className="w-12 h-12 mb-7" />
-          </div>
+              {/* Live sticker overlay */}
+              <div className="absolute bottom-28 left-5 pointer-events-none">
+                <TypeSticker headline={cleanHeadline} date={dateStr} size={200} />
+              </div>
+
+              {/* Top bar */}
+              <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-14 pb-4">
+                <button onClick={onClose}><X className="w-6 h-6 text-white drop-shadow" /></button>
+                <p className="text-white font-semibold text-sm drop-shadow">{frame.label}</p>
+                <button onClick={flipCamera}><SwitchCamera className="w-6 h-6 text-white drop-shadow" /></button>
+              </div>
+
+              {/* Shutter row */}
+              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-10 pb-16">
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
+                  >
+                    <ImageIcon className="w-5 h-5 text-white" />
+                  </button>
+                  <span className="text-white/60 text-xs">Galleri</span>
+                </div>
+
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    onClick={capturePhoto}
+                    disabled={!cameraReady}
+                    className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
+                    style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
+                  >
+                    <div className="w-14 h-14 rounded-full bg-white" />
+                  </button>
+                </div>
+                <div className="w-12 h-12 mb-7" />
+              </div>
+            </>
+          )}
         </div>
       )}
 

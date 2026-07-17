@@ -55,6 +55,14 @@
 	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Club No Sleep beder om adgang til din kalender for at kunne tilføje aftaler og påmindelser direkte i den.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Club No Sleep bruger kameraet til at tage billeder af dine milepæle og minder.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Club No Sleep bruger mikrofonen til optagelse af videoer af dine milepæle.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Club No Sleep bruger dit fotoalbum, så du kan vælge billeder til dine milepæle.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Club No Sleep gemmer dine milepælsbilleder i dit fotoalbum.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleURLTypes</key>
