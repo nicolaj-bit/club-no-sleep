@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
@@ -250,6 +250,11 @@ export default function Checkout() {
         <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>
           <Lock className="w-3 h-3" /> {t.checkoutSecure?.replace('{store}', store.footer)}
         </p>
+
+        <div className="flex items-center justify-center gap-4 mt-3 text-xs">
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Vilkår</Link>
+          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
+        </div>
 
         {/* TEMPORÆR: beta-tester / rabatkode-vej via Stripe, mens IAP afventer App Store/Play Console-opsætning */}
         <button

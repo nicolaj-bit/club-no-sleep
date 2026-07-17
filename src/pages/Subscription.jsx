@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2, Image, Video, X } from 'lucide-react';
@@ -423,6 +423,11 @@ export default function Subscription() {
         </motion.button>
 
         <p className="text-xs text-center mt-4" style={{ color: 'var(--color-text-muted)' }}>{footerNote}</p>
+
+        <div className="flex items-center justify-center gap-4 mt-3 text-xs">
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Vilkår</Link>
+          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
+        </div>
       </div>
 
       {/* Admin Edit Panel */}
