@@ -33,7 +33,7 @@ import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 
 import NativeAuthGate from './components/auth/NativeAuthGate';
-import GuestGate from './components/auth/GuestGate';
+import AccessGate from './components/auth/AccessGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
 
 
@@ -84,8 +84,8 @@ function RootRoute() {
 }
 
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
-  <Layout currentPageName={currentPageName}><GuestGate>{children}</GuestGate></Layout>
-  : <GuestGate>{children}</GuestGate>;
+  <Layout currentPageName={currentPageName}><AccessGate>{children}</AccessGate></Layout>
+  : <AccessGate>{children}</AccessGate>;
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
