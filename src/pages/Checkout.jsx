@@ -4,10 +4,9 @@ import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { Loader2, Check, ArrowLeft, Lock, AlertCircle, Ticket } from 'lucide-react';
+import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
-import { openInSystemBrowser } from '@/lib/openExternalUrl';
 
 function AppleIcon({ className, style }) {
   return (
@@ -38,7 +37,6 @@ export default function Checkout() {
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [testerCheckoutLoading, setTesterCheckoutLoading] = useState(false);
 
   const rc = useRevenueCat(userId || 'guest');
   const platform = Capacitor.getPlatform();
@@ -85,28 +83,6 @@ export default function Checkout() {
       }
     } finally {
       setPurchasing(false);
-    }
-  };
-
-  // TEMPORÆR workaround mens IAP afventer App Store/Play Console-opsætning:
-  // sender beta-testere til Stripe checkout i systembrowseren, hvor de kan
-  // indtaste en rabatkode (fx 6 måneders gratis abonnement). Fjern når IAP virker.
-  const handleTesterCheckout = async () => {
-    setError(null);
-    setTesterCheckoutLoading(true);
-    try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      if (response.data?.url) {
-        openInSystemBrowser(response.data.url);
-      } else {
-        console.error('[Checkout] createCheckoutSession returned no url:', response.data);
-        setError('Kunne ikke starte betaling. Prøv igen.');
-      }
-    } catch (e) {
-      console.error('[Checkout] Tester checkout error:', e);
-      setError(e?.message || 'Kunne ikke starte betaling. Prøv igen.');
-    } finally {
-      setTesterCheckoutLoading(false);
     }
   };
 
@@ -255,18 +231,6 @@ export default function Checkout() {
           <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Vilkår</Link>
           <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
         </div>
-
-        {/* TEMPORÆR: beta-tester / rabatkode-vej via Stripe, mens IAP afventer App Store/Play Console-opsætning */}
-        <button
-          onClick={handleTesterCheckout}
-          disabled={testerCheckoutLoading}
-          className="w-full mt-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
-          style={{ border: '1px solid var(--color-accent-soft)', color: 'var(--color-text-primary)', backgroundColor: 'transparent' }}
-        >
-          {testerCheckoutLoading
-            ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutOpeningPayment}</>
-            : <><Ticket className="w-4 h-4" /> {t.checkoutHasDiscountCode}</>}
-        </button>
       </div>
     </div>
   );
