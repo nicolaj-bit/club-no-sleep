@@ -70,15 +70,16 @@ export function useRevenueCat(userId) {
           }
         }
         await configure(rcUserId);
+        // KRITISK FIX — MÅ IKKE RULLES TILBAGE: getOfferings() returnerer { all, current } direkte
         const result = await Purchases.getOfferings();
-        console.log('[RevenueCat] offerings raw:', JSON.stringify(result?.offerings));
-        console.log('[RevenueCat] current offering:', result?.offerings?.current ? 'found' : 'NULL');
-        console.log('[RevenueCat] all offering keys:', result?.offerings?.all ? Object.keys(result.offerings.all) : 'none');
-        console.log('[RevenueCat] available packages:', result?.offerings?.current?.availablePackages?.length ?? 0);
-        if (result?.offerings?.current?.availablePackages?.[0]) {
-          console.log('[RevenueCat] first package product:', result.offerings.current.availablePackages[0].product?.identifier);
+        console.log('[RevenueCat] offerings raw:', JSON.stringify(result));
+        console.log('[RevenueCat] current offering:', result?.current ? 'found' : 'NULL');
+        console.log('[RevenueCat] all offering keys:', result?.all ? Object.keys(result.all) : 'none');
+        console.log('[RevenueCat] available packages:', result?.current?.availablePackages?.length ?? 0);
+        if (result?.current?.availablePackages?.[0]) {
+          console.log('[RevenueCat] first package product:', result.current.availablePackages[0].product?.identifier);
         }
-        setOfferings(result.offerings);
+        setOfferings(result);
 
         // Tjek om brugeren allerede har et aktivt abonnement
         await refreshCustomerInfo();

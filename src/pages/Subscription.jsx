@@ -35,7 +35,8 @@ export default function Subscription() {
   const da = lang === 'da';
 
   // RevenueCat — IAP på native, springes over på web
-  const rc = useRevenueCat(userId || 'guest');
+  // KRITISK FIX — MÅ IKKE RULLES TILBAGE: 'guest' blokeres af RevenueCat (error 16)
+  const rc = useRevenueCat(userId || null);
 
   useEffect(() => {
     const load = async () => {

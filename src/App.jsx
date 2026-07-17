@@ -65,7 +65,8 @@ function isNativeApp() {
 }
 
 function RootRoute() {
-  // Native app (App Store / Google Play) → altid direkte til appen (login vises af NativeAuthGate)
+  // KRITISK FIX — MÅ IKKE RULLES TILBAGE: native-tjek skal komme FØR clubnosleep-hostname-tjek,
+  // så app-brugere aldrig ser marketing-landingssiden
   if (isNativeApp()) {
     return <Navigate to="/app" replace />;
   }

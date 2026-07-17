@@ -38,7 +38,8 @@ export default function Checkout() {
   const [profile, setProfile] = useState(null);
   const [userId, setUserId] = useState(null);
 
-  const rc = useRevenueCat(userId || 'guest');
+  // KRITISK FIX — MÅ IKKE RULLES TILBAGE: 'guest' blokeres af RevenueCat (error 16)
+  const rc = useRevenueCat(userId || null);
   const platform = Capacitor.getPlatform();
   const store = platform === 'android' ? STORE_LABELS.android : STORE_LABELS.ios;
 

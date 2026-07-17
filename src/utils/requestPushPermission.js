@@ -9,7 +9,8 @@ let _initialized = false;
 // OneSignal's iOS SDK). Spring over på web/WebView uden bridge.
 async function ensureInitialized() {
   if (_initialized || !Capacitor.isNativePlatform()) return;
-  const { OneSignal } = await import('@onesignal/capacitor-plugin');
+  // KRITISK FIX — MÅ IKKE RULLES TILBAGE: plugin bruger DEFAULT export
+const mod = await import('@onesignal/capacitor-plugin'); const OneSignal = mod.default ?? mod.OneSignal;
   OneSignal.initialize(ONESIGNAL_APP_ID);
   _initialized = true;
 }
@@ -19,7 +20,8 @@ export async function requestPushPermission() {
 
   try {
     await ensureInitialized();
-    const { OneSignal } = await import('@onesignal/capacitor-plugin');
+    // KRITISK FIX — MÅ IKKE RULLES TILBAGE: plugin bruger DEFAULT export
+const mod = await import('@onesignal/capacitor-plugin'); const OneSignal = mod.default ?? mod.OneSignal;
     await OneSignal.Notifications.requestPermission(true);
 
     try {
