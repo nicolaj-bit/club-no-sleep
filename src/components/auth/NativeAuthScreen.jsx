@@ -260,7 +260,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 </motion.div>
               )}
 
-              {/* Continue with Apple */}
+              {/* MIDLERTIDIGT SKJULT — genaktiveres når Base44 understøtter session-udstedelse fra backend-funktioner (App Store Guideline 4)
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAppleLogin}
@@ -278,12 +278,12 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 Continue with Apple
               </motion.button>
 
-              {/* Divider */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
                 <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>eller</span>
                 <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
               </div>
+              */}
 
               {/* Email */}
               <div className="mb-3">
