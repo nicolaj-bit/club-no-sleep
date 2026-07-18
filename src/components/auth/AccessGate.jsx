@@ -24,7 +24,7 @@ import { showInAppLogin } from '@/lib/showInAppLogin';
  *   af LayoutWrapper → altid åbne udenom AccessGate.)
  */
 
-const ALLOWED_ROUTES = ['/app', '/AboutUs', '/Onboarding', '/Subscription'];
+const ALLOWED_ROUTES = ['/app', '/Profile', '/AboutUs', '/Onboarding', '/Subscription'];
 
 export default function AccessGate({ children }) {
   const { isAuthenticated, isLoadingAuth } = useAuth();
