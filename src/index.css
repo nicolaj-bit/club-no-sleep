@@ -64,6 +64,16 @@
     --color-card-mid: #E8D8C6;
     --color-nav-bg: #FFF8F3;
     --color-divider: #EDE4DB;
+
+    /* Theme tokens — mapped to --color-* vars, auto-update with themes */
+    --theme-background: var(--color-bg);
+    --theme-background-soft: var(--color-bg-subtle);
+    --theme-card: var(--color-bg-card);
+    --theme-border: var(--color-border);
+    --theme-accent: var(--color-primary);
+    --theme-text-primary: var(--color-text-primary);
+    --theme-text-secondary: var(--color-text-muted);
+    --theme-text-on-dark: var(--color-bg-card);
   }
 
   /* ── Dark mode – præcise brand-farver fra style guide ── */
@@ -117,6 +127,16 @@
     --color-card-mid:     #3A2B22;   /* Mørk brun */
     --color-nav-bg:       #2A231F;
     --color-divider:      #3A312B;   /* Divider / kant */
+
+    /* Theme tokens — mapped to --color-* vars, auto-update with themes */
+    --theme-background: var(--color-bg);
+    --theme-background-soft: var(--color-bg-subtle);
+    --theme-card: var(--color-bg-card);
+    --theme-border: var(--color-border);
+    --theme-accent: var(--color-accent);
+    --theme-text-primary: var(--color-text-primary);
+    --theme-text-secondary: var(--color-text-muted);
+    --theme-text-on-dark: var(--color-text-primary);
   }
 }
 
@@ -159,7 +179,7 @@
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #C29A73; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 2px; }
 
 /* ── Sleep time input: hide native clock icon & placeholder ── */
 .sleep-time-input::-webkit-calendar-picker-indicator {

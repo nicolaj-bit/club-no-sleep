@@ -177,7 +177,7 @@ export default function AddProfileSheet({ open, onClose }) {
 
               <Button
                 className="w-full h-12 rounded-2xl font-semibold flex items-center justify-center gap-2"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', border: 'none' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)', border: 'none' }}
                 onClick={handleSave}
                 disabled={saving || uploading}
               >

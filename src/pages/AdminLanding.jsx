@@ -206,38 +206,38 @@ export default function AdminLanding() {
 
       {/* PHONE MOCKUPS */}
       <h2 style={{ marginTop: '2rem', fontSize: '1.1rem' }}>{t.adminLandingPhones}</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingPhonesDesc}</p>
+      <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingPhonesDesc}</p>
 
       <div style={{ marginBottom: '1.5rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>{t.adminLandingPhoneA}</label>
-        <input type="text" value={phoneA} onChange={(e) => setPhoneA(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
+        <input type="text" value={phoneA} onChange={(e) => setPhoneA(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid var(--color-border)' }} />
         {phoneA && <img src={phoneA} alt="Preview A" style={{ maxWidth: 150, borderRadius: 8 }} />}
       </div>
       <div style={{ marginBottom: '1.5rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>{t.adminLandingPhoneB}</label>
-        <input type="text" value={phoneB} onChange={(e) => setPhoneB(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
+        <input type="text" value={phoneB} onChange={(e) => setPhoneB(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid var(--color-border)' }} />
         {phoneB && <img src={phoneB} alt="Preview B" style={{ maxWidth: 150, borderRadius: 8 }} />}
       </div>
-      <button onClick={handleSavePhones} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
+      <button onClick={handleSavePhones} disabled={loading} style={{ backgroundColor: 'var(--color-primary)', color: 'var(--theme-text-on-dark)', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
         {loading ? t.saving : t.adminLandingButtonSavePhones}
       </button>
 
       {/* HERO1 MOBILE IMAGE */}
       <h2 style={{ fontSize: '1.1rem' }}>🖼️ Hero1 mobil-billede</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>Billede der vises i hero1-sektionen på landing-siden (kun på mobil). Upload eller indsæt en URL.</p>
+      <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem', fontSize: '0.88rem' }}>Billede der vises i hero1-sektionen på landing-siden (kun på mobil). Upload eller indsæt en URL.</p>
 
       <div style={{ marginBottom: '1.5rem' }}>
         <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '0.88rem' }}>Billede-URL:</label>
-        <input type="text" value={hero1Image} onChange={(e) => setHero1Image(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid #EDE4DB' }} />
+        <input type="text" value={hero1Image} onChange={(e) => setHero1Image(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '0.75rem', marginBottom: '0.5rem', borderRadius: 8, border: '1px solid var(--color-border)' }} />
         {hero1Image && <img src={hero1Image} alt="Preview hero1" style={{ maxWidth: 200, borderRadius: 8 }} />}
       </div>
-      <button onClick={handleSaveHero1Image} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
+      <button onClick={handleSaveHero1Image} disabled={loading} style={{ backgroundColor: 'var(--color-primary)', color: 'var(--theme-text-on-dark)', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '3rem' }}>
         {loading ? 'Gemmer...' : 'Gem hero1-billede'}
       </button>
 
       {/* FEATURE ICONS */}
       <h2 style={{ fontSize: '1.1rem' }}>{t.adminLandingIcons}</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingIconsDesc}</p>
+      <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem', fontSize: '0.88rem' }}>{t.adminLandingIconsDesc}</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
         {FEATURE_KEYS.map(f => (
@@ -251,19 +251,19 @@ export default function AdminLanding() {
         ))}
       </div>
 
-      <button onClick={handleSaveIcons} disabled={loading} style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>
+      <button onClick={handleSaveIcons} disabled={loading} style={{ backgroundColor: 'var(--color-primary)', color: 'var(--theme-text-on-dark)', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>
         {loading ? t.saving : t.adminLandingButtonSaveIcons}
       </button>
 
       {/* SHOPIFY SYNC */}
       <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>{t.adminLandingShopify}</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
+      <p style={{ color: 'var(--color-text-muted)', marginBottom: '1rem', fontSize: '0.88rem' }}>
         {t.adminLandingShopifyDesc}
       </p>
       <button
         onClick={handleShopifySync}
         disabled={shopifySyncing}
-        style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.75rem' }}
+        style={{ backgroundColor: 'var(--color-primary)', color: 'var(--theme-text-on-dark)', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.75rem' }}
       >
         {shopifySyncing ? t.adminLandingSyncing : t.adminLandingSyncNow}
       </button>
@@ -275,7 +275,7 @@ export default function AdminLanding() {
 
       {/* SLEEP AGENT PROMPT */}
       <h2 style={{ marginTop: '3rem', fontSize: '1.1rem' }}>{t.adminLandingSleepAgent}</h2>
-      <p style={{ color: '#7A665A', marginBottom: '1rem', fontSize: '0.88rem' }}>
+      <p style={{ color: 'var(--color-text-muted)', marginBottom: '1rem', fontSize: '0.88rem' }}>
         {t.adminLandingSleepAgentDesc}
       </p>
       <textarea
@@ -283,7 +283,7 @@ export default function AdminLanding() {
         onChange={(e) => setSleepAgentPrompt(e.target.value)}
         rows={12}
         placeholder={t.adminLandingPromptPlaceholder}
-        style={{ width: '100%', padding: '0.75rem', borderRadius: 8, border: '1px solid #EDE4DB', fontSize: '0.88rem', lineHeight: 1.6, resize: 'vertical', marginBottom: '0.75rem', fontFamily: 'inherit' }}
+        style={{ width: '100%', padding: '0.75rem', borderRadius: 8, border: '1px solid var(--color-border)', fontSize: '0.88rem', lineHeight: 1.6, resize: 'vertical', marginBottom: '0.75rem', fontFamily: 'inherit' }}
       />
       <button
         onClick={async () => {
@@ -304,7 +304,7 @@ export default function AdminLanding() {
           }
         }}
         disabled={loading}
-        style={{ backgroundColor: '#5B3F2B', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '2rem' }}
+        style={{ backgroundColor: 'var(--color-primary)', color: 'var(--theme-text-on-dark)', border: 'none', padding: '0.6rem 1.25rem', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', marginBottom: '2rem' }}
       >
         {loading ? t.saving : t.adminLandingButtonSavePrompt}
       </button>

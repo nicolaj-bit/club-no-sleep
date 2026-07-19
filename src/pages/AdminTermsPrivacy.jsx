@@ -119,7 +119,7 @@ export default function AdminTermsPrivacy() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {/* Title */}
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#2B1F16' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
               {t.adminTermsPrivacyTitleField}
             </label>
             <input
@@ -135,7 +135,7 @@ export default function AdminTermsPrivacy() {
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: '1px solid #EDE4DB',
+                border: '1px solid var(--color-border)',
                 borderRadius: 4,
                 fontSize: '1rem',
                 fontFamily: 'inherit'
@@ -145,7 +145,7 @@ export default function AdminTermsPrivacy() {
 
           {/* Content editor */}
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#2B1F16' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>
               {t.adminTermsPrivacyContent}
             </label>
             <ReactQuill
@@ -168,7 +168,7 @@ export default function AdminTermsPrivacy() {
             disabled={saving}
             style={{
               padding: '0.75rem 2rem',
-              backgroundColor: saving ? '#ccc' : '#5B3F2B',
+              backgroundColor: saving ? '#ccc' : 'var(--color-primary)',
               color: '#fff',
               border: 'none',
               borderRadius: 4,

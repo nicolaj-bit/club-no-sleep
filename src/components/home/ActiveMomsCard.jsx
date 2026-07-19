@@ -78,7 +78,7 @@ export default function ActiveMomsCard() {
               {isLive && <span className="ml-1.5 text-sm" style={{ color: '#E8B4B8' }}>●</span>}
             </p>
             <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-              {lang === 'da' ? 'Du er ikke alene' : "You're not alone"} <span style={{ color: '#C8A882' }}>♥</span>
+              {lang === 'da' ? 'Du er ikke alene' : "You're not alone"} <span style={{ color: 'var(--color-accent)' }}>♥</span>
             </p>
           </div>
 

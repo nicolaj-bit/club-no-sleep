@@ -19,7 +19,7 @@ export default function CompleteMembershipBanner() {
       onClick={handleClick}
       className="flex items-center gap-3 rounded-2xl px-4 py-3.5 active:opacity-80 transition-opacity w-full text-left"
       style={{
-        background: 'linear-gradient(135deg, #3A2416, #5B3F2B)',
+        background: 'linear-gradient(135deg, var(--color-brown-dark), var(--color-primary))',
         boxShadow: '0 2px 12px rgba(58,36,22,0.25)',
       }}
     >

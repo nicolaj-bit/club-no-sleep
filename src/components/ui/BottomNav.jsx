@@ -116,7 +116,7 @@ export default function BottomNav() {
               style={{
                 bottom: 0,
                 top: 'auto',
-                background: isDark ? '#1F1A17' : 'linear-gradient(135deg, #FFFFFF, #F7F2EC)',
+                background: isDark ? 'var(--color-bg)' : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))',
                 boxShadow: isDark
                   ? '0 -4px 40px rgba(0,0,0,0.7), 0 0 0 0.5px #3A312B'
                   : '0 -4px 40px rgba(44,26,14,0.12), 0 0 0 0.5px rgba(44,26,14,0.06)',
@@ -130,7 +130,7 @@ export default function BottomNav() {
                 <button
                   onClick={() => setMenuOpen(false)}
                   className="w-7 h-7 rounded-full flex items-center justify-center transition-opacity active:opacity-50"
-                  style={{ backgroundColor: isDark ? '#3A312B' : '#F0E9E0' }}
+                  style={{ backgroundColor: isDark ? 'var(--color-border)' : 'var(--color-bg-subtle)' }}
                 >
                   <X className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                 </button>
@@ -148,10 +148,10 @@ export default function BottomNav() {
                       className="flex flex-col items-start gap-3 p-4 rounded-2xl text-left active:scale-95 transition-all duration-200"
                       style={{
                         background: active
-                          ? 'linear-gradient(135deg, #C29A73, #8A6B55)'
+                          ? 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))'
                           : isDark
-                          ? '#3A2B22'
-                          : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)',
+                          ? 'var(--color-bg-subtle)'
+                          : 'linear-gradient(135deg, var(--color-bg-subtle), var(--color-border))',
                       }}
                     >
                       <Icon
@@ -159,16 +159,16 @@ export default function BottomNav() {
                         strokeWidth={2}
                         style={{
                           color: active
-                            ? '#FFFFFF'
-                            : isDark ? '#888888' : '#9C7E6A',
+                            ? 'var(--theme-text-on-dark)'
+                            : 'var(--color-text-muted)',
                         }}
                       />
                       <span
                         className="text-[13px] font-medium leading-tight"
                         style={{
                           color: active
-                            ? '#FFFFFF'
-                            : isDark ? '#CCCCCC' : '#4A2E1A',
+                            ? 'var(--theme-text-on-dark)'
+                            : 'var(--color-text-primary)',
                         }}
                       >
                         {item.name}
@@ -190,8 +190,8 @@ export default function BottomNav() {
         <div
           className="flex items-center justify-around h-16 px-6 w-full max-w-xs rounded-full border"
           style={{
-            backgroundColor: isDark ? '#2A231F' : '#FFF8F3',
-            borderColor: isDark ? '#3A312B' : '#EDE4DB',
+            backgroundColor: isDark ? 'var(--color-bg-card)' : 'var(--color-nav-bg)',
+            borderColor: 'var(--color-border)',
             boxShadow: isDark
               ? '0 8px 40px rgba(0,0,0,0.7)'
               : '0 8px 40px rgba(92,51,23,0.12)',
@@ -207,7 +207,7 @@ export default function BottomNav() {
             <Home
               className="w-5 h-5"
               strokeWidth={isActive('Home') ? 2.5 : 2}
-              style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}
+              style={{ color: 'var(--color-text-primary)' }}
             />
             <span className="text-[10px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}>
               {t.home}
@@ -217,15 +217,15 @@ export default function BottomNav() {
           <Link to={createPageUrl('AIChat')} className="flex flex-col items-center gap-0.5">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden"
-              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, #C29A73, #8A6B55)' }}
+              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))' }}
             >
               {aiIconUrl ? (
                 <img src={aiIconUrl} alt="AI" className="w-full h-full object-cover" />
               ) : (
-                <svg viewBox="0 0 40 44" width="22" height="24" fill="#FFFFFF" aria-hidden>
+                <svg viewBox="0 0 40 44" width="22" height="24" fill="var(--theme-text-on-dark)" aria-hidden>
                   <ellipse cx="20" cy="10" rx="7.5" ry="8" opacity="0.9" />
                   <path d="M4 38 C4 28 8 24 20 24 C32 24 36 28 36 38" opacity="0.75" />
-                  <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="#F3EDE4" opacity="0.9" />
+                  <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="var(--color-bg-card)" opacity="0.9" />
                 </svg>
               )}
             </div>

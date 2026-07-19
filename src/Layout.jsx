@@ -63,7 +63,7 @@ export default function Layout({ children, currentPageName }) {
           }
           ::-webkit-scrollbar { width: 3px; height: 3px; }
           ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: #C8A882; border-radius: 2px; }
+          ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 2px; }
         `}</style>
 
         <Toaster position="top-center" />

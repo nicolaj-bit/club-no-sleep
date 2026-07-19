@@ -400,7 +400,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 <button
                   onClick={() => startCamera()}
                   className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-                  style={{ backgroundColor: '#fff', color: '#2B1F16' }}
+                  style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
                 >
                   <Camera className="w-4 h-4" /> Prøv igen
                 </button>
@@ -495,14 +495,14 @@ export default function MilestoneCamera({ frame, onClose }) {
               <button
                 onClick={downloadImage}
                 className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-                style={{ backgroundColor: '#FFFFFF', color: '#2B1F16' }}
+                style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
               >
                 <Download className="w-4 h-4" /> Gem
               </button>
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
                 className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }}
               >
                 <Share2 className="w-4 h-4" /> Del
               </button>

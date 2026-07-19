@@ -103,7 +103,7 @@ export default function Checkout() {
           <button
             onClick={() => navigate(-1)}
             className="w-full py-3.5 rounded-2xl text-sm font-semibold"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)', color: '#FFFDF9' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', color: 'var(--theme-text-on-dark)' }}
           >
             {t.checkoutBackToApp}
           </button>
@@ -161,7 +161,7 @@ export default function Checkout() {
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)', border: '2px solid #8B5E3C' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', border: '2px solid #8B5E3C' }}
           >
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -216,7 +216,7 @@ export default function Checkout() {
           onClick={handlePurchase}
           disabled={purchasing || rc.loading}
           className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)', color: '#FFFDF9' }}
+          style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', color: 'var(--theme-text-on-dark)' }}
         >
           {purchasing || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutProcessing}</>

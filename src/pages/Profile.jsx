@@ -153,9 +153,9 @@ export default function Profile() {
   const displayName = profile?.display_name || user?.full_name || 'Bruger';
 
   // Card background: matcher menu-knapper præcist
-  const cardBg = isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)';
-  const cardBgSolid = isDark ? 'var(--color-bg-card)' : '#F0EBE3'; // fallback for border-b rows
-  const cardBorder = isDark ? 'var(--color-border)' : '#E8DDD2';
+  const cardBg = isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, var(--color-bg-subtle), var(--color-border))';
+  const cardBgSolid = 'var(--color-bg-subtle)'; // fallback for border-b rows
+  const cardBorder = 'var(--color-border)';
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries();
@@ -183,7 +183,7 @@ export default function Profile() {
               onClick={() => navigate('/Onboarding')}
               className="w-full rounded-3xl overflow-hidden relative active:opacity-90 transition-opacity text-left"
               style={{
-                background: 'linear-gradient(135deg, #C8A882, #8A5A30)',
+                background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))',
                 minHeight: 110,
                 border: 'none',
               }}
@@ -225,14 +225,14 @@ export default function Profile() {
                   {profile?.profile_image
                     ? <img src={profile.profile_image} alt={displayName} className="w-full h-full object-cover" />
                     : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-semibold" style={{ background: isDark ? 'var(--color-bg-subtle)' : '#DCC1B0', color: 'var(--color-text-primary)' }}>
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-semibold" style={{ background: isDark ? 'var(--color-bg-subtle)' : 'var(--color-cappuccino)', color: 'var(--color-text-primary)' }}>
                         {displayName?.[0]?.toUpperCase()}
                       </div>
                     )
                   }
                 </div>
                 {/* Kamera-ikon */}
-                <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: isDark ? 'var(--color-border)' : '#EDE4DB' }}>
+                <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: 'var(--color-border)' }}>
                   <Camera className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
@@ -255,7 +255,7 @@ export default function Profile() {
                 <DialogTrigger asChild>
                   <button
                     className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity whitespace-nowrap"
-                    style={{ background: isDark ? '#3A312B' : '#EDE4DB', color: 'var(--color-text-secondary)' }}
+                    style={{ background: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                     onClick={() => setEditForm({
                       username: profile?.username || '',
                       display_name: profile?.display_name || '',
@@ -272,7 +272,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <DialogContent className="max-h-[90vh] flex flex-col p-0 gap-0" style={{ backgroundColor: isDark ? '#171311' : undefined }}>
+          <DialogContent className="max-h-[90vh] flex flex-col p-0 gap-0" style={{ backgroundColor: 'var(--color-bg)' }}>
             <DialogHeader className="px-6 pt-6 pb-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
               <DialogTitle style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>{t.editProfile}</DialogTitle>
             </DialogHeader>
@@ -530,7 +530,7 @@ export default function Profile() {
             <div className="flex-1 text-left">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.language}</p>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-full mr-1" style={{ background: isDark ? 'var(--color-bg-subtle)' : '#EDE4DB', color: 'var(--color-text-muted)' }}>
+            <span className="text-xs px-2.5 py-1 rounded-full mr-1" style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
               {lang === 'en' ? '🇬🇧 English' : '🇩🇰 Dansk'}
             </span>
             <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />

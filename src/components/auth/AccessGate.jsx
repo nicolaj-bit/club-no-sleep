@@ -94,7 +94,7 @@ function BlurredOverlay({ children, onAction, buttonText }) {
         <div
           className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
           style={{
-            background: 'linear-gradient(135deg, #3A2B22, #5B3F2B)',
+            background: 'linear-gradient(135deg, var(--color-brown-dark), var(--color-primary))',
             boxShadow: '0 4px 20px rgba(58,43,34,0.25)',
           }}
         >

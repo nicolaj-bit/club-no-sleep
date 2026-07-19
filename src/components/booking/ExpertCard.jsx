@@ -30,8 +30,8 @@ function ExpertAvatar({ src, name }) {
     >
       {/* Decorative arc / halo */}
       <svg viewBox="0 0 72 72" className="absolute inset-0 w-full h-full" aria-hidden>
-        <circle cx="36" cy="36" r="34" fill="none" stroke="#C8A882" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
-        <circle cx="36" cy="36" r="26" fill="none" stroke="#C8A882" strokeWidth="0.5" opacity="0.35" />
+        <circle cx="36" cy="36" r="34" fill="none" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+        <circle cx="36" cy="36" r="26" fill="none" stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.35" />
       </svg>
       {/* Person silhouette */}
       <svg viewBox="0 0 40 44" width="36" height="40" style={{ color: '#A0785A', position: 'relative', zIndex: 1 }} fill="currentColor">
@@ -40,7 +40,7 @@ function ExpertAvatar({ src, name }) {
         {/* Shoulders / body */}
         <path d="M4 38 C4 28 8 24 20 24 C32 24 36 28 36 38" opacity="0.75" />
         {/* Small leaf / heart accent */}
-        <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="#C8A882" opacity="0.9" />
+        <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="var(--color-accent)" opacity="0.9" />
       </svg>
     </div>
   );

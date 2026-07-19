@@ -195,13 +195,13 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       <div
         className="relative overflow-hidden"
         style={{
-          background: 'linear-gradient(160deg, #3A2B22 0%, #5B3F2B 50%, #C29A73 100%)',
+          background: 'linear-gradient(160deg, var(--color-brown-dark) 0%, var(--color-primary) 50%, var(--color-accent) 100%)',
           paddingTop: 'max(80px, env(safe-area-inset-top))',
           paddingBottom: 48,
         }}
       >
-        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-10" style={{ background: '#C29A73' }} />
-        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10" style={{ background: '#EDE4DB' }} />
+        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-10" style={{ background: 'var(--color-accent)' }} />
+        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10" style={{ background: 'var(--color-divider)' }} />
 
         <div className="relative z-10 flex flex-col items-center px-6 text-center">
           <motion.div

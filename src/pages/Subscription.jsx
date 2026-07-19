@@ -234,7 +234,7 @@ export default function Subscription() {
       <div
         className="relative overflow-hidden"
         style={{
-          background: 'linear-gradient(160deg, #3A2B22 0%, #5B3F2B 55%, #C29A73 100%)',
+          background: 'linear-gradient(160deg, var(--color-brown-dark) 0%, var(--color-primary) 55%, var(--color-accent) 100%)',
           paddingTop: 'max(56px, env(safe-area-inset-top))',
           paddingBottom: 52,
         }}
@@ -251,8 +251,8 @@ export default function Subscription() {
         )}
 
         {/* Decorative blobs */}
-        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-10" style={{ background: '#C29A73' }} />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full opacity-10" style={{ background: '#EDE4DB' }} />
+        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full opacity-10" style={{ background: 'var(--color-accent)' }} />
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full opacity-10" style={{ background: 'var(--color-divider)' }} />
 
         <div className="relative z-10 flex flex-col items-center px-6 text-center">
           {/* Logo */}
@@ -336,7 +336,7 @@ export default function Subscription() {
             className="px-6 py-3 rounded-2xl flex items-center gap-2"
             style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}
           >
-            <Sparkles className="w-4 h-4" style={{ color: '#C29A73' }} />
+            <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
             <span className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
               {priceLabel}
             </span>
@@ -355,7 +355,7 @@ export default function Subscription() {
             <div key={i} className="flex items-center gap-3">
               <span className="text-xl flex-shrink-0">{f.emoji}</span>
               <span className="text-sm flex-1" style={{ color: 'var(--color-text-primary)' }}>{f.text}</span>
-              <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#C29A73' }}>
+              <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent)' }}>
                 <Check className="w-3 h-3 text-white" />
               </div>
             </div>
@@ -591,9 +591,9 @@ export default function Subscription() {
                 <button
                   onClick={addFeature}
                   className="flex items-center gap-2 text-sm py-2"
-                  style={{ color: '#C29A73' }}
-                >
-                  <Plus className="w-4 h-4" /> Tilføj feature
+                  style={{ color: 'var(--color-accent)' }}
+                  >
+                   <Plus className="w-4 h-4" /> Tilføj feature
                 </button>
               </div>
             </div>

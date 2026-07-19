@@ -83,6 +83,21 @@ function applyThemeObject(theme, isDark) {
     if (value) root.style.setProperty(cssVar, value);
   });
 
+  // ── Theme tokens (mapped to --color-* vars for consistency) ──
+  const themeTokens = {
+    '--theme-background': bg,
+    '--theme-background-soft': subtle || bg,
+    '--theme-card': card,
+    '--theme-border': border,
+    '--theme-accent': isDark ? (accent || primary) : (primary || accent),
+    '--theme-text-primary': textPrimary,
+    '--theme-text-secondary': textMuted || textSecondary,
+    '--theme-text-on-dark': isDark ? textPrimary : (card || bg),
+  };
+  Object.entries(themeTokens).forEach(([cssVar, value]) => {
+    if (value) root.style.setProperty(cssVar, value);
+  });
+
   // ── Shadcn / Tailwind HSL tokens ──
   const hslVars = {};
   if (bg) {
@@ -145,6 +160,10 @@ const ALL_THEME_VARS = [
   '--color-cappuccino', '--color-text-primary', '--color-text-secondary',
   '--color-text-muted', '--color-brown-dark', '--color-brown-light',
   '--color-sand', '--color-nav-bg', '--color-card-warm', '--color-card-mid',
+  // Theme tokens (mapped to --color-* vars, set for explicitness)
+  '--theme-background', '--theme-background-soft', '--theme-card',
+  '--theme-border', '--theme-accent', '--theme-text-primary',
+  '--theme-text-secondary', '--theme-text-on-dark',
   // Shadcn HSL tokens
   '--background', '--foreground', '--card', '--card-foreground',
   '--popover', '--popover-foreground', '--primary', '--primary-foreground',

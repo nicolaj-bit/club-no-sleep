@@ -118,14 +118,14 @@ export default function Paywall({ onSubscribed }) {
       <div
         className="relative overflow-hidden"
         style={{
-          background: 'linear-gradient(160deg, #3A2B22 0%, #5B3F2B 50%, #C29A73 100%)',
+          background: 'linear-gradient(160deg, var(--color-brown-dark) 0%, var(--color-primary) 50%, var(--color-accent) 100%)',
           paddingTop: 'max(56px, env(safe-area-inset-top))',
           paddingBottom: 48,
         }}
       >
         {/* Decorative circles */}
-        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-10" style={{ background: '#C29A73' }} />
-        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10" style={{ background: '#EDE4DB' }} />
+        <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-10" style={{ background: 'var(--color-accent)' }} />
+        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10" style={{ background: 'var(--color-divider)' }} />
 
         <div className="relative z-10 flex flex-col items-center px-6 text-center">
           <motion.div
@@ -173,7 +173,7 @@ export default function Paywall({ onSubscribed }) {
         >
           <div
             className="px-5 py-2.5 rounded-2xl flex items-center gap-2"
-            style={{ background: isDark ? '#2A231F' : '#F3E9E1', border: '1px solid var(--color-border)' }}
+            style={{ background: isDark ? 'var(--color-bg-card)' : 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}
           >
             <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
             <span className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
@@ -194,7 +194,7 @@ export default function Paywall({ onSubscribed }) {
             <div key={i} className="flex items-center gap-3">
               <span className="text-xl flex-shrink-0">{f.emoji}</span>
               <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{f.text}</span>
-              <Check className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: '#C29A73' }} />
+              <Check className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             </div>
           ))}
         </motion.div>

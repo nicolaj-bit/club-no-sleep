@@ -66,7 +66,7 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
         <div
           className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
           style={{
-            background: 'linear-gradient(135deg, #3A2B22, #5B3F2B)',
+            background: 'linear-gradient(135deg, var(--color-brown-dark), var(--color-primary))',
             boxShadow: '0 4px 20px rgba(58,43,34,0.25)',
           }}
         >

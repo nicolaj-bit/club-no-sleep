@@ -33,8 +33,8 @@ function normalizeDbFrame(f) {
     headline: f.headline,
     subline: f.subline || '',
     bgColor: f.bg_color || '#F5EFE6',
-    accentColor: f.accent_color || '#C8A882',
-    textColor: f.text_color || '#2B1F16',
+    accentColor: f.accent_color || 'var(--color-accent)',
+    textColor: f.text_color || 'var(--color-text-primary)',
     sticker_image: f.sticker_image || null,
     order: f.order ?? 0,
   };

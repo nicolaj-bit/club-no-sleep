@@ -35,20 +35,20 @@ function SleepAIAvatar({ size = 'sm' }) {
   return (
     <div style={{
       width: dim, height: dim, flexShrink: 0,
-      background: 'linear-gradient(145deg, #F3EDE4 0%, #E8D9C8 100%)',
+      background: 'linear-gradient(145deg, var(--color-bg-subtle) 0%, var(--color-accent-warm) 100%)',
       borderRadius: size === 'lg' ? 16 : 10,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      border: '1.5px solid #C8A882',
+      border: '1.5px solid var(--color-accent)',
       boxShadow: size === 'lg' ? '0 4px 16px rgba(160,120,90,0.18)' : '0 1px 4px rgba(160,120,90,0.15)',
     }}>
       <svg viewBox={`0 0 ${dim} ${dim}`} width={dim} height={dim} aria-hidden>
-        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="#C8A882" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
-        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="#C8A882" strokeWidth="0.5" opacity="0.3" />
+        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="var(--color-accent)" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
+        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.3" />
         <ellipse cx={dim/2} cy={headCy} rx={headRx} ry={headRy} fill="#A0785A" opacity="0.88" />
         <path d={bodyD} fill="#A0785A" opacity="0.72" />
-        <path d={leafD} fill="#C8A882" opacity="0.95" />
-        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2 : 1} fill="#C8A882" opacity="0.7" />
-        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.2 : 0.7} fill="#C8A882" opacity="0.5" />
+        <path d={leafD} fill="var(--color-accent)" opacity="0.95" />
+        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2 : 1} fill="var(--color-accent)" opacity="0.7" />
+        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.2 : 0.7} fill="var(--color-accent)" opacity="0.5" />
         {/* Moon accent - removed emoji */}
       </svg>
     </div>
@@ -111,7 +111,7 @@ function Chip({ label, color }) {
         green: { backgroundColor: '#F0FDF4', color: '#15803D' },
         yellow: { backgroundColor: '#FEFCE8', color: '#A16207' },
         red: { backgroundColor: '#FEF2F2', color: '#B91C1C' },
-        brown: { backgroundColor: '#F3E9E1', color: '#5B3F2B' },
+        brown: { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-primary)' },
       };
   return (
     <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={colors[color] || colors.blue}>
@@ -373,7 +373,7 @@ export default function SleepLog() {
           {/* Hero gradient card */}
           <div
             className="rounded-2xl p-5 relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #C8A882 0%, #A0785A 100%)' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-brown-light) 100%)' }}
           >
             <div className="absolute top-0 right-0 w-28 h-28 rounded-full opacity-10 bg-white -translate-y-8 translate-x-8" />
             <div className="absolute bottom-0 left-0 w-16 h-16 rounded-full opacity-10 bg-white translate-y-5 -translate-x-5" />
@@ -450,7 +450,7 @@ export default function SleepLog() {
                     onClick={() => setForm(f => ({ ...f, bedtime_mood: f.bedtime_mood === m.value ? '' : m.value }))}
                     className="px-3 py-2 rounded-xl text-sm font-medium border transition-all flex items-center gap-1.5"
                     style={active
-                      ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff', borderColor: 'transparent' }
+                      ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)', borderColor: 'transparent' }
                       : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                   >
                     {m.label}
@@ -505,7 +505,7 @@ export default function SleepLog() {
                             }}
                             className="flex-shrink-0 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all"
                             style={sel
-                              ? { background: 'linear-gradient(135deg,#C8A882,#A0785A)', color: '#fff', borderColor: 'transparent' }
+                              ? { background: 'linear-gradient(135deg,var(--color-accent),var(--color-brown-light))', color: 'var(--theme-text-on-dark)', borderColor: 'transparent' }
                               : { backgroundColor: 'var(--color-bg)', color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}
                           >{m}</button>
                         );
@@ -647,7 +647,7 @@ export default function SleepLog() {
               onClick={() => saveMutation.mutate(form)}
               disabled={saveMutation.isPending}
               className="w-full py-4 rounded-2xl text-white font-semibold text-sm transition-all disabled:opacity-60"
-              style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)' }}
+              style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))' }}
             >
               {saveMutation.isPending ? t.saving : t.saveSleepLog}
             </button>
@@ -671,7 +671,7 @@ export default function SleepLog() {
           {/* Header – same gradient as AIChat */}
           <div
             className="flex items-center gap-3 px-4 py-3"
-            style={{ paddingTop: 'max(40px, env(safe-area-inset-top, 40px))', background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+            style={{ paddingTop: 'max(40px, env(safe-area-inset-top, 40px))', background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
           >
             <button onClick={() => setShowAiChat(false)} className="p-1.5 rounded-full" style={{ color: 'rgba(255,255,255,0.9)' }}>
               <ArrowLeft className="w-5 h-5" />
@@ -781,7 +781,7 @@ export default function SleepLog() {
                   onClick={sendAiMessage}
                   disabled={!aiInput.trim() || aiSending}
                   className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity disabled:opacity-30"
-                  style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                  style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
                 >
                   <Send className="w-4 h-4 text-white" />
                 </button>

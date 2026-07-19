@@ -22,7 +22,7 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
       <img
         src={iconUrl}
         alt="AI"
-        style={{ width: dim, height: dim, borderRadius: radius, objectFit: 'cover', flexShrink: 0, border: '1.5px solid #C8A882' }}
+        style={{ width: dim, height: dim, borderRadius: radius, objectFit: 'cover', flexShrink: 0, border: '1.5px solid var(--color-accent)' }}
       />
     );
   }
@@ -50,13 +50,13 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
       }}
     >
       <svg viewBox={`0 0 ${dim} ${dim}`} width={dim} height={dim} aria-hidden>
-        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="#C8A882" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
-        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="#C8A882" strokeWidth="0.5" opacity="0.3" />
+        <circle cx={dim/2} cy={dim/2} r={r1} fill="none" stroke="var(--color-accent)" strokeWidth="0.8" strokeDasharray="3 2.5" opacity="0.5" />
+        <circle cx={dim/2} cy={dim/2} r={r2} fill="none" stroke="var(--color-accent)" strokeWidth="0.5" opacity="0.3" />
         <ellipse cx={dim/2} cy={headCy} rx={headRx} ry={headRy} fill="#A0785A" opacity="0.88" />
         <path d={bodyD} fill="#A0785A" opacity="0.72" />
-        <path d={leafD} fill="#C8A882" opacity="0.95" />
-        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2.5 : 1} fill="#C8A882" opacity="0.7" />
-        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.5 : 0.7} fill="#C8A882" opacity="0.5" />
+        <path d={leafD} fill="var(--color-accent)" opacity="0.95" />
+        <circle cx={dim*0.72} cy={dim*0.28} r={size === 'lg' ? 2.5 : 1} fill="var(--color-accent)" opacity="0.7" />
+        <circle cx={dim*0.78} cy={dim*0.38} r={size === 'lg' ? 1.5 : 0.7} fill="var(--color-accent)" opacity="0.5" />
       </svg>
     </div>
   );
@@ -438,7 +438,7 @@ export default function AIChat() {
         {/* Loading state while restoring recent conversation */}
         {restoringChat && visibleMessages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full gap-4">
-            <div className="w-8 h-8 border-2 border-stone-300 border-t-[#C8A882] rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-stone-300 border-t-[var(--color-accent)] rounded-full animate-spin" />
           </div>
         )}
 
@@ -450,7 +450,7 @@ export default function AIChat() {
               <button
                 onClick={() => setPickingAvatar(true)}
                 className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
                 aria-label="Vælg avatar"
               >
                 {savingAvatar ? (
@@ -584,7 +584,7 @@ export default function AIChat() {
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity cursor-pointer disabled:opacity-30"
-            style={{ background: 'linear-gradient(135deg, #C8A882, #8B5E3C)' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
             aria-label={t.sendLabel}
           >
             <Send className="w-4 h-4 text-white" />
@@ -670,7 +670,7 @@ export default function AIChat() {
           <div className="overflow-y-auto flex-1 -mx-2 px-2">
             {loadingHistory && (
               <div className="flex items-center justify-center py-8">
-                <div className="w-6 h-6 border-2 border-stone-300 border-t-[#C8A882] rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-stone-300 border-t-[var(--color-accent)] rounded-full animate-spin" />
               </div>
             )}
             {!loadingHistory && historyList.length === 0 && (

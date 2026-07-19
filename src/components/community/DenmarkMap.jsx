@@ -12,7 +12,7 @@ function makePinIcon(size = 22, isMe = false, nightMode = false) {
   const pinH = s * 1.5;
   const glow = isMe
     ? (nightMode ? '#818cf8' : '#6366f1')
-    : (nightMode ? '#FFD700' : '#C9AA8F');
+    : (nightMode ? '#FFD700' : 'var(--color-brown-light)');
   const inner = isMe
     ? (nightMode ? '#c7d2fe' : '#e0e7ff')
     : (nightMode ? '#FFFDE7' : '#FFF8EE');

@@ -28,7 +28,7 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
             onClick={() => setActiveCategory(cat)}
             className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
             style={activeCategory === cat
-              ? { background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }
+              ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
           >
             {cat}
@@ -97,7 +97,7 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
         <button
           onClick={onOpen}
           className="w-full h-14 rounded-2xl flex items-center justify-center gap-2 font-semibold text-sm"
-          style={{ background: 'linear-gradient(135deg, #C8A882, #A0785A)', color: '#fff' }}
+          style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }}
         >
           <Camera className="w-5 h-5" />
           Tag milepælsbillede med "{selectedFrame.label}"
