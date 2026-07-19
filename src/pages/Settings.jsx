@@ -294,7 +294,7 @@ export default function Settings() {
           </span>
         </button>
 
-        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>{t.version}</p>
+        <p className="text-center text-xs pb-2" style={{ color: 'var(--color-text-muted)' }}>Version 2.0</p>
       </div>
 
       {/* Change Password */}
