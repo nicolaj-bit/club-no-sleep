@@ -42,28 +42,15 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-// Robust native app detection — Base44's native app uses a web view wrapper,
-// so Capacitor.isNativePlatform() alone may return false. We also check the
-// user agent for web view indicators.
+// Native app detection — the native app is always built with the Capacitor bridge,
+// so isNativePlatform() is the only reliable signal. User-agent heuristics are
+// removed because they incorrectly flag mobile Safari as a native app.
 function isNativeApp() {
-  // 1. Capacitor bridge (if app is built with Capacitor)
   try {
-    if (Capacitor.isNativePlatform()) return true;
-  } catch {}
-
-  const ua = navigator.userAgent || '';
-
-  // 2. Android WebView — has "wv" in user agent
-  if (/; wv\)/.test(ua) || /; wv;/.test(ua)) return true;
-
-  // 3. iOS WKWebView (native app) — window.safari object only exists in real Safari,
-  //    not in WKWebView. Exclude Chrome (CriOS) and Firefox (FxiOS) which also use WKWebView.
-  if (/iPhone|iPad|iPod/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua) && typeof window.safari === 'undefined') return true;
-
-  // 4. iOS PWA / Add to Home Screen
-  if (window.navigator.standalone === true) return true;
-
-  return false;
+    return Capacitor.isNativePlatform();
+  } catch {
+    return false;
+  }
 }
 
 function RootRoute() {
