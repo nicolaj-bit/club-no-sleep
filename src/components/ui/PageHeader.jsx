@@ -24,8 +24,8 @@ export default function PageHeader({
     <div
       className={cn('sticky top-0 z-10 border-b px-4 pb-2 flex items-center justify-between transition-transform duration-300', className)}
       style={{
-        background: transparent ? 'transparent' : (isDark ? 'var(--color-bg-card)' : 'linear-gradient(135deg, #F7F2EC, #EDE4D8)'),
-        borderColor: transparent ? 'transparent' : (isDark ? 'var(--color-border)' : '#E8DDD2'),
+        background: transparent ? 'transparent' : 'var(--color-bg)',
+        borderColor: transparent ? 'transparent' : 'var(--color-border)',
         transform: scrollHide ? (visible ? 'translateY(0)' : 'translateY(-100%)') : 'translateY(0)',
         paddingTop: 'max(40px, env(safe-area-inset-top, 0px))',
       }}
