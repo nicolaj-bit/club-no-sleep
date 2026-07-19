@@ -500,7 +500,7 @@ export default function Profile() {
             <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>FAQ, {lang === 'da' ? 'kontakt & support' : 'contact & support'}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Kontakt os</p>
             </div>
             <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
           </button>
