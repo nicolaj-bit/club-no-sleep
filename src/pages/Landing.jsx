@@ -66,10 +66,7 @@ export default function Landing() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
             <button onClick={() => window.location.href = '/app'} style={btnDark}>{t.landingOpenApp}</button> :
-            <>
-                <button className="lnd-nav-btn-text" onClick={handleLogin} style={{ background: 'none', border: 'none', color: '#5B3F2B', fontSize: '0.88rem', fontWeight: 500, cursor: 'pointer' }}>{t.landingLogIn}</button>
-                <button onClick={handleBecomeMember} style={btnDark}>{t.landingBecomeMember}</button>
-              </>
+            <button onClick={handleBecomeMember} style={btnDark}>{t.landingBecomeMember}</button>
             }
           </div>
         </div>
