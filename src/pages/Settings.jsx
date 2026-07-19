@@ -113,7 +113,6 @@ export default function Settings() {
   ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
   { icon: Lock, label: t.password, action: () => setPasswordOpen(true) },
   { icon: Bell, label: t.notifications, action: () => setNotifOpen(true) },
-  { icon: Shield, label: t.privacy, action: openPrivacy },
   { icon: HelpCircle, label: t.help, accordion: true }];
 
 
