@@ -1,0 +1,53 @@
+name: Byg Android AAB
+
+on:
+  workflow_dispatch:   # Manuel start via Actions-fanen på GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hent koden
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer dependencies
+        run: npm ci
+
+      - name: Byg web-app
+        run: npm run build
+
+      - name: Capacitor sync (Android)
+        run: npx cap sync android
+
+      - name: Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Byg release AAB
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease
+
+      - name: Signér AAB
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > upload-keystore.jks
+          jarsigner -keystore upload-keystore.jks \
+            -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            -signedjar app-release-signed.aab \
+            android/app/build/outputs/bundle/release/app-release.aab upload
+          rm upload-keystore.jks
+
+      - name: Upload AAB som artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: club-no-sleep-release
+          path: app-release-signed.aab
