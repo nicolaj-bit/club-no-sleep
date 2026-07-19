@@ -149,7 +149,7 @@ export default function FamilyInvite() {
         {/* Intro */}
         <div className="rounded-2xl p-4 border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {pageConfig?.intro_text || t.familyInviteIntroDefault}
+            {pageConfig?.intro_text || "Du er ikke alene, heller ikke i appen.\nDel rejsen med en, der betyder noget for dig. Du vælger selv, hvad personen skal kunne se og modtage notifikationer om."}
           </p>
         </div>
 
