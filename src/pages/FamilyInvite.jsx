@@ -160,7 +160,7 @@ export default function FamilyInvite() {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           <UserPlus className="w-5 h-5" />
-          {pageConfig?.invite_button_label || t.inviteFamilyMember}
+          {pageConfig?.invite_button_label || 'Invitér en medbruger'}
         </Button>
 
         {/* Existing invites */}
