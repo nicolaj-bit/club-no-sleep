@@ -20,10 +20,10 @@ import PageHeader from '@/components/ui/PageHeader';
 
 // Brand-farver fra style guide – matcher menu-knapper præcist
 const CARD_BG_LIGHT_SOLID = 'var(--color-bg-card)';
-const CARD_BG_DARK    = 'var(--color-bg-card)';
-const BORDER_LIGHT    = 'var(--color-border)';
-const BORDER_DARK     = 'var(--color-border)';
-const ICON_COLOR      = 'var(--color-accent)';
+const CARD_BG_DARK = 'var(--color-bg-card)';
+const BORDER_LIGHT = 'var(--color-border)';
+const BORDER_DARK = 'var(--color-border)';
+const ICON_COLOR = 'var(--color-accent)';
 
 export default function Settings() {
   const { isDark, toggle } = useTheme();
@@ -47,13 +47,13 @@ export default function Settings() {
     notif_pregnancy_weekly: true,
     notif_calendar_reminder: true,
     notif_sleep_encouragement: true,
-    notif_blog_new: true,
+    notif_blog_new: true
   });
   const [notifSaving, setNotifSaving] = useState(false);
 
-  const cardBg     = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))';
+  const cardBg = isDark ? CARD_BG_DARK : 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))';
   const cardBgSolid = isDark ? CARD_BG_DARK : CARD_BG_LIGHT_SOLID;
-  const cardBorder = isDark ? BORDER_DARK  : BORDER_LIGHT;
+  const cardBorder = isDark ? BORDER_DARK : BORDER_LIGHT;
 
   useEffect(() => {
     const loadUser = async () => {
@@ -69,7 +69,7 @@ export default function Settings() {
             notif_pregnancy_weekly: p.notif_pregnancy_weekly !== false,
             notif_calendar_reminder: p.notif_calendar_reminder !== false,
             notif_sleep_encouragement: p.notif_sleep_encouragement !== false,
-            notif_blog_new: p.notif_blog_new !== false,
+            notif_blog_new: p.notif_blog_new !== false
           });
         }
       } catch {
@@ -86,7 +86,7 @@ export default function Settings() {
       const cancelDate = new Date(res.data.cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
       toast.success(`Abonnement opsagt. Du har adgang til ${cancelDate}.`);
       setCancelOpen(false);
-      setProfile(p => ({ ...p, subscription_cancel_at: res.data.cancel_at }));
+      setProfile((p) => ({ ...p, subscription_cancel_at: res.data.cancel_at }));
     } catch (e) {
       toast.error(e.message || 'Noget gik galt. Prøv igen.');
     } finally {
@@ -99,8 +99,8 @@ export default function Settings() {
   useEffect(() => {
     const loadHelp = async () => {
       const results = await base44.entities.LegalContent.list();
-      setFaqContent(results.find(r => r.type === 'faq') || null);
-      setSupportContent(results.find(r => r.type === 'support') || null);
+      setFaqContent(results.find((r) => r.type === 'faq') || null);
+      setSupportContent(results.find((r) => r.type === 'support') || null);
       setHelpLoaded(true);
     };
     loadHelp();
@@ -110,12 +110,12 @@ export default function Settings() {
   const openTerms = () => setTermsOpen(true);
 
   const gridItems = [
-    ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
-    { icon: Lock,        label: t.password,      action: () => setPasswordOpen(true) },
-    { icon: Bell,        label: t.notifications, action: () => setNotifOpen(true) },
-    { icon: Shield,      label: t.privacy,       action: openPrivacy },
-    { icon: HelpCircle,  label: t.help,          accordion: true },
-  ];
+  ...(isAdmin ? [{ icon: FileText, label: 'Admin', link: 'AdminEditor' }] : []),
+  { icon: Lock, label: t.password, action: () => setPasswordOpen(true) },
+  { icon: Bell, label: t.notifications, action: () => setNotifOpen(true) },
+  { icon: Shield, label: t.privacy, action: openPrivacy },
+  { icon: HelpCircle, label: t.help, accordion: true }];
+
 
   return (
     <div className="min-h-screen pb-10" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -125,7 +125,7 @@ export default function Settings() {
 
         {/* Grid items */}
         <div className="grid grid-cols-2 gap-3">
-          {gridItems.filter(i => !i.accordion).map((item, i) => {
+          {gridItems.filter((i) => !i.accordion).map((item, i) => {
             const Icon = item.icon;
 
             if (item.toggle) {
@@ -133,15 +133,15 @@ export default function Settings() {
                 <div
                   key={i}
                   className="rounded-2xl p-5 flex flex-col gap-3 border"
-                  style={{ background: cardBg, borderColor: cardBorder }}
-                >
+                  style={{ background: cardBg, borderColor: cardBorder }}>
+                  
                   <Icon className="w-6 h-6" style={{ color: ICON_COLOR }} />
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
                     <Switch defaultChecked={item.defaultChecked} />
                   </div>
-                </div>
-              );
+                </div>);
+
             }
 
             const Wrapper = item.link ? Link : 'button';
@@ -152,20 +152,20 @@ export default function Settings() {
                 key={i}
                 {...wrapperProps}
                 className="rounded-2xl p-5 flex flex-col gap-3 text-left cursor-pointer active:opacity-70 transition-opacity border"
-                style={{ background: cardBg, borderColor: cardBorder }}
-              >
+                style={{ background: cardBg, borderColor: cardBorder }}>
+                
                 <Icon className="w-6 h-6" style={{ color: ICON_COLOR }} />
                 <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{item.label}</span>
-              </Wrapper>
-            );
+              </Wrapper>);
+
           })}
         </div>
 
         {/* Tema – Lys / Mørk */}
         <div
           className="rounded-2xl p-5 space-y-3 border"
-          style={{ background: cardBg, borderColor: cardBorder }}
-        >
+          style={{ background: cardBg, borderColor: cardBorder }}>
+          
           <div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.theme}</p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.chooseTheme}</p>
@@ -177,9 +177,9 @@ export default function Settings() {
               style={{
                 background: !isDark ? 'var(--color-accent)' : 'transparent',
                 borderColor: !isDark ? 'var(--color-accent)' : cardBorder,
-                color: !isDark ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)',
-              }}
-            >
+                color: !isDark ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)'
+              }}>
+              
               <Sun className="w-4 h-4 mx-auto mb-1" style={{ color: !isDark ? 'var(--color-primary-foreground)' : 'var(--color-text-muted)' }} />
               {t.light}
             </button>
@@ -189,9 +189,9 @@ export default function Settings() {
               style={{
                 background: isDark ? 'var(--color-accent)' : 'transparent',
                 borderColor: isDark ? 'var(--color-accent)' : cardBorder,
-                color: isDark ? '#fff' : 'var(--color-text-muted)',
-              }}
-            >
+                color: isDark ? '#fff' : 'var(--color-text-muted)'
+              }}>
+              
               <Moon className="w-4 h-4 mx-auto mb-1" style={{ color: isDark ? '#fff' : 'var(--color-text-muted)' }} />
               {t.dark}
             </button>
@@ -203,34 +203,34 @@ export default function Settings() {
         {isAdmin && <PushNotificationSender />}
 
         {/* Admin sandbox checkout — kun for admin (test af IAP via App Store Sandbox) */}
-        {isAdmin && (
-          <Link
-            to="/Checkout"
-            className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
-            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
-          >
+        {isAdmin &&
+        <Link
+          to="/Checkout"
+          className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
+          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
+          
             <CreditCard className="w-4 h-4" style={{ color: ICON_COLOR }} />
             Sandbox betaling (admin)
           </Link>
-        )}
+        }
 
         {/* FAQ + Support */}
         <div
           className="rounded-2xl overflow-hidden border"
-          style={{ background: cardBgSolid, borderColor: cardBorder }}
-        >
+          style={{ background: cardBgSolid, borderColor: cardBorder }}>
+          
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: cardBorder }}>
-              <AccordionTrigger className="px-5 hover:no-underline py-4">
+              <AccordionTrigger className="px-5 hover:no-underline py-4 hidden">
                 <div className="flex items-center gap-3">
                   <HelpCircle className="w-5 h-5" style={{ color: ICON_COLOR }} />
                   <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.faq}</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
-                {faqContent
-                  ? <div dangerouslySetInnerHTML={{ __html: faqContent.content }} />
-                  : (!helpLoaded ? t.loading : t.noFaqAvailable)}
+                {faqContent ?
+                <div dangerouslySetInnerHTML={{ __html: faqContent.content }} /> :
+                !helpLoaded ? t.loading : t.noFaqAvailable}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="support" className="border-0">
@@ -241,9 +241,9 @@ export default function Settings() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
-                {supportContent
-                  ? <div dangerouslySetInnerHTML={{ __html: supportContent.content }} />
-                  : (!helpLoaded ? t.loading : t.noSupportInfo)}
+                {supportContent ?
+                <div dangerouslySetInnerHTML={{ __html: supportContent.content }} /> :
+                !helpLoaded ? t.loading : t.noSupportInfo}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -254,16 +254,16 @@ export default function Settings() {
           <button
             onClick={openTerms}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
-            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
-          >
+            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
+            
             <FileText className="w-4 h-4" style={{ color: ICON_COLOR }} />
             Betingelser
           </button>
           <button
             onClick={openPrivacy}
             className="py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border flex items-center justify-center gap-2"
-            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
-          >
+            style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
+            
             <Shield className="w-4 h-4" style={{ color: ICON_COLOR }} />
             Privatliv
           </button>
@@ -273,13 +273,13 @@ export default function Settings() {
         <button
           onClick={() => setCancelOpen(true)}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
-        >
+          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
+          
           <span className="flex items-center justify-center gap-2">
             <CreditCard className="w-4 h-4" style={{ color: ICON_COLOR }} />
-            {profile?.subscription_cancel_at
-              ? `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}`
-              : 'Opsig abonnement'}
+            {profile?.subscription_cancel_at ?
+            `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}` :
+            'Opsig abonnement'}
           </span>
         </button>
 
@@ -287,8 +287,8 @@ export default function Settings() {
         <button
           onClick={() => setDeleteOpen(true)}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity border"
-          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}
-        >
+          style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
+          
           <span className="flex items-center justify-center gap-2">
             <Trash2 className="w-4 h-4" style={{ color: '#e57373' }} />
             {t.deleteAccount}
@@ -303,18 +303,18 @@ export default function Settings() {
         <div className="px-5 py-4 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="current-pw">{t.currentPassword}</Label>
-            <Input id="current-pw" type="password" value={passwordForm.current} onChange={e => setPasswordForm({ ...passwordForm, current: e.target.value })} />
+            <Input id="current-pw" type="password" value={passwordForm.current} onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="new-pw">{t.newPassword}</Label>
-            <Input id="new-pw" type="password" value={passwordForm.new} onChange={e => setPasswordForm({ ...passwordForm, new: e.target.value })} />
+            <Input id="new-pw" type="password" value={passwordForm.new} onChange={(e) => setPasswordForm({ ...passwordForm, new: e.target.value })} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm-pw">{t.confirmPassword}</Label>
-            <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={e => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
+            <Input id="confirm-pw" type="password" value={passwordForm.confirm} onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })} />
           </div>
           <Button className="w-full" style={{ background: 'var(--color-accent)', color: '#fff' }} onClick={() => {
-            if (passwordForm.new !== passwordForm.confirm) { toast.error(t.passwordMismatch); return; }
+            if (passwordForm.new !== passwordForm.confirm) {toast.error(t.passwordMismatch);return;}
             toast.success(t.passwordUpdated);
             setPasswordOpen(false);
             setPasswordForm({ current: '', new: '', confirm: '' });
@@ -331,29 +331,29 @@ export default function Settings() {
           <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
 
           {[
-            { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
-            { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
-            { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
-            { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
-            { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
-          ].map(({ key, label, desc }) => (
-            <div key={key} className="flex items-center justify-between gap-4">
+          { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
+          { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
+          { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
+          { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
+          { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' }].
+          map(({ key, label, desc }) =>
+          <div key={key} className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
               </div>
               <Switch
-                checked={notifPrefs[key]}
-                onCheckedChange={async (val) => {
-                  const updated = { ...notifPrefs, [key]: val };
-                  setNotifPrefs(updated);
-                  if (profile?.id) {
-                    await base44.entities.UserProfile.update(profile.id, { [key]: val });
-                  }
-                }}
-              />
+              checked={notifPrefs[key]}
+              onCheckedChange={async (val) => {
+                const updated = { ...notifPrefs, [key]: val };
+                setNotifPrefs(updated);
+                if (profile?.id) {
+                  await base44.entities.UserProfile.update(profile.id, { [key]: val });
+                }
+              }} />
+            
             </div>
-          ))}
+          )}
           <div className="h-2" />
         </div>
       </BottomSheet>
@@ -376,16 +376,16 @@ export default function Settings() {
           <button
             onClick={openTerms}
             className="text-sm underline underline-offset-2 cursor-pointer"
-            style={{ color: 'var(--color-accent)' }}
-          >
+            style={{ color: 'var(--color-accent)' }}>
+            
             Læs handelsbetingelserne →
           </button>
           <Button
             variant="destructive"
             className="w-full"
             onClick={handleCancelSubscription}
-            disabled={cancelLoading}
-          >
+            disabled={cancelLoading}>
+            
             <CreditCard className="w-4 h-4 mr-2" />
             {cancelLoading ? 'Opsiger…' : 'Bekræft opsigelse'}
           </Button>
@@ -402,7 +402,7 @@ export default function Settings() {
           <p className="text-sm leading-relaxed text-rose-500">{t.deleteWarning}</p>
           <div className="space-y-2">
             <Label htmlFor="delete-confirm">{t.typeToConfirmDelete}</Label>
-            <Input id="delete-confirm" value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
+            <Input id="delete-confirm" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} placeholder={t.deleteConfirmWord} />
           </div>
           <Button variant="destructive" className="w-full" disabled={deleteConfirm !== t.deleteConfirmWord} onClick={async () => {
             try {
@@ -421,6 +421,6 @@ export default function Settings() {
           <div className="h-2" />
         </div>
       </BottomSheet>
-    </div>
-  );
+    </div>);
+
 }
