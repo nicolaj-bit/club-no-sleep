@@ -6,99 +6,37 @@
       "type": "string",
       "description": "Temaets navn"
     },
-    "description": {
+    "themeBackground": {
       "type": "string",
-      "description": "Kort beskrivelse"
+      "description": "Sidens baggrund"
     },
-    "preview_gradient": {
-      "type": "string"
-    },
-    "preview_dot": {
-      "type": "string"
-    },
-    "c_bg": {
+    "themeBackgroundSoft": {
       "type": "string",
-      "description": "Kernefarve: baggrund (lys)"
+      "description": "Subtil baggrund"
     },
-    "c_card": {
+    "themeCard": {
       "type": "string",
-      "description": "Kernefarve: kort (lys)"
+      "description": "Kort-baggrund"
     },
-    "c_primary": {
+    "themeBorder": {
       "type": "string",
-      "description": "Kernefarve: prim\u00e6r"
+      "description": "Kantfarve"
     },
-    "c_accent": {
+    "themeAccent": {
       "type": "string",
-      "description": "Kernefarve: accent"
+      "description": "Accent / prim\u00e6r farve"
     },
-    "c_text": {
+    "textPrimary": {
       "type": "string",
-      "description": "Kernefarve: tekst (lys)"
+      "description": "Prim\u00e6r tekstfarve"
     },
-    "c_dark_bg": {
+    "textSecondary": {
       "type": "string",
-      "description": "Kernefarve: m\u00f8rk baggrund"
+      "description": "Sekund\u00e6r tekstfarve"
     },
-    "light_bg": {
-      "type": "string"
-    },
-    "light_card": {
-      "type": "string"
-    },
-    "light_subtle": {
-      "type": "string"
-    },
-    "light_border": {
-      "type": "string"
-    },
-    "light_primary": {
-      "type": "string"
-    },
-    "light_accent": {
-      "type": "string"
-    },
-    "light_cappuccino": {
-      "type": "string"
-    },
-    "light_text_primary": {
-      "type": "string"
-    },
-    "light_text_secondary": {
-      "type": "string"
-    },
-    "light_text_muted": {
-      "type": "string"
-    },
-    "dark_bg": {
-      "type": "string"
-    },
-    "dark_card": {
-      "type": "string"
-    },
-    "dark_subtle": {
-      "type": "string"
-    },
-    "dark_border": {
-      "type": "string"
-    },
-    "dark_primary": {
-      "type": "string"
-    },
-    "dark_accent": {
-      "type": "string"
-    },
-    "dark_cappuccino": {
-      "type": "string"
-    },
-    "dark_text_primary": {
-      "type": "string"
-    },
-    "dark_text_secondary": {
-      "type": "string"
-    },
-    "dark_text_muted": {
-      "type": "string"
+    "textOnDark": {
+      "type": "string",
+      "description": "Tekst p\u00e5 m\u00f8rk/accent baggrund"
     },
     "is_active": {
       "type": "boolean",

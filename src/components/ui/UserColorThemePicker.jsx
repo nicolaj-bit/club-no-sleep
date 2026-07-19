@@ -7,8 +7,8 @@ import { Check } from 'lucide-react';
 const DEFAULT_THEME = {
   id: '__default__',
   name: 'Standard',
-  preview_gradient: 'linear-gradient(135deg, #FAF6F1, #DCC1B0)',
-  preview_dot: '#B08D72',
+  themeBackground: '#FAF6F1',
+  themeAccent: '#B08D72',
 };
 
 export default function UserColorThemePicker() {
@@ -40,7 +40,7 @@ export default function UserColorThemePicker() {
               borderColor: isActive ? 'var(--color-primary)' : 'var(--color-border)',
             }}
           >
-            <div className="h-10 w-full" style={{ background: theme.preview_gradient || '#ccc' }} />
+            <div className="h-10 w-full" style={{ background: `linear-gradient(135deg, ${theme.themeBackground || '#FAF6F1'}, ${theme.themeAccent || '#B08D72'})` }} />
             <p className="text-[10px] font-medium py-1 px-1 text-center leading-tight truncate"
               style={{ color: 'var(--color-text-primary)', backgroundColor: 'var(--color-bg-card)' }}>
               {theme.name.split(' ')[0]}

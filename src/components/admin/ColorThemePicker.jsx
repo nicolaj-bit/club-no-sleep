@@ -34,14 +34,14 @@ export default function ColorThemePicker() {
     }
     localStorage.setItem('lalatoto-color-theme-id', selected);
     setSaving(false);
-    toast.success(t('admin.theme_picker.toast.saved'));
+    toast.success(t('colorThemeSaved') || 'Farvetema gemt!');
   };
 
   return (
     <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
       <div>
-        <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{t('admin.theme_picker.title')}</p>
-        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('admin.theme_picker.description')}</p>
+        <p className="text-sm font-medium mb-1" style={{ color: 'var(--color-text-primary)' }}>{t('colorThemeChoose') || 'Vælg appens farvetema'}</p>
+        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t('colorThemeChooseDesc') || 'Temaet gælder for alle brugere af appen'}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -55,17 +55,9 @@ export default function ColorThemePicker() {
               backgroundColor: 'var(--color-bg-card)',
             }}
           >
-            <div className="h-16 w-full" style={{ background: theme.preview_gradient || '#ccc' }}>
-              {theme.preview_dot && (
-                <div
-                  className="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white"
-                  style={{ backgroundColor: theme.preview_dot }}
-                />
-              )}
-            </div>
+            <div className="h-16 w-full" style={{ background: `linear-gradient(135deg, ${theme.themeBackground || '#FAF6F1'}, ${theme.themeAccent || '#5B3F2B'})` }} />
             <div className="px-3 py-2.5">
               <p className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{theme.name}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{theme.description}</p>
             </div>
             {selected === theme.id && (
               <div
@@ -85,7 +77,7 @@ export default function ColorThemePicker() {
         className="w-full"
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
       >
-        {saving ? t('admin.theme_picker.button.saving') : t('admin.theme_picker.button.save')}
+        {saving ? (t('colorThemeSaving') || 'Gemmer…') : (t('colorThemeSaveTheme') || 'Gem tema')}
       </Button>
     </div>
   );
