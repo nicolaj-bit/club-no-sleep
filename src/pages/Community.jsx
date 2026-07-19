@@ -49,6 +49,7 @@ export default function Community() {
   const [isVisible, setIsVisible] = useState(true);
   const [locationEnabled, setLocationEnabled] = useState(false);
 
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     const loadUser = async () => {
@@ -243,7 +244,7 @@ export default function Community() {
         <div>
           <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="400px">
           {/* Far-profil blokeringsbesked for community-tabs */}
-          {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && (
+          {(activeTab === 'nearby' || activeTab === 'chats') && !isMom && !isAdmin && (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
               <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'var(--color-primary)' }}>
                 <Lock className="w-7 h-7 text-white" />
@@ -261,7 +262,7 @@ export default function Community() {
           )}
 
           {/* Nearby Tab */}
-          {activeTab === 'nearby' && isMom && <div className="space-y-4">
+          {activeTab === 'nearby' && (isMom || isAdmin) && <div className="space-y-4">
             {/* Privacy Settings */}
             <div className="rounded-xl p-4 border space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="flex items-center justify-between">
@@ -376,7 +377,7 @@ export default function Community() {
           </div>}
 
           {/* Chats Tab */}
-          {activeTab === 'chats' && isMom && <div className="space-y-3">
+          {activeTab === 'chats' && (isMom || isAdmin) && <div className="space-y-3">
             {loadingChats ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (
