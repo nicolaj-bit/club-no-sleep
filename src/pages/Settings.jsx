@@ -221,12 +221,12 @@ export default function Settings() {
           
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="faq" className="border-0 border-b" style={{ borderColor: cardBorder }}>
-              <AccordionTrigger className="px-5 hover:no-underline py-4 hidden">
-                <div className="flex items-center gap-3">
-                  <HelpCircle className="w-5 h-5" style={{ color: ICON_COLOR }} />
-                  <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.faq}</span>
-                </div>
-              </AccordionTrigger>
+              
+
+
+
+
+              
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {faqContent ?
                 <div dangerouslySetInnerHTML={{ __html: faqContent.content }} /> :
