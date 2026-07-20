@@ -54,6 +54,16 @@ Deno.serve(async (req) => {
       for (const log of sleepLogs) {
         await base44.entities.SleepLog.delete(log.id);
       }
+      // Delete children
+      const children = await base44.entities.Child.filter({ user_email: user.email });
+      for (const child of children) {
+        await base44.entities.Child.delete(child.id);
+      }
+      // Delete calendar events
+      const events = await base44.entities.CalendarEvent.filter({ user_email: user.email });
+      for (const ev of events) {
+        await base44.entities.CalendarEvent.delete(ev.id);
+      }
       // Delete profile
       const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
       if (profiles[0]) {
