@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import PlanChooser from '@/components/onboarding/PlanChooser';
 
 export default function Onboarding() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(-1);
   const hasPaid = new URLSearchParams(window.location.search).get('subscription') === 'success';
@@ -157,7 +159,7 @@ export default function Onboarding() {
 
       // Onboarding done — allerede betalt via App Store: gå til appen.
       // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
-      window.location.href = isActive || plan === 'demo' ? '/app' : '/Checkout';
+      navigate(isActive || plan === 'demo' ? '/app' : '/Checkout');
     } catch (err) {
       console.error('[Onboarding] handleFinish error:', err);
       toast.error(err?.message || 'Noget gik galt. Prøv igen.');

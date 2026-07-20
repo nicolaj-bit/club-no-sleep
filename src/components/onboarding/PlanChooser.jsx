@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-export default function PlanChooser({ onChoose }) {
+export default function PlanChooser({ onChoose, finishing }) {
   const [selected, setSelected] = useState(null);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
   const { offerings, purchase } = useRevenueCat();
@@ -149,6 +149,7 @@ export default function PlanChooser({ onChoose }) {
       {/* Skip-knap — giver kun adgang til demo */}
       <button
         onClick={() => onChoose && onChoose('demo')}
+        disabled={finishing}
         style={{
           width: '100%',
           background: 'none',
@@ -157,13 +158,17 @@ export default function PlanChooser({ onChoose }) {
           fontSize: '0.82rem',
           marginTop: '1.2rem',
           padding: '8px',
-          cursor: 'pointer',
+          cursor: finishing ? 'default' : 'pointer',
           textDecoration: 'underline',
           textDecorationColor: 'var(--color-border)',
           textUnderlineOffset: 3,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
         }}
       >
-        {t.skipLimitedAccess}
+        {finishing ? <><Loader2 size={14} className="animate-spin" /> Gemmer...</> : t.skipLimitedAccess}
       </button>
     </motion.div>
   );
