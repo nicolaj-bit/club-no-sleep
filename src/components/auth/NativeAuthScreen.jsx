@@ -95,6 +95,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
     setLoading(true);
     setError(null);
+    localStorage.removeItem('demo_mode'); // Ryd demo mode ved OTP-verifikation
     try {
       await base44.auth.verifyOtp({ email, otpCode });
       const { access_token } = await base44.auth.loginViaEmailPassword(email, password);

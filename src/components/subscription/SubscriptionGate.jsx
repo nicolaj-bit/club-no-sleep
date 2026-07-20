@@ -28,13 +28,21 @@ export default function SubscriptionGate({ children }) {
     }
 
     try {
+      // Hvis token findes i localStorage men SDK ikke er klar endnu,
+      // prøv direkte med me() i stedet for at give op
       const isAuth = await base44.auth.isAuthenticated();
-      if (!isAuth) {
-        setStatus('ok');
-        return;
+      let user = null;
+      if (isAuth) {
+        user = await base44.auth.me();
+      } else if (localStorage.getItem('base44_access_token')) {
+        // SDK har muligvis ikke initialiseret token endnu — prøv me() direkte
+        try {
+          user = await base44.auth.me();
+        } catch {
+          user = null;
+        }
       }
 
-      const user = await base44.auth.me();
       if (!user) {
         setStatus('ok');
         return;
