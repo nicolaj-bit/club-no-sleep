@@ -108,9 +108,12 @@ export default function Onboarding() {
     setSaving(true);
     try {
       const isActive = hasPaid || plan === 'paid' || plan === 'appstore' || plan === 'googleplay';
-      const { accept_terms, accept_privacy, ...profileData } = form;
+      const { accept_terms, accept_privacy, child_name, child_birthdate, child_due_date, ...profileData } = form;
       // Brugernavn bruges også som visningsnavn
       if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
+      // Only include dates if they have a value (avoid validation errors with empty strings)
+      if (child_birthdate) profileData.child_birthdate = child_birthdate;
+      if (child_due_date) profileData.child_due_date = child_due_date;
 
       // Tjek om profilen allerede eksisterer — opdater i stedet for at oprette ny
       const existing = await base44.entities.UserProfile.filter({ user_email: user.email });
