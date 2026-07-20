@@ -36,6 +36,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
     setLoading(true);
     setError(null);
+    localStorage.removeItem('demo_mode'); // Ryd demo mode ved login
 
     try {
       // Login med email/password
@@ -73,6 +74,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
     setLoading(true);
     setError(null);
+    localStorage.removeItem('demo_mode'); // Ryd demo mode ved oprettelse
     try {
       await base44.auth.register({ email, password });
       setInfo('Vi har sendt en kode til din email. Indtast den herunder for at bekræfte din konto.');
