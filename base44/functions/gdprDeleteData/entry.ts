@@ -59,6 +59,12 @@ Deno.serve(async (req) => {
       if (profiles[0]) {
         await base44.entities.UserProfile.delete(profiles[0].id);
       }
+      // Delete the user account itself (service role needed — built-in RLS blocks self-delete)
+      try {
+        await base44.asServiceRole.entities.User.delete(user.id);
+      } catch (e) {
+        console.log('Could not delete user account:', e.message);
+      }
     }
 
     // Audit log
