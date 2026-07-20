@@ -103,6 +103,7 @@ export default function Onboarding() {
       toast.error(t.errorTryAgain || 'Kunne ikke finde din bruger. Prøv igen.');
       return;
     }
+    if (saving) return; // forhindrer dobbelt-kald
 
     setSaving(true);
     try {
@@ -110,14 +111,22 @@ export default function Onboarding() {
       const { accept_terms, accept_privacy, ...profileData } = form;
       // Brugernavn bruges også som visningsnavn
       if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
-      await base44.entities.UserProfile.create({
+
+      // Tjek om profilen allerede eksisterer — opdater i stedet for at oprette ny
+      const existing = await base44.entities.UserProfile.filter({ user_email: user.email });
+      const profileData2 = {
         ...profileData,
         gender: form.profile_label === 'mor' ? 'female' : 'male',
         user_email: user.email,
         subscription_status: isActive ? 'active' : 'trial',
         subscription_started_at: isActive ? new Date().toISOString() : undefined,
         trial_started_at: isActive ? undefined : new Date().toISOString(),
-      });
+      };
+      if (existing && existing.length > 0) {
+        await base44.entities.UserProfile.update(existing[0].id, profileData2);
+      } else {
+        await base44.entities.UserProfile.create(profileData2);
+      }
 
       // Opret barn baseret på onboarding-data
       if (childMode === 'gravid' && form.child_due_date) {
