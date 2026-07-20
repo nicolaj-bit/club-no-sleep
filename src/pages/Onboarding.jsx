@@ -154,7 +154,7 @@ export default function Onboarding() {
 
       // Onboarding done — allerede betalt via App Store: gå til appen.
       // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
-      window.location.href = isActive ? '/app' : '/Checkout';
+      window.location.href = isActive || plan === 'demo' ? '/app' : '/Checkout';
     } catch (err) {
       console.error('[Onboarding] handleFinish error:', err);
       toast.error(err?.message || 'Noget gik galt. Prøv igen.');
