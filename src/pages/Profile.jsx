@@ -543,6 +543,7 @@ export default function Profile() {
             try {
               const { Capacitor } = await import('@capacitor/core');
               if (Capacitor.isNativePlatform()) {
+                // KRITISK FIX — MÅ IKKE RULLES TILBAGE: plugin bruger DEFAULT export
                 const mod = await import('@onesignal/capacitor-plugin');
                 const OneSignal = mod.default ?? mod.OneSignal;
                 await OneSignal.logout();
