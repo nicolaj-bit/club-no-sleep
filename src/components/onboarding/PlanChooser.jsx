@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
@@ -11,6 +12,7 @@ export default function PlanChooser({ onChoose, finishing }) {
   const [loadingPurchase, setLoadingPurchase] = useState(false);
   const { offerings, purchase } = useRevenueCat();
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const handleAppStore = async () => {
     if (window.self !== window.top) {
@@ -146,9 +148,9 @@ export default function PlanChooser({ onChoose, finishing }) {
         {t.securePaymentNote}
       </p>
 
-      {/* Skip-knap — giver kun adgang til demo */}
+      {/* Skip-knap — gå direkte til home */}
       <button
-        onClick={() => onChoose && onChoose('demo')}
+        onClick={() => navigate('/app')}
         disabled={finishing}
         style={{
           width: '100%',
