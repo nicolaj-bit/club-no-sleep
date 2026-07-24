@@ -9,7 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
-import ReactMarkdown from 'react-markdown';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -98,27 +97,14 @@ export default function BlogPost() {
     },
   });
 
-  // Strip HTML tags and decode common entities to plain text/markdown
-  const stripHtml = (html) => {
-    if (!html) return '';
-    return html
-      .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/<\/p>/gi, '\n\n')
-      .replace(/<\/h[1-6]>/gi, '\n\n')
-      .replace(/<h([1-6])[^>]*>/gi, (_, n) => '\n' + '#'.repeat(Number(n)) + ' ')
-      .replace(/<\/li>/gi, '\n')
-      .replace(/<li[^>]*>/gi, '- ')
-      .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
-      .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
-      .replace(/<[^>]+>/g, '')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
+  // Konverterer plain text (linjeskift) til HTML <p>-tags hvis der ikke er HTML i forvejen
+  const formatContent = (content) => {
+    if (!content) return '';
+    if (/<[a-z][\s\S]*>/i.test(content)) return content;
+    return content
+      .split(/\n{2,}/)
+      .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+      .join('');
   };
 
   const translations = useTranslation(
@@ -273,33 +259,11 @@ export default function BlogPost() {
         </div>
 
         {/* Body */}
-         <div
-           className="prose prose-sm max-w-none leading-relaxed"
-           style={{ color: 'var(--color-text-primary)' }}
-         >
-          <ReactMarkdown
-            components={{
-              h1: ({ children }) => <h1 className="text-xl font-bold mt-5 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h1>,
-              h2: ({ children }) => <h2 className="text-lg font-semibold mt-5 mb-2" style={{ color: 'var(--color-text-primary)' }}>{children}</h2>,
-              h3: ({ children }) => <h3 className="text-base font-semibold mt-4 mb-1" style={{ color: 'var(--color-text-primary)' }}>{children}</h3>,
-              p: ({ children }) => <p className="mb-3 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{children}</p>,
-              ul: ({ children }) => <ul className="mb-3 ml-4 space-y-1 list-disc" style={{ color: 'var(--color-text-secondary)' }}>{children}</ul>,
-              ol: ({ children }) => <ol className="mb-3 ml-4 space-y-1 list-decimal" style={{ color: 'var(--color-text-secondary)' }}>{children}</ol>,
-              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-              strong: ({ children }) => <strong className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{children}</strong>,
-              blockquote: ({ children }) => (
-                <blockquote
-                  className="border-l-4 pl-4 my-4 italic"
-                  style={{ borderColor: 'var(--color-accent)', color: 'var(--color-text-muted)' }}
-                >
-                  {children}
-                </blockquote>
-              ),
-            }}
-          >
-            {stripHtml(translated?.content || post.content)}
-          </ReactMarkdown>
-        </div>
+        <div
+          className="article-content"
+          style={{ color: 'var(--color-text-secondary)' }}
+          dangerouslySetInnerHTML={{ __html: formatContent(translated?.content || post.content) }}
+        />
 
         {/* Tags */}
         {post.tags?.length > 0 && (
