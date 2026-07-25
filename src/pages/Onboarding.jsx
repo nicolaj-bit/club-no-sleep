@@ -111,57 +111,24 @@ export default function Onboarding() {
 
     setSaving(true);
     try {
-      const isActive = hasPaid || plan === 'paid' || plan === 'appstore' || plan === 'googleplay';
-      const { accept_terms, accept_privacy, child_name, child_birthdate, child_due_date, ...profileData } = form;
-      // Brugernavn bruges også som visningsnavn
-      if (!profileData.display_name?.trim()) profileData.display_name = profileData.username;
-      // Only include dates if they have a value (avoid validation errors with empty strings)
-      if (child_birthdate) profileData.child_birthdate = child_birthdate;
-      if (child_due_date) profileData.child_due_date = child_due_date;
-
-      // Tjek om profilen allerede eksisterer — opdater i stedet for at oprette ny
-      const existing = await base44.entities.UserProfile.filter({ user_email: user.email });
-      const profileData2 = {
-        ...profileData,
-        gender: form.profile_label === 'mor' ? 'female' : 'male',
-        user_email: user.email,
-        subscription_status: isActive ? 'active' : 'trial',
-        subscription_started_at: isActive ? new Date().toISOString() : undefined,
-        trial_started_at: isActive ? undefined : new Date().toISOString(),
-      };
-      if (existing && existing.length > 0) {
-        await base44.entities.UserProfile.update(existing[0].id, { ...profileData2, onboarding_completed: true });
-      } else {
-        await base44.entities.UserProfile.create({ ...profileData2, onboarding_completed: true });
-      }
-      invalidateProfileCache(user.email);
-
-      // Opret barn baseret på onboarding-data
-      if (childMode === 'gravid' && form.child_due_date) {
-        await base44.entities.Child.create({
-          user_email: user.email,
-          name: 'Mit barn',
-          due_date: form.child_due_date,
-        });
-      } else if (childMode === 'fodt' && (form.child_birthdate || form.child_due_date)) {
-        await base44.entities.Child.create({
-          user_email: user.email,
-          name: form.child_name?.trim() || 'Mit barn',
-          birthdate: form.child_birthdate || undefined,
-          due_date: form.child_due_date || undefined,
-        });
-      }
-
-      // Gem GDPR consent-log
-      await base44.entities.ConsentLog.create({
-        user_email: user.email,
-        terms_version: '1.0',
-        privacy_version: '1.0',
-        accepted_at: new Date().toISOString(),
+      const response = await base44.functions.invoke('completeOnboarding', {
+        plan,
+        username: form.username,
+        display_name: form.display_name || form.username,
+        profile_label: form.profile_label,
+        city: form.city,
+        profile_image: form.profile_image,
+        child_birthdate: form.child_birthdate,
+        child_due_date: form.child_due_date,
+        childMode,
+        child_name: form.child_name,
       });
 
-      // Onboarding fuldført — alle brugere sendes til appen.
-      // Betalende brugere får fuld adgang, skip/demo-brugere får begrænset adgang via SubscriptionGate.
+      if (!response.data?.ok) {
+        throw new Error(response.data?.error || 'Kunne ikke gemme profil');
+      }
+
+      invalidateProfileCache(user.email);
       navigate('/app');
     } catch (e) {
       console.error('[Onboarding] handleFinish fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
