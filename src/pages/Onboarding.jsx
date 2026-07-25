@@ -102,6 +102,7 @@ export default function Onboarding() {
   };
 
   const handleFinish = async (plan = 'demo') => {
+    console.log('[Onboarding] handleFinish start, plan:', plan, 'user:', user?.email);
     if (!user?.email) {
       toast.error(t.errorTryAgain || 'Kunne ikke finde din bruger. Prøv igen.');
       return;
@@ -162,9 +163,9 @@ export default function Onboarding() {
       // Onboarding done — allerede betalt via App Store: gå til appen.
       // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
       navigate(isActive || plan === 'demo' ? '/app' : '/Checkout');
-    } catch (err) {
-      console.error('[Onboarding] handleFinish error:', err);
-      toast.error(err?.message || 'Noget gik galt. Prøv igen.');
+    } catch (e) {
+      console.error('[Onboarding] handleFinish fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
+      toast.error(e?.message || 'Noget gik galt. Prøv igen.');
       setSaving(false);
     }
   };
