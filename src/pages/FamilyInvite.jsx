@@ -93,48 +93,51 @@ export default function FamilyInvite() {
       return;
     }
     setSaving(true);
+    let invite;
     try {
-      const invite = await base44.entities.FamilyInvite.create({
+      invite = await base44.entities.FamilyInvite.create({
         ...form,
         inviter_email: user.email,
         status: 'pending',
       });
-
-      const inviterName = user.full_name || user.email;
-      const inviteUrl = `${window.location.origin}/AcceptInvite?invite=${invite.id}`;
-      const shareText = `${inviterName} inviterer dig som ${form.invitee_title} til LALATOTO 🤍\n\nFå adgang til at følge med i barnets udvikling, søvn og milepæle.\n\nAcceptér invitation her:\n${inviteUrl}`;
-
-      // Brug enhedens indbyggede delingsfunktion (SMS, WhatsApp, email, osv.)
-      let shared = false;
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: 'Invitation til LALATOTO',
-            text: shareText,
-            url: inviteUrl,
-          });
-          shared = true;
-        } catch (shareErr) {
-          if (shareErr.name === 'AbortError') {
-            setSaving(false);
-            return;
-          }
-        }
-      }
-
-      if (!shared) {
-        await navigator.clipboard.writeText(shareText);
-        toast.success(lang === 'en' ? 'Invitation link copied — paste it in a message to your family member' : 'Invitationslink kopieret — sæt det ind i en besked til dit familiemedlem');
-      }
-
-      setInvites(prev => [invite, ...prev]);
-      setSheetOpen(false);
-      resetForm();
     } catch (e) {
       toast.error(t.somethingWentWrongTryAgain);
-    } finally {
       setSaving(false);
+      return;
     }
+
+    // Invitation gemt — forsøg at dele linket (ikke-kritisk)
+    const inviterName = user.full_name || user.email;
+    const inviteUrl = `${window.location.origin}/AcceptInvite?invite=${invite.id}`;
+    const shareText = `${inviterName} inviterer dig som ${form.invitee_title} til LALATOTO 🤍\n\nFå adgang til at følge med i barnets udvikling, søvn og milepæle.\n\nAcceptér invitation her:\n${inviteUrl}`;
+
+    let shared = false;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Invitation til LALATOTO',
+          text: shareText,
+          url: inviteUrl,
+        });
+        shared = true;
+      } catch (shareErr) {
+        // AbortError = bruger annullerede — det er OK
+      }
+    }
+
+    if (!shared) {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        toast.success(lang === 'en' ? 'Invitation link copied — paste it in a message to your family member' : 'Invitationslink kopieret — sæt det ind i en besked til dit familiemedlem');
+      } catch {
+        toast.success(lang === 'en' ? 'Invitation created! Share this link:' : 'Invitation oprettet! Del dette link: ' + inviteUrl);
+      }
+    }
+
+    setInvites(prev => [invite, ...prev]);
+    setSheetOpen(false);
+    resetForm();
+    setSaving(false);
   };
 
   const handleDelete = async (id) => {
