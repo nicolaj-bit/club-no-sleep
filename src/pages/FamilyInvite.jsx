@@ -101,6 +101,7 @@ export default function FamilyInvite() {
         status: 'pending',
       });
     } catch (e) {
+      console.error('[FamilyInvite] create/invite fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
       toast.error(t.somethingWentWrongTryAgain);
       setSaving(false);
       return;
