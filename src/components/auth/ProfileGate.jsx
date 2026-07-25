@@ -47,8 +47,31 @@ export default function ProfileGate({ children }) {
     }
 
     base44.entities.UserProfile.filter({ user_email: email })
-      .then(profiles => {
-        const profile = profiles && profiles[0];
+      .then(async (profiles) => {
+        let profile = profiles && profiles[0];
+
+        // Auto-create a minimal profile if none exists, so the user appears in data
+        // even before completing onboarding.
+        if (!profile) {
+          const username = (email.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '');
+          try {
+            profile = await base44.entities.UserProfile.create({
+              username: username || email,
+              display_name: username || '',
+              user_email: email,
+              profile_label: 'mor',
+              gender: 'female',
+              onboarding_completed: false,
+              subscription_status: 'trial',
+              trial_started_at: new Date().toISOString(),
+              is_visible: false,
+              location_enabled: false,
+            });
+          } catch (e) {
+            // If creation fails (e.g. race condition), proceed to onboarding anyway
+          }
+        }
+
         const completed = profile?.onboarding_completed === true;
         profileCache[email] = completed;
         if (!completed) {
