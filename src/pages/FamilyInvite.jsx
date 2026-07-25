@@ -103,7 +103,6 @@ export default function FamilyInvite() {
       invite = res.data.invite;
       inviteUrl = res.data.inviteUrl;
     } catch (e) {
-      console.error('[FamilyInvite] create/invite fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
       toast.error(t.somethingWentWrongTryAgain);
       setSaving(false);
       return;
