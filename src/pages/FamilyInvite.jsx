@@ -34,7 +34,7 @@ export default function FamilyInvite() {
   const [pageConfig, setPageConfig] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const TITLE_SUGGESTIONS = getTitleSuggestions(t);
   const PERMISSIONS = getPermissions(t);
   const NOTIFICATIONS = getNotifications(t);
@@ -100,18 +100,36 @@ export default function FamilyInvite() {
         status: 'pending',
       });
 
-      // Send invite email
-      await base44.functions.invoke('sendFamilyInvite', {
-        invitee_email: form.invitee_email,
-        invitee_title: form.invitee_title,
-        inviter_name: user.full_name || user.email,
-        invite_id: invite.id,
-      });
+      const inviterName = user.full_name || user.email;
+      const inviteUrl = `${window.location.origin}/AcceptInvite?invite=${invite.id}`;
+      const shareText = `${inviterName} inviterer dig som ${form.invitee_title} til LALATOTO 🤍\n\nFå adgang til at følge med i barnets udvikling, søvn og milepæle.\n\nAcceptér invitation her:\n${inviteUrl}`;
+
+      // Brug enhedens indbyggede delingsfunktion (SMS, WhatsApp, email, osv.)
+      let shared = false;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Invitation til LALATOTO',
+            text: shareText,
+            url: inviteUrl,
+          });
+          shared = true;
+        } catch (shareErr) {
+          if (shareErr.name === 'AbortError') {
+            setSaving(false);
+            return;
+          }
+        }
+      }
+
+      if (!shared) {
+        await navigator.clipboard.writeText(shareText);
+        toast.success(lang === 'en' ? 'Invitation link copied — paste it in a message to your family member' : 'Invitationslink kopieret — sæt det ind i en besked til dit familiemedlem');
+      }
 
       setInvites(prev => [invite, ...prev]);
       setSheetOpen(false);
       resetForm();
-      toast.success(`${t.invitationSentToPrefix} ${form.invitee_email} 🎉`);
     } catch (e) {
       toast.error(t.somethingWentWrongTryAgain);
     } finally {
