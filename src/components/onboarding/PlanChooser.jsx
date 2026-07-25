@@ -148,9 +148,9 @@ export default function PlanChooser({ onChoose, finishing }) {
         {t.securePaymentNote}
       </p>
 
-      {/* Skip-knap — gå direkte til home */}
+      {/* Skip-knap — gem profil og gå til appen med begrænset adgang */}
       <button
-        onClick={() => navigate('/app')}
+        onClick={() => onChoose('demo')}
         disabled={finishing}
         style={{
           width: '100%',
