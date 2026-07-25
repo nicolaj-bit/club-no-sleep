@@ -95,11 +95,11 @@ export default function FamilyInvite() {
     setSaving(true);
     let invite;
     try {
-      invite = await base44.entities.FamilyInvite.create({
+      const res = await base44.functions.invoke('sendFamilyInvite', {
         ...form,
         inviter_email: user.email,
-        status: 'pending',
       });
+      invite = res.data.invite;
     } catch (e) {
       console.error('[FamilyInvite] create/invite fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
       toast.error(t.somethingWentWrongTryAgain);
