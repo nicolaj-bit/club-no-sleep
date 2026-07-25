@@ -48,9 +48,10 @@ export default function ProfileGate({ children }) {
 
     base44.entities.UserProfile.filter({ user_email: email })
       .then(profiles => {
-        const exists = profiles && profiles.length > 0;
-        profileCache[email] = exists;
-        if (!exists) {
+        const profile = profiles && profiles[0];
+        const completed = profile?.onboarding_completed === true;
+        profileCache[email] = completed;
+        if (!completed) {
           navigate('/Onboarding', { replace: true });
         } else {
           setReady(true);

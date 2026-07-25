@@ -129,9 +129,9 @@ export default function Onboarding() {
         trial_started_at: isActive ? undefined : new Date().toISOString(),
       };
       if (existing && existing.length > 0) {
-        await base44.entities.UserProfile.update(existing[0].id, profileData2);
+        await base44.entities.UserProfile.update(existing[0].id, { ...profileData2, onboarding_completed: true });
       } else {
-        await base44.entities.UserProfile.create(profileData2);
+        await base44.entities.UserProfile.create({ ...profileData2, onboarding_completed: true });
       }
       invalidateProfileCache(user.email);
 
