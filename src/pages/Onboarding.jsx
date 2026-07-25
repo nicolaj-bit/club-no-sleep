@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PlanChooser from '@/components/onboarding/PlanChooser';
+import { invalidateProfileCache } from '@/components/auth/ProfileGate';
 
 export default function Onboarding() {
   const { t } = useLanguage();
@@ -132,6 +133,7 @@ export default function Onboarding() {
       } else {
         await base44.entities.UserProfile.create(profileData2);
       }
+      invalidateProfileCache(user.email);
 
       // Opret barn baseret på onboarding-data
       if (childMode === 'gravid' && form.child_due_date) {

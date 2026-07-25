@@ -33,6 +33,7 @@ import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 
 import NativeAuthGate from './components/auth/NativeAuthGate';
+import ProfileGate from './components/auth/ProfileGate';
 import AccessGate from './components/auth/AccessGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
 import SwipeBackGesture from './components/SwipeBackGesture';
@@ -98,6 +99,7 @@ const AuthenticatedApp = () => {
 
   return (
     <NativeAuthGate>
+    <ProfileGate>
     <SubscriptionGate>
       <Routes>
         {/* Web: /Landing er default. Native: /app er default */}
@@ -138,6 +140,7 @@ const AuthenticatedApp = () => {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </SubscriptionGate>
+    </ProfileGate>
     </NativeAuthGate>
   );
 };
