@@ -160,9 +160,9 @@ export default function Onboarding() {
         accepted_at: new Date().toISOString(),
       });
 
-      // Onboarding done — allerede betalt via App Store: gå til appen.
-      // Sprunget over plan-valg: send til checkout så de stadig kan tegne abonnement.
-      navigate(isActive || plan === 'demo' ? '/app' : '/Checkout');
+      // Onboarding fuldført — alle brugere sendes til appen.
+      // Betalende brugere får fuld adgang, skip/demo-brugere får begrænset adgang via SubscriptionGate.
+      navigate('/app');
     } catch (e) {
       console.error('[Onboarding] handleFinish fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
       toast.error(e?.message || 'Noget gik galt. Prøv igen.');
