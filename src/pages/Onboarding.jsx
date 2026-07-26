@@ -102,7 +102,6 @@ export default function Onboarding() {
   };
 
   const handleFinish = async (plan = 'demo') => {
-    console.log('[Onboarding] handleFinish start, plan:', plan, 'user:', user?.email);
     if (!user?.email) {
       toast.error(t.errorTryAgain || 'Kunne ikke finde din bruger. Prøv igen.');
       return;
@@ -131,7 +130,6 @@ export default function Onboarding() {
       invalidateProfileCache(user.email);
       navigate('/app');
     } catch (e) {
-      console.error('[Onboarding] handleFinish fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
       toast.error(e?.message || 'Noget gik galt. Prøv igen.');
       setSaving(false);
     }
