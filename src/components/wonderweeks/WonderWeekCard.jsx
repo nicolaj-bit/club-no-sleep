@@ -28,12 +28,6 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
           boxShadow: isActive ? `0 4px 24px ${wonderWeek.color}18` : '0 1px 4px rgba(0,0,0,0.04)',
         }}
       >
-        {/* Gradient header strip */}
-        <div
-          className="h-1 w-full"
-          style={{ background: `linear-gradient(90deg, ${wonderWeek.color}, ${wonderWeek.color}55)` }}
-        />
-
         <div className="p-5">
           {/* Label row */}
           <div className="flex items-center gap-2 mb-3">
@@ -53,22 +47,14 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
             )}
           </div>
 
-          {/* Title + emoji */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg leading-snug" style={{ color: 'var(--color-text-primary)' }}>
-                {wonderWeek.name}
-              </h3>
-              <p className="text-sm mt-1 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                {wonderWeek.shortDescription}
-              </p>
-            </div>
-            <div
-              className="w-13 h-13 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
-              style={{ backgroundColor: `${wonderWeek.color}18`, width: 52, height: 52, fontFamily: EMOJI_FONT }}
-            >
-              {emoji}
-            </div>
+          {/* Title */}
+          <div>
+            <h3 className="font-semibold text-lg leading-snug" style={{ color: 'var(--color-text-primary)' }}>
+              {wonderWeek.name}
+            </h3>
+            <p className="text-sm mt-1 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {wonderWeek.shortDescription}
+            </p>
           </div>
 
           {/* Progress bar for active */}
@@ -171,7 +157,7 @@ export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
           {/* Upcoming teaser */}
           {isUpcoming && (
             <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-              {t.getReadyLeap}
+              {t.getReadyLeap.replace(/🌱/g, '').trim()}
             </p>
           )}
         </div>
