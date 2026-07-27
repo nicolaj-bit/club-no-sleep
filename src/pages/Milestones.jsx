@@ -6,7 +6,8 @@ import MilestoneCamera from '@/components/milestones/MilestoneCamera';
 import TypeSticker from '@/components/milestones/TypeSticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { Camera } from 'lucide-react';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
+import { Camera, Lock } from 'lucide-react';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 
@@ -41,9 +42,13 @@ function normalizeDbFrame(f) {
 }
 
 export default function Milestones() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [cameraFrame, setCameraFrame] = useState(null);
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
+  const { isInvited, permissions } = useInviteAccess();
+
+  // Invited users: check can_see_milestones permission
+  const milestoneLocked = isInvited && permissions && permissions.can_see_milestones === false;
 
   const { data: dbFrames = [], isSuccess } = useQuery({
     queryKey: ['milestoneFrames'],
@@ -66,6 +71,24 @@ export default function Milestones() {
     return <MilestoneCamera frame={cameraFrame} onClose={() => setCameraFrame(null)} />;
   }
 
+  if (milestoneLocked) {
+    return (
+      <div className="min-h-screen pb-28 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <PageHeader title={t.milestonesTitle} />
+        <div className="text-center px-8 mt-20">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'var(--color-bg-subtle)' }}>
+            <Lock className="w-7 h-7" style={{ color: 'var(--color-text-muted)' }} />
+          </div>
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            {lang === 'en'
+              ? 'You do not have access to milestones. Ask the account owner to enable it.'
+              : 'Du har ikke adgang til milepæle. Bed konto-ejeren om at aktivere det.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Use DB frames if available, otherwise fall back to hardcoded
   const frames = dbFrames.length > 0
     ? dbFrames.map(normalizeDbFrame)
@@ -80,7 +103,7 @@ export default function Milestones() {
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       <PageHeader title={t.milestonesTitle} />
 
-      <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="320px">
+      <ContentLock locked={!hasSubscription && !isInvited} loading={subscriptionLoading} blurHeight="320px">
         <div className="px-4 pt-2 space-y-8">
           {CATEGORY_ORDER.map(cat => (
             <div key={cat}>

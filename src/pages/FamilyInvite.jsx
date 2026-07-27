@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, UserPlus, Trash2, Check, Mail } from 'lucide-react';
+import { ArrowLeft, UserPlus, Trash2, Check, Mail, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +18,7 @@ const getPermissions = (t) => [
   { key: 'can_see_sleep_log', label: t.familySleepLog, emoji: '😴' },
   { key: 'can_see_wonder_weeks', label: t.familyWonderWeeks, emoji: '🐯' },
   { key: 'can_see_calendar', label: t.familyCalendar, emoji: '📅' },
+  { key: 'can_see_milestones', label: t.familyMilestones, emoji: '📸' },
   { key: 'can_see_knowledge', label: t.familyKnowledge, emoji: '📚' },
 ];
 
@@ -34,6 +35,10 @@ export default function FamilyInvite() {
   const [pageConfig, setPageConfig] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editingInvite, setEditingInvite] = useState(null);
+  const [editSheetOpen, setEditSheetOpen] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editForm, setEditForm] = useState({});
   const { t, lang } = useLanguage();
   const TITLE_SUGGESTIONS = getTitleSuggestions(t);
   const PERMISSIONS = getPermissions(t);
@@ -45,11 +50,14 @@ export default function FamilyInvite() {
     can_see_sleep_log: true,
     can_see_wonder_weeks: true,
     can_see_calendar: true,
+    can_see_milestones: true,
     can_see_knowledge: false,
     notify_wonder_weeks: true,
     notify_sleep: false,
     notify_calendar: true,
   });
+
+  const hasActiveInvite = invites.some(i => i.status === 'pending' || i.status === 'accepted');
 
   useEffect(() => {
     const load = async () => {
@@ -77,11 +85,46 @@ export default function FamilyInvite() {
     can_see_sleep_log: true,
     can_see_wonder_weeks: true,
     can_see_calendar: true,
+    can_see_milestones: true,
     can_see_knowledge: false,
     notify_wonder_weeks: true,
     notify_sleep: false,
     notify_calendar: true,
   });
+
+  const openEditSheet = (invite) => {
+    setEditingInvite(invite);
+    setEditForm({
+      can_see_sleep_log: invite.can_see_sleep_log !== false,
+      can_see_wonder_weeks: invite.can_see_wonder_weeks !== false,
+      can_see_calendar: invite.can_see_calendar !== false,
+      can_see_milestones: invite.can_see_milestones !== false,
+      can_see_knowledge: invite.can_see_knowledge === true,
+      notify_wonder_weeks: invite.notify_wonder_weeks !== false,
+      notify_sleep: invite.notify_sleep === true,
+      notify_calendar: invite.notify_calendar !== false,
+    });
+    setEditSheetOpen(true);
+  };
+
+  const handleEditSave = async () => {
+    setEditSaving(true);
+    try {
+      const res = await base44.functions.invoke('updateFamilyInvite', {
+        invite_id: editingInvite.id,
+        permissions: editForm,
+      });
+      const updated = res.data?.invite || res?.invite;
+      setInvites(prev => prev.map(i => i.id === editingInvite.id ? { ...i, ...updated } : i));
+      setEditSheetOpen(false);
+      setEditingInvite(null);
+      toast.success(t.saved || 'Gemt');
+    } catch (e) {
+      toast.error(e?.response?.data?.error || e?.message);
+    } finally {
+      setEditSaving(false);
+    }
+  };
 
   const handleSend = async () => {
     if (!form.invitee_email || !form.invitee_title) {
@@ -148,15 +191,17 @@ export default function FamilyInvite() {
           </p>
         </div>
 
-        {/* Invite button */}
-        <Button
-          className="w-full gap-2 h-12 text-base"
-          onClick={() => { resetForm(); setSheetOpen(true); }}
-          style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-        >
-          <UserPlus className="w-5 h-5" />
-          {pageConfig?.invite_button_label || 'Invitér en medbruger'}
-        </Button>
+        {/* Invite button — hidden if active invite exists */}
+        {!hasActiveInvite && (
+          <Button
+            className="w-full gap-2 h-12 text-base"
+            onClick={() => { resetForm(); setSheetOpen(true); }}
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            <UserPlus className="w-5 h-5" />
+            {pageConfig?.invite_button_label || 'Invitér en medbruger'}
+          </Button>
+        )}
 
         {/* Existing invites */}
         {invites.length > 0 && (
@@ -192,13 +237,24 @@ export default function FamilyInvite() {
                     ))}
                   </div>
                 </div>
-                <button
-                  onClick={() => handleDelete(invite.id)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 active:opacity-60"
-                  style={{ background: 'var(--color-bg-subtle)' }}
-                >
-                  <Trash2 className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
-                </button>
+                <div className="flex flex-col gap-1.5 flex-shrink-0">
+                  {(invite.status === 'pending' || invite.status === 'accepted') && (
+                    <button
+                      onClick={() => openEditSheet(invite)}
+                      className="w-8 h-8 rounded-full flex items-center justify-center active:opacity-60"
+                      style={{ background: 'var(--color-bg-subtle)' }}
+                    >
+                      <Pencil className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDelete(invite.id)}
+                    className="w-8 h-8 rounded-full flex items-center justify-center active:opacity-60"
+                    style={{ background: 'var(--color-bg-subtle)' }}
+                  >
+                    <Trash2 className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -296,6 +352,64 @@ export default function FamilyInvite() {
           >
             <Check className="w-5 h-5" />
             {saving ? t.sending : t.sendInvitation}
+          </Button>
+        </div>
+      </BottomSheet>
+
+      {/* Edit Invite Bottom Sheet */}
+      <BottomSheet open={editSheetOpen} onOpenChange={setEditSheetOpen} title={t.editPermissions}>
+        <div className="px-5 py-2 space-y-5 pb-8">
+          {editingInvite && (
+            <div className="rounded-xl p-3 border" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}>
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                {editingInvite.invitee_title}
+              </p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                {editingInvite.invitee_email}
+              </p>
+            </div>
+          )}
+
+          {/* Adgang */}
+          <div className="space-y-1.5">
+            <Label>{t.whatToShare}</Label>
+            <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: 'var(--color-border)' }}>
+              {PERMISSIONS.map(p => (
+                <div key={p.key} className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{p.emoji} {p.label}</span>
+                  <Switch
+                    checked={editForm[p.key] ?? false}
+                    onCheckedChange={val => setEditForm(prev => ({ ...prev, [p.key]: val }))}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Notifikationer */}
+          <div className="space-y-1.5">
+            <Label>{t.notifications}</Label>
+            <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: 'var(--color-border)' }}>
+              {NOTIFICATIONS.map(n => (
+                <div key={n.key} className="flex items-center justify-between px-4 py-3" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+                  <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{n.emoji} {n.label}</span>
+                  <Switch
+                    checked={editForm[n.key] ?? false}
+                    onCheckedChange={val => setEditForm(prev => ({ ...prev, [n.key]: val }))}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Button
+            className="w-full h-12 text-base gap-2"
+            onClick={handleEditSave}
+            disabled={editSaving}
+            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+          >
+            <Check className="w-5 h-5" />
+            {editSaving ? (t.saving || 'Gemmer...') : (t.saveChanges || 'Gem ændringer')}
           </Button>
         </div>
       </BottomSheet>

@@ -18,6 +18,7 @@ Deno.serve(async (req) => {
       can_see_wonder_weeks,
       can_see_calendar,
       can_see_knowledge,
+      can_see_milestones,
       notify_wonder_weeks,
       notify_sleep,
       notify_calendar,
@@ -33,6 +34,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'inviter_email does not match authenticated user' }, { status: 403 });
     }
 
+    // Tjek om der allerede findes en aktiv invitation (pending eller accepted)
+    const existingInvites = await base44.asServiceRole.entities.FamilyInvite.filter(
+      { inviter_email: user.email },
+      '-created_date',
+      20
+    );
+    const activeInvite = existingInvites?.find(i => i.status === 'pending' || i.status === 'accepted');
+    if (activeInvite) {
+      return Response.json({ error: 'Du kan kun invitere én person. Slet den eksisterende invitation først.' }, { status: 409 });
+    }
+
     // Opret FamilyInvite-record med service role (RLS blokerer frontend create)
     const invite = await base44.asServiceRole.entities.FamilyInvite.create({
       inviter_email,
@@ -42,6 +54,7 @@ Deno.serve(async (req) => {
       can_see_wonder_weeks: can_see_wonder_weeks ?? true,
       can_see_calendar: can_see_calendar ?? true,
       can_see_knowledge: can_see_knowledge ?? false,
+      can_see_milestones: can_see_milestones ?? true,
       notify_wonder_weeks: notify_wonder_weeks ?? true,
       notify_sleep: notify_sleep ?? false,
       notify_calendar: notify_calendar ?? true,

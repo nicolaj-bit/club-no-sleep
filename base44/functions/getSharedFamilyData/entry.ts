@@ -30,6 +30,7 @@ export default async function(req) {
       can_see_wonder_weeks: invite.can_see_wonder_weeks !== false,
       can_see_calendar: invite.can_see_calendar !== false,
       can_see_knowledge: invite.can_see_knowledge === true,
+      can_see_milestones: invite.can_see_milestones !== false,
       notify_wonder_weeks: invite.notify_wonder_weeks !== false,
       notify_sleep: invite.notify_sleep === true,
       notify_calendar: invite.notify_calendar !== false,

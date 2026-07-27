@@ -34,6 +34,11 @@
       "default": false,
       "description": "Kan se viden/artikler"
     },
+    "can_see_milestones": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kan se milep\u00e6le"
+    },
     "notify_wonder_weeks": {
       "type": "boolean",
       "default": true,
