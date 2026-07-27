@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, UserPlus, Trash2, Check, Mail, Copy, Share2, Link2 } from 'lucide-react';
+import { ArrowLeft, UserPlus, Trash2, Check, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,7 +34,6 @@ export default function FamilyInvite() {
   const [pageConfig, setPageConfig] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [successLink, setSuccessLink] = useState(null);
   const { t, lang } = useLanguage();
   const TITLE_SUGGESTIONS = getTitleSuggestions(t);
   const PERMISSIONS = getPermissions(t);
@@ -94,16 +93,16 @@ export default function FamilyInvite() {
       return;
     }
     setSaving(true);
-    let invite, inviteUrl;
+    let invite;
     try {
       const res = await base44.functions.invoke('sendFamilyInvite', {
         ...form,
         inviter_email: user.email,
+        inviter_name: user.full_name || user.email,
       });
       invite = res.data.invite;
-      inviteUrl = res.data.inviteUrl;
     } catch (e) {
-      toast.error(t.somethingWentWrongTryAgain);
+      toast.error(e?.response?.data?.error || e?.message);
       setSaving(false);
       return;
     }
@@ -112,42 +111,7 @@ export default function FamilyInvite() {
     setSheetOpen(false);
     resetForm();
     setSaving(false);
-    setSuccessLink(inviteUrl);
-  };
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(successLink);
-      toast.success(lang === 'en' ? 'Link copied' : 'Link kopieret');
-    } catch {
-      // Fallback for ældre browsere / ikke-sikre kontekster
-      const ta = document.createElement('textarea');
-      ta.value = successLink;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      try {
-        document.execCommand('copy');
-        toast.success(lang === 'en' ? 'Link copied' : 'Link kopieret');
-      } catch {
-        toast.error(lang === 'en' ? 'Could not copy — copy manually' : 'Kunne ikke kopiere — kopiér manuelt');
-      }
-      document.body.removeChild(ta);
-    }
-  };
-
-  const shareLink = async () => {
-    const shareText = `Du er inviteret til Club No Sleep: ${successLink}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Club No Sleep', text: shareText });
-      } catch {
-        // Bruger annullerede — OK
-      }
-    } else {
-      copyLink();
-    }
+    toast.success(`Invitation sendt til ${form.invitee_email} 🎉`);
   };
 
   const handleDelete = async (id) => {
@@ -335,59 +299,6 @@ export default function FamilyInvite() {
           </Button>
         </div>
       </BottomSheet>
-
-      {/* Success: link til deling */}
-      {successLink && (
-        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center" style={{ background: 'rgba(0,0,0,0.5)' }}
-          onClick={() => setSuccessLink(null)}>
-          <div className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4" style={{ background: 'var(--color-bg-card)' }}
-            onClick={e => e.stopPropagation()}>
-            <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto" style={{ background: 'var(--color-bg-subtle)' }}>
-              <Check className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
-            </div>
-            <h2 className="text-xl font-medium text-center" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-              {lang === 'en' ? 'Invitation created!' : 'Invitation oprettet!'}
-            </h2>
-            <p className="text-sm text-center leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              {lang === 'en'
-                ? 'Share this link with your family member so they can accept the invitation.'
-                : 'Del dette link med dit familiemedlem, så vedkommende kan acceptere invitationen.'}
-            </p>
-            <div className="rounded-xl p-3 border flex items-center gap-2" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}>
-              <Link2 className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-              <p className="text-xs truncate flex-1" style={{ color: 'var(--color-text-secondary)' }}>{successLink}</p>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                className="flex-1 h-11 gap-2"
-                variant="outline"
-                onClick={copyLink}
-                style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
-              >
-                <Copy className="w-4 h-4" />
-                {lang === 'en' ? 'Copy link' : 'Kopiér link'}
-              </Button>
-              {navigator.share && (
-                <Button
-                  className="flex-1 h-11 gap-2"
-                  onClick={shareLink}
-                  style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-                >
-                  <Share2 className="w-4 h-4" />
-                  {lang === 'en' ? 'Share' : 'Del'}
-                </Button>
-              )}
-            </div>
-            <button
-              className="w-full text-center text-sm py-2"
-              onClick={() => setSuccessLink(null)}
-              style={{ color: 'var(--color-text-muted)' }}
-            >
-              {lang === 'en' ? 'Close' : 'Luk'}
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
