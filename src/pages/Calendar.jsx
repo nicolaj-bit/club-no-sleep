@@ -142,7 +142,18 @@ export default function Calendar() {
 
   // All items on a day (user events + dynamic)
   const allItemsOnDay = (day) => {
-    const userEvents = allEvents.filter((e) => isSameDay(parseISO(e.start_datetime), day));
+    const userEvents = allEvents.filter((e) => {
+      const start = parseISO(e.start_datetime);
+      if (isSameDay(start, day)) return true;
+      if (e.end_datetime) {
+        const end = parseISO(e.end_datetime);
+        const d = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+        const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        const en = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+        return d >= s && d <= en;
+      }
+      return false;
+    });
     const dynamic = dynamicItemsOnDay(day);
     return [...userEvents, ...dynamic];
   };
