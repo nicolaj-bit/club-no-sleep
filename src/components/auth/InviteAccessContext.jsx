@@ -32,7 +32,7 @@ export function InviteAccessProvider({ children }) {
         setState(s => ({ ...s, loading: false }));
         return;
       }
-      const result = await base44.functions.invoke('getInvitedData', {});
+      const result = await base44.functions.invoke('getSharedFamilyData', {});
       const data = result?.data || result;
       if (data?.is_invited) {
         setState({
