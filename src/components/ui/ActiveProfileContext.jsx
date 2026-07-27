@@ -50,13 +50,7 @@ export function ActiveProfileProvider({ children }) {
     refreshProfiles();
   }, [refreshProfiles]);
 
-  // For invited users, override activeProfile with inviter's profile
-  useEffect(() => {
-    if (isInvited && inviterProfile) {
-      setActiveProfile(inviterProfile);
-    }
-  }, [isInvited, inviterProfile]);
-
+  // Invited users use their OWN UserProfile — inviter data is available via useInviteAccess()
   const switchProfile = useCallback((profile) => {
     if (isInvited) return; // Invited users can't switch profiles
     setActiveProfile(profile);

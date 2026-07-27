@@ -233,13 +233,10 @@ export default function Profile() {
                     )
                   }
                 </div>
-                {/* Kamera-ikon — skjules for inviterede */}
-                {!isInvited && (
                 <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: 'var(--color-border)' }}>
                   <Camera className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
-                )}
               </div>
 
               {/* Tekst */}
@@ -253,10 +250,8 @@ export default function Profile() {
 
               </div>
 
-              {/* Rediger-knap – absolut placeret i nederste højre hjørne (skjules for inviterede) */}
-              {!isInvited && (
+              {/* Rediger-knap – absolut placeret i nederste højre hjørne */}
               <div className="flex flex-col items-end justify-end self-stretch py-1 flex-shrink-0">
-                {/* Rediger-knap */}
                 <DialogTrigger asChild>
                   <button
                     className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full active:opacity-70 transition-opacity whitespace-nowrap"
@@ -266,15 +261,12 @@ export default function Profile() {
                       display_name: profile?.display_name || '',
                       gender: profile?.gender || '',
                       city: profile?.city || '',
-                      child_birthdate: profile?.child_birthdate || '',
-                      child_due_date: profile?.child_due_date || '',
                     })}
                   >
                     {t.edit} <ChevronRight className="w-3 h-3" />
                   </button>
                 </DialogTrigger>
               </div>
-              )}
             </div>
           </div>
 
@@ -309,7 +301,8 @@ export default function Profile() {
                 {/* Divider */}
                 <div className="h-px w-full" style={{ background: 'var(--color-border)' }} />
 
-                {/* Børn */}
+                {/* Børn — skjules fuldstændigt for inviterede */}
+                {!isInvited && (
                 <div className="space-y-2">
                   <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
                     {lang === 'da' ? 'Mine børn' : 'My children'}
@@ -337,7 +330,6 @@ export default function Profile() {
                               : ''}
                         </p>
                       </div>
-                      {!isInvited && (
                       <button
                         type="button"
                         onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(child); setAddChildOpen(true); }, 200); }}
@@ -347,10 +339,8 @@ export default function Profile() {
                         <Pencil className="w-3 h-3" />
                         {lang === 'da' ? 'Rediger' : 'Edit'}
                       </button>
-                      )}
                     </div>
                   ))}
-                  {!isInvited && (
                   <button
                     type="button"
                     onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(null); setAddChildOpen(true); }, 200); }}
@@ -359,8 +349,8 @@ export default function Profile() {
                   >
                     + {lang === 'da' ? 'Tilføj barn' : 'Add child'}
                   </button>
-                  )}
                 </div>
+                )}
 
               </div>
             </ScrollArea>
@@ -379,7 +369,9 @@ export default function Profile() {
           </DialogContent>
         </Dialog>}
 
-        {/* Børnesektion */}
+        {/* Børnesektion — skjules fuldstændigt for inviterede */}
+        {!isInvited && (
+        <>
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
           {lang === 'da' ? 'Mine børn' : 'My children'}
         </p>
@@ -415,7 +407,6 @@ export default function Profile() {
                   </p>
                 </div>
               </button>
-              {!isInvited && (
               <button
                 onClick={() => { setEditingChild(child); setAddChildOpen(true); }}
                 className="p-2 rounded-full active:opacity-60"
@@ -423,11 +414,9 @@ export default function Profile() {
               >
                 <Pencil className="w-4 h-4" />
               </button>
-              )}
             </div>
           ))}
 
-          {!isInvited && (
           <button
             onClick={() => { setEditingChild(null); setAddChildOpen(true); }}
             className="w-full flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity"
@@ -440,7 +429,6 @@ export default function Profile() {
               {lang === 'da' ? '+ Tilføj barn' : '+ Add child'}
             </p>
           </button>
-          )}
         </div>
 
         <AddChildSheet
@@ -449,6 +437,8 @@ export default function Profile() {
           onSaved={() => { setAddChildOpen(false); setEditingChild(null); refetchChildren(); }}
           editChild={editingChild}
         />
+        </>
+        )}
 
         {/* Section label */}
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
