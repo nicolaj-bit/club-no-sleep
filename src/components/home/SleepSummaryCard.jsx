@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Moon } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 
 function formatDuration(bedtime, wakeTime) {
   if (!bedtime || !wakeTime) return null;
@@ -18,10 +19,26 @@ function formatDuration(bedtime, wakeTime) {
 
 export default function SleepSummaryCard({ userEmail }) {
   const { t, lang } = useLanguage();
+  const { isInvited, inviterSleepLogs } = useInviteAccess();
   const [log, setLog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isInvited) {
+      // Use pre-loaded inviter data
+      if (!Array.isArray(inviterSleepLogs) || inviterSleepLogs.length === 0) {
+        setLog(null);
+        setLoading(false);
+        return;
+      }
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+      const recent = inviterSleepLogs.find(l => l.date === today || l.date === yesterday);
+      setLog(recent || null);
+      setLoading(false);
+      return;
+    }
+
     if (!userEmail) return;
     import('@/api/base44Client').then(({ base44 }) => {
       const today = format(new Date(), 'yyyy-MM-dd');
@@ -40,7 +57,7 @@ export default function SleepSummaryCard({ userEmail }) {
         setLoading(false);
       });
     });
-  }, [userEmail]);
+  }, [userEmail, isInvited, inviterSleepLogs]);
 
   const dur = log ? formatDuration(log.sleep_time || log.bedtime, log.wake_time) : null;
   const wakings = log?.night_wakings?.length ?? null;

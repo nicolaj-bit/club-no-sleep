@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 
 const ActiveChildContext = createContext({
   children: [],
@@ -10,6 +11,7 @@ const ActiveChildContext = createContext({
 });
 
 export function ActiveChildProvider({ children: reactChildren }) {
+  const { isInvited, inviterChildren, loading: inviteLoading } = useInviteAccess();
   const [children, setChildren] = useState([]);
   const [activeChildId, setActiveChildIdState] = useState(() =>
     localStorage.getItem('active-child-id') || null
@@ -45,8 +47,22 @@ export function ActiveChildProvider({ children: reactChildren }) {
   }, []);
 
   useEffect(() => {
-    fetchChildren();
-  }, [fetchChildren]);
+    if (isInvited) {
+      // Invited users see inviter's children (read-only)
+      setChildren(inviterChildren || []);
+      if (inviterChildren?.length > 0) {
+        const stored = localStorage.getItem('active-child-id');
+        const exists = inviterChildren.some(c => c.id === stored);
+        if (!exists) {
+          setActiveChildIdState(inviterChildren[0].id);
+          localStorage.setItem('active-child-id', inviterChildren[0].id);
+        }
+      }
+      setLoading(false);
+    } else {
+      fetchChildren();
+    }
+  }, [isInvited, inviterChildren, fetchChildren]);
 
   const setActiveChildId = (id) => {
     setActiveChildIdState(id);
@@ -55,8 +71,10 @@ export function ActiveChildProvider({ children: reactChildren }) {
 
   const activeChild = children.find(c => c.id === activeChildId) || children[0] || null;
 
+  const combinedLoading = loading || (isInvited && inviteLoading);
+
   return (
-    <ActiveChildContext.Provider value={{ children, activeChild, setActiveChildId, loading, refetch: fetchChildren }}>
+    <ActiveChildContext.Provider value={{ children, activeChild, setActiveChildId, loading: combinedLoading, refetch: fetchChildren }}>
       {reactChildren}
     </ActiveChildContext.Provider>
   );

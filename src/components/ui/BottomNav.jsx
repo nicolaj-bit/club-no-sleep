@@ -9,6 +9,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { subscribeToUnreadCount } from '@/components/ui/NotificationBell';
 
 export default function BottomNav() {
@@ -21,7 +22,20 @@ export default function BottomNav() {
   const { isDark } = useTheme();
   const { t } = useLanguage();
   const { activeProfile } = useActiveProfile();
+  const { isInvited, permissions } = useInviteAccess();
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Invited users: filter menu items by permissions
+  const invitedHiddenPages = isInvited ? [
+    ...(!permissions?.can_see_sleep_log ? ['SleepLog'] : []),
+    ...(!permissions?.can_see_wonder_weeks ? ['Knowledge'] : []),
+    ...(!permissions?.can_see_calendar ? ['Calendar'] : []),
+    ...(!permissions?.can_see_knowledge ? ['Blog'] : []),
+    // Always hidden for invited users
+    'Practitioners', 'BabyFriendlyCafes', 'Milestones', 'Community', 'FamilyInvite',
+    'AdminNotifications', 'AdminSupport', 'AdminUsers', 'AdminLanding', 'AdminTermsPrivacy',
+    'Subscription',
+  ] : [];
 
   useEffect(() => {
     const unsub = subscribeToUnreadCount(setUnreadCount);
@@ -47,10 +61,12 @@ export default function BottomNav() {
     { key: 'aboutUs', icon: Heart, page: 'AboutUs', name: 'Om os' },
   ];
 
-  const menuItems = menuItemsConfig.map(item => ({
-    ...item,
-    name: item.name || t[item.key],
-  }));
+  const menuItems = menuItemsConfig
+    .filter(item => !invitedHiddenPages.includes(item.page))
+    .map(item => ({
+      ...item,
+      name: item.name || t[item.key],
+    }));
 
   useEffect(() => {
     base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {

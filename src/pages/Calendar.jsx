@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { getDynamicItemsForDay, getCalendarMode, getPregnancyWeek, getBabyAgeInMonths } from '@/components/calendar/calendarUtils';
 import { WONDER_WEEKS, getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 
@@ -43,6 +44,7 @@ async function addToNativeCalendar(event) {
 export default function Calendar() {
   const { t, lang } = useLanguage();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
+  const { isInvited, inviterCalendarEvents } = useInviteAccess();
   const { activeChild } = useActiveChild();
   const navigate = useNavigate();
   const dateLocale = lang === 'en' ? enUS : da;
@@ -83,8 +85,11 @@ export default function Calendar() {
   const { data: events = [] } = useQuery({
     queryKey: ['calendarEvents', user?.email],
     queryFn: () => base44.entities.CalendarEvent.filter({ user_email: user.email }, 'start_datetime'),
-    enabled: !!user?.email
+    enabled: !!user?.email && !isInvited
   });
+
+  // Invited users: use pre-loaded inviter events
+  const allEvents = isInvited ? (inviterCalendarEvents || []) : events;
 
   const createEvent = useMutation({
     mutationFn: (data) => base44.entities.CalendarEvent.create({ ...data, user_email: user.email }),
@@ -117,7 +122,7 @@ export default function Calendar() {
 
   // All items on a day (user events + dynamic)
   const allItemsOnDay = (day) => {
-    const userEvents = events.filter((e) => isSameDay(parseISO(e.start_datetime), day));
+    const userEvents = allEvents.filter((e) => isSameDay(parseISO(e.start_datetime), day));
     const dynamic = dynamicItemsOnDay(day);
     return [...userEvents, ...dynamic];
   };
@@ -174,12 +179,14 @@ export default function Calendar() {
       <PageHeader
         title={t.calendarTitle}
         rightAction={
+          isInvited ? null : (
           <button
             onClick={prefillTime}
             className="w-9 h-9 rounded-full flex items-center justify-center"
             style={{ background: 'var(--color-primary)' }}>
             <Plus className="w-5 h-5" style={{ color: 'var(--color-primary-foreground)' }} />
           </button>
+          )
         }
       />
 
@@ -241,9 +248,11 @@ export default function Calendar() {
             <h3 className="text-sm font-semibold capitalize" style={{ color: 'var(--color-text-secondary)' }}>
               {format(selectedDay, lang === 'en' ? 'EEEE, MMMM d' : "EEEE 'd.' d. MMMM", { locale: dateLocale })}
             </h3>
+            {!isInvited && (
             <button onClick={prefillTime} className="text-xs flex items-center gap-1" style={{ color: 'var(--color-accent)' }}>
               <Plus className="w-3.5 h-3.5" /> {t.addEvent}
             </button>
+            )}
           </div>
 
           {selectedDayItems.length === 0 ?
@@ -283,7 +292,7 @@ export default function Calendar() {
                       <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
                     }
                   </div>
-                  {isUserEvent && (
+                  {isUserEvent && !isInvited && (
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteEvent.mutate(item.id); }}
                       className="p-1.5 rounded-lg active:opacity-60"
@@ -301,7 +310,7 @@ export default function Calendar() {
 
       {/* Add event bottom sheet */}
       <AnimatePresence>
-        {showForm &&
+        {showForm && !isInvited &&
         <>
             <motion.div
             initial={{ opacity: 0 }}

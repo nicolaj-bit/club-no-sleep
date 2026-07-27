@@ -6,13 +6,27 @@ import { format, isToday, isTomorrow, parseISO } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 
 export default function UpcomingEventCard({ userEmail }) {
   const { t, lang } = useLanguage();
+  const { isInvited, inviterCalendarEvents } = useInviteAccess();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isInvited) {
+      // Use pre-loaded inviter data
+      const now = new Date().toISOString();
+      const events = Array.isArray(inviterCalendarEvents) ? inviterCalendarEvents : [];
+      const upcoming = events
+        .filter(e => e.start_datetime >= now)
+        .sort((a, b) => a.start_datetime.localeCompare(b.start_datetime));
+      setEvent(upcoming[0] || null);
+      setLoading(false);
+      return;
+    }
+
     if (!userEmail) return;
     import('@/api/base44Client').then(({ base44 }) => {
       const now = new Date().toISOString();
@@ -32,7 +46,7 @@ export default function UpcomingEventCard({ userEmail }) {
         setLoading(false);
       });
     });
-  }, [userEmail]);
+  }, [userEmail, isInvited, inviterCalendarEvents]);
 
   function getDateLabel(dt) {
     const d = parseISO(dt);

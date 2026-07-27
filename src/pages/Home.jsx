@@ -9,6 +9,7 @@ import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wo
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import ChildDevelopmentCard from '@/components/home/ChildDevelopmentCard';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
@@ -53,7 +54,13 @@ export default function Home() {
   const queryClient = useQueryClient();
   const { activeProfile, loading: profileLoading } = useActiveProfile();
   const { activeChild, loading: childLoading } = useActiveChild();
+  const { isInvited, permissions } = useInviteAccess();
   const { user, isLoadingAuth } = useAuth();
+
+  const canSeeSleep = !isInvited || permissions?.can_see_sleep_log;
+  const canSeeCalendar = !isInvited || permissions?.can_see_calendar;
+  const canSeeWonderWeeks = !isInvited || permissions?.can_see_wonder_weeks;
+  const canSeeKnowledge = !isInvited || permissions?.can_see_knowledge;
 
   // Handle return from Stripe checkout — trigger subscription verification
   useEffect(() => {
@@ -139,11 +146,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
-      {user && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
+      {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement (skjules for inviterede) */}
+      {user && !isInvited && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
 
-      {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over */}
-      {user && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
+      {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
+      {user && !isInvited && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
 
       {/* Færdiggør profil banner — kun hvis ingen profil */}
       {!profile && (
@@ -172,30 +179,30 @@ export default function Home() {
       {/* Sleep/Diary + Calendar row */}
       {user && (
         <div className="mx-5 mb-5 flex gap-3">
-          <SleepSummaryCard userEmail={user.email} />
-          <UpcomingEventCard userEmail={user.email} />
+          {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
+          {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
         </div>
       )}
 
-      {/* Active Moms Card — kun for mor-profiler */}
-      {profile?.profile_label === 'mor' && (
+      {/* Active Moms Card — kun for mor-profiler (skjules for inviterede) */}
+      {profile?.profile_label === 'mor' && !isInvited && (
         <div className="mx-5 mb-5">
           <ActiveMomsCard />
         </div>
       )}
 
       {/* Wonder Week Card */}
-      {wonderWeek && wonderWeek.status !== 'complete' && (
+      {canSeeWonderWeeks && wonderWeek && wonderWeek.status !== 'complete' && (
         <div className="mb-5">
           <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
         </div>
       )}
 
-      {/* AI Sleep Advice — only shown when 5+ logs exist */}
-      {user && <SleepAdviceCard userEmail={user.email} />}
+      {/* AI Sleep Advice — only shown when 5+ logs exist (skjules for inviterede) */}
+      {user && !isInvited && <SleepAdviceCard userEmail={user.email} />}
 
       {/* AI-curated blog posts */}
-      {Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
+      {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
     </div>
     </PullToRefresh>
   );

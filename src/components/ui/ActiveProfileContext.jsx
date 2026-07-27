@@ -1,16 +1,20 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 
 const ActiveProfileContext = createContext({
   activeProfile: null,
   allProfiles: [],
   isMom: false,
+  isInvited: false,
+  permissions: null,
   switchProfile: () => {},
   refreshProfiles: async () => {},
   loading: true,
 });
 
 export function ActiveProfileProvider({ children }) {
+  const { isInvited, permissions, inviterProfile, loading: inviteLoading } = useInviteAccess();
   const [allProfiles, setAllProfiles] = useState([]);
   const [activeProfile, setActiveProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,15 +50,25 @@ export function ActiveProfileProvider({ children }) {
     refreshProfiles();
   }, [refreshProfiles]);
 
+  // For invited users, override activeProfile with inviter's profile
+  useEffect(() => {
+    if (isInvited && inviterProfile) {
+      setActiveProfile(inviterProfile);
+    }
+  }, [isInvited, inviterProfile]);
+
   const switchProfile = useCallback((profile) => {
+    if (isInvited) return; // Invited users can't switch profiles
     setActiveProfile(profile);
     localStorage.setItem('active_profile_id', profile.id);
-  }, []);
+  }, [isInvited]);
 
   const isMom = activeProfile?.profile_label === 'mor';
 
+  const combinedLoading = loading || (isInvited && inviteLoading);
+
   return (
-    <ActiveProfileContext.Provider value={{ activeProfile, allProfiles, isMom, switchProfile, refreshProfiles, loading }}>
+    <ActiveProfileContext.Provider value={{ activeProfile, allProfiles, isMom, isInvited, permissions, switchProfile, refreshProfiles, loading: combinedLoading }}>
       {children}
     </ActiveProfileContext.Provider>
   );

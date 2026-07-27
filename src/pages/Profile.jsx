@@ -21,6 +21,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
 import AddChildSheet from '@/components/children/AddChildSheet';
@@ -36,6 +37,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { activeProfile, allProfiles, refreshProfiles } = useActiveProfile();
+  const { isInvited, permissions } = useInviteAccess();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
@@ -170,11 +172,11 @@ export default function Profile() {
 
       <div className="px-4 space-y-3">
 
-        {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement */}
-        <ReactivateSubscriptionBanner />
+        {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement (skjules for inviterede) */}
+        {!isInvited && <ReactivateSubscriptionBanner />}
 
-        {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over */}
-        <CompleteMembershipBanner />
+        {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
+        {!isInvited && <CompleteMembershipBanner />}
 
         {/* Færdiggør profil — vis kun hvis ingen profil */}
         {!profile && (
@@ -231,11 +233,13 @@ export default function Profile() {
                     )
                   }
                 </div>
-                {/* Kamera-ikon */}
+                {/* Kamera-ikon — skjules for inviterede */}
+                {!isInvited && (
                 <label className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md" style={{ background: 'var(--color-border)' }}>
                   <Camera className="w-3.5 h-3.5" style={{ color: 'var(--color-text-secondary)' }} />
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
+                )}
               </div>
 
               {/* Tekst */}
@@ -249,7 +253,8 @@ export default function Profile() {
 
               </div>
 
-              {/* Rediger-knap – absolut placeret i nederste højre hjørne */}
+              {/* Rediger-knap – absolut placeret i nederste højre hjørne (skjules for inviterede) */}
+              {!isInvited && (
               <div className="flex flex-col items-end justify-end self-stretch py-1 flex-shrink-0">
                 {/* Rediger-knap */}
                 <DialogTrigger asChild>
@@ -269,6 +274,7 @@ export default function Profile() {
                   </button>
                 </DialogTrigger>
               </div>
+              )}
             </div>
           </div>
 
@@ -331,6 +337,7 @@ export default function Profile() {
                               : ''}
                         </p>
                       </div>
+                      {!isInvited && (
                       <button
                         type="button"
                         onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(child); setAddChildOpen(true); }, 200); }}
@@ -340,8 +347,10 @@ export default function Profile() {
                         <Pencil className="w-3 h-3" />
                         {lang === 'da' ? 'Rediger' : 'Edit'}
                       </button>
+                      )}
                     </div>
                   ))}
+                  {!isInvited && (
                   <button
                     type="button"
                     onClick={() => { setEditOpen(false); setTimeout(() => { setEditingChild(null); setAddChildOpen(true); }, 200); }}
@@ -350,6 +359,7 @@ export default function Profile() {
                   >
                     + {lang === 'da' ? 'Tilføj barn' : 'Add child'}
                   </button>
+                  )}
                 </div>
 
               </div>
@@ -405,6 +415,7 @@ export default function Profile() {
                   </p>
                 </div>
               </button>
+              {!isInvited && (
               <button
                 onClick={() => { setEditingChild(child); setAddChildOpen(true); }}
                 className="p-2 rounded-full active:opacity-60"
@@ -412,9 +423,11 @@ export default function Profile() {
               >
                 <Pencil className="w-4 h-4" />
               </button>
+              )}
             </div>
           ))}
 
+          {!isInvited && (
           <button
             onClick={() => { setEditingChild(null); setAddChildOpen(true); }}
             className="w-full flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity"
@@ -427,6 +440,7 @@ export default function Profile() {
               {lang === 'da' ? '+ Tilføj barn' : '+ Add child'}
             </p>
           </button>
+          )}
         </div>
 
         <AddChildSheet
@@ -445,9 +459,9 @@ export default function Profile() {
         <div className="grid grid-cols-2 gap-3">
           {[
             { icon: Bookmark, label: t.favorites, sub: lang === 'da' ? 'Dine gemte øjeblikke' : 'Your saved moments', page: 'Favorites' },
-            { icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', action: () => setNotifOpen(true) },
+            ...(isInvited ? [] : [{ icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', action: () => setNotifOpen(true) }]),
             { icon: Settings, label: t.settings, sub: lang === 'da' ? 'Tilpas appen til dig' : 'Customise the app', page: 'Settings' },
-            { icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? 'Inviter en du stoler på' : 'Invite someone you trust', page: 'FamilyInvite' },
+            ...(isInvited ? [] : [{ icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? 'Inviter en du stoler på' : 'Invite someone you trust', page: 'FamilyInvite' }]),
           ].map((item, i) => {
             const Icon = item.icon;
             const inner = (
@@ -505,7 +519,8 @@ export default function Profile() {
             <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
           </button>
 
-          {/* Share location toggle */}
+          {/* Share location toggle — skjules for inviterede */}
+          {!isInvited && (
           <div
             className="flex items-center gap-3 px-5 py-4 border-b"
             style={{ background: cardBgSolid, borderColor: cardBorder }}
@@ -519,6 +534,7 @@ export default function Profile() {
             </div>
             <Switch checked={profile?.location_enabled || false} onCheckedChange={(checked) => updateProfileMutation.mutate({ location_enabled: checked })} />
           </div>
+          )}
 
           {/* Language */}
           <button

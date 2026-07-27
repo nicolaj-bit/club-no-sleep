@@ -16,6 +16,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import ReactMarkdown from 'react-markdown';
 
 // Søvn AI Avatar – same branded style as AIChat
@@ -129,6 +130,7 @@ export default function SleepLog() {
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
+  const { isInvited, inviterSleepLogs } = useInviteAccess();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -198,7 +200,7 @@ export default function SleepLog() {
   const { data: todayLog } = useQuery({
     queryKey: ['sleeplog-today', user?.email, childId, today],
     queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null, date: today }),
-    enabled: !!user,
+    enabled: !!user && !isInvited,
     onSuccess: (data) => {
       if (data?.length > 0) {
         const log = data[0];
@@ -218,11 +220,16 @@ export default function SleepLog() {
     }
   });
 
-  const { data: history } = useQuery({
+  const { data: historyData } = useQuery({
     queryKey: ['sleeplog-history', user?.email, childId],
     queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null }, '-date', 30),
-    enabled: !!user && view === 'history',
+    enabled: !!user && view === 'history' && !isInvited,
   });
+
+  // For invited users, use pre-loaded inviter data; otherwise normal query
+  const history = isInvited
+    ? (inviterSleepLogs || []).filter(l => !childId || l.child_id === childId).slice(0, 30)
+    : historyData;
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -353,6 +360,7 @@ export default function SleepLog() {
       <PageHeader
         title={t.sleepLogTitle}
         rightAction={
+          isInvited ? null : (
           <button
             onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
@@ -361,10 +369,11 @@ export default function SleepLog() {
             <BookOpen className="w-3.5 h-3.5" />
             {view === 'log' ? t.historyBtn : t.logTodayBtn}
           </button>
+          )
         }
       />
 
-      {view === 'history' ? (
+      {view === 'history' || isInvited ? (
         <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />
       ) : (
         <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="300px">

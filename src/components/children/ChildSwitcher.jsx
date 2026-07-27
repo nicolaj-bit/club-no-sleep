@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { base44 } from '@/api/base44Client';
 import { ChevronDown, Plus, Baby, LogIn } from 'lucide-react';
 import AddChildSheet from './AddChildSheet';
 
 export default function ChildSwitcher({ compact = false }) {
   const { children, activeChild, setActiveChildId, refetch } = useActiveChild();
+  const { isInvited } = useInviteAccess();
   const [open, setOpen] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const ref = useRef(null);
@@ -94,6 +96,7 @@ export default function ChildSwitcher({ compact = false }) {
               </button>
             ))}
             <div style={{ borderTop: '1px solid var(--color-border)', margin: '4px 0' }} />
+            {!isInvited && (
             <button
               onClick={() => { setOpen(false); setShowAdd(true); }}
               className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2"
@@ -102,6 +105,7 @@ export default function ChildSwitcher({ compact = false }) {
               <Plus className="w-3.5 h-3.5" />
               Tilføj barn
             </button>
+            )}
           </div>
         )}
       </div>
