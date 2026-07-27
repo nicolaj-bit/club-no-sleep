@@ -91,6 +91,15 @@
       "default": false,
       "description": "Om brugeren har gennemf\u00f8rt onboarding"
     },
+    "is_invited": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om brugeren blev inviteret af en prim\u00e6r bruger (springer onboarding over)"
+    },
+    "inviter_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den bruger der inviterede denne bruger"
+    },
     "wonderweeks_notifications": {
       "type": "boolean",
       "default": true,

@@ -31,6 +31,22 @@ export default function ProfileGate({ children }) {
     }
 
     if (SKIP_ROUTES.includes(location.pathname)) {
+      // Invited users on /Onboarding → redirect to /app (they skip onboarding)
+      if (location.pathname === '/Onboarding') {
+        base44.functions.invoke('checkInviteStatus', {})
+          .then(async (result) => {
+            const invited = result?.data?.is_invited || result?.is_invited;
+            if (invited) {
+              await base44.functions.invoke('provisionInvitedUser', {});
+              profileCache[user.email] = true;
+              navigate('/app', { replace: true });
+            } else {
+              setReady(true);
+            }
+          })
+          .catch(() => setReady(true));
+        return;
+      }
       setReady(true);
       return;
     }
@@ -46,8 +62,23 @@ export default function ProfileGate({ children }) {
       return;
     }
 
-    base44.entities.UserProfile.filter({ user_email: email })
-      .then(async (profiles) => {
+    (async () => {
+      // Invited users: skip onboarding entirely — provision profile via backend
+      try {
+        const inviteResult = await base44.functions.invoke('checkInviteStatus', {});
+        if (inviteResult?.data?.is_invited || inviteResult?.is_invited) {
+          await base44.functions.invoke('provisionInvitedUser', {});
+          profileCache[email] = true;
+          setReady(true);
+          return;
+        }
+      } catch (e) {
+        console.error('Invite check failed, proceeding with normal flow:', e);
+      }
+
+      // Normal flow: check profile, auto-create minimal, redirect to onboarding if not completed
+      try {
+        const profiles = await base44.entities.UserProfile.filter({ user_email: email });
         let profile = profiles && profiles[0];
 
         // Auto-create a minimal profile if none exists, so the user appears in data
@@ -79,8 +110,10 @@ export default function ProfileGate({ children }) {
         } else {
           setReady(true);
         }
-      })
-      .catch(() => setReady(true));
+      } catch {
+        setReady(true);
+      }
+    })();
   }, [isAuthenticated, user?.email, location.pathname, navigate]);
 
   if (!ready) {
