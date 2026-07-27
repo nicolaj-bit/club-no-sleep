@@ -44,7 +44,7 @@ async function addToNativeCalendar(event) {
 export default function Calendar() {
   const { t, lang } = useLanguage();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
-  const { isInvited, inviterCalendarEvents } = useInviteAccess();
+  const { isInvited, inviterCalendarEvents, refresh: refreshInviteData } = useInviteAccess();
   const { activeChild } = useActiveChild();
   const navigate = useNavigate();
   const dateLocale = lang === 'en' ? enUS : da;
@@ -92,20 +92,40 @@ export default function Calendar() {
   const allEvents = isInvited ? (inviterCalendarEvents || []) : events;
 
   const createEvent = useMutation({
-    mutationFn: (data) => base44.entities.CalendarEvent.create({ ...data, user_email: user.email }),
+    mutationFn: async (data) => {
+      if (isInvited) {
+        const result = await base44.functions.invoke('createInvitedCalendarEvent', { eventData: data });
+        return result?.data?.event || result?.event;
+      }
+      return base44.entities.CalendarEvent.create({ ...data, user_email: user.email });
+    },
     onSuccess: async (savedEvent, variables) => {
-      queryClient.invalidateQueries(['calendarEvents', user?.email]);
+      if (isInvited) {
+        refreshInviteData();
+      } else {
+        queryClient.invalidateQueries(['calendarEvents', user?.email]);
+      }
       setShowForm(false);
       setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
       toast.success(t.eventCreated);
-      await addToNativeCalendar({ ...variables, user_email: user.email });
+      await addToNativeCalendar({ ...variables, user_email: user?.email || '' });
     }
   });
 
   const deleteEvent = useMutation({
-    mutationFn: (id) => base44.entities.CalendarEvent.delete(id),
+    mutationFn: async (id) => {
+      if (isInvited) {
+        await base44.functions.invoke('deleteInvitedCalendarEvent', { event_id: id });
+        return;
+      }
+      return base44.entities.CalendarEvent.delete(id);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['calendarEvents', user?.email]);
+      if (isInvited) {
+        refreshInviteData();
+      } else {
+        queryClient.invalidateQueries(['calendarEvents', user?.email]);
+      }
       toast.success(t.eventDeleted);
     }
   });
@@ -179,14 +199,12 @@ export default function Calendar() {
       <PageHeader
         title={t.calendarTitle}
         rightAction={
-          isInvited ? null : (
           <button
             onClick={prefillTime}
             className="w-9 h-9 rounded-full flex items-center justify-center"
             style={{ background: 'var(--color-primary)' }}>
             <Plus className="w-5 h-5" style={{ color: 'var(--color-primary-foreground)' }} />
           </button>
-          )
         }
       />
 
@@ -248,11 +266,9 @@ export default function Calendar() {
             <h3 className="text-sm font-semibold capitalize" style={{ color: 'var(--color-text-secondary)' }}>
               {format(selectedDay, lang === 'en' ? 'EEEE, MMMM d' : "EEEE 'd.' d. MMMM", { locale: dateLocale })}
             </h3>
-            {!isInvited && (
             <button onClick={prefillTime} className="text-xs flex items-center gap-1" style={{ color: 'var(--color-accent)' }}>
               <Plus className="w-3.5 h-3.5" /> {t.addEvent}
             </button>
-            )}
           </div>
 
           {selectedDayItems.length === 0 ?
@@ -292,7 +308,7 @@ export default function Calendar() {
                       <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{item.description}</p>
                     }
                   </div>
-                  {isUserEvent && !isInvited && (
+                  {isUserEvent && (
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteEvent.mutate(item.id); }}
                       className="p-1.5 rounded-lg active:opacity-60"
@@ -310,7 +326,7 @@ export default function Calendar() {
 
       {/* Add event bottom sheet */}
       <AnimatePresence>
-        {showForm && !isInvited &&
+        {showForm &&
         <>
             <motion.div
             initial={{ opacity: 0 }}

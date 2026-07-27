@@ -95,6 +95,10 @@
       "type": "string",
       "description": "Noter fra for\u00e6lder"
     },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den bruger der oprettede loggen (for inviterede partnere)"
+    },
     "description": {
       "type": "string",
       "maxLength": 1000,

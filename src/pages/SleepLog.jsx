@@ -130,7 +130,7 @@ export default function SleepLog() {
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
-  const { isInvited, inviterSleepLogs } = useInviteAccess();
+  const { isInvited, inviterSleepLogs, refresh: refreshInviteData } = useInviteAccess();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -197,6 +197,11 @@ export default function SleepLog() {
   const profileId = activeProfile?.id;
   const childId = activeChild?.id || null;
 
+  // For invited users, find today's log from inviter's pre-loaded data
+  const invitedTodayLog = isInvited
+    ? (inviterSleepLogs || []).find(l => l.date === today && (!childId || l.child_id === childId))
+    : null;
+
   const { data: todayLog } = useQuery({
     queryKey: ['sleeplog-today', user?.email, childId, today],
     queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null, date: today }),
@@ -220,6 +225,24 @@ export default function SleepLog() {
     }
   });
 
+  // Pre-fill form for invited users from inviter's data
+  useEffect(() => {
+    if (isInvited && invitedTodayLog) {
+      setForm({
+        date: invitedTodayLog.date || today,
+        child_age_months: invitedTodayLog.child_age_months || '',
+        bedtime: invitedTodayLog.bedtime || '',
+        sleep_time: invitedTodayLog.sleep_time || '',
+        wake_time: invitedTodayLog.wake_time || '',
+        night_wakings: invitedTodayLog.night_wakings || [],
+        naps: invitedTodayLog.naps || [],
+        sleep_method: invitedTodayLog.sleep_method || '',
+        bedtime_mood: invitedTodayLog.bedtime_mood || '',
+        parent_note: invitedTodayLog.parent_note || '',
+      });
+    }
+  }, [isInvited, invitedTodayLog?.id]);
+
   const { data: historyData } = useQuery({
     queryKey: ['sleeplog-history', user?.email, childId],
     queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null }, '-date', 30),
@@ -240,10 +263,21 @@ export default function SleepLog() {
         mts = (sh * 60 + sm) - (bh * 60 + bm);
         if (mts < 0) mts += 24 * 60;
       }
-      const payload = { ...data, user_email: user.email, child_id: childId || null, minutes_to_sleep: mts };
+      const payload = { ...data, child_id: childId || null, minutes_to_sleep: mts };
+
+      if (isInvited) {
+        const existing = invitedTodayLog;
+        const result = await base44.functions.invoke('createInvitedSleepLog', {
+          sleepLogData: payload,
+          existing_id: existing?.id || null,
+        });
+        return result?.data || result;
+      }
+
+      const payload2 = { ...payload, user_email: user.email };
       const existing = todayLog?.[0];
-      if (existing) return base44.entities.SleepLog.update(existing.id, payload);
-      return base44.entities.SleepLog.create(payload);
+      if (existing) return base44.entities.SleepLog.update(existing.id, payload2);
+      return base44.entities.SleepLog.create(payload2);
     },
     onMutate: async (data) => {
       await queryClient.cancelQueries(['sleeplog-today']);
@@ -259,8 +293,12 @@ export default function SleepLog() {
       if (ctx?.prev) queryClient.setQueryData(['sleeplog-today', user?.email, profileId, today], ctx.prev);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['sleeplog-today']);
-      queryClient.invalidateQueries(['sleeplog-history']);
+      if (isInvited) {
+        refreshInviteData();
+      } else {
+        queryClient.invalidateQueries(['sleeplog-today']);
+        queryClient.invalidateQueries(['sleeplog-history']);
+      }
       toast.success(t.sleepLogSaved);
     }
   });
@@ -360,7 +398,6 @@ export default function SleepLog() {
       <PageHeader
         title={t.sleepLogTitle}
         rightAction={
-          isInvited ? null : (
           <button
             onClick={() => setView(v => v === 'log' ? 'history' : 'log')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
@@ -369,11 +406,10 @@ export default function SleepLog() {
             <BookOpen className="w-3.5 h-3.5" />
             {view === 'log' ? t.historyBtn : t.logTodayBtn}
           </button>
-          )
         }
       />
 
-      {view === 'history' || isInvited ? (
+      {view === 'history' ? (
         <HistoryView history={history} t={t} lang={lang} dateLocale={dateLocale} MOODS={MOODS} />
       ) : (
         <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="300px">

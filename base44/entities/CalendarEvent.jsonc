@@ -69,6 +69,10 @@
       "type": "boolean",
       "default": false,
       "description": "Om notifikation p\u00e5 selve dagen er sendt"
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den bruger der oprettede aftalen (for inviterede partnere)"
     }
   },
   "required": [
