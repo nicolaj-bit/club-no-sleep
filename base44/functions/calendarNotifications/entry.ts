@@ -1,5 +1,30 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
+const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
+const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
+
+async function sendPush(email, title, message) {
+  if (!ONESIGNAL_APP_ID || !REST_API_KEY) return false;
+  const body = {
+    app_id: ONESIGNAL_APP_ID,
+    include_aliases: { external_id: [email] },
+    target_channel: 'push',
+    headings: { da: title, en: title },
+    contents: { da: message, en: message },
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
+  };
+  const res = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Key ${REST_API_KEY}`,
+    },
+    body: JSON.stringify(body),
+  });
+  return res.ok;
+}
+
 // Opret in-app notifikationer for en liste af emails — ingen emojis
 async function createInAppNotifications(base44, emails, title, message, link) {
   for (const email of emails) {
@@ -115,8 +140,16 @@ Deno.serve(async (req) => {
     const now = new Date();
     console.log(`[calendarNotifications] Kører nu: ${now.toISOString()}`);
 
-    const allEvents = await base44.asServiceRole.entities.CalendarEvent.list();
+    const [allEvents, profiles] = await Promise.all([
+      base44.asServiceRole.entities.CalendarEvent.list(),
+      base44.asServiceRole.entities.UserProfile.list(),
+    ]);
     console.log(`[calendarNotifications] Fandt ${allEvents.length} events`);
+
+    const notifPrefByEmail = {};
+    for (const p of profiles) {
+      if (p.user_email) notifPrefByEmail[p.user_email] = p.notif_calendar_reminder !== false;
+    }
 
     let sentCount = 0;
 
@@ -138,6 +171,9 @@ Deno.serve(async (req) => {
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
           await sendEmailFallback(base44, email, event.title, timeStr, false);
+          if (notifPrefByEmail[email] !== false) {
+            await sendPush(email, title, msg);
+          }
         }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_day_before_sent: true });
         sentCount++;
@@ -151,6 +187,9 @@ Deno.serve(async (req) => {
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
           await sendEmailFallback(base44, email, event.title, timeStr, true);
+          if (notifPrefByEmail[email] !== false) {
+            await sendPush(email, title, msg);
+          }
         }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_30min_before_sent: true });
         sentCount++;
