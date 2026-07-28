@@ -170,7 +170,6 @@ Deno.serve(async (req) => {
         const msg = `${event.title} kl. ${timeStr}`;
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
-          await sendEmailFallback(base44, email, event.title, timeStr, false);
           if (notifPrefByEmail[email] !== false) {
             await sendPush(email, title, msg);
           }
@@ -186,7 +185,6 @@ Deno.serve(async (req) => {
         const msg = `${event.title} kl. ${timeStr}`;
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
-          await sendEmailFallback(base44, email, event.title, timeStr, true);
           if (notifPrefByEmail[email] !== false) {
             await sendPush(email, title, msg);
           }
