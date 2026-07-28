@@ -134,7 +134,7 @@ export default function Home() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div key={activeChild?.id || 'no-child'} className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Header */}
-      <div className="px-5 pt-6 pb-4">
+      <div className="px-5 pb-4" style={{ paddingTop: 'max(24px, env(safe-area-inset-top, 0px))' }}>
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <ChildSwitcher />

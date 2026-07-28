@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
     <ActiveProfileProvider>
     <ActiveChildProvider>
     <TabStateProvider>
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
+      <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }

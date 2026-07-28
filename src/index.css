@@ -176,6 +176,24 @@
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 .header-safe { padding-top: max(12px, env(safe-area-inset-top)); }
 
+/* ── Prevent horizontal overflow on all screens ── */
+html, body, #root {
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Allow flex children to shrink below content width to prevent overflow */
+.flex > * {
+  min-width: 0;
+}
+
+/* Ensure common containers don't exceed viewport width */
+img, video, svg, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
