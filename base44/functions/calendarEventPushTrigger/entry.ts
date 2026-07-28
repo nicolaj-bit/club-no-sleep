@@ -51,6 +51,8 @@ Deno.serve(async (req) => {
         target_channel: 'push',
         headings: { en: title, da: title },
         contents: { en: message, da: message },
+        ios_badgeType: 'Increase',
+        ios_badgeCount: 1,
       };
 
       if (rule.url) body.url = rule.url;

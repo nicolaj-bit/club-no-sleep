@@ -85,6 +85,8 @@ async function sendPushNotification(email, title, message) {
     headings: { da: title, en: title },
     contents: { da: message, en: message },
     url: 'https://lalatoto.dk/PregnancyWeeks',
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
   };
   const res = await fetch('https://onesignal.com/api/v1/notifications', {
     method: 'POST',

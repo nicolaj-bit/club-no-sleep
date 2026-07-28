@@ -26,10 +26,12 @@ Deno.serve(async (req) => {
       app_id: ONESIGNAL_APP_ID,
       include_aliases: { external_id: [user.email] },
       target_channel: 'push',
-      isIos: false,
+      isIos: true,
       isAndroid: true,
       headings: { en: notif.title, da: notif.title },
       contents: { en: notif.message, da: notif.message },
+      ios_badgeType: 'Increase',
+      ios_badgeCount: 1,
     };
 
     const res = await fetch('https://onesignal.com/api/v1/notifications', {

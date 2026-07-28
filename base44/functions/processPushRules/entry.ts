@@ -9,9 +9,11 @@ async function sendOneSignalPush(title, message, url, segment = 'all') {
     app_id: appId,
     headings: { en: title, da: title },
     contents: { en: message, da: message },
-    isIos: false,
+    isIos: true,
     isAndroid: true,
     isAnyWeb: true,
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
   };
 
   if (segment === 'all') {

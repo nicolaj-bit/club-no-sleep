@@ -76,6 +76,8 @@ async function sendPushNotification(apiKey, appId, userEmail, title, message, fe
     headings: { da: title, en: title },
     contents: { da: message, en: message },
     url: feedbackUrl,
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
     buttons: [
       { id: 'helpful', text: '👍 Hjalp mig' },
       { id: 'not_helpful', text: '👎 Hjalp ikke' },

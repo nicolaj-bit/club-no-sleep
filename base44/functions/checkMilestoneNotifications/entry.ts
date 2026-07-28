@@ -89,6 +89,8 @@ async function sendPush(email, title, message, apiKey) {
     headings: { da: title, en: title },
     contents: { da: message, en: message },
     url: 'https://app.lalatoto.dk/Milestones',
+    ios_badgeType: 'Increase',
+    ios_badgeCount: 1,
   };
 
   const res = await fetch('https://onesignal.com/api/v1/notifications', {
