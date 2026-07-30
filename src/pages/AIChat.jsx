@@ -498,7 +498,7 @@ export default function AIChat() {
         {visibleMessages.map((msg, i) => {
           const isUser = msg.role === 'user';
           return (
-            <div key={i} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+            <div key={i} className={`flex items-end gap-2 overflow-x-hidden ${isUser ? 'justify-end' : 'justify-start'}`} style={{ minWidth: 0, maxWidth: '100%', boxSizing: 'border-box' }}>
               {!isUser && <AIAvatar size="sm" iconUrl={avatarUrl} />}
               <div
                 className={`max-w-[78%] rounded-2xl px-4 py-3 shadow-sm ${
@@ -507,20 +507,26 @@ export default function AIChat() {
                     : 'rounded-bl-md border'
                 }`}
                 style={isUser
-                  ? { background: 'linear-gradient(135deg, #A0785A, #6B3F20)' }
+                  ? { background: 'linear-gradient(135deg, #A0785A, #6B3F20)', overflowWrap: 'break-word', wordBreak: 'break-word', boxSizing: 'border-box', overflow: 'hidden' }
                   : {
                       backgroundColor: 'var(--color-bg-card)',
                       borderColor: 'var(--color-border)',
                       color: 'var(--color-text-primary)',
+                      overflowWrap: 'break-word',
+                      wordBreak: 'break-word',
+                      boxSizing: 'border-box',
+                      overflow: 'hidden',
                     }
                 }
               >
                 {isUser ? (
-                  <p className="text-sm leading-relaxed">{msg.content}</p>
+                  <p className="text-sm leading-relaxed" style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}>{msg.content}</p>
                 ) : (
-                  <ReactMarkdown className="text-sm prose prose-sm prose-stone max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
-                    {msg.content}
-                  </ReactMarkdown>
+                  <div style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+                    <ReactMarkdown className="text-sm prose prose-sm prose-stone max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
                 )}
               </div>
             </div>
