@@ -135,7 +135,7 @@ export const PREGNANCY_WEEKS = {
     nextStepText: [
       "Mange vælger at dele nyhederne efter 12-ugers scanningen. Hvis det også er tilfældet hos Jer, så tal om hvordan I gerne vil dele nyhederne. Hvis I ønsker at gøre lidt ekstra ud af det, så har vi samlet en masse søde, sjove og anderledes måder at fortælle nyheden på! {{link}}."
     ],
-    linkUrl: "6a3fb793d12af43cc22f0dfd"
+    linkUrl: "6a3fb793de5cc6317be5d8b7"
   },
   12: {
     title: "Uge 12",
