@@ -347,7 +347,6 @@ export default function AIChat() {
   }, [input]);
 
   const sendMessage = async (overrideText) => {
-    console.log('[AIChat] send tapped', { overrideText, input, conversation, isLoading });
     const text = (overrideText || input).trim();
     if (!text || !conversation || isLoading) return;
     if (!overrideText) setInput('');
