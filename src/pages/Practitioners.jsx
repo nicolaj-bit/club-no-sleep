@@ -14,15 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
-
-function getMapsUrl(address) {
-  const query = encodeURIComponent(address);
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if (isIOS) {
-    return `https://maps.apple.com/?q=${query}`;
-  }
-  return `https://maps.google.com/?q=${query}`;
-}
+import { openInMaps } from '@/lib/openInMaps';
 
 export default function Practitioners() {
   const { t } = useLanguage();
@@ -331,16 +323,15 @@ export default function Practitioners() {
                         <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{expert.title}</p>
                       )}
                       {expert.address && (
-                        <a
-                          href={getMapsUrl(expert.address)}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => openInMaps(expert.address)}
                           className="flex items-center gap-1.5 text-xs mt-1.5 w-fit"
                           style={{ color: 'var(--color-accent)' }}
                         >
                           <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                           {expert.address}
-                        </a>
+                        </button>
                       )}
                       {!expert.address && expert.city && <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{expert.city}</p>}
                       {expert.bio && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{expert.bio}</p>}

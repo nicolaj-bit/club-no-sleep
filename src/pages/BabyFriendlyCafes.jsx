@@ -14,19 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
-
-function getMapsUrl(address) {
-  const query = encodeURIComponent(address);
-  // "geo:" åbner brugerens valgte kort-app på Android.
-  // På iOS er der ingen universel "vælg kort-app" standard —
-  // Apple Maps er default, men vi bruger maps.apple.com som fallback
-  // så iOS spørger brugeren hvis de har Google Maps installeret.
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if (isIOS) {
-    return `https://maps.apple.com/?q=${query}`;
-  }
-  return `https://maps.google.com/?q=${query}`;
-}
+import { openInMaps } from '@/lib/openInMaps';
 
 export default function BabyFriendlyCafes() {
   const { t } = useLanguage();
@@ -351,16 +339,15 @@ export default function BabyFriendlyCafes() {
                         <div key={cafe.id} className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
-                            <a
-                              href={getMapsUrl(cafe.address)}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              type="button"
+                              onClick={() => openInMaps(cafe.address)}
                               className="flex items-center gap-1.5 text-xs mt-1 w-fit"
                               style={{ color: 'var(--color-accent)' }}
                             >
                               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                               {cafe.address}
-                            </a>
+                            </button>
                           )}
                           {!cafe.address && cafe.city && <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{cafe.city}</p>}
                           {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
@@ -426,16 +413,15 @@ export default function BabyFriendlyCafes() {
                         <div key={cafe.id} className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
                           <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{cafe.name}</h3>
                           {cafe.address && (
-                            <a
-                              href={getMapsUrl(cafe.address)}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              type="button"
+                              onClick={() => openInMaps(cafe.address)}
                               className="flex items-center gap-1.5 text-xs mt-1 w-fit"
                               style={{ color: 'var(--color-accent)' }}
                             >
                               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                               {cafe.address}
-                            </a>
+                            </button>
                           )}
                           {cafe.description && <p className="text-sm mt-2" style={{ color: 'var(--color-text-secondary)' }}>{cafe.description}</p>}
                           {(cafe.instagram || cafe.facebook || cafe.website) && (
