@@ -566,6 +566,9 @@ export default function AIChat() {
           style={{
             backgroundColor: 'var(--color-bg-subtle)',
             borderColor: 'var(--color-border)',
+            width: '100%',
+            boxSizing: 'border-box',
+            overflow: 'hidden',
           }}
         >
           <textarea
@@ -581,13 +584,15 @@ export default function AIChat() {
               lineHeight: '1.6',
               maxHeight: '120px',
               caretColor: 'var(--color-accent)',
+              minWidth: 0,
+              maxWidth: '100%',
             }}
           />
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-opacity cursor-pointer disabled:opacity-30"
-            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center transition-opacity cursor-pointer disabled:opacity-30"
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', flexShrink: 0 }}
             aria-label={t.sendLabel}
           >
             <Send className="w-4 h-4 text-white" />
