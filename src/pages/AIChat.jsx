@@ -366,7 +366,7 @@ export default function AIChat() {
   const showSelectionNav = mode === null && visibleMessages.length === 0;
 
   return (
-    <div className="flex flex-col h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <div className="flex flex-col" style={{ backgroundColor: 'var(--color-bg)', height: '100dvh', overflowX: 'hidden', maxWidth: '100%', boxSizing: 'border-box' }}>
 
       {/* Header */}
       <div
@@ -432,7 +432,7 @@ export default function AIChat() {
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-6 space-y-5" style={{ minWidth: 0, maxWidth: '100%', boxSizing: 'border-box' }}>
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="100%">
 
         {/* Loading state while restoring recent conversation */}
@@ -556,6 +556,9 @@ export default function AIChat() {
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border)',
           paddingBottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
+          flexShrink: 0,
+          boxSizing: 'border-box',
+          maxWidth: '100%',
         }}
       >
         <div
