@@ -199,6 +199,11 @@ img, video, svg, canvas {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 2px; }
 
+/* ── Prevent iOS auto-zoom on input focus (font-size must be >= 16px) ── */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
 /* ── Sleep time input: hide native clock icon & placeholder ── */
 .sleep-time-input::-webkit-calendar-picker-indicator {
   display: none;
