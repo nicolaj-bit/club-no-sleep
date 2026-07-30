@@ -347,6 +347,7 @@ export default function AIChat() {
   }, [input]);
 
   const sendMessage = async (overrideText) => {
+    console.log('[AIChat] send tapped', { overrideText, input, conversation, isLoading });
     const text = (overrideText || input).trim();
     if (!text || !conversation || isLoading) return;
     if (!overrideText) setInput('');
@@ -595,7 +596,7 @@ export default function AIChat() {
             }}
           />
           <button
-            onClick={sendMessage}
+            onClick={() => sendMessage()}
             disabled={!input.trim() || isLoading}
             className="w-9 h-9 rounded-xl flex items-center justify-center transition-opacity cursor-pointer disabled:opacity-30"
             style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', flexShrink: 0 }}
