@@ -16,24 +16,26 @@
     },
     {
       "function_name": "getCurrentUserContext",
-      "description": "Henter KUN den indloggede brugers navn, email og barnets info. Brug altid denne funktion til at f\u00e5 brugerens navn \u2014 brug aldrig UserProfile direkte eller g\u00e6t navnet."
+      "description": "Henter KUN den indloggede brugers navn, email og barnets info"
     }
   ],
+  "context_files": [],
+  "app_user_connector_configs": [],
+  "selected_skill_names": [],
+  "selected_workspace_skill_ids": [],
   "model": "automatic",
+  "whatsapp_greeting": "",
+  "telegram_greeting": "",
+  "line_greeting": "",
   "memory_config": {
     "enabled": true,
     "scope": "user",
     "include_other_conversation_context": false,
     "instructions": null
   },
-  "context_files": [],
-  "app_user_connector_configs": [],
-  "selected_skill_names": [],
-  "selected_workspace_connectors": [],
-  "whatsapp_greeting": "",
-  "telegram_greeting": "",
-  "line_greeting": "",
-  "selected_workspace_skill_ids": [],
+  "voice_config": {
+    "voice_id": null
+  },
   "allow_anonymous_access": false,
   "name": "encouragement"
 }
