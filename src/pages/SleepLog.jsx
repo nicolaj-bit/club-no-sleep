@@ -276,8 +276,16 @@ export default function SleepLog() {
 
       const payload2 = { ...payload, user_email: user.email };
       const existing = todayLog?.[0];
-      if (existing) return base44.entities.SleepLog.update(existing.id, payload2);
-      return base44.entities.SleepLog.create(payload2);
+      try {
+        const result = await base44.functions.invoke('createSleepLog', {
+          sleepLogData: payload2,
+          existing_id: existing?.id || null,
+        });
+        return result?.data?.sleepLog || result?.data || result;
+      } catch (e) {
+        console.error('[SleepLog] gem-fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
+        throw e;
+      }
     },
     onMutate: async (data) => {
       await queryClient.cancelQueries(['sleeplog-today']);
@@ -689,7 +697,7 @@ export default function SleepLog() {
           {/* Actions */}
           <div className="space-y-3 pb-4">
             <button
-              onClick={() => saveMutation.mutate(form)}
+              onClick={() => { console.log('[SleepLog] gem tapped'); saveMutation.mutate(form); }}
               disabled={saveMutation.isPending}
               className="w-full py-4 rounded-2xl text-white font-semibold text-sm transition-all disabled:opacity-60"
               style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))' }}
