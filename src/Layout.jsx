@@ -9,6 +9,7 @@ import { LanguageProvider } from '@/components/ui/LanguageContext';
 import DarkModeNudge from '@/components/ui/DarkModeNudge';
 import NotificationPrompt from '@/components/ui/NotificationPrompt';
 import BadgeClearer from '@/components/ui/BadgeClearer';
+import AdminDebugConsole from '@/components/ui/AdminDebugConsole';
 import { InviteAccessProvider } from '@/components/auth/InviteAccessContext';
 import { ActiveProfileProvider } from '@/components/ui/ActiveProfileContext';
 import { ActiveChildProvider } from '@/components/ui/ActiveChildContext';
@@ -95,6 +96,7 @@ export default function Layout({ children, currentPageName }) {
         <DarkModeNudge />
         <NotificationPrompt />
         <BadgeClearer />
+        <AdminDebugConsole />
       </div>
     </TabStateProvider>
     </ActiveChildProvider>

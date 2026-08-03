@@ -75,25 +75,25 @@ export default function BlogPost() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (isSaved) {
-        const fav = favorites[0];
-        if (fav) await base44.entities.Favorite.delete(fav.id);
-      } else {
-        await base44.entities.Favorite.create({
-          user_email: user.email,
-          item_type: 'blog',
-          item_id: postId,
-          item_title: post.title,
-          item_image: post.featured_image,
-        });
-      }
+      console.log('[Bookmark] tapped');
+      const result = await base44.functions.invoke('toggleBlogFavorite', {
+        item_id: postId,
+        item_title: post?.title,
+        item_image: post?.featured_image,
+      });
+      return result?.data || result;
     },
-    onSuccess: () => {
-      setIsSaved(!isSaved);
+    onSuccess: (data) => {
+      const nowSaved = data?.isSaved ?? !isSaved;
+      setIsSaved(nowSaved);
       queryClient.invalidateQueries(['favorites']);
-      toast.success(isSaved
-        ? (lang === 'en' ? 'Removed from favorites' : 'Fjernet fra favoritter')
-        : (lang === 'en' ? 'Saved to favorites' : 'Gemt til favoritter'));
+      toast.success(nowSaved
+        ? (lang === 'en' ? 'Saved to favorites' : 'Gemt til favoritter')
+        : (lang === 'en' ? 'Removed from favorites' : 'Fjernet fra favoritter'));
+    },
+    onError: (e) => {
+      console.error('[Bookmark] fejl:', e?.message || e, JSON.stringify(e?.response?.data || {}));
+      toast.error(lang === 'en' ? 'Could not save' : 'Kunne ikke gemme');
     },
   });
 

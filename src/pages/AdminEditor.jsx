@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle, Bug } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { clearSubscriptionCache } from '@/components/subscription/useSubscription';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
@@ -18,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode', 'WonderWeeksIntro'];
+const TABS = ['BlogPost', 'KnowledgeArticle', 'LegalContent', 'HelpModal', 'SharingPage', 'ColorTheme', 'Milestones', 'DemoMode', 'WonderWeeksIntro', 'DebugMode'];
 
 const emptyBlog = { title: '', excerpt: '', content: '', category: '', featured_image: '', author_name: '', published: true, published_date: '' };
 const emptyArticle = { title: '', content: '', category: '', tags: [], is_faq: false, order: 0 };
@@ -44,6 +44,7 @@ export default function AdminEditor() {
   const [wwIntroConfig, setWwIntroConfig] = useState(null);
   const [wwIntroForm, setWwIntroForm] = useState({});
   const [wwIntroSaving, setWwIntroSaving] = useState(false);
+  const [debugMode, setDebugMode] = useState(false);
 
 
   useEffect(() => {
@@ -158,6 +159,31 @@ export default function AdminEditor() {
       setDemoMode(config?.demo_mode === true);
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'DebugMode') return;
+    setDebugMode(localStorage.getItem('debug_mode') === 'on');
+  }, [activeTab]);
+
+  const handleToggleDebugMode = (checked) => {
+    setDebugMode(checked);
+    if (checked) {
+      localStorage.setItem('debug_mode', 'on');
+      if (!window.eruda) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/eruda@3';
+        script.onload = () => { if (window.eruda) window.eruda.init(); };
+        document.body.appendChild(script);
+      } else {
+        window.eruda.init();
+      }
+      toast.success('Debug-konsol aktiveret');
+    } else {
+      localStorage.setItem('debug_mode', 'off');
+      toast.success('Debug-konsol deaktiveret — genindlæser');
+      setTimeout(() => window.location.reload(), 600);
+    }
+  };
 
   const handleToggleDemoMode = async (checked) => {
     setDemoSaving(true);
@@ -460,7 +486,7 @@ export default function AdminEditor() {
             <Bell className="w-3.5 h-3.5" /> {t.adminEditorNotificationsBtn}
           </button>
         </Link>
-        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && activeTab !== 'WonderWeeksIntro' && (
+        {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && activeTab !== 'WonderWeeksIntro' && activeTab !== 'DebugMode' && (
           <button
             onClick={handleNew}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
@@ -481,8 +507,8 @@ export default function AdminEditor() {
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
           >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? t.adminEditorBlogTab : tab === 'KnowledgeArticle' ? t.adminEditorArticlesTab : tab === 'LegalContent' ? t.adminEditorLegalTab : tab === 'HelpModal' ? t.adminEditorHelpTab : tab === 'SharingPage' ? t.adminEditorSharingTab : tab === 'ColorTheme' ? t.adminEditorColorTab : tab === 'Milestones' ? t.adminEditorMilestonesTab : tab === 'DemoMode' ? t.adminEditorDemoTab : t.adminEditorWonderWeeksTab}
+            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : tab === 'DebugMode' ? <Bug className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
+            {tab === 'BlogPost' ? t.adminEditorBlogTab : tab === 'KnowledgeArticle' ? t.adminEditorArticlesTab : tab === 'LegalContent' ? t.adminEditorLegalTab : tab === 'HelpModal' ? t.adminEditorHelpTab : tab === 'SharingPage' ? t.adminEditorSharingTab : tab === 'ColorTheme' ? t.adminEditorColorTab : tab === 'Milestones' ? t.adminEditorMilestonesTab : tab === 'DemoMode' ? t.adminEditorDemoTab : tab === 'DebugMode' ? 'Debug' : t.adminEditorWonderWeeksTab}
           </button>
         ))}
       </div>
@@ -636,8 +662,30 @@ export default function AdminEditor() {
         </div>
       )}
 
+      {activeTab === 'DebugMode' && (
+        <div className="p-4 max-w-lg mx-auto mt-4 space-y-4">
+          <div className="rounded-2xl border p-5 space-y-4" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: debugMode ? '#dbeafe' : 'var(--color-bg-subtle)' }}>
+                <Bug className="w-5 h-5" style={{ color: debugMode ? '#2563eb' : 'var(--color-text-muted)' }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>Debug-konsol</p>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                  Viser Eruda debug-konsol (kun for admin). Indlæses automatisk ved app-start når aktiveret.
+                </p>
+              </div>
+              <Switch checked={debugMode} onCheckedChange={handleToggleDebugMode} />
+            </div>
+            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              Når aktiv indlæses Eruda fra CDN og initialiseres. Ved deaktivering gemmes 'off' og appen genindlæses for at fjerne konsollen.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="p-4 space-y-2 mt-2">
-        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' || activeTab === 'WonderWeeksIntro' ? null : isLoading ? (
+        {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' || activeTab === 'WonderWeeksIntro' || activeTab === 'DebugMode' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorLoading}</p>
         ) : items.length === 0 ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorNoPostsYet}</p>
