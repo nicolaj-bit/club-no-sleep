@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Twitter, MessageCircle, Mail, Camera, AlertCircle } from 'lucide-react';
+import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Camera, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import TypeSticker from './TypeSticker';
 
@@ -220,7 +220,6 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
-  const [showShareMenu, setShowShareMenu] = useState(false);
   const [saving, setSaving] = useState(false);
   const [cameraError, setCameraError] = useState(null);
 
@@ -371,34 +370,25 @@ export default function MilestoneCamera({ frame, onClose }) {
     }
   };
 
-  const shareImage = async () => {
-    if (!navigator.share) { downloadImage(); return; }
-    const res = await fetch(capturedImage);
-    const blob = await res.blob();
-    const file = new File([blob], `lalatoto-${frame.id}.jpg`, { type: 'image/jpeg' });
-    await navigator.share({ files: [file], title: frame.headline, text: frame.subline });
-  };
-
-  // Social media share intents
-  const shareOnFacebook = () => {
-    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍`);
-    window.open(`https://www.facebook.com/sharer/sharer.php?quote=${text}&app_id=123456`, '_blank');
-  };
-
-  const shareOnTwitter = () => {
-    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍 #lalatoto`);
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-  };
-
-  const shareOnWhatsApp = () => {
-    const text = encodeURIComponent(`Se min milepæl på LALATOTO: ${frame.headline} 🤍`);
-    window.open(`https://wa.me/?text=${text}`, '_blank');
-  };
-
-  const shareOnEmail = () => {
-    const subject = encodeURIComponent(`Min milepæl: ${frame.headline}`);
-    const body = encodeURIComponent(`Se hvad jeg har delt på LALATOTO! 🤍\n\n${frame.subline}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  // Native dele-menu med billede vedhæftet (Web Share API). Fallback til tekst-deling eller download.
+  const handleShare = async () => {
+    const shareText = `Se min milepæl på LALATOTO: ${frame.headline}`;
+    try {
+      const blob = await (await fetch(capturedImage)).blob();
+      const file = new File([blob], `lalatoto-${frame.id}.jpg`, { type: 'image/jpeg' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: frame.headline, text: shareText });
+      } else if (navigator.share) {
+        await navigator.share({ title: frame.headline, text: shareText });
+      } else {
+        downloadImage();
+        toast.info('Deling ikke understøttet her — billedet er downloadet i stedet');
+      }
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+      console.error('MilestoneCamera: deling fejlede:', e.message);
+      toast.error('Kunne ikke dele billedet');
+    }
   };
 
   const retake = () => { setCapturedImage(null); setMode('camera'); };
@@ -548,7 +538,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 {saving ? 'Gemmer...' : 'Gem'}
               </button>
               <button
-                onClick={() => setShowShareMenu(!showShareMenu)}
+                onClick={handleShare}
                 className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-semibold"
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
@@ -556,49 +546,6 @@ export default function MilestoneCamera({ frame, onClose }) {
                 Del
               </button>
             </div>
-
-            {/* Sociale dele-knapper — uniforme neutrale kort */}
-            {showShareMenu && (
-              <div className="mt-4">
-                <p className="text-[11px] uppercase tracking-widest mb-3 text-center" style={{ color: 'var(--color-text-muted)' }}>
-                  Del på
-                </p>
-                <div className="grid grid-cols-4 gap-2.5">
-                  <button
-                    onClick={shareOnFacebook}
-                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
-                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                  >
-                    <Facebook className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Facebook</span>
-                  </button>
-                  <button
-                    onClick={shareOnTwitter}
-                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
-                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                  >
-                    <Twitter className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Twitter</span>
-                  </button>
-                  <button
-                    onClick={shareOnWhatsApp}
-                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
-                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                  >
-                    <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>WhatsApp</span>
-                  </button>
-                  <button
-                    onClick={shareOnEmail}
-                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
-                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                  >
-                    <Mail className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
-                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Email</span>
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
