@@ -4,12 +4,13 @@ import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle, Bug } from 'lucide-react';
+import { ChevronLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, BookOpen, Upload, Bell, Scale, HelpCircle, Share2, Palette, Star, FlaskConical, MessageCircle, Bug, Menu } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { clearSubscriptionCache } from '@/components/subscription/useSubscription';
 import PushNotificationSender from '@/components/admin/PushNotificationSender';
 import ColorThemeEditor from '@/components/admin/ColorThemeEditor';
 import MilestoneFrameEditor from '@/components/admin/MilestoneFrameEditor';
+import AdminNavDrawer from '@/components/admin/AdminNavDrawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,6 +30,7 @@ export default function AdminEditor() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('BlogPost');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [isNew, setIsNew] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -466,30 +468,42 @@ export default function AdminEditor() {
   const items = activeTab === 'BlogPost' ? blogPosts : activeTab === 'KnowledgeArticle' ? articles : legalItems;
   const isLoading = activeTab === 'BlogPost' ? loadingBlogs : activeTab === 'KnowledgeArticle' ? loadingArticles : loadingLegal;
 
+  const tabItems = [
+    { key: 'BlogPost', label: t.adminEditorBlogTab, icon: FileText },
+    { key: 'KnowledgeArticle', label: t.adminEditorArticlesTab, icon: BookOpen },
+    { key: 'LegalContent', label: t.adminEditorLegalTab, icon: Scale },
+    { key: 'HelpModal', label: t.adminEditorHelpTab, icon: HelpCircle },
+    { key: 'SharingPage', label: t.adminEditorSharingTab, icon: Share2 },
+    { key: 'ColorTheme', label: t.adminEditorColorTab, icon: Palette },
+    { key: 'Milestones', label: t.adminEditorMilestonesTab, icon: Star },
+    { key: 'DemoMode', label: t.adminEditorDemoTab, icon: FlaskConical },
+    { key: 'WonderWeeksIntro', label: t.adminEditorWonderWeeksTab, icon: BookOpen },
+    { key: 'DebugMode', label: 'Debug', icon: Bug },
+  ];
+  const activeLabel = tabItems.find(i => i.key === activeTab)?.label || t.adminEditorTitle;
+
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b backdrop-blur-xl"
+      <div className="sticky top-0 z-40 flex items-center gap-2 px-4 py-3 border-b backdrop-blur-xl"
         style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <Link to="/Settings">
-          <button className="p-2 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+          <button className="p-2 rounded-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }} aria-label="Tilbage">
             <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
           </button>
         </Link>
-        <h1 className="flex-1 font-semibold text-base" style={{ color: 'var(--color-text-primary)' }}>{t.adminEditorTitle}</h1>
-        <Link to="/AdminSupport">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-            <MessageCircle className="w-3.5 h-3.5" /> {t.adminEditorSupportBtn}
-          </button>
-        </Link>
-        <Link to="/AdminNotifications">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}>
-            <Bell className="w-3.5 h-3.5" /> {t.adminEditorNotificationsBtn}
-          </button>
-        </Link>
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="p-2 rounded-full"
+          style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+          aria-label="Admin menu"
+        >
+          <Menu className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
+        </button>
+        <h1 className="flex-1 font-semibold text-base truncate" style={{ color: 'var(--color-text-primary)' }}>{activeLabel}</h1>
         {activeTab !== 'HelpModal' && activeTab !== 'SharingPage' && activeTab !== 'ColorTheme' && activeTab !== 'Milestones' && activeTab !== 'DemoMode' && activeTab !== 'WonderWeeksIntro' && activeTab !== 'DebugMode' && (
           <button
             onClick={handleNew}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium flex-shrink-0"
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <Plus className="w-4 h-4" /> {t.adminEditorNewBtn}
@@ -497,21 +511,17 @@ export default function AdminEditor() {
         )}
       </div>
 
-      <div className="flex gap-2 px-4 pt-4 overflow-x-auto">
-        {TABS.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap"
-            style={activeTab === tab
-              ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }
-              : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
-          >
-            {tab === 'BlogPost' ? <FileText className="w-3.5 h-3.5" /> : tab === 'KnowledgeArticle' ? <BookOpen className="w-3.5 h-3.5" /> : tab === 'LegalContent' ? <Scale className="w-3.5 h-3.5" /> : tab === 'HelpModal' ? <HelpCircle className="w-3.5 h-3.5" /> : tab === 'SharingPage' ? <Share2 className="w-3.5 h-3.5" /> : tab === 'ColorTheme' ? <Palette className="w-3.5 h-3.5" /> : tab === 'Milestones' ? <Star className="w-3.5 h-3.5" /> : tab === 'DebugMode' ? <Bug className="w-3.5 h-3.5" /> : <FlaskConical className="w-3.5 h-3.5" />}
-            {tab === 'BlogPost' ? t.adminEditorBlogTab : tab === 'KnowledgeArticle' ? t.adminEditorArticlesTab : tab === 'LegalContent' ? t.adminEditorLegalTab : tab === 'HelpModal' ? t.adminEditorHelpTab : tab === 'SharingPage' ? t.adminEditorSharingTab : tab === 'ColorTheme' ? t.adminEditorColorTab : tab === 'Milestones' ? t.adminEditorMilestonesTab : tab === 'DemoMode' ? t.adminEditorDemoTab : tab === 'DebugMode' ? 'Debug' : t.adminEditorWonderWeeksTab}
-          </button>
-        ))}
-      </div>
+      <AdminNavDrawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        items={tabItems}
+        activeTab={activeTab}
+        onSelect={(key) => setActiveTab(key)}
+        footerItems={[
+          { key: 'support', label: t.adminEditorSupportBtn, icon: MessageCircle, to: '/AdminSupport' },
+          { key: 'notifications', label: t.adminEditorNotificationsBtn, icon: Bell, to: '/AdminNotifications' },
+        ]}
+      />
 
       {activeTab === 'SharingPage' && (
         <div className="p-4 space-y-5 max-w-2xl mx-auto mt-2">
