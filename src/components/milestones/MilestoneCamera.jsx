@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Camera, AlertCircle } from 'lucide-react';
+import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Facebook, Twitter, MessageCircle, Mail, Camera, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import TypeSticker from './TypeSticker';
 
@@ -433,37 +433,32 @@ export default function MilestoneCamera({ frame, onClose }) {
                 <TypeSticker headline={cleanHeadline} date={dateStr} size={200} />
               </div>
 
-              {/* Top bar */}
-              <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-14 pb-4">
-                <button onClick={onClose}><X className="w-6 h-6 text-white drop-shadow" /></button>
-                <p className="text-white font-semibold text-sm drop-shadow">{frame.label}</p>
-                <button onClick={flipCamera}><SwitchCamera className="w-6 h-6 text-white drop-shadow" /></button>
-              </div>
-
-              {/* Shutter row */}
-              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-10 pb-16">
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center active:opacity-70"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)' }}
-                  >
+              {/* Top bar — luk + label + galleri & vend kamera */}
+              <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-14 pb-4 safe-top">
+                <button onClick={onClose} aria-label="Luk" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                  <X className="w-5 h-5 text-white" />
+                </button>
+                <p className="text-white font-semibold text-sm px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>{frame.label}</p>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => fileInputRef.current?.click()} aria-label="Galleri" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
                     <ImageIcon className="w-5 h-5 text-white" />
                   </button>
-                  <span className="text-white/60 text-xs">Galleri</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    onClick={capturePhoto}
-                    disabled={!cameraReady}
-                    className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
-                  >
-                    <div className="w-14 h-14 rounded-full bg-white" />
+                  <button onClick={flipCamera} aria-label="Vend kamera" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                    <SwitchCamera className="w-5 h-5 text-white" />
                   </button>
                 </div>
-                <div className="w-12 h-12 mb-7" />
+              </div>
+
+              {/* Shutter — kun centreret udløser, overlay-tekst holdes fri */}
+              <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pb-16 safe-bottom">
+                <button
+                  onClick={capturePhoto}
+                  disabled={!cameraReady}
+                  className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-95 transition-transform disabled:opacity-40"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.25)' }}
+                >
+                  <div className="w-14 h-14 rounded-full bg-white" />
+                </button>
               </div>
             </>
           )}
@@ -472,73 +467,104 @@ export default function MilestoneCamera({ frame, onClose }) {
 
       {/* ── PREVIEW MODE ── */}
       {mode === 'preview' && capturedImage && (
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-5 pt-14 pb-4">
-            <button onClick={retake}><X className="w-6 h-6 text-white" /></button>
-            <p className="text-white font-semibold text-sm">{frame.label}</p>
-            <div className="w-6" />
+        <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--color-bg)' }}>
+          {/* Top bar */}
+          <div className="flex items-center justify-between px-4 pt-14 pb-3 safe-top">
+            <button onClick={retake} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+              <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+            </button>
+            <p className="font-display text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{frame.label}</p>
+            <div className="w-10" />
           </div>
 
-          <div className="flex-1 flex items-center justify-center px-4">
-            <img src={capturedImage} alt="Milepæl" className="w-full rounded-3xl object-cover" style={{ maxHeight: '65vh', maxWidth: 480 }} />
+          {/* Billede i blød ramme */}
+          <div className="flex-1 flex items-center justify-center px-5 min-h-0">
+            <img
+              src={capturedImage}
+              alt="Milepæl"
+              className="rounded-3xl object-cover"
+              style={{ maxHeight: '52vh', maxWidth: 440, border: '6px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
+            />
           </div>
 
-          <div className="px-6 pb-12 pt-6 space-y-3">
-            <div className="flex gap-3">
+          {/* Dele-panel i appens palet */}
+          <div
+            className="px-5 pb-10 pt-5 safe-bottom"
+            style={{
+              backgroundColor: 'var(--color-bg-card)',
+              borderTopLeftRadius: 28,
+              borderTopRightRadius: 28,
+              boxShadow: '0 -10px 30px rgba(0,0,0,0.08)',
+            }}
+          >
+            {/* Primære handlinger — ensartet række */}
+            <div className="grid grid-cols-3 gap-2.5">
               <button
                 onClick={retake}
-                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-                style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
-                <RotateCcw className="w-4 h-4" /> Prøv igen
+                <RotateCcw className="w-5 h-5" />
+                Prøv igen
               </button>
               <button
                 onClick={downloadImage}
-                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-                style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium"
+                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
-                <Download className="w-4 h-4" /> Gem
+                <Download className="w-5 h-5" />
+                Gem
               </button>
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
-                className="flex-1 h-14 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
-                style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-semibold"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
-                <Share2 className="w-4 h-4" /> Del
+                <Share2 className="w-5 h-5" />
+                Del
               </button>
             </div>
 
-            {/* Social media share buttons */}
+            {/* Sociale dele-knapper — uniforme neutrale kort */}
             {showShareMenu && (
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={shareOnFacebook}
-                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-                  style={{ backgroundColor: '#1877F2', color: '#fff', borderColor: '#1877F2' }}
-                >
-                  <Facebook className="w-4 h-4" /> Facebook
-                </button>
-                <button
-                  onClick={shareOnTwitter}
-                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-                  style={{ backgroundColor: '#000000', color: '#fff', borderColor: '#000000' }}
-                >
-                  𝕏 Twitter
-                </button>
-                <button
-                  onClick={shareOnWhatsApp}
-                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-                  style={{ backgroundColor: '#25D366', color: '#fff', borderColor: '#25D366' }}
-                >
-                  💬 WhatsApp
-                </button>
-                <button
-                  onClick={shareOnEmail}
-                  className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
-                  style={{ backgroundColor: '#EA4335', color: '#fff', borderColor: '#EA4335' }}
-                >
-                  ✉️ Email
-                </button>
+              <div className="mt-4">
+                <p className="text-[11px] uppercase tracking-widest mb-3 text-center" style={{ color: 'var(--color-text-muted)' }}>
+                  Del på
+                </p>
+                <div className="grid grid-cols-4 gap-2.5">
+                  <button
+                    onClick={shareOnFacebook}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                  >
+                    <Facebook className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Facebook</span>
+                  </button>
+                  <button
+                    onClick={shareOnTwitter}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                  >
+                    <Twitter className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Twitter</span>
+                  </button>
+                  <button
+                    onClick={shareOnWhatsApp}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                  >
+                    <MessageCircle className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>WhatsApp</span>
+                  </button>
+                  <button
+                    onClick={shareOnEmail}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-2xl"
+                    style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                  >
+                    <Mail className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-secondary)' }}>Email</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
