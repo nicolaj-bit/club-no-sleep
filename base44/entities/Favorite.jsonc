@@ -10,7 +10,8 @@
       "enum": [
         "product",
         "blog",
-        "article"
+        "article",
+        "milestone"
       ],
       "description": "Type af favorit"
     },
@@ -23,6 +24,10 @@
     },
     "item_image": {
       "type": "string"
+    },
+    "item_date": {
+      "type": "string",
+      "description": "Dato for gemt milep\u00e6l (valgfri)"
     },
     "description": {
       "type": "string",

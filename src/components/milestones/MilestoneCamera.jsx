@@ -221,6 +221,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [facingMode, setFacingMode] = useState('environment');
   const [cameraReady, setCameraReady] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [cameraError, setCameraError] = useState(null);
 
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
@@ -338,6 +339,36 @@ export default function MilestoneCamera({ frame, onClose }) {
     a.download = `lalatoto-${frame.id}.jpg`;
     a.click();
     toast.success('Billede gemt! 🎉');
+  };
+
+  // Gem på enhed + gem i Favoritter (kategori 'Milepæle') via backend (RLS-workaround)
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const a = document.createElement('a');
+      a.href = capturedImage;
+      a.download = `lalatoto-${frame.id}.jpg`;
+      a.click();
+    } catch (e) { /* enhedsgem er best-effort */ }
+    try {
+      const { base44 } = await import('@/api/base44Client');
+      const blob = await (await fetch(capturedImage)).blob();
+      const file = new File([blob], `milestone-${frame.id}.jpg`, { type: 'image/jpeg' });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.functions.invoke('createMilestoneFavorite', {
+        title: cleanHeadline,
+        date: dateStr,
+        image_url: file_url,
+        frame_id: frame.id,
+      });
+      toast.success('Gemt i Favoritter under Milepæle');
+    } catch (e) {
+      console.error('MilestoneCamera: kunne ikke gemme favorit:', e.message);
+      toast.error('Kunne ikke gemme i Favoritter');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const shareImage = async () => {
@@ -478,12 +509,12 @@ export default function MilestoneCamera({ frame, onClose }) {
           </div>
 
           {/* Billede i blød ramme */}
-          <div className="flex-1 flex items-center justify-center px-5 min-h-0">
+          <div className="flex-1 flex items-center justify-center px-3 min-h-0">
             <img
               src={capturedImage}
               alt="Milepæl"
-              className="rounded-3xl object-cover"
-              style={{ maxHeight: '52vh', maxWidth: 440, border: '6px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
+              className="rounded-3xl object-cover w-full"
+              style={{ maxHeight: '64vh', maxWidth: 460, border: '3px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
             />
           </div>
 
@@ -508,12 +539,13 @@ export default function MilestoneCamera({ frame, onClose }) {
                 Prøv igen
               </button>
               <button
-                onClick={downloadImage}
-                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium"
+                onClick={handleSave}
+                disabled={saving}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium disabled:opacity-50"
                 style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 <Download className="w-5 h-5" />
-                Gem
+                {saving ? 'Gemmer...' : 'Gem'}
               </button>
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
