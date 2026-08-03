@@ -56,6 +56,7 @@ export default function Favorites() {
 
   const typeIcon = { product: ShoppingBag, blog: BookOpen, article: FileText };
   const typeLink = { product: 'ProductDetail', blog: 'BlogPost', article: 'ArticleDetail' };
+  const stripCount = (label) => (label || '').replace(/\s*\([^)]*count[^)]*\)/gi, '').trim();
 
   const FavoriteItem = ({ item }) => {
     const Icon = typeIcon[item.item_type] || FileText;
@@ -81,7 +82,7 @@ export default function Favorites() {
             </h3>
           </Link>
           <p className="text-xs mt-1 capitalize" style={{ color: 'var(--color-text-muted)' }}>
-            {item.item_type === 'product' ? t.favoritesProduct : item.item_type === 'blog' ? t.favoritesBlog : t.favoritesArticle}
+            {stripCount(item.item_type === 'product' ? t.favoritesProduct : item.item_type === 'blog' ? t.favoritesBlog : t.favoritesArticle)}
           </p>
         </div>
         <button
