@@ -130,7 +130,7 @@ export default function SleepLog() {
   const { t, lang } = useLanguage();
   const { isDark } = useTheme();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
-  const { isInvited, inviterSleepLogs, refresh: refreshInviteData } = useInviteAccess();
+  const { isInvited, refresh: refreshInviteData } = useInviteAccess();
   const dateLocale = lang === 'en' ? enUS : da;
 
   const SLEEP_METHODS = [
@@ -197,62 +197,45 @@ export default function SleepLog() {
   const profileId = activeProfile?.id;
   const childId = activeChild?.id || null;
 
-  // For invited users, find today's log from inviter's pre-loaded data
-  const invitedTodayLog = isInvited
-    ? (inviterSleepLogs || []).find(l => l.date === today && (!childId || l.child_id === childId))
-    : null;
-
-  const { data: todayLog } = useQuery({
-    queryKey: ['sleeplog-today', user?.email, childId, today],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null, date: today }),
-    enabled: !!user && !isInvited,
-    onSuccess: (data) => {
-      if (data?.length > 0) {
-        const log = data[0];
-        setForm({
-          date: log.date || today,
-          child_age_months: log.child_age_months || '',
-          bedtime: log.bedtime || '',
-          sleep_time: log.sleep_time || '',
-          wake_time: log.wake_time || '',
-          night_wakings: log.night_wakings || [],
-          naps: log.naps || [],
-          sleep_method: log.sleep_method || '',
-          bedtime_mood: log.bedtime_mood || '',
-          parent_note: log.parent_note || '',
-        });
-      }
-    }
+  // Hent HELE søvnlog-historikken via backend (asServiceRole). Backend bestemmer
+  // ejerskab ud fra den indloggede bruger — virker for både hovedbruger og
+  // inviterede familiemedlemmer og omgår RLS-udfordringer for email/password-brugere.
+  const { data: sleepLogsData, isLoading: sleepLogsLoading } = useQuery({
+    queryKey: ['sleeplogs', user?.email],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('getSleepLogs', {});
+      return res?.data || res;
+    },
+    enabled: !!user,
   });
 
-  // Pre-fill form for invited users from inviter's data
+  const allLogs = sleepLogsData?.sleep_logs || [];
+
+  // Dagsaktuelt log for det aktive barn (findes i den hentede historik)
+  const todayLog = allLogs.find(l => l.date === today && (!childId || l.child_id === childId)) || null;
+
+  // Hele historikken, filtreret efter aktivt barn hvis valgt (nyeste først fra backend)
+  const history = sleepLogsLoading
+    ? undefined
+    : (childId ? allLogs.filter(l => l.child_id === childId) : allLogs);
+
+  // Pre-fill form når dagens log indlæses (gælder både hovedbruger og inviteret)
   useEffect(() => {
-    if (isInvited && invitedTodayLog) {
+    if (todayLog) {
       setForm({
-        date: invitedTodayLog.date || today,
-        child_age_months: invitedTodayLog.child_age_months || '',
-        bedtime: invitedTodayLog.bedtime || '',
-        sleep_time: invitedTodayLog.sleep_time || '',
-        wake_time: invitedTodayLog.wake_time || '',
-        night_wakings: invitedTodayLog.night_wakings || [],
-        naps: invitedTodayLog.naps || [],
-        sleep_method: invitedTodayLog.sleep_method || '',
-        bedtime_mood: invitedTodayLog.bedtime_mood || '',
-        parent_note: invitedTodayLog.parent_note || '',
+        date: todayLog.date || today,
+        child_age_months: todayLog.child_age_months || '',
+        bedtime: todayLog.bedtime || '',
+        sleep_time: todayLog.sleep_time || '',
+        wake_time: todayLog.wake_time || '',
+        night_wakings: todayLog.night_wakings || [],
+        naps: todayLog.naps || [],
+        sleep_method: todayLog.sleep_method || '',
+        bedtime_mood: todayLog.bedtime_mood || '',
+        parent_note: todayLog.parent_note || '',
       });
     }
-  }, [isInvited, invitedTodayLog?.id]);
-
-  const { data: historyData } = useQuery({
-    queryKey: ['sleeplog-history', user?.email, childId],
-    queryFn: () => base44.entities.SleepLog.filter({ user_email: user.email, child_id: childId || null }, '-date', 30),
-    enabled: !!user && view === 'history' && !isInvited,
-  });
-
-  // For invited users, use pre-loaded inviter data; otherwise normal query
-  const history = isInvited
-    ? (inviterSleepLogs || []).filter(l => !childId || l.child_id === childId).slice(0, 30)
-    : historyData;
+  }, [todayLog?.id]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -266,42 +249,23 @@ export default function SleepLog() {
       const payload = { ...data, child_id: childId || null, minutes_to_sleep: mts };
 
       if (isInvited) {
-        const existing = invitedTodayLog;
         const result = await base44.functions.invoke('createInvitedSleepLog', {
           sleepLogData: payload,
-          existing_id: existing?.id || null,
+          existing_id: todayLog?.id || null,
         });
         return result?.data || result;
       }
 
       const payload2 = { ...payload, user_email: user.email };
-      const existing = todayLog?.[0];
       const result = await base44.functions.invoke('createSleepLog', {
         sleepLogData: payload2,
-        existing_id: existing?.id || null,
+        existing_id: todayLog?.id || null,
       });
       return result?.data?.sleepLog || result?.data || result;
     },
-    onMutate: async (data) => {
-      await queryClient.cancelQueries(['sleeplog-today']);
-      const prev = queryClient.getQueryData(['sleeplog-today', user?.email, profileId, today]);
-      // Optimistically update the cache
-      queryClient.setQueryData(['sleeplog-today', user?.email, profileId, today], old => {
-        if (old?.length > 0) return [{ ...old[0], ...data }];
-        return [{ ...data, id: '__optimistic__' }];
-      });
-      return { prev };
-    },
-    onError: (_err, _data, ctx) => {
-      if (ctx?.prev) queryClient.setQueryData(['sleeplog-today', user?.email, profileId, today], ctx.prev);
-    },
     onSuccess: () => {
-      if (isInvited) {
-        refreshInviteData();
-      } else {
-        queryClient.invalidateQueries(['sleeplog-today']);
-        queryClient.invalidateQueries(['sleeplog-history']);
-      }
+      queryClient.invalidateQueries(['sleeplogs']);
+      if (isInvited) refreshInviteData();
       toast.success(t.sleepLogSaved);
     }
   });
@@ -390,8 +354,8 @@ export default function SleepLog() {
   const fallAsleepMinutes = calcFallAsleep();
 
   const handleRefresh = async () => {
-    await queryClient.invalidateQueries(['sleeplog-today']);
-    await queryClient.invalidateQueries(['sleeplog-history']);
+    await queryClient.invalidateQueries(['sleeplogs']);
+    if (isInvited) await refreshInviteData();
   };
 
   return (
