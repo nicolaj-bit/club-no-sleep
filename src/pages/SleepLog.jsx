@@ -211,31 +211,45 @@ export default function SleepLog() {
 
   const allLogs = sleepLogsData?.sleep_logs || [];
 
-  // Dagsaktuelt log for det aktive barn (findes i den hentede historik)
-  const todayLog = allLogs.find(l => l.date === today && (!childId || l.child_id === childId)) || null;
+  // Log for den valgte dato + aktive barn (til pre-fill ved redigering af tidligere indtastet data)
+  const activeDateLog = allLogs.find(l => l.date === form.date && (!childId || l.child_id === childId)) || null;
 
   // Hele historikken, filtreret efter aktivt barn hvis valgt (nyeste først fra backend)
   const history = sleepLogsLoading
     ? undefined
     : (childId ? allLogs.filter(l => l.child_id === childId) : allLogs);
 
-  // Pre-fill form når dagens log indlæses (gælder både hovedbruger og inviteret)
+  // Pre-fill form med tidligere indtastet data for den valgte dato.
+  // Hvis datoen ikke har et log, nulstilles søvnfelterne så brugeren starter friskt.
   useEffect(() => {
-    if (todayLog) {
+    if (activeDateLog) {
       setForm({
-        date: todayLog.date || today,
-        child_age_months: todayLog.child_age_months || '',
-        bedtime: todayLog.bedtime || '',
-        sleep_time: todayLog.sleep_time || '',
-        wake_time: todayLog.wake_time || '',
-        night_wakings: todayLog.night_wakings || [],
-        naps: todayLog.naps || [],
-        sleep_method: todayLog.sleep_method || '',
-        bedtime_mood: todayLog.bedtime_mood || '',
-        parent_note: todayLog.parent_note || '',
+        date: activeDateLog.date || form.date,
+        child_age_months: activeDateLog.child_age_months || '',
+        bedtime: activeDateLog.bedtime || '',
+        sleep_time: activeDateLog.sleep_time || '',
+        wake_time: activeDateLog.wake_time || '',
+        night_wakings: activeDateLog.night_wakings || [],
+        naps: activeDateLog.naps || [],
+        sleep_method: activeDateLog.sleep_method || '',
+        bedtime_mood: activeDateLog.bedtime_mood || '',
+        parent_note: activeDateLog.parent_note || '',
       });
+    } else {
+      setForm(f => ({
+        date: f.date,
+        child_age_months: '',
+        bedtime: '',
+        sleep_time: '',
+        wake_time: '',
+        night_wakings: [],
+        naps: [],
+        sleep_method: '',
+        bedtime_mood: '',
+        parent_note: '',
+      }));
     }
-  }, [todayLog?.id]);
+  }, [activeDateLog?.id]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -251,7 +265,7 @@ export default function SleepLog() {
       if (isInvited) {
         const result = await base44.functions.invoke('createInvitedSleepLog', {
           sleepLogData: payload,
-          existing_id: todayLog?.id || null,
+          existing_id: activeDateLog?.id || null,
         });
         return result?.data || result;
       }
@@ -259,7 +273,7 @@ export default function SleepLog() {
       const payload2 = { ...payload, user_email: user.email };
       const result = await base44.functions.invoke('createSleepLog', {
         sleepLogData: payload2,
-        existing_id: todayLog?.id || null,
+        existing_id: activeDateLog?.id || null,
       });
       return result?.data?.sleepLog || result?.data || result;
     },

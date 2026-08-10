@@ -22,20 +22,21 @@ export default async function(req) {
     let ownerEmail = user.email;
 
     if (profile?.is_invited) {
-      // Find accepted invitation
+      // Find accepted invitation (ignorer selv-referencer / ugyldige data)
       const invites = await base44.asServiceRole.entities.FamilyInvite.filter(
         { invitee_email: user.email },
         '-created_date',
         10
       );
-      const invite = invites?.find(i => i.status === 'accepted');
-      if (!invite) {
-        return Response.json({ sleep_logs: [], is_invited: true, has_access: false });
+      const invite = invites?.find(i => i.status === 'accepted' && i.inviter_email && i.inviter_email !== user.email);
+      if (invite) {
+        // Gyldig invitation — honorer tilladelse
+        if (invite.can_see_sleep_log === false) {
+          return Response.json({ sleep_logs: [], is_invited: true, has_access: false });
+        }
+        ownerEmail = invite.inviter_email;
       }
-      if (invite.can_see_sleep_log === false) {
-        return Response.json({ sleep_logs: [], is_invited: true, has_access: false });
-      }
-      ownerEmail = invite.inviter_email;
+      // Ingen gyldig invitation → fald tilbage til egne logs (håndterer inkonsistent profil-data)
     }
 
     // Hent HELE historikken for ejeren, nyeste først
