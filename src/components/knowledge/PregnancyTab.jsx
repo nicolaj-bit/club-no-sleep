@@ -6,15 +6,7 @@ import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from './pregnancyWeekData';
-
-function getPregnancyWeek(dueDateStr) {
-  if (!dueDateStr) return null;
-  const dueDate = new Date(dueDateStr);
-  const today = new Date();
-  const daysUntilDue = differenceInDays(dueDate, today);
-  const currentWeek = 40 - Math.round(daysUntilDue / 7);
-  return currentWeek;
-}
+import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
 function WeekCard({ week, data, isCurrent }) {
   const [open, setOpen] = useState(isCurrent);
@@ -111,7 +103,7 @@ export default function PregnancyTab() {
   }, []);
 
   const dueDateStr = profile?.child_due_date;
-  const currentWeek = dueDateStr ? getPregnancyWeek(dueDateStr) : null;
+  const currentWeek = dueDateStr ? getGestationalAge(dueDateStr)?.ordinal : null;
   const isPregnant = currentWeek !== null && currentWeek >= 4 && currentWeek <= 42;
   const isPostTerm = currentWeek !== null && currentWeek > 42;
 

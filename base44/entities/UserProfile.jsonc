@@ -110,6 +110,10 @@
       "default": true,
       "description": "Ugentlig graviditetsopdatering"
     },
+    "last_notified_pregnancy_week": {
+      "type": "number",
+      "description": "Sidste graviditetsuge der er sendt 'ny uge'-notifikation for (idempotens)"
+    },
     "notif_calendar_reminder": {
       "type": "boolean",
       "default": true,

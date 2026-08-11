@@ -11,23 +11,7 @@ import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
-
-function getPregnancyInfo(dueDate) {
-  if (!dueDate) return null;
-  const due = new Date(dueDate);
-  const today = new Date();
-  const daysLeft = differenceInDays(due, today);
-  if (daysLeft < 0) return null;
-  const weeksLeft = Math.floor(daysLeft / 7);
-  const daysRem = daysLeft % 7;
-  const currentWeek = 40 - weeksLeft;
-  return {
-    currentWeek: Math.max(1, Math.min(42, currentWeek)),
-    weeksLeft,
-    daysLeft,
-    daysRem,
-  };
-}
+import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
 function getGreeting(lang, name) {
   const hour = new Date().getHours();
@@ -48,7 +32,8 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
   // Brug aktivt barn's terminsdato, ellers fald tilbage til profil
   const dueDate = activeChild?.due_date || profile?.child_due_date;
   const childName = activeChild?.name;
-  const pregnancy = dueDate ? getPregnancyInfo(dueDate) : null;
+  const ga = dueDate ? getGestationalAge(dueDate) : null;
+  const pregnancy = ga && ga.daysUntilDue >= 0 ? ga : null;
 
   return (
     <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -70,7 +55,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
 
       {/* Pregnancy Hero Card */}
       {pregnancy && (
-        <Link to={`/PregnancyWeekDetail?week=${pregnancy.currentWeek}`} className="block mx-5 mb-4">
+        <Link to={`/PregnancyWeekDetail?week=${pregnancy.ordinal}`} className="block mx-5 mb-4">
           <div
             className="rounded-3xl overflow-hidden relative flex"
             style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', minHeight: 190 }}
@@ -83,7 +68,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
                 </p>
                 <div className="flex items-baseline gap-1.5 mb-0.5">
                   <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)', lineHeight: 1 }}>
-                    {pregnancy.weeksLeft}
+                    {Math.floor(pregnancy.daysUntilDue / 7)}
                   </span>
                   <span className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
                     {lang === 'da' ? 'uger' : 'weeks'}
@@ -100,8 +85,8 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
                 <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
                 <span className="text-xs font-medium whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>
                   {lang === 'da'
-                    ? `Du er i uge ${pregnancy.currentWeek} (${pregnancy.currentWeek - 1}+${pregnancy.daysRem || 0})`
-                    : `Week ${pregnancy.currentWeek}`}
+                    ? `Du er i uge ${pregnancy.ordinal} (${pregnancy.completedWeeks}+${pregnancy.days})`
+                    : `Week ${pregnancy.ordinal}`}
                 </span>
               </div>
             </div>

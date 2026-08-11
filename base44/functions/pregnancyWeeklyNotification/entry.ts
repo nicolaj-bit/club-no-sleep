@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { getGestationalAge } from '../../shared/getGestationalAge.js';
 
 const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
@@ -45,26 +46,6 @@ const WEEK_TITLES = {
   41: 'Uge 41',
   42: 'Uge 42',
 };
-
-// Beregn graviditetsuge ud fra terminsdato (uge 40 = terminsdagen)
-function getPregnancyWeek(dueDateStr) {
-  const due = new Date(dueDateStr);
-  due.setHours(0, 0, 0, 0);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
-  return 40 - Math.floor(daysUntilDue / 7);
-}
-
-// Er det præcis første dag i en ny uge? (dage til termin deleligt med 7)
-function isNewWeekToday(dueDateStr) {
-  const due = new Date(dueDateStr);
-  due.setHours(0, 0, 0, 0);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const daysUntilDue = Math.round((due - today) / (1000 * 60 * 60 * 24));
-  return daysUntilDue % 7 === 0;
-}
 
 // Er terminsdatoen stadig i fremtiden (barnet ikke født)?
 function isStillPregnant(dueDateStr, birthdateStr) {
@@ -139,16 +120,25 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      if (!isNewWeekToday(dueDate)) {
-        console.log(`${profile.user_email}: Ikke ny uge i dag (terminsdato: ${dueDate})`);
-        continue;
-      }
-
-      const week = getPregnancyWeek(dueDate);
-      if (week < 4 || week > 42) {
+      const ga = getGestationalAge(dueDate);
+      const week = ga?.ordinal;
+      if (!week || week < 4 || week > 42) {
         console.log(`${profile.user_email}: Uge ${week} er uden for interval, springer over`);
         continue;
       }
+
+      // Idempotent pr. uge pr. bruger: send KUN hvis aktuelle ordinal-uge er
+      // STØRRE end sidst notificerede uge. Mangler værdi → 0 (første kørsel).
+      const lastNotified = profile.last_notified_pregnancy_week || 0;
+      if (week <= lastNotified) {
+        console.log(`${profile.user_email}: Uge ${week} allerede notificeret (sidst=${lastNotified})`);
+        continue;
+      }
+
+      // Sæt last_notified FØR afsendelse — guard mod gentagne/samtidige kørsler.
+      await base44.asServiceRole.entities.UserProfile.update(profile.id, {
+        last_notified_pregnancy_week: week,
+      });
 
       const title = WEEK_TITLES[week] || `Uge ${week}`;
       const message = `Uge ${week} ligger klar til dig i appen.`;

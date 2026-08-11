@@ -5,16 +5,9 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
+import { getGestationalAge } from '../../base44/shared/getGestationalAge';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
-
-function getPregnancyWeek(dueDateStr) {
-  if (!dueDateStr) return null;
-  const dueDate = new Date(dueDateStr);
-  const today = new Date();
-  const daysUntilDue = differenceInDays(dueDate, today);
-  return 40 - Math.round(daysUntilDue / 7);
-}
 
 function WeekCard({ week, data, isCurrent }) {
   const { t } = useLanguage();
@@ -98,7 +91,7 @@ export default function PregnancyWeeks() {
   }, []);
 
   const dueDateStr = profile?.child_due_date;
-  const currentWeek = dueDateStr ? getPregnancyWeek(dueDateStr) : null;
+  const currentWeek = dueDateStr ? getGestationalAge(dueDateStr)?.ordinal : null;
   const isPregnant = currentWeek !== null && currentWeek >= 4 && currentWeek <= 42;
   const isPostTerm = currentWeek !== null && currentWeek > 42;
 
