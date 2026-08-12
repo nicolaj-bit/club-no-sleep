@@ -602,7 +602,7 @@ export const PREGNANCY_WEEKS = {
     linkUrl: null
   },
   41: {
-    title: "Uge 41 og 42",
+    title: "Uge 41",
     mainText: [
       "Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.",
       "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.",
@@ -619,7 +619,7 @@ export const PREGNANCY_WEEKS = {
     linkUrl: null
   },
   42: {
-    title: "Uge 41 og 42",
+    title: "Uge 42",
     mainText: [
       "Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.",
       "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.",
