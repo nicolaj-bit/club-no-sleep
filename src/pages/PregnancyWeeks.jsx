@@ -53,7 +53,7 @@ function WeekCard({ week, data, isCurrent }) {
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
           >
             <BookOpen className="w-4 h-4" />
-            <span>{t.pregnancyWeeksReadMore} {week}</span>
+            <span>{t.pregnancyWeeksReadMore} {week === 41 ? '41-42' : week}</span>
           </Link>
         </div>
       )}
