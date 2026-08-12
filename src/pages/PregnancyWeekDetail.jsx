@@ -52,7 +52,7 @@ export default function PregnancyWeekDetail() {
   }, []);
 
   const prevWeek = week > 4 ? week - 1 : null;
-  const nextWeek = week < 42 ? week + 1 : null;
+  const nextWeek = week < 41 ? week + 1 : null;
 
   if (!data) {
     return (

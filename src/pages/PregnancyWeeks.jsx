@@ -121,7 +121,7 @@ export default function PregnancyWeeks() {
                   key={week}
                   week={week}
                   data={PREGNANCY_WEEKS[week]}
-                  isCurrent={isPregnant && week === currentWeek}
+                  isCurrent={isPregnant && (week === currentWeek || (week === 41 && currentWeek === 42))}
                 />
               ))}
             </div>

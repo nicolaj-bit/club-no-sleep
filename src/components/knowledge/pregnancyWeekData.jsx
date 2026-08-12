@@ -602,24 +602,7 @@ export const PREGNANCY_WEEKS = {
     linkUrl: null
   },
   41: {
-    title: "Uge 41",
-    mainText: [
-      "Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.",
-      "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.",
-      "Baby har været længe hos dig, og kroppen har båret jer hele vejen hertil. Det er stort, også selvom du måske mest føler dig træt, utålmodig eller følelsesmæssigt lidt brugt.",
-      "Det kan være fristende at google sig til alverdens alternative metoder, til at sætte fødslen i gang, men hvad kroppen typisk har brug for er ofte bare ro. Ro til at samle kræfter til fødslen."
-    ],
-    partnerText: [
-      "{{motherName}} kan være virkelig træt af at vente nu og det er du måske også. Det er ikke sikkert, hun har brug for optimisme eller kommentarer om, at baby nok kommer snart. Måske har hun bare brug for, at du anerkender, at det er hårdt.",
-      "Hun kan også have brug for ekstra ro, ekstra omsorg og ekstra beskyttelse mod velmenende pres udefra. Vær med til at holde overblikket, lytte til fagpersonerne og sikre, at hun ikke står alene med beslutninger eller bekymringer."
-    ],
-    nextStepText: [
-      "Tal med jordemoder eller fødested om næste skridt, og hold hinanden lidt ekstra tæt i ventetiden. Før I ved af det er hun/han her."
-    ],
-    linkUrl: null
-  },
-  42: {
-    title: "Uge 42",
+    title: "Uge 41-42",
     mainText: [
       "Du er nu over termin, og det kan føles som om tiden opfører sig mærkeligt. Dagene kan blive lange, især hvis kroppen er tung, beskederne tikker ind, og du selv havde håbet, at baby allerede var her. Men baby er ikke forkert på den, og det er du heller ikke.",
       "Hvis du stadig er gravid nu, er du nået til den del af ventetiden, hvor der ofte er ekstra kontakt med jordemoder eller fødested. Det kan være både trygt og mentalt tungt. Måske er du klar. Mere end klar.",
