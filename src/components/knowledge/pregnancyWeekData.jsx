@@ -559,7 +559,7 @@ export const PREGNANCY_WEEKS = {
   38: {
     title: "Uge 38",
     mainText: [
-      "Baby er cirka så lang som en purre og kan komme når som helst nu, men det kan også tage lidt tid endnu. Det er lige præcis det svære ved de sidste uger. Man ved det ikke.",
+      "Baby er cirka så lang som en porre og kan komme når som helst nu, men det kan også tage lidt tid endnu. Det er lige præcis det svære ved de sidste uger. Man ved det ikke.",
       "Måske mærker du flere plukkeveer, mere tryk, ændret energi eller en fornemmelse af, at kroppen arbejder. Måske mærker du ingenting nyt. Begge dele kan være helt almindeligt.",
       "Omverdenen begynder måske også at skrive mere. 'Er der sket noget?' 'Nogen baby?' Det kan være kærligt ment, men det kan også være trættende, når man selv går og venter."
     ],
