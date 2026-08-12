@@ -359,7 +359,7 @@ export const PREGNANCY_WEEKS = {
   25: {
     title: "Uge 25",
     mainText: [
-      "Baby er nu cirka på størrelse med et blomkål. Der bliver mere fylde på kroppen, og baby fortsætter med at øver sig på bevægelser, reflekser og små rytmer inde i maven.",
+      "Baby er nu cirka på størrelse med et rødkål. Der bliver mere fylde på kroppen, og baby fortsætter med at øver sig på bevægelser, reflekser og små rytmer inde i maven.",
       "Du mærker måske mere liv nu. Måske er der bestemte tidspunkter på dagen, hvor baby virker mere aktiv. Måske når du ligger stille. Måske når du lige har spist. Måske præcis når du egentlig havde tænkt dig at sove.",
       "I kroppen kan du måske mærke mere tyngde, ømme hofter, halsbrand eller behov for flere pauser. Det er ikke sikkert, du føles dig besværet hele tiden, men kroppen kan begynde at minde dig om, at den altså har gang i noget ret stort.",
       "Det kan også være en fin tid at begynde at tænke endnu mere på lyd. Musik, din stemme, partners stemme, et instrument eller en sang som går igen, der måske senere bliver en del af putning.",
