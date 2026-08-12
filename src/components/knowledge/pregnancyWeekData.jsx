@@ -422,7 +422,7 @@ export const PREGNANCY_WEEKS = {
   29: {
     title: "Uge 29",
     mainText: [
-      "Baby er cirka på størrelse med en butternut squash og bliver nu hele tiden rundere og stærkere fordi kroppen fortsætter med at lagre fedt. Det er små, vigtige forberedelser til livet udenfor maven. Bevægelserne kan være kraftige nu, og nogle gange kan det føles, som om baby rammer præcis de steder, hvor der ikke var brug for det. Måske bliver du øm på et bestemt ribben eller skal tisse hele tiden.",
+      "Baby er cirka på størrelse med en butternut squash og bliver nu hele tiden rundere og stærkere fordi kroppen fortsætter med at lagre fedt. Det er små, vigtige forberedelser til livet udenfor maven. Bevægelserne kan være kraftige nu. Det kan betyde, at du kan opleve at blive øm, hvis baby er glad for at sparke et bestemt sted, eller at du skal tisse hele tiden.",
       "Maven fylder mere, og det kan blive sværre at finde gode stillinger, både om dagen og om natten. Måske begynder tankerne om tiden efter fødslen også at fylde mere. Hvem bliver baby? Hvordan bliver hverdagen? Hvad vil I gerne tage med videre som familie?"
     ],
     partnerText: [
