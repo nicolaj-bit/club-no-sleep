@@ -4,10 +4,13 @@ import WonderWeeksTab from '@/components/wonderweeks/WonderWeeksTab';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useQueryClient } from '@tanstack/react-query';
+import { useListScrollRestoration } from '@/hooks/useListScrollRestoration';
 
 export default function Knowledge() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
+
+  useListScrollRestoration(true);
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries();

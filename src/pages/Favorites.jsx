@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import PageHeader from '@/components/ui/PageHeader';
+import { useListScrollRestoration } from '@/hooks/useListScrollRestoration';
 
 export default function Favorites() {
   const { t } = useLanguage();
@@ -34,6 +35,8 @@ export default function Favorites() {
     queryFn: () => base44.entities.Favorite.filter({ user_email: user.email }),
     enabled: !!user?.email,
   });
+
+  useListScrollRestoration(!!user?.email && !isLoading);
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Favorite.delete(id),

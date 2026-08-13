@@ -9,7 +9,8 @@ import { toast } from 'sonner';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
-import PageHeader from '@/components/ui/PageHeader';
+import ArticleFloatingNav from '@/components/articles/ArticleFloatingNav';
+import { markArticleVisit } from '@/hooks/useListScrollRestoration';
 import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
 
 // Konverterer plain text (linjeskift) til HTML <p>-tags hvis der ikke er HTML i forvejen
@@ -39,6 +40,8 @@ export default function ArticleDetail() {
   console.log('[ArticleDetail] location.search:', location.search, '| window.search:', window.location.search, '| slug:', articleSlug, '| id:', articleId);
 
   const [translatedArticle, setTranslatedArticle] = useState(null);
+
+  useEffect(() => { markArticleVisit(); }, []);
 
   const { data: article, isLoading } = useQuery({
     queryKey: ['article', articleId, articleSlug],
@@ -141,23 +144,24 @@ Return format:
   const Icon = article.is_faq ? HelpCircle : FileText;
   const isFaq = article.is_faq;
 
+  const renderRightActions = (mode, styles) => (
+    <button
+      onClick={handleShare}
+      className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
+      style={{ backgroundColor: styles.btnBg }}
+    >
+      <Share2 className="w-4 h-4" style={{ color: styles.iconColor }} />
+    </button>
+  );
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader
-        backUrl={createPageUrl('Knowledge')}
-        rightAction={
-          <button
-            onClick={handleShare}
-            className="w-9 h-9 rounded-full flex items-center justify-center active:opacity-60"
-            style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-          >
-            <Share2 className="w-4 h-4" style={{ color: 'var(--color-text-secondary)' }} />
-          </button>
-        }
-      />
+      <ArticleFloatingNav backUrl={createPageUrl('Knowledge')} hasHero={false}>
+        {renderRightActions}
+      </ArticleFloatingNav>
 
       {/* Article body */}
-      <article className="max-w-2xl mx-auto px-5 pt-8 pb-16">
+      <article className="max-w-2xl mx-auto px-5 pb-16" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 64px)' }}>
 
         {/* Category badge */}
         <div className="flex items-center gap-2 mb-5">

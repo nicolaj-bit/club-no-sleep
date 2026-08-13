@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Share2, Bookmark, BookOpen } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Share2, Bookmark, BookOpen } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -14,7 +12,8 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTranslation } from '@/components/hooks/useTranslation';
 import { enUS } from 'date-fns/locale';
-import PageHeader from '@/components/ui/PageHeader';
+import ArticleFloatingNav from '@/components/articles/ArticleFloatingNav';
+import { markArticleVisit } from '@/hooks/useListScrollRestoration';
 
 export default function BlogPost() {
   const { isDark } = useTheme();
@@ -22,27 +21,12 @@ export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const heroRef = useRef(null);
 
   const [isSaved, setIsSaved] = useState(false);
   const [user, setUser] = useState(null);
-  const [headerVisible, setHeaderVisible] = useState(false);
-  const lastScrollY = useRef(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY < 20) {
-        setHeaderVisible(false);
-      } else if (currentY < lastScrollY.current - 5) {
-        setHeaderVisible(true);
-      } else if (currentY > lastScrollY.current + 5) {
-        setHeaderVisible(false);
-      }
-      lastScrollY.current = currentY;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  useEffect(() => { markArticleVisit(); }, []);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(isAuth => {
@@ -149,36 +133,43 @@ export default function BlogPost() {
     ? format(new Date(post.published_date), lang === 'en' ? 'MMMM d, yyyy' : 'd. MMMM yyyy', { locale: lang === 'en' ? enUS : da })
     : null;
 
+  const renderRightActions = (mode, styles) => {
+    const savedFill = isSaved ? 'currentColor' : 'none';
+    return (
+      <>
+        {user && (
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
+            style={{ backgroundColor: styles.btnBg }}
+            onClick={() => saveMutation.mutate()}
+            disabled={saveMutation.isPending}
+          >
+            <Bookmark className="w-4.5 h-4.5" style={{ fill: savedFill, color: styles.iconColor }} />
+          </button>
+        )}
+        <button
+          className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
+          style={{ backgroundColor: styles.btnBg }}
+          onClick={handleShare}
+        >
+          <Share2 className="w-4 h-4" style={{ color: styles.iconColor }} />
+        </button>
+      </>
+    );
+  };
+
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader
-        title={translated?.title || post?.title || ''}
+      <ArticleFloatingNav
         backUrl={createPageUrl('Blog')}
-        rightAction={
-          <div className="flex gap-2">
-            {user && (
-              <button
-                className="w-9 h-9 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-                onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending}
-              >
-                <Bookmark className="w-4 h-4" style={{ fill: isSaved ? 'currentColor' : 'none', color: 'var(--color-text-primary)' }} />
-              </button>
-            )}
-            <button
-              className="w-9 h-9 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-bg-subtle)' }}
-              onClick={handleShare}
-            >
-              <Share2 className="w-4 h-4" style={{ color: 'var(--color-text-primary)' }} />
-            </button>
-          </div>
-        }
-      />
+        hasHero
+        heroRef={heroRef}
+      >
+        {renderRightActions}
+      </ArticleFloatingNav>
 
       {/* Hero */}
-      <div className="relative">
+      <div className="relative" ref={heroRef}>
         <div className="aspect-[16/9] w-full" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
           {post.featured_image ? (
             <img src={post.featured_image} alt={post.title} className="w-full h-full object-cover" />
@@ -189,40 +180,6 @@ export default function BlogPost() {
           )}
           {/* Gradient overlay for top nav readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
-        </div>
-
-        {/* Floating nav */}
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 pt-5">
-          <Link to={createPageUrl('Blog')}>
-            <button
-              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)' }}
-            >
-              <ChevronLeft className="w-5 h-5" style={{ color: isDark ? '#fff' : '#000' }} />
-            </button>
-          </Link>
-          <div className="flex gap-2">
-            {user && (
-              <button
-                className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-                style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)' }}
-                onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending}
-              >
-                <Bookmark
-                  className="w-4.5 h-4.5"
-                  style={{ fill: isSaved ? 'currentColor' : 'none', color: isDark ? '#fff' : '#000' }}
-                />
-              </button>
-            )}
-            <button
-              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)' }}
-              onClick={handleShare}
-            >
-              <Share2 className="w-4 h-4" style={{ color: isDark ? '#fff' : '#000' }} />
-            </button>
-          </div>
         </div>
       </div>
 

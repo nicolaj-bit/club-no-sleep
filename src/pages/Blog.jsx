@@ -13,6 +13,7 @@ import { useTranslation } from '@/components/hooks/useTranslation';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import { useListScrollRestoration } from '@/hooks/useListScrollRestoration';
 
 export default function Blog() {
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
@@ -39,6 +40,8 @@ export default function Blog() {
     queryKey: ['blogPosts'],
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date'),
   });
+
+  useListScrollRestoration(!isLoading);
 
   const { data: categoryRecords = [] } = useQuery({
     queryKey: ['blogCategories'],
