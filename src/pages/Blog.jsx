@@ -41,7 +41,7 @@ export default function Blog() {
     queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date'),
   });
 
-  useListScrollRestoration(!isLoading);
+  useListScrollRestoration(!isLoading && !subscriptionLoading);
 
   const { data: categoryRecords = [] } = useQuery({
     queryKey: ['blogCategories'],

@@ -161,7 +161,7 @@ Return format:
       </ArticleFloatingNav>
 
       {/* Article body */}
-      <article className="max-w-2xl mx-auto px-5 pb-16" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 64px)' }}>
+      <article className="max-w-2xl mx-auto px-5 pb-16" style={{ paddingTop: '64px' }}>
 
         {/* Category badge */}
         <div className="flex items-center gap-2 mb-5">

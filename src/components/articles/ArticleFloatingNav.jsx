@@ -60,7 +60,7 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
       {hasHero && (
         <div
           className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4"
-          style={{ paddingTop: '16px' }}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
         >
           <Link
             to={backUrl}
@@ -78,7 +78,7 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
         className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 transition-transform duration-300"
         style={{
           transform: pinned ? 'translateY(0)' : 'translateY(-120%)',
-          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
+          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)',
           paddingBottom: '10px',
           backgroundColor: isDark ? 'rgba(31,26,23,0.82)' : 'rgba(255,253,249,0.82)',
           backdropFilter: 'blur(16px)',

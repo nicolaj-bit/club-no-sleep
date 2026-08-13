@@ -1,39 +1,49 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useLayoutEffect } from 'react';
 import { useNavigationType } from 'react-router-dom';
 
 const FLAG_KEY = 'justOpenedArticle';
 
 /**
- * Husk listens scroll-position når man navigerer ind i en artikel,
- * og gendan den ved tilbage-navigation. Ved frisk navigation startes i toppen.
+ * Husk listens scroll-position og gendan den ved tilbage-navigation fra en artikel.
  *
- * dataReady: sæt til true når listens data er klar (for at gendanne efter render).
+ * Listerne i appen scroller på `window` (ingen indre scroll-container), så vi
+ * læser/sætter `window.scrollY` / `window.scrollTo`.
+ *
+ * - Gemmer positionen løbende i en ref og flusher til sessionStorage ved unmount
+ *   (før navigationen) samt på `pagehide` — så vi altid har positionen fra FØR
+ *   et evt. scroll-reset udløses.
+ * - Gendanner KUN ved POP (tilbage-nav) OG når der er sat et artikel-flag.
+ *   Frisk navigation ind på listen starter i toppen.
+ * - Gendannelsen poler (rAF) indtil dokumentet er højt nok til at kunne rulle til
+ *   målet — ellers ville et sent re-render (fx ContentLock/subscription eller
+ *   billeder der loader) ødelægge positionen og sætte den tilbage til 0.
+ *
+ * dataReady: sæt til true når listens data/indhold er klar.
  */
 export function useListScrollRestoration(dataReady = true) {
   const navType = useNavigationType();
-  const pathname = window.location.pathname;
-  const key = `listScroll:${pathname}`;
+  const key = `listScroll:${window.location.pathname}`;
+  const lastY = useRef(0);
   const restored = useRef(false);
 
-  // Gem scroll-position løbende mens listen er aktiv
+  // Følg scroll løbende; gem seneste position ved unmount / pagehide.
   useEffect(() => {
-    let t = null;
-    const onScroll = () => {
-      if (t) return;
-      t = setTimeout(() => {
-        try { sessionStorage.setItem(key, String(window.scrollY)); } catch (_) {}
-        t = null;
-      }, 100);
+    lastY.current = window.scrollY;
+    const onScroll = () => { lastY.current = window.scrollY; };
+    const flush = () => {
+      try { sessionStorage.setItem(key, String(lastY.current)); } catch (_) {}
     };
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('pagehide', flush);
     return () => {
       window.removeEventListener('scroll', onScroll);
-      try { sessionStorage.setItem(key, String(window.scrollY)); } catch (_) {}
+      window.removeEventListener('pagehide', flush);
+      flush();
     };
   }, [key]);
 
-  // Gendan ved mount (kun ved tilbage-navigation fra en artikel)
-  useEffect(() => {
+  // Gendan ved mount — venter på dataReady, poler derefter indtil siden er høj nok.
+  useLayoutEffect(() => {
     if (restored.current) return;
     if (!dataReady) return;
 
@@ -44,17 +54,31 @@ export function useListScrollRestoration(dataReady = true) {
     if (navType === 'POP' && flag === '1') {
       let saved = '0';
       try { saved = sessionStorage.getItem(key) || '0'; } catch (_) {}
-      const y = parseInt(saved, 10) || 0;
+      const target = parseInt(saved, 10) || 0;
       restored.current = true;
-      const apply = () => window.scrollTo(0, y);
-      requestAnimationFrame(apply);
-      setTimeout(apply, 60);
-      setTimeout(apply, 220);
-      setTimeout(apply, 450);
+
+      if (target <= 0) {
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      // Poler indtil dokumentet er højt nok til at rulle til mål (max ~1.5s).
+      let n = 0;
+      const step = () => {
+        window.scrollTo(0, target);
+        n += 1;
+        if (window.scrollY >= target - 2 && window.scrollY <= target + 2) return;
+        if (n > 90) return;
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      // Ekstra sikring hvis indhold loader sent (subscription/billeder).
+      setTimeout(() => window.scrollTo(0, target), 500);
+      setTimeout(() => window.scrollTo(0, target), 1100);
     } else {
       try { sessionStorage.removeItem(key); } catch (_) {}
-      window.scrollTo(0, 0);
       restored.current = true;
+      window.scrollTo(0, 0);
     }
   }, [dataReady, key, navType]);
 }
