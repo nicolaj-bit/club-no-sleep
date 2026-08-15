@@ -12,9 +12,8 @@ const FLAG_KEY = 'justOpenedArticle';
  *
  * - Gemmer positionen LØBENDE mens man scroller (debounced onScroll → sessionStorage,
  *   nøgle pr. rute fx `listScroll:/Blog`), plus safety-flush på pagehide/unmount.
- *   Så fanges positionen uanset hvordan man navigerer væk.
- * - Gendanner KUN ved POP (tilbage-nav) når artikel-flaget er sat (frisk navigation
- *   starter i toppen).
+ * - Gendanner ved POP (tilbage-nav) når artikel-flaget er sat. Frisk navigation
+ *   (PUSH) starter i toppen.
  * - Gendannelsen bruger useLayoutEffect + rAF-polling indtil document.scrollHeight
  *   er stort nok til at kunne rulle til mål — håndterer asynkront load af
  *   data/ContentLock/billeder, som ellers nulstiller scroll til 0.

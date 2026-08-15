@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { useTheme } from '@/components/ui/ThemeProvider';
 
@@ -16,6 +16,11 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
   const { isDark } = useTheme();
   const [pinned, setPinned] = useState(!hasHero);
   const lastScrollY = useRef(0);
+  const navigate = useNavigate();
+  const handleBack = () => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate(backUrl);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,13 +67,14 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
           className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4"
           style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 47px)' }}
         >
-          <Link
-            to={backUrl}
+          <button
+            type="button"
+            onClick={handleBack}
             className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
             style={{ backgroundColor: heroBtnBg }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: heroIconColor }} />
-          </Link>
+          </button>
           <div className="flex gap-2">{children('hero', { btnBg: heroBtnBg, iconColor: heroIconColor })}</div>
         </div>
       )}
@@ -86,13 +92,14 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
           borderBottom: '1px solid var(--color-border)',
         }}
       >
-        <Link
-          to={backUrl}
+        <button
+          type="button"
+          onClick={handleBack}
           className="w-10 h-10 rounded-full flex items-center justify-center"
           style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(43,31,22,0.06)' }}
         >
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
-        </Link>
+        </button>
         <div className="flex gap-2">
           {children('pinned', {
             btnBg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(43,31,22,0.06)',
