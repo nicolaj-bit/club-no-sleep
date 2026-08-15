@@ -6,32 +6,38 @@ const FLAG_KEY = 'justOpenedArticle';
 /**
  * Husk listens scroll-position og gendan den ved tilbage-navigation fra en artikel.
  *
- * Listerne i appen scroller på `window` (ingen indre scroll-container), så vi
- * læser/sætter `window.scrollY` / `window.scrollTo`.
+ * SCROLL-ELEMENT: Listerne i appen (Blog, Favorites, Knowledge) scroller på
+ * `window`/document — der er ingen indre div med overflow-y. Så vi læser/sætter
+ * `window.scrollY` og `window.scrollTo`.
  *
- * - Gemmer positionen løbende i en ref og flusher til sessionStorage ved unmount
- *   (før navigationen) samt på `pagehide` — så vi altid har positionen fra FØR
- *   et evt. scroll-reset udløses.
- * - Gendanner KUN ved POP (tilbage-nav) OG når der er sat et artikel-flag.
- *   Frisk navigation ind på listen starter i toppen.
- * - Gendannelsen poler (rAF) indtil dokumentet er højt nok til at kunne rulle til
- *   målet — ellers ville et sent re-render (fx ContentLock/subscription eller
- *   billeder der loader) ødelægge positionen og sætte den tilbage til 0.
+ * - Gemmer positionen LØBENDE mens man scroller (debounced onScroll → sessionStorage,
+ *   nøgle pr. rute fx `listScroll:/Blog`), plus safety-flush på pagehide/unmount.
+ *   Så fanges positionen uanset hvordan man navigerer væk.
+ * - Gendanner KUN ved POP (tilbage-nav) når artikel-flaget er sat (frisk navigation
+ *   starter i toppen).
+ * - Gendannelsen bruger useLayoutEffect + rAF-polling indtil document.scrollHeight
+ *   er stort nok til at kunne rulle til mål — håndterer asynkront load af
+ *   data/ContentLock/billeder, som ellers nulstiller scroll til 0.
  *
- * dataReady: sæt til true når listens data/indhold er klar.
+ * dataReady: sæt true når listens indhold er klar.
  */
 export function useListScrollRestoration(dataReady = true) {
   const navType = useNavigationType();
   const key = `listScroll:${window.location.pathname}`;
-  const lastY = useRef(0);
   const restored = useRef(false);
 
-  // Følg scroll løbende; gem seneste position ved unmount / pagehide.
+  // Løbende gem (debounced) + safety-flush.
   useEffect(() => {
-    lastY.current = window.scrollY;
-    const onScroll = () => { lastY.current = window.scrollY; };
+    let t = null;
+    const save = (y) => { try { sessionStorage.setItem(key, String(y)); } catch (_) {} };
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (t) clearTimeout(t);
+      t = setTimeout(() => save(y), 120);
+    };
     const flush = () => {
-      try { sessionStorage.setItem(key, String(lastY.current)); } catch (_) {}
+      if (t) clearTimeout(t);
+      try { sessionStorage.setItem(key, String(window.scrollY)); } catch (_) {}
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pagehide', flush);
@@ -42,7 +48,7 @@ export function useListScrollRestoration(dataReady = true) {
     };
   }, [key]);
 
-  // Gendan ved mount — venter på dataReady, poler derefter indtil siden er høj nok.
+  // Gendan ved mount.
   useLayoutEffect(() => {
     if (restored.current) return;
     if (!dataReady) return;
@@ -62,7 +68,7 @@ export function useListScrollRestoration(dataReady = true) {
         return;
       }
 
-      // Poler indtil dokumentet er højt nok til at rulle til mål (max ~1.5s).
+      // Poll indtil dokumentet er højt nok til at rulle til mål (max ~1.5s).
       let n = 0;
       const step = () => {
         window.scrollTo(0, target);
@@ -72,7 +78,7 @@ export function useListScrollRestoration(dataReady = true) {
         requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
-      // Ekstra sikring hvis indhold loader sent (subscription/billeder).
+      // Ekstra sikring hvis indhold loader sent.
       setTimeout(() => window.scrollTo(0, target), 500);
       setTimeout(() => window.scrollTo(0, target), 1100);
     } else {
