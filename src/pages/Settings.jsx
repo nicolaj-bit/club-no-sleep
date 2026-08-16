@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
+import { inAppLogout } from '@/lib/inAppLogout';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
@@ -413,7 +414,7 @@ export default function Settings() {
                 await OneSignal.logout();
               }
             } catch {}
-            base44.auth.logout('/');
+            inAppLogout('/');
           }}>
             <Trash2 className="w-4 h-4 mr-2" />
             {t.deletePermanently}

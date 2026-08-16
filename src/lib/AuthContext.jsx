@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
+import { inAppLogout } from '@/lib/inAppLogout';
 
 const AuthContext = createContext();
 
@@ -47,11 +48,8 @@ export const AuthProvider = ({ children }) => {
   const logout = (shouldRedirect = true) => {
     setUser(null);
     setIsAuthenticated(false);
-    if (shouldRedirect) {
-      base44.auth.logout(window.location.href);
-    } else {
-      base44.auth.logout();
-    }
+    // Android: in-app log ud (ingen ekstern redirect). iOS/web: uændret.
+    inAppLogout(shouldRedirect ? window.location.href : undefined);
   };
 
   const navigateToLogin = () => {

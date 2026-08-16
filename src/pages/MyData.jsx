@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { inAppLogout } from '@/lib/inAppLogout';
 import { ArrowLeft, Download, Trash2, MessageSquareX, AlertTriangle, FileText, Upload, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -73,7 +74,7 @@ export default function MyData() {
     toast.success(type === 'all' ? t.accountAndDataDeleted : type === 'chat' ? t.chatHistoryDeleted : t.locationDataDeleted);
     setLoading(null);
     if (type === 'all') {
-      base44.auth.logout(createPageUrl('Home'));
+      inAppLogout(createPageUrl('Home'));
     }
   };
 

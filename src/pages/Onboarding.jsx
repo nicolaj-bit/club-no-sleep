@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
+import { inAppLogout } from '@/lib/inAppLogout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -219,7 +220,7 @@ export default function Onboarding() {
               <button
                 className="w-full text-center text-sm py-2"
                 style={{ color: 'var(--color-text-secondary)' }}
-                onClick={() => base44.auth.logout('/')}
+                onClick={() => inAppLogout('/')}
               >
                 Har du allerede en konto?{' '}
                 <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>

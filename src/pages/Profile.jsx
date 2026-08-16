@@ -29,6 +29,7 @@ import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
+import { inAppLogout } from '@/lib/inAppLogout';
 import PageHeader from '@/components/ui/PageHeader';
 
 export default function Profile() {
@@ -555,7 +556,7 @@ export default function Profile() {
                 await OneSignal.logout();
               }
             } catch {}
-            base44.auth.logout('/');
+            inAppLogout('/');
           }}
           className="w-full py-4 rounded-2xl text-sm font-medium cursor-pointer active:opacity-70 transition-opacity"
           style={{ background: cardBg, border: `1px solid ${cardBorder}`, color: 'var(--color-text-muted)' }}
