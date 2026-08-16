@@ -1,29 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
-
-// Wonder weeks timing in weeks from DUE DATE (never from birth date)
-const WONDER_WEEKS = [
-  { number: 1, week: 5, name: 'Sansernes verden' },
-  { number: 2, week: 8, name: 'Monstre' },
-  { number: 3, week: 12, name: 'Overgange' },
-  { number: 4, week: 19, name: 'Begivenheder' },
-  { number: 5, week: 26, name: 'Relationer' },
-  { number: 6, week: 37, name: 'Kategorier' },
-  { number: 7, week: 46, name: 'Sekvenser' },
-  { number: 8, week: 55, name: 'Programmer' },
-  { number: 9, week: 71, name: 'Principper' },
-  { number: 10, week: 75, name: 'Systemer' },
-];
+import { getCurrentLeapNumber, getLeapByNumber } from '../../shared/getWonderWeek.js';
 
 const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
-
-function getAgeInDays(dueDateStr) {
-  const due = new Date(dueDateStr);
-  due.setHours(0, 0, 0, 0);
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return Math.round((now - due) / (24 * 60 * 60 * 1000));
-}
 
 async function createInAppNotification(base44, email, title, message) {
   await base44.asServiceRole.entities.AppNotification.create({
@@ -54,6 +33,10 @@ async function sendPush(email, title, message) {
     },
     body: JSON.stringify(body),
   });
+  if (!res.ok) {
+    const result = await res.json().catch(() => ({}));
+    console.error(`OneSignal fejl for ${email}:`, JSON.stringify(result));
+  }
   return res.ok;
 }
 
@@ -69,49 +52,41 @@ Deno.serve(async (req) => {
       notifByOwner.set(p.user_email, p.wonderweeks_notifications === true);
     }
 
-    // Grupper børn pr. user_email
-    const childrenByOwner = new Map();
-    for (const child of children) {
-      if (!child.user_email || !child.due_date) continue;
-      if (!childrenByOwner.has(child.user_email)) {
-        childrenByOwner.set(child.user_email, []);
-      }
-      childrenByOwner.get(child.user_email).push(child);
-    }
-
     let sent = 0;
 
-    for (const [email, kids] of childrenByOwner) {
+    for (const child of children) {
+      if (!child.user_email || !child.due_date) continue;
       // Skip hvis brugeren ikke har slået tigerspring-notifikationer til
-      if (!notifByOwner.get(email)) continue;
+      if (!notifByOwner.get(child.user_email)) continue;
 
-      for (const child of kids) {
-        // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
-        const ageDays = getAgeInDays(child.due_date);
-        if (ageDays < 0) continue;
+      // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato.
+      // Samme kilde som app-visningen (base44/shared/getWonderWeek.js).
+      const currentLeap = getCurrentLeapNumber(child.due_date);
+      if (currentLeap === null) continue;
 
-        for (const ww of WONDER_WEEKS) {
-          // Præcis én dag: dagen før tigerspringet starter
-          if (ageDays === (ww.week - 1) * 7) {
-            const title = 'Et nyt tigerspring nærmer sig';
-            const message = 'Baby kan være på vej ind i en periode, hvor verden bliver lidt større. Læs mere i appen.';
-            await createInAppNotification(base44, email, title, message);
-            await sendPush(email, title, message);
-            console.log(`Tigerspring approaching sent til ${email}: ${ww.name} (child ${child.id})`);
-            sent++;
-          }
-
-          // Præcis én dag: startdagen
-          if (ageDays === ww.week * 7) {
-            const title = 'Tigerspring';
-            const message = 'Der ligger en ny udviklingsguide klar til jer.';
-            await createInAppNotification(base44, email, title, message);
-            await sendPush(email, title, message);
-            console.log(`Tigerspring start sent til ${email}: ${ww.name} (child ${child.id})`);
-            sent++;
-          }
-        }
+      // Idempotens pr. spring pr. barn: send KUN hvis aktuelt spring er
+      // ANDERLEDES end sidst notificerede spring. Er det samme spring → send IKKE.
+      if (currentLeap === child.last_notified_leap) {
+        continue;
       }
+
+      // Sæt last_notified_leap FØR afsendelse — guard mod gentagne/samtidige
+      // kørsler, så resten af ugen (eller dagen) ikke sender igen.
+      await base44.asServiceRole.entities.Child.update(child.id, {
+        last_notified_leap: currentLeap,
+      });
+
+      const ww = getLeapByNumber(currentLeap);
+      const title = 'Tigerspring';
+      const message = ww
+        ? `Spring ${currentLeap}: ${ww.name} ligger klar til dig i appen.`
+        : 'Der ligger en ny udviklingsguide klar til jer i appen.';
+
+      await createInAppNotification(base44, child.user_email, title, message);
+      await sendPush(child.user_email, title, message);
+
+      console.log(`Tigerspring ${currentLeap} notifikation sendt til ${child.user_email} (barn ${child.id})`);
+      sent++;
     }
 
     return Response.json({ success: true, sent });

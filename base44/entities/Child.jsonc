@@ -39,6 +39,10 @@
       "default": 0,
       "description": "Sorteringsr\u00e6kkef\u00f8lge"
     },
+    "last_notified_leap": {
+      "type": "number",
+      "description": "Sidste tigerspring-nummer der er sendt notifikation om (idempotens pr. spring pr. barn)"
+    },
     "description": {
       "type": "string",
       "maxLength": 1000,

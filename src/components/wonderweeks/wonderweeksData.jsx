@@ -1,5 +1,16 @@
 // Tigerspring data - baseret på "The Wonder Weeks" af Hetty van de Rijt og Frans Plooij
 // Alle uger er beregnet fra terminsdato (40 uger fra sidst menstruation)
+//
+// Kernen (number, weekStart, weekEnd, navn) og selve beregningen af hvilket
+// spring barnet er i, kommer fra base44/shared/getWonderWeek.js — den samme
+// kilde som backend-notifikationen (checkWonderWeeks) bruger, så app-visning
+// og notifikation er enige. Herunder er kun de rige visningsdata (emoji,
+// farve, beskrivelser, tips, articleSlug).
+
+import {
+  getAgeInWeeksFromDue,
+  getLeapNumberByAge,
+} from '../../../base44/shared/getWonderWeek';
 
 export const WONDER_WEEKS = [
   {
@@ -227,30 +238,27 @@ export const WONDER_WEEKS = [
 export const wonderWeeks = WONDER_WEEKS;
 
 /**
- * Beregn barnets alder i uger fra terminsdato (eller fødselsdato som fallback)
- * Wonder Weeks bruger terminsdato som udgangspunkt
+ * Beregn barnets alder i uger fra terminsdato.
+ * Wonder Weeks bruger terminsdato som udgangspunkt. Delegerer til den delte
+ * kilde (base44/shared/getWonderWeek.js).
  */
 export function getAgeInWeeks(dueDate, birthDate) {
-  // Tigerspring beregnes ALTID ud fra terminsdato — aldrig fødselsdato
-  const referenceDate = dueDate ? new Date(dueDate) : null;
-  if (!referenceDate) return null;
-  const today = new Date();
-  const diffMs = today - referenceDate;
-  const diffWeeks = diffMs / (1000 * 60 * 60 * 24 * 7);
-  return Math.floor(diffWeeks);
+  // birthDate ignoreres med vilje — tigerspring regnes altid fra terminsdato.
+  return getAgeInWeeksFromDue(dueDate);
 }
 
 /**
- * Find det aktuelle eller næste tigerspring baseret på alder i uger
+ * Find det aktuelle eller næste tigerspring baseret på alder i uger.
+ * Afgørelsen om hvilket spring der er "aktivt" kommer fra den delte kilde
+ * (getLeapNumberByAge), så app-visning og notifikation er enige.
  */
 export function getCurrentWonderWeek(ageInWeeks) {
   if (ageInWeeks === null || ageInWeeks < 0) return null;
 
-  // Er barnet i et spring?
-  const current = WONDER_WEEKS.find(
-    ww => ageInWeeks >= ww.weekStart - 1 && ageInWeeks <= ww.weekEnd + 1
-  );
-  if (current) {
+  // Er barnet i et spring? (samme vindue som backend-notifikationen)
+  const leapNumber = getLeapNumberByAge(ageInWeeks);
+  if (leapNumber !== null) {
+    const current = WONDER_WEEKS.find(ww => ww.number === leapNumber);
     const weeksLeft = current.weekEnd - ageInWeeks;
     return { ...current, status: 'active', weeksLeft: Math.max(0, weeksLeft) };
   }
