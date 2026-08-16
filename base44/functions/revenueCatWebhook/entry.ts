@@ -1,7 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 /**
- * RevenueCat webhook — synkroniserer iOS IAP til UserProfile.subscription_status
+ * RevenueCat webhook — synkroniserer IAP (iOS App Store OG Google Play) til UserProfile.subscription_status
+ * Webhooken er platform-neutral: events fra både App Store og Play Store håndteres
+ * ud fra event.type og entitlement, ikke ud fra platform/store.
  * Konfigurér i RevenueCat dashboard → Project Settings → Integrations → Webhooks
  * URL: <din app url>/api/functions/revenueCatWebhook
  * Authorization header: sæt REVENUECAT_WEBHOOK_SECRET i app secrets
