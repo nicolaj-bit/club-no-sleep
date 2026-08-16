@@ -178,7 +178,7 @@
 
 /* ── Prevent horizontal overflow on all screens ── */
 html, body, #root {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
   box-sizing: border-box;
 }
