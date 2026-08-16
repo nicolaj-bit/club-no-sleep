@@ -6,7 +6,7 @@ import { base44 } from '@/api/base44Client';
 const RC_API_KEY_IOS = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 // TODO: indsæt den rigtige Android-nøgle fra RevenueCat, når Play Console-appen
 // og abonnementsproduktet er sat op (se RevenueCat dashboard > Project settings > API keys).
-const RC_API_KEY_ANDROID = 'goog_REPLACE_WITH_ANDROID_KEY';
+const RC_API_KEY_ANDROID = 'goog_UDgCHKbxGVPzooBzJOglqUUAtnS';
 
 function getApiKeyForPlatform() {
   return Capacitor.getPlatform() === 'android' ? RC_API_KEY_ANDROID : RC_API_KEY_IOS;
