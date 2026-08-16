@@ -65,17 +65,17 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
       {hasHero && (
         <div
           className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4"
-          style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 47px)' }}
+          style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 47px)', pointerEvents: 'none' }}
         >
           <button
             type="button"
             onClick={handleBack}
             className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-            style={{ backgroundColor: heroBtnBg }}
+            style={{ backgroundColor: heroBtnBg, pointerEvents: 'auto' }}
           >
             <ChevronLeft className="w-5 h-5" style={{ color: heroIconColor }} />
           </button>
-          <div className="flex gap-2">{children('hero', { btnBg: heroBtnBg, iconColor: heroIconColor })}</div>
+          <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>{children('hero', { btnBg: heroBtnBg, iconColor: heroIconColor })}</div>
         </div>
       )}
 
@@ -90,17 +90,18 @@ export default function ArticleFloatingNav({ backUrl, hasHero = false, heroRef =
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--color-border)',
+          pointerEvents: 'none',
         }}
       >
         <button
           type="button"
           onClick={handleBack}
           className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(43,31,22,0.06)' }}
+          style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(43,31,22,0.06)', pointerEvents: 'auto' }}
         >
           <ChevronLeft className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
         </button>
-        <div className="flex gap-2">
+        <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
           {children('pinned', {
             btnBg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(43,31,22,0.06)',
             iconColor: 'var(--color-text-primary)',
