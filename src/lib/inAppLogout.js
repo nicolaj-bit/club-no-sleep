@@ -1,10 +1,10 @@
-import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
+import { isNativeAndroid } from '@/lib/platform';
 
 /**
  * Platform-bevidst log ud.
  *
- * ANDROID (KUN her er adfærden ændret):
+ * ANDROID (inkl. test-app hvor Capacitor-broen ikke detekteres):
  *   Logger ud UDEN at kalde base44.auth.logout(), som ellers sætter
  *   window.location.href til en ekstern auth-URL og udløser Androids
  *   "open external link?"-prompt. I stedet ryddes den lokale session/token,
@@ -13,9 +13,12 @@ import { base44 } from '@/api/base44Client';
  *
  * iOS & WEB (urørt — 100 % som før):
  *   Kalder base44.auth.logout(redirectUrl) præcis som den eksisterende kode.
+ *
+ * Detektering bruger isNativeAndroid() (Capacitor + UA-fallback), så også
+ * Android-WebView'er hvor broen ikke er injiceret (fx test-app) fanges.
  */
 export async function inAppLogout(redirectUrl) {
-  if (Capacitor.getPlatform() === 'android') {
+  if (isNativeAndroid()) {
     try {
       localStorage.removeItem('base44_access_token');
       localStorage.removeItem('token');
