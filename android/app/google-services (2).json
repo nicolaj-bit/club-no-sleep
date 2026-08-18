@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "77481804419",
+    "project_id": "club-no-sleep",
+    "storage_bucket": "club-no-sleep.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77481804419:android:0e650b2a527c54a84a91b6",
+        "android_client_info": {
+          "package_name": "com.base699f47a86e7e0a874d1159ed.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaqYnr6TLzvMKddPMhFjRAGoJ52Qap-0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
