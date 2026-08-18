@@ -1,0 +1,41 @@
+{
+  "name": "Kalender - Daglig motor (dags-p\u00e5mindelser)",
+  "description": "K\u00f8rer dagligt kl 08:00 \u2014 sender notifikationer for aftaler i dag og i morgen, plus graviditetsuger, tigerspring og milep\u00e6le.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 6 * * *",
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "kalender_daglig_motor_dags_p_mindelser",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "calendarEngine",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}

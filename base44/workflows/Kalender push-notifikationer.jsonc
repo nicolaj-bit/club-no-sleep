@@ -1,0 +1,41 @@
+{
+  "name": "Kalender push-notifikationer",
+  "description": "Sender push-notifikationer til begge for\u00e6ldre dagen f\u00f8r og 30 min f\u00f8r kalenderaftaler",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 5,
+      "interval_unit": "minutes",
+      "interval_anchor": "2026-04-06T08:57:14.150000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "kalender_push_notifikationer",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "calendarNotifications",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  }
+}
