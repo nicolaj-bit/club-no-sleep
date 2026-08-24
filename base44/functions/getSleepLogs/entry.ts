@@ -42,12 +42,17 @@ export default async function(req) {
     // Hent HELE historikken for ejeren, nyeste først
     const logs = await base44.asServiceRole.entities.SleepLog.filter(
       { user_email: ownerEmail },
-      '-date',
+      '-created_date',
       1000
     );
 
+    const activeSession = (logs || []).find(
+      l => l.session_status === 'active_sleep' || l.session_status === 'active_awake'
+    ) || null;
+
     return Response.json({
       sleep_logs: logs || [],
+      active_session: activeSession,
       is_invited: !!(profile?.is_invited),
       has_access: true,
     });

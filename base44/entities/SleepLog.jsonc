@@ -4,7 +4,7 @@
   "properties": {
     "user_email": {
       "type": "string",
-      "description": "Reference til bruger"
+      "description": "Ejerens email"
     },
     "child_id": {
       "type": "string",
@@ -17,27 +17,79 @@
     "date": {
       "type": "string",
       "format": "date",
-      "description": "Dato for log"
+      "description": "Dato for session (afledt af session_start)"
     },
     "child_age_months": {
       "type": "number",
       "description": "Barnets alder i m\u00e5neder"
     },
+    "session_status": {
+      "type": "string",
+      "enum": [
+        "active_sleep",
+        "active_awake",
+        "completed"
+      ],
+      "description": "Sessionens status: aktiv sovende, aktiv v\u00e5gen, eller afsluttet"
+    },
+    "session_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Sessionens start-tidspunkt"
+    },
+    "session_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Sessionens slut-tidspunkt (null mens aktiv)"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "sleep",
+              "awake"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "null for den \u00e5bne/nuv\u00e6rende periode"
+          }
+        }
+      },
+      "description": "Liste af s\u00f8vn- og v\u00e5gen-perioder. Den sidste uden 'end' er den nuv\u00e6rende."
+    },
+    "created_by_email": {
+      "type": "string",
+      "description": "Email p\u00e5 den bruger der oprettede eller \u00e6ndrede sessionen"
+    },
+    "parent_note": {
+      "type": "string",
+      "description": "Noter fra for\u00e6lder"
+    },
     "bedtime": {
       "type": "string",
-      "description": "Sengetid (HH:mm)"
+      "description": "Legacy: sengetid (HH:mm)"
     },
     "sleep_time": {
       "type": "string",
-      "description": "Tid barnet faldt i s\u00f8vn (HH:mm)"
+      "description": "Legacy: faldt i s\u00f8vn (HH:mm)"
     },
     "wake_time": {
       "type": "string",
-      "description": "Tid barnet v\u00e5gnede for dagen (HH:mm)"
+      "description": "Legacy: v\u00e5gnede (HH:mm)"
     },
     "minutes_to_sleep": {
       "type": "number",
-      "description": "Minutter fra lagt i seng til faldt i s\u00f8vn"
+      "description": "Legacy: minutter til at falde i s\u00f8vn"
     },
     "night_wakings": {
       "type": "array",
@@ -52,7 +104,7 @@
           }
         }
       },
-      "description": "Natlige opv\u00e5gninger"
+      "description": "Legacy: natlige opv\u00e5gninger"
     },
     "naps": {
       "type": "array",
@@ -67,7 +119,7 @@
           }
         }
       },
-      "description": "Lure i l\u00f8bet af dagen"
+      "description": "Legacy: lure"
     },
     "sleep_method": {
       "type": "string",
@@ -79,7 +131,7 @@
         "barnevogn",
         "med_for\u00e6lder"
       ],
-      "description": "Hvordan faldt barnet i s\u00f8vn"
+      "description": "Legacy: hvordan barnet faldt i s\u00f8vn"
     },
     "bedtime_mood": {
       "type": "string",
@@ -89,20 +141,7 @@
         "meget_tr\u00e6t",
         "overtr\u00e6t"
       ],
-      "description": "Hum\u00f8r f\u00f8r sengetid"
-    },
-    "parent_note": {
-      "type": "string",
-      "description": "Noter fra for\u00e6lder"
-    },
-    "created_by_email": {
-      "type": "string",
-      "description": "Email p\u00e5 den bruger der oprettede loggen (for inviterede partnere)"
-    },
-    "description": {
-      "type": "string",
-      "maxLength": 1000,
-      "description": "Valgfri beskrivelse"
+      "description": "Legacy: hum\u00f8r f\u00f8r sengetid"
     }
   },
   "required": [
