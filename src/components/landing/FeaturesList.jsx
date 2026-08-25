@@ -84,8 +84,8 @@ function FeatureCard({ f, imageUrl, t }) {
         ) : f.icon}
       </div>
       <div style={{ paddingTop: 5 }}>
-        <p style={{ color: '#1E140A', fontSize: '0.88rem', fontWeight: 600, margin: '0 0 6px', lineHeight: 1.3 }}>{t[f.titleKey]}</p>
-        <p style={{ color: '#7A665A', fontSize: '0.78rem', lineHeight: 1.72, margin: 0 }}>{t[f.descKey]}</p>
+        <p style={{ color: '#1E140A', fontSize: '0.92rem', fontWeight: 600, margin: '0 0 6px', lineHeight: 1.3 }}>{t[f.titleKey]}</p>
+        <p style={{ color: '#3A2B22', fontSize: '0.82rem', lineHeight: 1.72, margin: 0 }}>{t[f.descKey]}</p>
       </div>
     </div>
   );
