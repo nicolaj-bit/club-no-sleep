@@ -56,6 +56,41 @@ export default function Landing() {
     showInAppLogin('/app');
   };
 
+  const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
+  const storeBtnStyle = {
+    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10,
+    padding: '10px 12px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', minHeight: 48
+  };
+
+  const appStoreBtn = (
+    <a key="appstore" href="https://apps.apple.com/dk/app/id6764388095" target="_blank" rel="noopener noreferrer" style={storeBtnStyle}>
+      <svg width="18" height="18" viewBox="0 0 814 1000" fill="currentColor">
+        <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z" />
+      </svg>
+      <div style={{ textAlign: 'left' }}>
+        <div style={{ fontSize: '0.6rem', opacity: 0.7, lineHeight: 1 }}>{t.landingDownloadNow}</div>
+        <div style={{ fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.2 }}>{t.landingAppStoreLabel}</div>
+      </div>
+    </a>
+  );
+
+  const googlePlayBtn = (
+    <a key="googleplay" href="https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app" target="_blank" rel="noopener noreferrer" style={storeBtnStyle}>
+      <svg width="18" height="18" viewBox="0 0 512 512">
+        <path d="M48 64.4v383.2c0 13.8 7.2 26.4 18.8 33.4l244.4-225L66.8 31C55.2 38 48 50.6 48 64.4z" fill="#4285F4"/>
+        <path d="M385.4 174.2l-60.1 60.1 60.1 60.1 62.5-36c19.8-11.5 19.8-40.5 0-52l-62.5-36.2z" fill="#34A853"/>
+        <path d="M66.8 481c5.8 3.5 12.6 5.5 19.8 5.5 4.7 0 9.4-.9 13.8-2.6l287.6-112c19.8-7.7 19.8-34.1 0-41.8L100.4 293.5c-4.4-1.7-9.1-2.6-13.8-2.6-7.2 0-14 2-19.8 5.5L66.8 481z" fill="#FBBC04"/>
+        <path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1z" fill="#EA4335"/>
+      </svg>
+      <div style={{ textAlign: 'left' }}>
+        <div style={{ fontSize: '0.6rem', opacity: 0.7, lineHeight: 1 }}>{t.landingDownloadNow}</div>
+        <div style={{ fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.2 }}>{t.landingGooglePlayLabel}</div>
+      </div>
+    </a>
+  );
+
   return (
     <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", backgroundColor: '#F5EDE0', overflowX: 'hidden', minHeight: '100dvh' }}>
 
@@ -65,7 +100,7 @@ export default function Landing() {
           <span className="lnd-nav-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.15rem', fontWeight: 600, color: '#2B1F16', letterSpacing: '0.04em' }}>CLUB NO SLEEP</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuth ?
-            <button onClick={() => window.location.href = '/app'} style={btnDark}>{t.landingOpenApp}</button> :
+            <button onClick={() => window.location.href = '/app'} style={btnOutline}>{t.landingOpenApp}</button> :
             <button onClick={handleBecomeMember} style={btnDark}>{t.landingBecomeMember}</button>
             }
           </div>
@@ -92,11 +127,13 @@ export default function Landing() {
               {t.landingHero1Title2}
             </h1>
 
-            {/* Heart */}
-            <div style={{ marginBottom: '1.4rem' }}>
-              <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+            {/* Divider with heart */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.4rem' }}>
+              <span style={{ height: 1, width: 50, backgroundColor: '#D4B89A' }} />
+              <svg width="14" height="12" viewBox="0 0 18 16" fill="none">
                 <path d="M9 15C9 15 1 9.5 1 4.5C1 2.5 2.5 1 4.5 1C6 1 7.5 2 9 3.5C10.5 2 12 1 13.5 1C15.5 1 17 2.5 17 4.5C17 9.5 9 15 9 15Z" fill="#C8A882" stroke="#C8A882" strokeWidth="0.5" />
               </svg>
+              <span style={{ height: 1, width: 50, backgroundColor: '#D4B89A' }} />
             </div>
 
             <p className="lnd-hero1-p" style={{ color: '#4A3525', fontSize: '0.93rem', lineHeight: 1.9, maxWidth: 420, margin: '0 0 0.6rem' }}>
@@ -106,36 +143,22 @@ export default function Landing() {
               <strong>{t.landingHero1P2Bold}</strong> {t.landingHero1P2}
             </p>
 
-            <div className="lnd-hero1-cta" style={{ display: 'flex', gap: 12, flexDirection: 'column' }}>
-              <div style={{ display: 'flex', gap: 12 }}>
-                <a href="https://apps.apple.com/dk/app/id6764388095" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-                  <svg width="22" height="22" viewBox="0 0 814 1000" fill="currentColor">
-                    <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-42.3-150.3-109.2c-44.3-64.7-82.6-170.4-82.6-271.1 0-169.6 110.7-259.3 219.7-259.3 75.4 0 138.4 45.5 186 45.5 45.5 0 116.9-48.1 200.9-48.1 32.5 0 116.3 3.2 171.8 73.9zm-215.6-104.3c31.2-37 52.3-88.7 52.3-140.3 0-7.1-.6-14.3-1.9-20.1-49.4 1.9-108.2 33.1-143.7 75.4-27.6 31.9-53.5 83.6-53.5 136.2 0 7.7 1.3 15.5 1.9 17.9 3.2.6 8.4 1.3 13.6 1.3 44.3 0 98.5-29.9 131.3-70.4z" />
-                  </svg>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingAppStoreLabel}</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{t.landingDownloadNow}</div>
-                  </div>
-                </a>
-                <a href="https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app" target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: '#3A2416', color: '#F5EFE9', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', textDecoration: 'none' }}>
-                  <svg width="22" height="22" viewBox="0 0 512 512">
-                    <path d="M48 64.4v383.2c0 13.8 7.2 26.4 18.8 33.4l244.4-225L66.8 31C55.2 38 48 50.6 48 64.4z" fill="#4285F4"/>
-                    <path d="M385.4 174.2l-60.1 60.1 60.1 60.1 62.5-36c19.8-11.5 19.8-40.5 0-52l-62.5-36.2z" fill="#34A853"/>
-                    <path d="M66.8 481c5.8 3.5 12.6 5.5 19.8 5.5 4.7 0 9.4-.9 13.8-2.6l287.6-112c19.8-7.7 19.8-34.1 0-41.8L100.4 293.5c-4.4-1.7-9.1-2.6-13.8-2.6-7.2 0-14 2-19.8 5.5L66.8 481z" fill="#FBBC04"/>
-                    <path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1z" fill="#EA4335"/>
-                  </svg>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Google Play</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{t.landingDownloadNow}</div>
-                  </div>
-                </a>
+            <div className="lnd-hero1-cta" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {isAndroid ? [googlePlayBtn, appStoreBtn] : [appStoreBtn, googlePlayBtn]}
               </div>
-              <button className="lnd-hero1-btn" onClick={handleBecomeMember} style={btnBrown}>{t.landingBecomeMember}</button>
-              
+              <button onClick={handleBecomeMember} style={{ background: 'none', border: 'none', color: '#7A665A', fontSize: '0.85rem', fontWeight: 500, cursor: 'pointer', padding: '6px 0', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationColor: '#D4B89A' }}>
+                {t.landingBecomeMember} →
+              </button>
             </div>
           </div>
 
-          {/* Right — app mockup image (tom — indsæt selv via AdminLanding) */}
+          {/* Desktop phone mockup */}
+          {phoneUrls.a && (
+            <div className="lnd-hero1-phone-desktop" style={{ flexShrink: 0, width: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <img src={phoneUrls.a} alt="Club No Sleep app" style={{ width: '100%', maxWidth: 280, height: 'auto', borderRadius: 28, boxShadow: '0 25px 70px -15px rgba(58,36,22,0.35)' }} />
+            </div>
+          )}
 
           {/* Mobile hero image — kun synlig på mobil, vælges via AdminLanding */}
           {hero1Image && (
@@ -347,13 +370,13 @@ export default function Landing() {
                     <path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1z" fill="#EA4335"/>
                   </svg>
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>Google Play</div>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{t.landingGooglePlayLabel}</div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{t.landingDownloadNow}</div>
                   </div>
                 </a>
               </div>
-              <button className="lnd-partner-btn" onClick={handleBecomeMember} style={{ backgroundColor: '#7A5535', color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer' }}>
-                {t.landingBecomeMember}
+              <button className="lnd-partner-btn" onClick={handleBecomeMember} style={{ backgroundColor: 'transparent', color: '#3E2810', border: '1.5px solid #3E2810', borderRadius: 10, padding: '12px 32px', fontSize: '0.88rem', fontWeight: 600, cursor: 'pointer' }}>
+                {t.landingBecomeMember} →
               </button>
             </div>
           </div>
@@ -507,6 +530,7 @@ export default function Landing() {
         .lnd-phone-a { width: 220px !important; height: 450px !important; }
         .lnd-phone-b { width: 200px !important; height: 415px !important; }
         .lnd-hero1-mobile-img { display: none !important; }
+        .lnd-hero1-phone-desktop { display: flex !important; }
 
         /* ── "KOM MED I KLUBBEN" ── */
         .lnd-klub-inner { padding: 3rem 4rem 3rem 3.5rem !important; gap: 4.5rem !important; flex-direction: row !important; }
@@ -521,6 +545,7 @@ export default function Landing() {
         @media (max-width: 900px) {
            .lnd-hero1-phones { display: none !important; }
            .lnd-hero1-mobile-img { display: block !important; }
+           .lnd-hero1-phone-desktop { display: none !important; }
            .lnd-hero1-section { padding: 4rem 1.5rem 4rem !important; }
            .lnd-hero1-inner { align-items: flex-start !important; }
            .lnd-hero1-copy { flex: 0 0 100% !important; }
@@ -546,8 +571,8 @@ export default function Landing() {
            .lnd-hero1-h1 { font-size: 1.85rem !important; line-height: 1.2 !important; margin-bottom: 1rem !important; }
            .lnd-hero1-p { font-size: 0.82rem !important; line-height: 1.7 !important; max-width: 100% !important; }
            .lnd-hero1-cta { width: 100% !important; text-align: left !important; flex-direction: column !important; }
-           .lnd-hero1-cta > div:first-child { flex-direction: column !important; }
-           .lnd-hero1-cta a { flex: 0 0 auto !important; width: 100% !important; }
+           .lnd-hero1-cta > div:first-child { flex-direction: row !important; }
+           .lnd-hero1-cta a { flex: 1 1 0 !important; width: auto !important; }
            .lnd-hero1-btn { width: 100% !important; padding: 14px !important; font-size: 0.95rem !important; border-radius: 12px !important; }
 
           /* Klub */
@@ -590,6 +615,11 @@ const btnDark = {
 const btnBrown = {
   backgroundColor: '#7A5535', color: '#fff', border: 'none',
   borderRadius: 10, padding: '14px 34px', fontSize: '0.92rem',
+  fontWeight: 600, cursor: 'pointer'
+};
+const btnOutline = {
+  backgroundColor: 'transparent', color: '#3A2416', border: '1.5px solid #3A2416',
+  borderRadius: 8, padding: '8px 18px', fontSize: '0.87rem',
   fontWeight: 600, cursor: 'pointer'
 };
 const tiny = (color) => ({ color, fontSize: '0.34rem', margin: 0 });
