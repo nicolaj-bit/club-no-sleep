@@ -455,6 +455,26 @@ const translations = {
     landingCopyright: '© 2025 Club No Sleep · Alle rettigheder forbeholdes',
     landingMadeWithLove: 'Skabt med ❤️ i Danmark',
 
+    // Features (landing page)
+    featPregnancyTitle: 'Graviditet uge for uge',
+    featPregnancyDesc: 'Følg din graviditet fra uge til uge med daglig opdatering om babyen og din krop.',
+    featMilestonesTitle: 'Milepæle',
+    featMilestonesDesc: 'Gem og del de store øjeblikke med billeder — dit barns første smil, tand, skridt.',
+    featWonderWeeksTitle: 'Tigerspring',
+    featWonderWeeksDesc: 'Få besked når dit barn går ind i et nyt udviklingsspring — med tegn og tips.',
+    featNightLightTitle: 'Nattensomhed',
+    featNightLightDesc: 'Et trygt rum for mødre der er vågne om natten — I er ikke alene.',
+    featCafesTitle: 'Babyvenlige caféer',
+    featCafesDesc: 'Find caféer i dit område hvor det er trygt at amme og være med baby.',
+    featCalendarTitle: 'Fælles kalender',
+    featCalendarDesc: 'Del kalender med din partner — jordemoder, scanninger og aftaler ét sted.',
+    featSleepLogTitle: 'Live søvnlog',
+    featSleepLogDesc: 'Følg barnets søvn i realtid med timer-logik der virker på tværs af app-lukning.',
+    featCommunityTitle: 'Fællesskab',
+    featCommunityDesc: 'Mød andre mødre i nærheden, stil spørgsmål og find svar sammen.',
+    featChoicesTitle: 'Valg & frihed',
+    featChoicesDesc: 'Alt er frivilligt — du vælger selv hvad du vil dele og bruge i appen.',
+
     // AboutUs
     editLabelPrefix: 'Rediger',
     saved: 'Gemt',
@@ -1507,6 +1527,26 @@ const translations = {
     landingGetTheApp: 'Get the app',
     landingCopyright: '© 2025 Club No Sleep · All rights reserved',
     landingMadeWithLove: 'Made with ❤️ in Denmark',
+
+    // Features (landing page)
+    featPregnancyTitle: 'Pregnancy week by week',
+    featPregnancyDesc: 'Follow your pregnancy week by week with daily updates on your baby and body.',
+    featMilestonesTitle: 'Milestones',
+    featMilestonesDesc: 'Save and share the big moments with photos — your baby\'s first smile, tooth, step.',
+    featWonderWeeksTitle: 'Wonder weeks',
+    featWonderWeeksDesc: 'Get notified when your child enters a new developmental leap — with signs and tips.',
+    featNightLightTitle: 'Night loneliness',
+    featNightLightDesc: 'A safe space for moms awake at night — you are not alone.',
+    featCafesTitle: 'Baby-friendly cafes',
+    featCafesDesc: 'Find cafes in your area where it\'s safe to nurse and be with your baby.',
+    featCalendarTitle: 'Shared calendar',
+    featCalendarDesc: 'Share a calendar with your partner — midwife, scans and appointments in one place.',
+    featSleepLogTitle: 'Live sleep log',
+    featSleepLogDesc: 'Track your baby\'s sleep in real time with timer logic that survives app restarts.',
+    featCommunityTitle: 'Community',
+    featCommunityDesc: 'Meet other moms nearby, ask questions and find answers together.',
+    featChoicesTitle: 'Choice & freedom',
+    featChoicesDesc: 'Everything is voluntary — you choose what to share and use in the app.',
 
     // AboutUs
     editLabelPrefix: 'Edit',
