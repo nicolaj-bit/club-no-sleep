@@ -185,6 +185,83 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ════════════════════════════════
+              MEDLEMSKAB — Paywall (sidens klimaks)
+              MÅ KUN vises på web-landingssiden — aldrig i native app.
+           ════════════════════════════════ */}
+      <section id="medlemskab" style={{ backgroundColor: '#EDE0D0', padding: '5rem 2.5rem' }}>
+        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+          <div style={{
+            backgroundColor: '#FFFDF9',
+            borderRadius: 28,
+            padding: '3rem 2.4rem 2.4rem',
+            boxShadow: '0 20px 60px -20px rgba(58,36,22,0.15)',
+            border: '1px solid rgba(200,168,130,0.2)',
+            textAlign: 'center'
+          }}>
+            {/* Heading */}
+            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.2rem', fontWeight: 400, color: '#1E140A', margin: '0 0 0.6rem', lineHeight: 1.2 }}>
+              {t.landingPaywallTitle}
+            </h2>
+            {/* Subtitle */}
+            <p style={{ color: '#7A665A', fontSize: '0.88rem', lineHeight: 1.6, margin: '0 0 2rem', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+              {t.landingPaywallSubtitle}
+            </p>
+            {/* Price */}
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.3rem' }}>
+              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '3rem', fontWeight: 500, color: '#3A2416', lineHeight: 1 }}>59</span>
+              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.3rem', fontWeight: 400, color: '#B08D72' }}>kr.</span>
+              <span style={{ color: '#9A7A6A', fontSize: '0.82rem' }}>{t.landingPerMonth}</span>
+            </div>
+            <p style={{ color: '#9A7A6A', fontSize: '0.72rem', fontStyle: 'italic', margin: '0 0 2.2rem' }}>{t.landingPaywallNoBinding}</p>
+
+            {/* Divider */}
+            <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #EDE4DB, transparent)', margin: '0 0 1.8rem' }} />
+
+            {/* Features */}
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.2rem', display: 'flex', flexDirection: 'column', gap: 14, textAlign: 'left' }}>
+              {[t.landingPaywallFeature1, t.landingPaywallFeature2, t.landingPaywallFeature3, t.landingPaywallFeature4, t.landingPaywallFeature5].map((f, i) => (
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, color: '#3A2412', fontSize: '0.86rem', lineHeight: 1.5 }}>
+                  <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg, #C8A882, #B08D72)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.5 6.5L5 9L9.5 3.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA — download, ikke betaling */}
+            <a href={downloadUrl} target="_blank" rel="noopener noreferrer" style={{
+              display: 'block',
+              width: '100%',
+              background: 'linear-gradient(135deg, #C8A882 0%, #B08D72 100%)',
+              color: '#2B1A0F',
+              border: 'none',
+              borderRadius: 14,
+              padding: '16px',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              letterSpacing: '0.02em',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              boxShadow: '0 8px 20px -6px rgba(200,168,130,0.5)',
+              textAlign: 'center'
+            }}>
+              {t.landingPaywallCta}
+            </a>
+          </div>
+
+          {/* Legal links */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: '1.6rem' }}>
+            <a href="/Terms" style={{ color: '#9A7A6A', fontSize: '0.78rem', textDecoration: 'none' }}>{t.landingTerms}</a>
+            <span style={{ color: '#D4B89A' }}>·</span>
+            <a href="/Privacy" style={{ color: '#9A7A6A', fontSize: '0.78rem', textDecoration: 'none' }}>{t.landingPrivacy}</a>
+          </div>
+        </div>
+      </section>
+
       {/* Gamle paywall-sektion fjernet — ny paywall findes længere nede som #medlemskab */}
 
       {/* ════════════════════════════════
@@ -378,83 +455,6 @@ export default function Landing() {
               </div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════
-              MEDLEMSKAB — Paywall (sidens klimaks)
-              MÅ KUN vises på web-landingssiden — aldrig i native app.
-           ════════════════════════════════ */}
-      <section id="medlemskab" style={{ backgroundColor: '#EDE0D0', padding: '5rem 2.5rem' }}>
-        <div style={{ maxWidth: 540, margin: '0 auto' }}>
-          <div style={{
-            backgroundColor: '#FFFDF9',
-            borderRadius: 28,
-            padding: '3rem 2.4rem 2.4rem',
-            boxShadow: '0 20px 60px -20px rgba(58,36,22,0.15)',
-            border: '1px solid rgba(200,168,130,0.2)',
-            textAlign: 'center'
-          }}>
-            {/* Heading */}
-            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.2rem', fontWeight: 400, color: '#1E140A', margin: '0 0 0.6rem', lineHeight: 1.2 }}>
-              {t.landingPaywallTitle}
-            </h2>
-            {/* Subtitle */}
-            <p style={{ color: '#7A665A', fontSize: '0.88rem', lineHeight: 1.6, margin: '0 0 2rem', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
-              {t.landingPaywallSubtitle}
-            </p>
-            {/* Price */}
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.3rem' }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '3rem', fontWeight: 500, color: '#3A2416', lineHeight: 1 }}>59</span>
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.3rem', fontWeight: 400, color: '#B08D72' }}>kr.</span>
-              <span style={{ color: '#9A7A6A', fontSize: '0.82rem' }}>{t.landingPerMonth}</span>
-            </div>
-            <p style={{ color: '#9A7A6A', fontSize: '0.72rem', fontStyle: 'italic', margin: '0 0 2.2rem' }}>{t.landingPaywallNoBinding}</p>
-
-            {/* Divider */}
-            <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #EDE4DB, transparent)', margin: '0 0 1.8rem' }} />
-
-            {/* Features */}
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.2rem', display: 'flex', flexDirection: 'column', gap: 14, textAlign: 'left' }}>
-              {[t.landingPaywallFeature1, t.landingPaywallFeature2, t.landingPaywallFeature3, t.landingPaywallFeature4, t.landingPaywallFeature5].map((f, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, color: '#3A2412', fontSize: '0.86rem', lineHeight: 1.5 }}>
-                  <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'linear-gradient(135deg, #C8A882, #B08D72)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                      <path d="M2.5 6.5L5 9L9.5 3.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            {/* CTA — download, ikke betaling */}
-            <a href={downloadUrl} target="_blank" rel="noopener noreferrer" style={{
-              display: 'block',
-              width: '100%',
-              background: 'linear-gradient(135deg, #C8A882 0%, #B08D72 100%)',
-              color: '#2B1A0F',
-              border: 'none',
-              borderRadius: 14,
-              padding: '16px',
-              fontSize: '0.95rem',
-              fontWeight: 700,
-              letterSpacing: '0.02em',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              boxShadow: '0 8px 20px -6px rgba(200,168,130,0.5)',
-              textAlign: 'center'
-            }}>
-              {t.landingPaywallCta}
-            </a>
-          </div>
-
-          {/* Legal links */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: '1.6rem' }}>
-            <a href="/Terms" style={{ color: '#9A7A6A', fontSize: '0.78rem', textDecoration: 'none' }}>{t.landingTerms}</a>
-            <span style={{ color: '#D4B89A' }}>·</span>
-            <a href="/Privacy" style={{ color: '#9A7A6A', fontSize: '0.78rem', textDecoration: 'none' }}>{t.landingPrivacy}</a>
           </div>
         </div>
       </section>
