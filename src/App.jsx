@@ -10,6 +10,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Landing from './pages/Landing';
 import { Capacitor } from '@capacitor/core';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
+import SleepNotificationManager from '@/components/sleep/SleepNotificationManager';
 
 import Onboarding from './pages/Onboarding';
 import AboutUs from './pages/AboutUs';
@@ -165,6 +166,7 @@ function App() {
 function PublicOrAuth() {
   return (
     <AuthProvider>
+      <SleepNotificationManager />
       <AppRoutes />
     </AuthProvider>
   );

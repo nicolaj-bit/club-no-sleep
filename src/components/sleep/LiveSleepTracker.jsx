@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sunrise, Lock, Sparkles, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { syncSleepNotification, clearSleepNotification, requestSleepNotificationPermission } from '@/lib/sleepNotifications';
 import { useSleepSession } from './useSleepSession';
 import {
   computeSessionTotals,
@@ -110,6 +111,16 @@ export default function LiveSleepTracker({ user, activeChild }) {
     return () => document.removeEventListener('visibilitychange', handleVisible);
   }, []);
 
+  // Synkronisér vedvarende notifikation med session-tilstand
+  useEffect(() => {
+    if (loading) return;
+    if (activeSession) {
+      syncSleepNotification(activeSession);
+    } else {
+      clearSleepNotification();
+    }
+  }, [activeSession?.id, activeSession?.session_status, loading]);
+
   // Find tilstand
   let state = 1;
   if (justEndedSession) state = 4;
@@ -125,7 +136,10 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const justEndedTotals = justEndedSession ? computeSessionTotals(justEndedSession) : null;
 
   const handleStart = async () => {
-    try { await startSession(activeChild?.id || null); } catch {}
+    try {
+      await requestSleepNotificationPermission();
+      await startSession(activeChild?.id || null);
+    } catch {}
   };
   const handleMarkAwake = async () => {
     try { await markAwake(activeSession.id); } catch {}
