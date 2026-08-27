@@ -11,9 +11,11 @@ const ACTION_AWAKE = 'SLEEP_SESSION_AWAKE';
 let actionTypesRegistered = false;
 let actionListenerRegistered = false;
 
-function isNative() {
+function isAvailable() {
   try {
-    return Capacitor.isNativePlatform();
+    if (!Capacitor.isNativePlatform()) return false;
+    if (typeof Capacitor.isPluginAvailable === 'function' && !Capacitor.isPluginAvailable('LocalNotifications')) return false;
+    return true;
   } catch {
     return false;
   }
@@ -21,7 +23,7 @@ function isNative() {
 
 // Register action types + Android channel — call at app startup
 export async function ensureActionTypesRegistered() {
-  if (!isNative() || actionTypesRegistered) return;
+  if (!isAvailable() || actionTypesRegistered) return;
 
   // Android: define a LOW-importance, no-vibration channel
   try {
@@ -62,7 +64,7 @@ export async function ensureActionTypesRegistered() {
 
 // Request notification permission — call on first use of sleep log
 export async function requestSleepNotificationPermission() {
-  if (!isNative()) return false;
+  if (!isAvailable()) return false;
   try {
     const perm = await LocalNotifications.checkPermissions();
     if (perm.display === 'prompt') {
@@ -78,7 +80,7 @@ export async function requestSleepNotificationPermission() {
 
 // Show or update the notification to match session state
 export async function showSleepNotification(session) {
-  if (!isNative() || !session) return;
+  if (!isAvailable() || !session) return;
   try {
     const status = session.session_status;
     const phaseStart = getCurrentPhaseStart(session);
@@ -119,7 +121,7 @@ export async function showSleepNotification(session) {
 
 // Clear/remove the notification
 export async function clearSleepNotification() {
-  if (!isNative()) return;
+  if (!isAvailable()) return;
   try {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIF_ID }] });
   } catch (e) {
@@ -129,7 +131,7 @@ export async function clearSleepNotification() {
 
 // Sync notification with actual session state from DB
 export async function syncSleepNotification(session) {
-  if (!isNative()) return;
+  if (!isAvailable()) return;
   if (!session || session.session_status === 'completed') {
     await clearSleepNotification();
     return;
@@ -168,7 +170,7 @@ async function handleAction(actionId, sessionId) {
 
 // Register action listener — call once at app startup
 export async function registerSleepNotificationActions() {
-  if (!isNative() || actionListenerRegistered) return;
+  if (!isAvailable() || actionListenerRegistered) return;
   try {
     await LocalNotifications.addListener(
       'localNotificationActionPerformed',
