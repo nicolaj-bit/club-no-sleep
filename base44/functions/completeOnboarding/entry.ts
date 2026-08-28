@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
       profile_label,
       gender,
       city: city || undefined,
+      auto_light_enabled: city ? true : undefined,
       profile_image: profile_image || undefined,
       child_birthdate: child_birthdate || undefined,
       child_due_date: child_due_date || undefined,

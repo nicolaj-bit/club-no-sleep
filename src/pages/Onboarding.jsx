@@ -399,7 +399,7 @@ export default function Onboarding() {
                   <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt="Vågne mødre kort over Danmark" className="w-48 h-auto" />
                 </div>
                 <div className="space-y-2">
-                  <Label>{t.yourCity}</Label>
+                  <Label>Din by (valgfrit)</Label>
                   <Input
                     value={form.city}
                     onChange={e => setField('city', e.target.value)}
@@ -407,7 +407,7 @@ export default function Onboarding() {
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                   />
                   <p className="text-xs" style={{ color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
-                    Når du oplyser din by, har du mulighed for at "tænde et lys" og vise andre mødre i nærheden af dig, at de ikke er alene. Det er valgfrit om du ønsker at oplyse din by. Såfremt du springer trinnet over, men stadig ønsker at gøre brug af natteensomhedskortet, indsættes et lys et tilfældigt sted
+                    Vi bruger din by til at vise dig som et lys på kortet, når du logger at du er vågen — så andre vågne mødre kan se, at de ikke er alene. Vi viser aldrig dit navn eller din præcise adresse, og du kan altid slå det fra.
                   </p>
                 </div>
               </motion.div>

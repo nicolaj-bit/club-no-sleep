@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Sunrise, Lock, Sparkles, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { syncSleepNotification, clearSleepNotification, requestSleepNotificationPermission } from '@/lib/sleepNotifications';
-import { getLightState, turnLightOn, turnLightOff, saveLightConsent } from '@/lib/sleepLight';
+import { getLightState, turnLightOn, turnLightOff } from '@/lib/sleepLight';
 import SleepLightIndicator from './SleepLightIndicator';
-import AutoLightConsentDialog from './AutoLightConsentDialog';
 import { useSleepSession } from './useSleepSession';
 import {
   computeSessionTotals,
@@ -99,11 +98,9 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const [feedback, setFeedback] = useState(null);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
   const [, setTick] = useState(0);
-  const [lightConsent, setLightConsent] = useState(null); // null = loading, true/false/undefined = loaded
+  const [lightConsent, setLightConsent] = useState(null); // null = loading, true/false = loaded
   const [lightOn, setLightOn] = useState(false);
   const [onlineCount, setOnlineCount] = useState(0);
-  const [showConsent, setShowConsent] = useState(false);
-  const consentShownRef = useRef('');
   const lastSyncKey = useRef('');
 
   // Live timer — re-render hver sekund mens en session er aktiv
@@ -145,6 +142,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
   }, [user?.email]);
 
   // Synkronisér 'Et lys i mørket' med session-tilstand
+  // Auto-tænd lyset når barnet er vågent, hvis brugeren har givet samtykke (auto_light_enabled === true)
   useEffect(() => {
     if (loading || lightConsent === null) return;
     const status = activeSession?.session_status;
@@ -154,18 +152,13 @@ export default function LiveSleepTracker({ user, activeChild }) {
     if (lastSyncKey.current === syncKey) return;
     lastSyncKey.current = syncKey;
 
-    if (status === 'active_awake') {
-      if (lightConsent === true) {
-        turnLightOn().then(res => {
-          if (res) {
-            setLightOn(true);
-            setOnlineCount(res.online_count || 0);
-          }
-        });
-      } else if (lightConsent !== false && consentShownRef.current !== sessionId) {
-        consentShownRef.current = sessionId;
-        setShowConsent(true);
-      }
+    if (status === 'active_awake' && lightConsent === true) {
+      turnLightOn().then(res => {
+        if (res) {
+          setLightOn(true);
+          setOnlineCount(res.online_count || 0);
+        }
+      });
     } else {
       if (lightOn) {
         setLightOn(false);
@@ -173,30 +166,6 @@ export default function LiveSleepTracker({ user, activeChild }) {
       }
     }
   }, [activeSession?.id, activeSession?.session_status, loading, lightConsent, lightOn]);
-
-  // Luk consent-dialog hvis session forlader active_awake
-  useEffect(() => {
-    if (activeSession?.session_status !== 'active_awake') {
-      setShowConsent(false);
-    }
-  }, [activeSession?.session_status]);
-
-  const handleConsent = async (accepted) => {
-    setShowConsent(false);
-    setLightConsent(accepted);
-    // Forhindr sync-effect i at køre dobbelt
-    const sessionId = activeSession?.id || '';
-    lastSyncKey.current = sessionId + ':active_awake:' + accepted;
-    if (accepted) {
-      const res = await turnLightOn({ auto_light_enabled: true });
-      if (res) {
-        setLightOn(true);
-        setOnlineCount(res.online_count || 0);
-      }
-    } else {
-      await saveLightConsent(false);
-    }
-  };
 
   // Find tilstand
   let state = 1;
@@ -337,12 +306,6 @@ export default function LiveSleepTracker({ user, activeChild }) {
           </OutlineButton>
         </div>
         <BgNote />
-        <AutoLightConsentDialog
-          open={showConsent}
-          onAccept={() => handleConsent(true)}
-          onDecline={() => handleConsent(false)}
-          onClose={() => setShowConsent(false)}
-        />
       </div>
     );
   }
