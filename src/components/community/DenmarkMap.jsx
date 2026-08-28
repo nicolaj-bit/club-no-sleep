@@ -89,6 +89,11 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
     ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
     : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
+  // Reference-lag (bynavne/labels) — lægges ovenpå base, under markører
+  const labelUrl = isNightMode
+    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
+    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}';
+
   // Pin size scales with zoom: small at zoom 6, bigger zoomed in
   const pinSize = Math.max(8, Math.min(20, (zoom - 5) * 3 + 8));
   const meSize = Math.max(16, Math.min(26, (zoom - 5) * 3 + 16));
@@ -125,6 +130,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         attributionControl={true}
       >
         <TileLayer url={tileUrl} attribution="© Esri, HERE, Garmin" />
+        <TileLayer url={labelUrl} />
         <AutoZoom location={currentUserLocation} />
         <ZoomTracker onZoom={setZoom} />
 
