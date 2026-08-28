@@ -313,16 +313,6 @@ export default function Community() {
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     {isVisible ? t.visible : t.hidden}
                   </span>
-                  <Switch
-                    checked={isVisible && locationEnabled}
-                    onCheckedChange={async (checked) => {
-                      if (checked && !locationEnabled) {
-                        await handleEnableLocation();
-                      } else {
-                        handleToggleVisibility(checked);
-                      }
-                    }}
-                  />
                 </div>
               </div>
               <DenmarkMap

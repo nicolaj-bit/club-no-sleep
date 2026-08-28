@@ -84,9 +84,10 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
     return hour >= 20 || hour < 5;
   }, []);
 
+  // ESRI World Light/Dark Gray Canvas — gratis, ingen API-nøgle, dæmpet stil
   const tileUrl = isNightMode
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
   // Pin size scales with zoom: small at zoom 6, bigger zoomed in
   const pinSize = Math.max(8, Math.min(20, (zoom - 5) * 3 + 8));
@@ -112,16 +113,18 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         .leaflet-control-zoom-in, .leaflet-control-zoom-out { width: 36px !important; height: 36px !important; line-height: 36px !important; font-size: 18px !important; color: var(--color-text-primary) !important; background: var(--color-bg-card) !important; border: none !important; }
         .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--color-bg-subtle) !important; }
         .leaflet-bottom.leaflet-right { bottom: 12px; right: 12px; }
+        .leaflet-control-attribution { background: rgba(255,253,249,0.8) !important; font-size: 9px !important; padding: 1px 6px !important; border-radius: 6px 0 0 0 !important; color: var(--color-text-muted) !important; }
+        .leaflet-control-attribution a { color: var(--color-accent) !important; }
       `}</style>
       <MapContainer
-        center={DENMARK_CENTER}
-        zoom={6}
+        center={currentUserLocation ? [currentUserLocation.lat, currentUserLocation.lng] : DENMARK_CENTER}
+        zoom={currentUserLocation ? 11 : 6}
         style={{ height: '100%', width: '100%' }}
         zoomControl={true}
         scrollWheelZoom={false}
-        attributionControl={false}
+        attributionControl={true}
       >
-        <TileLayer url={tileUrl} />
+        <TileLayer url={tileUrl} attribution="© Esri, HERE, Garmin" />
         <AutoZoom location={currentUserLocation} />
         <ZoomTracker onZoom={setZoom} />
 
