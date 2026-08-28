@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Sunrise, Lock, Sparkles, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { syncSleepNotification, clearSleepNotification, requestSleepNotificationPermission } from '@/lib/sleepNotifications';
+import { getLightState, turnLightOn, turnLightOff, saveLightConsent } from '@/lib/sleepLight';
+import SleepLightIndicator from './SleepLightIndicator';
+import AutoLightConsentDialog from './AutoLightConsentDialog';
 import { useSleepSession } from './useSleepSession';
 import {
   computeSessionTotals,
@@ -96,6 +99,12 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const [feedback, setFeedback] = useState(null);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
   const [, setTick] = useState(0);
+  const [lightConsent, setLightConsent] = useState(null); // null = loading, true/false/undefined = loaded
+  const [lightOn, setLightOn] = useState(false);
+  const [onlineCount, setOnlineCount] = useState(0);
+  const [showConsent, setShowConsent] = useState(false);
+  const consentShownRef = useRef('');
+  const lastSyncKey = useRef('');
 
   // Live timer — re-render hver sekund mens en session er aktiv
   useEffect(() => {
@@ -120,6 +129,74 @@ export default function LiveSleepTracker({ user, activeChild }) {
       clearSleepNotification();
     }
   }, [activeSession?.id, activeSession?.session_status, loading]);
+
+  // Hent lys-tilstand (consent + online + count) ved opstart
+  useEffect(() => {
+    if (!user?.email) return;
+    getLightState().then(state => {
+      if (state) {
+        setLightConsent(state.auto_light_enabled);
+        setLightOn(state.is_online === true);
+        setOnlineCount(state.online_count || 0);
+      } else {
+        setLightConsent(false); // fallback ved fejl: ingen automatisk lys
+      }
+    });
+  }, [user?.email]);
+
+  // Synkronisér 'Et lys i mørket' med session-tilstand
+  useEffect(() => {
+    if (loading || lightConsent === null) return;
+    const status = activeSession?.session_status;
+    const sessionId = activeSession?.id || '';
+    const syncKey = sessionId + ':' + status + ':' + lightConsent;
+
+    if (lastSyncKey.current === syncKey) return;
+    lastSyncKey.current = syncKey;
+
+    if (status === 'active_awake') {
+      if (lightConsent === true) {
+        turnLightOn().then(res => {
+          if (res) {
+            setLightOn(true);
+            setOnlineCount(res.online_count || 0);
+          }
+        });
+      } else if (lightConsent !== false && consentShownRef.current !== sessionId) {
+        consentShownRef.current = sessionId;
+        setShowConsent(true);
+      }
+    } else {
+      if (lightOn) {
+        setLightOn(false);
+        turnLightOff();
+      }
+    }
+  }, [activeSession?.id, activeSession?.session_status, loading, lightConsent, lightOn]);
+
+  // Luk consent-dialog hvis session forlader active_awake
+  useEffect(() => {
+    if (activeSession?.session_status !== 'active_awake') {
+      setShowConsent(false);
+    }
+  }, [activeSession?.session_status]);
+
+  const handleConsent = async (accepted) => {
+    setShowConsent(false);
+    setLightConsent(accepted);
+    // Forhindr sync-effect i at køre dobbelt
+    const sessionId = activeSession?.id || '';
+    lastSyncKey.current = sessionId + ':active_awake:' + accepted;
+    if (accepted) {
+      const res = await turnLightOn({ auto_light_enabled: true });
+      if (res) {
+        setLightOn(true);
+        setOnlineCount(res.online_count || 0);
+      }
+    } else {
+      await saveLightConsent(false);
+    }
+  };
 
   // Find tilstand
   let state = 1;
@@ -235,6 +312,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
           <StatusDot color="orange" />
           <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Opvågning i gang</span>
         </div>
+        {lightOn && <SleepLightIndicator onlineCount={onlineCount} />}
         <h1 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
           Barnet er vågent
         </h1>
@@ -259,6 +337,12 @@ export default function LiveSleepTracker({ user, activeChild }) {
           </OutlineButton>
         </div>
         <BgNote />
+        <AutoLightConsentDialog
+          open={showConsent}
+          onAccept={() => handleConsent(true)}
+          onDecline={() => handleConsent(false)}
+          onClose={() => setShowConsent(false)}
+        />
       </div>
     );
   }

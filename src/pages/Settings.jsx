@@ -48,7 +48,8 @@ export default function Settings() {
     notif_pregnancy_weekly: true,
     notif_calendar_reminder: true,
     notif_sleep_encouragement: true,
-    notif_blog_new: true
+    notif_blog_new: true,
+    auto_light_enabled: false
   });
   const [notifSaving, setNotifSaving] = useState(false);
 
@@ -70,7 +71,8 @@ export default function Settings() {
             notif_pregnancy_weekly: p.notif_pregnancy_weekly !== false,
             notif_calendar_reminder: p.notif_calendar_reminder !== false,
             notif_sleep_encouragement: p.notif_sleep_encouragement !== false,
-            notif_blog_new: p.notif_blog_new !== false
+            notif_blog_new: p.notif_blog_new !== false,
+            auto_light_enabled: p.auto_light_enabled === true
           });
         }
       } catch {
@@ -354,6 +356,24 @@ export default function Settings() {
             
             </div>
           )}
+          {/* Auto light setting — 'Et lys i mørket' */}
+          <div className="border-t pt-4 mt-2" style={{ borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tænd lys automatisk</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vis dig som vågen for andre mødre i 'Et lys i mørket'</p>
+              </div>
+              <Switch
+                checked={notifPrefs.auto_light_enabled === true}
+                onCheckedChange={async (val) => {
+                  setNotifPrefs(p => ({ ...p, auto_light_enabled: val }));
+                  try {
+                    await base44.functions.invoke('toggleNightLight', { action: 'status', auto_light_enabled: val });
+                  } catch {}
+                }}
+              />
+            </div>
+          </div>
           <div className="h-2" />
         </div>
       </BottomSheet>

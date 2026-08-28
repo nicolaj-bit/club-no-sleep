@@ -65,7 +65,11 @@
     "is_online": {
       "type": "boolean",
       "default": false,
-      "description": "Online status"
+      "description": "Online status \u2014 'lyset er t\u00e6ndt' n\u00e5r true"
+    },
+    "auto_light_enabled": {
+      "type": "boolean",
+      "description": "Automatisk t\u00e6nd/sluk af 'Et lys i m\u00f8rket' ved s\u00f8vnlog-opv\u00e5gning. Ingen default = ikke spurgt endnu."
     },
     "last_active": {
       "type": "string",
