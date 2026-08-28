@@ -1,5 +1,5 @@
-import React from 'react';
-import { Moon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Moon, Sun } from 'lucide-react';
 import { format } from 'date-fns';
 import { useSleepSession } from './useSleepSession';
 import {
@@ -25,6 +25,7 @@ function Chip({ label, color }) {
 
 export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
   const { history, loading } = useSleepSession(user);
+  const [filter, setFilter] = useState('all'); // 'all' | 'night' | 'nap'
 
   if (loading) {
     return (
@@ -34,9 +35,15 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
     );
   }
 
-  const filtered = activeChild?.id
+  const childFiltered = activeChild?.id
     ? history.filter(l => !l.child_id || l.child_id === activeChild.id)
     : history;
+
+  const filtered = childFiltered.filter(l => {
+    if (filter === 'all') return true;
+    if (filter === 'nap') return l.sleep_type === 'nap';
+    return l.sleep_type !== 'nap'; // night (inkluderer eksisterende uden type)
+  });
 
   if (filtered.length === 0) {
     return (
@@ -47,18 +54,51 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
     );
   }
 
+  const filterButtons = [
+    { key: 'all', label: 'Alle' },
+    { key: 'night', label: 'Nattesøvn' },
+    { key: 'nap', label: 'Lure' },
+  ];
+
   return (
     <div className="px-4 py-5 space-y-3 max-w-lg mx-auto">
+      {/* Filter */}
+      <div className="flex gap-2 mb-1">
+        {filterButtons.map(btn => (
+          <button
+            key={btn.key}
+            onClick={() => setFilter(btn.key)}
+            className="flex-1 py-2 rounded-xl text-xs font-medium transition-all"
+            style={{
+              background: filter === btn.key ? 'var(--color-accent)' : 'var(--color-bg-subtle)',
+              color: filter === btn.key ? 'var(--theme-text-on-dark, #FFFDF9)' : 'var(--color-text-secondary)',
+            }}
+          >
+            {btn.label}
+          </button>
+        ))}
+      </div>
+
       {filtered.map(log => {
+        const isNap = log.sleep_type === 'nap';
         // Nyt format: period-baseret
         if (log.periods && log.periods.length > 0) {
           const totals = computeSessionTotals(log);
           return (
             <div key={log.id} className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-card)' }}>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                  {format(new Date(log.date || log.session_start), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
-                </span>
+                <div className="flex items-center gap-2">
+                  {isNap
+                    ? <Sun className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+                    : <Moon className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
+                  }
+                  <span className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                    {format(new Date(log.date || log.session_start), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
+                  </span>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
+                    {isNap ? 'Lur' : 'Nattesøvn'}
+                  </span>
+                </div>
                 {log.session_start && (
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     {formatClockHm(log.session_start)} – {formatClockHm(log.session_end)}

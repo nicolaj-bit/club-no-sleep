@@ -42,7 +42,7 @@ export default async function(req) {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { action, session_id, child_id } = body;
+    const { action, session_id, child_id, sleep_type } = body;
 
     // Find brugerens profil for at afgøre om de er inviteret
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: user.email });
@@ -120,6 +120,7 @@ export default async function(req) {
         created_by_email: user.email,
         date: today,
         session_status: 'active_sleep',
+        sleep_type: sleep_type === 'nap' ? 'nap' : 'night',
         session_start: now,
         session_end: null,
         periods: [{ type: 'sleep', start: now, end: null }],

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Moon, Sunrise, Lock, Sparkles, RefreshCw } from 'lucide-react';
+import { Moon, Sunrise, Sun, Lock, Sparkles, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { syncSleepNotification, clearSleepNotification, requestSleepNotificationPermission } from '@/lib/sleepNotifications';
 import { getLightState, turnLightOn, turnLightOff } from '@/lib/sleepLight';
@@ -102,6 +102,10 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const [lightOn, setLightOn] = useState(false);
   const [onlineCount, setOnlineCount] = useState(0);
   const lastSyncKey = useRef('');
+  const [sleepType, setSleepType] = useState(() => {
+    const h = new Date().getHours();
+    return (h >= 18 || h < 6) ? 'night' : 'nap';
+  });
 
   // Live timer — re-render hver sekund mens en session er aktiv
   useEffect(() => {
@@ -152,7 +156,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
     if (lastSyncKey.current === syncKey) return;
     lastSyncKey.current = syncKey;
 
-    if (status === 'active_awake' && lightConsent === true) {
+    if (status === 'active_awake' && lightConsent === true && activeSession?.sleep_type !== 'nap') {
       turnLightOn().then(res => {
         if (res) {
           setLightOn(true);
@@ -173,6 +177,13 @@ export default function LiveSleepTracker({ user, activeChild }) {
   else if (activeSession?.session_status === 'active_sleep') state = 2;
   else if (activeSession?.session_status === 'active_awake') state = 3;
 
+  // Søvntype: nattesøvn som standard (baglæns kompatibel med eksisterende sessioner)
+  const isNightSleep = justEndedSession
+    ? justEndedSession.sleep_type !== 'nap'
+    : activeSession
+      ? activeSession.sleep_type !== 'nap'
+      : sleepType === 'night';
+
   const phaseStart = activeSession ? getCurrentPhaseStart(activeSession) : null;
   const elapsedMs = phaseStart ? Date.now() - new Date(phaseStart).getTime() : 0;
 
@@ -184,7 +195,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const handleStart = async () => {
     try {
       await requestSleepNotificationPermission();
-      await startSession(activeChild?.id || null);
+      await startSession(activeChild?.id || null, sleepType);
     } catch {}
   };
   const handleMarkAwake = async () => {
@@ -232,9 +243,35 @@ export default function LiveSleepTracker({ user, activeChild }) {
         <h1 className="text-2xl font-semibold text-center mb-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
           Klar til at logge søvn?
         </h1>
-        <p className="text-sm text-center mb-8" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
           Tryk på knappen, når dit barn falder i søvn. Vi klarer resten.
         </p>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <button
+            type="button"
+            onClick={() => setSleepType('night')}
+            className="rounded-2xl p-4 text-center transition-all border-2"
+            style={{
+              borderColor: sleepType === 'night' ? 'var(--color-accent)' : 'var(--color-border)',
+              background: sleepType === 'night' ? 'var(--color-accent-warm)' : 'var(--color-bg-subtle)',
+            }}
+          >
+            <Moon className="w-6 h-6 mx-auto mb-1.5" style={{ color: 'var(--color-accent)' }} />
+            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>Nattesøvn</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSleepType('nap')}
+            className="rounded-2xl p-4 text-center transition-all border-2"
+            style={{
+              borderColor: sleepType === 'nap' ? 'var(--color-accent)' : 'var(--color-border)',
+              background: sleepType === 'nap' ? 'var(--color-accent-warm)' : 'var(--color-bg-subtle)',
+            }}
+          >
+            <Sun className="w-6 h-6 mx-auto mb-1.5" style={{ color: 'var(--color-accent)' }} />
+            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>Lur</span>
+          </button>
+        </div>
         <PrimaryButton onClick={handleStart} disabled={isPending} subtitle="Barnet sover">
           Start søvn
         </PrimaryButton>
@@ -322,7 +359,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
         </div>
       </div>
       <h1 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
-        Godmorgen
+        {isNightSleep ? 'Godmorgen' : 'Luren er slut'}
       </h1>
       <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
         Session afsluttet
@@ -330,7 +367,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
 
       {justEndedTotals && (
         <div className="rounded-2xl p-5 mb-6" style={{ backgroundColor: 'var(--color-bg-card)' }}>
-          <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: 'var(--color-text-muted)' }}>Nattens søvn</p>
+          <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: 'var(--color-text-muted)' }}>{isNightSleep ? 'Nattens søvn' : 'Denne lur'}</p>
           <div className="space-y-2.5">
             <div className="flex justify-between">
               <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Søvnen startede</span>
@@ -368,7 +405,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
 
       <div className="space-y-3">
         {!feedback && (
-          <PrimaryButton onClick={handleFeedback} disabled={feedbackLoading || isPending} subtitle="Få personlig feedback på nattens søvn">
+          <PrimaryButton onClick={handleFeedback} disabled={feedbackLoading || isPending} subtitle={isNightSleep ? 'Få personlig feedback på nattens søvn' : 'Få personlig feedback på luren'}>
             {feedbackLoading ? 'Analyserer…' : 'Modtag feedback'}
           </PrimaryButton>
         )}

@@ -32,6 +32,15 @@
       ],
       "description": "Sessionens status: aktiv sovende, aktiv v\u00e5gen, eller afsluttet"
     },
+    "sleep_type": {
+      "type": "string",
+      "enum": [
+        "nap",
+        "night"
+      ],
+      "default": "night",
+      "description": "S\u00f8vntype: lur eller nattes\u00f8vn. Eksisterende sessioner uden type behandles som nattes\u00f8vn."
+    },
     "session_start": {
       "type": "string",
       "format": "date-time",

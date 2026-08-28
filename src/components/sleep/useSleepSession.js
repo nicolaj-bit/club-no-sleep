@@ -21,8 +21,8 @@ export function useSleepSession(user) {
   });
 
   const actionMutation = useMutation({
-    mutationFn: async ({ action, session_id, child_id }) => {
-      const res = await base44.functions.invoke('manageSleepSession', { action, session_id, child_id });
+    mutationFn: async ({ action, session_id, child_id, sleep_type }) => {
+      const res = await base44.functions.invoke('manageSleepSession', { action, session_id, child_id, sleep_type });
       return res?.data || res;
     },
     onSuccess: (result) => {
@@ -63,7 +63,7 @@ export function useSleepSession(user) {
     activeSession,
     history,
     loading: isLoading,
-    startSession: (child_id) => actionMutation.mutateAsync({ action: 'start', child_id }),
+    startSession: (child_id, sleep_type) => actionMutation.mutateAsync({ action: 'start', child_id, sleep_type }),
     markAwake: (session_id) => actionMutation.mutateAsync({ action: 'mark_awake', session_id }),
     markSleeping: (session_id) => actionMutation.mutateAsync({ action: 'mark_sleeping', session_id }),
     endSession: (session_id) => actionMutation.mutateAsync({ action: 'end', session_id }),
