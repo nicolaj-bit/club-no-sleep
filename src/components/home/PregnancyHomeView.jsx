@@ -11,6 +11,9 @@ import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 import ChildSwitcher from '@/components/children/ChildSwitcher';
+import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
+import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
+import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
 function getGreeting(lang, name) {
@@ -25,6 +28,7 @@ function getGreeting(lang, name) {
 
 export default function PregnancyHomeView({ profile, user, posts = [], activeChild }) {
   const { t, lang } = useLanguage();
+  const { isInvited } = useInviteAccess();
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
   const displayName = profile?.display_name || user?.full_name || (lang === 'da' ? 'kommende mor' : 'mom-to-be');
   const { greeting, name } = getGreeting(lang, displayName);
@@ -52,6 +56,12 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
         </div>
 
       </div>
+
+      {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement (skjules for inviterede) */}
+      {user && !isInvited && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
+
+      {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
+      {user && !isInvited && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
 
       {/* Pregnancy Hero Card */}
       {pregnancy && (
