@@ -1,37 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { differenceInWeeks, differenceInDays, format } from 'date-fns';
-import { da, enUS } from 'date-fns/locale';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { Moon, CalendarDays, Baby } from 'lucide-react';
-import NotificationBell from '@/components/ui/NotificationBell';
+import { Baby } from 'lucide-react';
 import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
 import ActiveMomsCard from '@/components/home/ActiveMomsCard';
-import ChildSwitcher from '@/components/children/ChildSwitcher';
-import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
-import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
-import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
-function getGreeting(lang, name) {
-  const hour = new Date().getHours();
-  let greeting;
-  if (hour >= 5 && hour < 12) greeting = lang === 'da' ? 'Godmorgen' : 'Good morning';
-  else if (hour >= 12 && hour < 17) greeting = lang === 'da' ? 'God eftermiddag' : 'Good afternoon';
-  else if (hour >= 17 && hour < 21) greeting = lang === 'da' ? 'Godaften' : 'Good evening';
-  else greeting = lang === 'da' ? 'Godnat' : 'Good night';
-  return { greeting, name };
-}
-
 export default function PregnancyHomeView({ profile, user, posts = [], activeChild }) {
-  const { t, lang } = useLanguage();
-  const { isInvited } = useInviteAccess();
-  const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
-  const displayName = profile?.display_name || user?.full_name || (lang === 'da' ? 'kommende mor' : 'mom-to-be');
-  const { greeting, name } = getGreeting(lang, displayName);
+  const { lang } = useLanguage();
 
   // Brug aktivt barn's terminsdato, ellers fald tilbage til profil
   const dueDate = activeChild?.due_date || profile?.child_due_date;
@@ -40,29 +18,7 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
   const pregnancy = ga && ga.daysUntilDue >= 0 ? ga : null;
 
   return (
-    <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {/* Header */}
-      <div className="px-5 pt-6 pb-4">
-        <div className="flex items-start justify-between">
-          <div className="flex flex-col">
-            <ChildSwitcher />
-            <h1 className="text-[38px] font-light leading-tight mt-2" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-              {greeting}, {name}
-            </h1>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            {user && <NotificationBell userEmail={user.email} />}
-          </div>
-        </div>
-
-      </div>
-
-      {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement (skjules for inviterede) */}
-      {user && !isInvited && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
-
-      {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
-      {user && !isInvited && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
-
+    <>
       {/* Pregnancy Hero Card */}
       {pregnancy && (
         <Link to={`/PregnancyWeekDetail?week=${pregnancy.ordinal}`} className="block mx-5 mb-4">
@@ -84,7 +40,6 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
                     {lang === 'da' ? 'uger' : 'weeks'}
                   </span>
                 </div>
-    
               </div>
 
               {/* Week pill — bottom */}
@@ -136,6 +91,6 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
       <div className="mb-2">
         <AIRelevantPosts profile={profile} allPosts={posts} />
       </div>
-    </div>
+    </>
   );
 }

@@ -119,17 +119,6 @@ export default function Home() {
     await queryClient.invalidateQueries();
   };
 
-  // Graviditetsview: har terminsdato i fremtiden, barnet ikke født endnu
-  if (isExpecting) {
-    return (
-      <PullToRefresh onRefresh={handleRefresh}>
-        <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />
-      </PullToRefresh>
-    );
-  }
-
-  // Normalt dashboard: barnet er født (child_birthdate sat) ELLER terminsdato er passeret
-
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div key={activeChild?.id || 'no-child'} className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
@@ -173,36 +162,43 @@ export default function Home() {
 
 
 
-      {/* Daglig personlig besked */}
-      {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
+      {/* Graviditetsvisning eller normalt dashboard */}
+      {isExpecting ? (
+        <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />
+      ) : (
+        <>
+          {/* Daglig personlig besked */}
+          {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
 
-      {/* Sleep/Diary + Calendar row */}
-      {user && (
-        <div className="mx-5 mb-5 flex gap-3">
-          {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
-          {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
-        </div>
+          {/* Sleep/Diary + Calendar row */}
+          {user && (
+            <div className="mx-5 mb-5 flex gap-3">
+              {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
+              {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
+            </div>
+          )}
+
+          {/* Active Moms Card — kun for mor-profiler (skjules for inviterede) */}
+          {profile?.profile_label === 'mor' && !isInvited && (
+            <div className="mx-5 mb-5">
+              <ActiveMomsCard />
+            </div>
+          )}
+
+          {/* Wonder Week Card */}
+          {canSeeWonderWeeks && wonderWeek && wonderWeek.status !== 'complete' && (
+            <div className="mb-5">
+              <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
+            </div>
+          )}
+
+          {/* AI Sleep Advice — only shown when 5+ logs exist (skjules for inviterede) */}
+          {user && !isInvited && <SleepAdviceCard userEmail={user.email} />}
+
+          {/* AI-curated blog posts */}
+          {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
+        </>
       )}
-
-      {/* Active Moms Card — kun for mor-profiler (skjules for inviterede) */}
-      {profile?.profile_label === 'mor' && !isInvited && (
-        <div className="mx-5 mb-5">
-          <ActiveMomsCard />
-        </div>
-      )}
-
-      {/* Wonder Week Card */}
-      {canSeeWonderWeeks && wonderWeek && wonderWeek.status !== 'complete' && (
-        <div className="mb-5">
-          <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
-        </div>
-      )}
-
-      {/* AI Sleep Advice — only shown when 5+ logs exist (skjules for inviterede) */}
-      {user && !isInvited && <SleepAdviceCard userEmail={user.email} />}
-
-      {/* AI-curated blog posts */}
-      {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
     </div>
     </PullToRefresh>
   );
