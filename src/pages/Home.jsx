@@ -162,6 +162,21 @@ export default function Home() {
 
 
 
+      {/* Sleep/Diary + Calendar row — vises i begge faser */}
+      {user && (
+        <div className="mx-5 mb-5 flex gap-3">
+          {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
+          {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
+        </div>
+      )}
+
+      {/* Active Moms Card — vises til mor-profiler der ikke er inviterede, i begge faser */}
+      {profile?.profile_label === 'mor' && !isInvited && (
+        <div className="mx-5 mb-5">
+          <ActiveMomsCard />
+        </div>
+      )}
+
       {/* Daglig personlig besked — vises i begge faser */}
       {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
 
@@ -180,21 +195,6 @@ export default function Home() {
           {/* AI Sleep Advice — kun dashboard (kræver søvnlogs) */}
           {user && !isInvited && <SleepAdviceCard userEmail={user.email} />}
         </>
-      )}
-
-      {/* Sleep/Diary + Calendar row — vises i begge faser */}
-      {user && (
-        <div className="mx-5 mb-5 flex gap-3">
-          {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
-          {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
-        </div>
-      )}
-
-      {/* Active Moms Card — vises til ikke-inviterede brugere i begge faser */}
-      {!isInvited && (
-        <div className="mx-5 mb-5">
-          <ActiveMomsCard />
-        </div>
       )}
 
       {/* AI-curated blog posts — vises i begge faser */}
