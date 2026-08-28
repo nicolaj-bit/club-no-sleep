@@ -162,43 +162,43 @@ export default function Home() {
 
 
 
-      {/* Graviditetsvisning eller normalt dashboard */}
+      {/* Daglig personlig besked — vises i begge faser */}
+      {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
+
+      {/* Fase-specifikt indhold */}
       {isExpecting ? (
-        <PregnancyHomeView profile={profile} user={user} posts={posts} activeChild={activeChild} />
+        <PregnancyHomeView profile={profile} activeChild={activeChild} />
       ) : (
         <>
-          {/* Daglig personlig besked */}
-          {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
-
-          {/* Sleep/Diary + Calendar row */}
-          {user && (
-            <div className="mx-5 mb-5 flex gap-3">
-              {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
-              {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
-            </div>
-          )}
-
-          {/* Active Moms Card — kun for mor-profiler (skjules for inviterede) */}
-          {profile?.profile_label === 'mor' && !isInvited && (
-            <div className="mx-5 mb-5">
-              <ActiveMomsCard />
-            </div>
-          )}
-
-          {/* Wonder Week Card */}
+          {/* Wonder Week Card — kun dashboard (født barn) */}
           {canSeeWonderWeeks && wonderWeek && wonderWeek.status !== 'complete' && (
             <div className="mb-5">
               <WonderWeekCard wonderWeek={wonderWeek} ageInWeeks={ageInWeeks} />
             </div>
           )}
 
-          {/* AI Sleep Advice — only shown when 5+ logs exist (skjules for inviterede) */}
+          {/* AI Sleep Advice — kun dashboard (kræver søvnlogs) */}
           {user && !isInvited && <SleepAdviceCard userEmail={user.email} />}
-
-          {/* AI-curated blog posts */}
-          {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
         </>
       )}
+
+      {/* Sleep/Diary + Calendar row — vises i begge faser */}
+      {user && (
+        <div className="mx-5 mb-5 flex gap-3">
+          {canSeeSleep && <SleepSummaryCard userEmail={user.email} />}
+          {canSeeCalendar && <UpcomingEventCard userEmail={user.email} />}
+        </div>
+      )}
+
+      {/* Active Moms Card — vises til ikke-inviterede brugere i begge faser */}
+      {!isInvited && (
+        <div className="mx-5 mb-5">
+          <ActiveMomsCard />
+        </div>
+      )}
+
+      {/* AI-curated blog posts — vises i begge faser */}
+      {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
     </div>
     </PullToRefresh>
   );

@@ -2,16 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Baby } from 'lucide-react';
-import AIRelevantPosts from '@/components/home/AIRelevantPosts';
-import SleepSummaryCard from '@/components/home/SleepSummaryCard';
-import UpcomingEventCard from '@/components/home/UpcomingEventCard';
-import ActiveMomsCard from '@/components/home/ActiveMomsCard';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
-export default function PregnancyHomeView({ profile, user, posts = [], activeChild }) {
+export default function PregnancyHomeView({ profile, activeChild }) {
   const { lang } = useLanguage();
 
-  // Brug aktivt barn's terminsdato, ellers fald tilbage til profil
   const dueDate = activeChild?.due_date || profile?.child_due_date;
   const childName = activeChild?.name;
   const ga = dueDate ? getGestationalAge(dueDate) : null;
@@ -73,24 +68,6 @@ export default function PregnancyHomeView({ profile, user, posts = [], activeChi
           </div>
         </Link>
       )}
-
-      {/* Sleep + Next appointment row */}
-      {user && (
-        <div className="mx-5 mb-4 flex gap-3">
-          <SleepSummaryCard userEmail={user.email} />
-          <UpcomingEventCard userEmail={user.email} />
-        </div>
-      )}
-
-      {/* Active moms card */}
-      <div className="mx-5 mb-4">
-        <ActiveMomsCard />
-      </div>
-
-      {/* Relevant posts */}
-      <div className="mb-2">
-        <AIRelevantPosts profile={profile} allPosts={posts} />
-      </div>
     </>
   );
 }
