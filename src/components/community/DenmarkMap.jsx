@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
@@ -118,8 +118,8 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         .leaflet-control-zoom-in, .leaflet-control-zoom-out { width: 36px !important; height: 36px !important; line-height: 36px !important; font-size: 18px !important; color: var(--color-text-primary) !important; background: var(--color-bg-card) !important; border: none !important; }
         .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--color-bg-subtle) !important; }
         .leaflet-bottom.leaflet-right { bottom: 12px; right: 12px; }
-        .leaflet-control-attribution { background: rgba(255,253,249,0.8) !important; font-size: 9px !important; padding: 1px 6px !important; border-radius: 6px 0 0 0 !important; color: var(--color-text-muted) !important; }
-        .leaflet-control-attribution a { color: var(--color-accent) !important; }
+        .leaflet-control-attribution { background: transparent !important; font-size: 8px !important; padding: 0 4px !important; color: var(--color-text-muted) !important; opacity: 0.55; text-shadow: 0 0 3px rgba(255,253,249,0.8); }
+        .leaflet-control-attribution a { color: var(--color-text-muted) !important; }
       `}</style>
       <MapContainer
         center={currentUserLocation ? [currentUserLocation.lat, currentUserLocation.lng] : DENMARK_CENTER}
@@ -127,10 +127,11 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         style={{ height: '100%', width: '100%' }}
         zoomControl={true}
         scrollWheelZoom={false}
-        attributionControl={true}
+        attributionControl={false}
       >
         <TileLayer url={tileUrl} attribution="© Esri, HERE, Garmin" />
         <TileLayer url={labelUrl} />
+        <AttributionControl prefix={false} position="bottomright" />
         <AutoZoom location={currentUserLocation} />
         <ZoomTracker onZoom={setZoom} />
 
