@@ -10,10 +10,10 @@ import UserNotifications
 /// det tidsrum, iOS giver. Håndteres trykket i JavaScript, går det derfor tabt.
 /// Her sendes handlingen direkte fra Swift, uden at webviewet involveres.
 ///
-/// Fejler netværkskaldet, lægges handlingen i en kø i UserDefaults med sit
-/// oprindelige tidspunkt og sendes igen, næste gang appen starter. Backend
-/// bruger det medsendte tidspunkt, så søvnloggen får det rigtige klokkeslæt,
-/// selv om kaldet først går igennem timer senere.
+/// Selve afsendelsen og køen over handlinger, der endnu ikke er nået frem,
+/// ligger i `SleepActionSender`, som deles med widget-extensionen. Denne klasse
+/// står kun for notifikationerne: kategorien med knapperne, delegate-kæden og
+/// baggrundsopgaven, der holder appen i live, mens kaldet er undervejs.
 @objc final class SleepLockScreenActions: NSObject, UNUserNotificationCenterDelegate {
 
     @objc static let shared = SleepLockScreenActions()
@@ -22,30 +22,12 @@ import UserNotifications
 
     /// Skal være identisk med actionTypeId i src/lib/sleepNotifications.js
     static let categoryId = "SLEEP_SESSION"
-    static let actionAwake = "awake"
-    static let actionEnd = "end"
-
-    private static let appId = "699f47a86e7e0a874d1159ed"
-    private static let defaultEndpoint =
-        "https://lalatoto.base44.app/api/apps/699f47a86e7e0a874d1159ed/functions/nativeSleepAction"
-
-    /// Capacitor Preferences gemmer i UserDefaults med præfikset "CapacitorStorage."
-    private static let tokenKey = "CapacitorStorage.cns_native_token"
-    private static let endpointKey = "CapacitorStorage.cns_native_endpoint"
-
-    /// Vores egen kø over handlinger der endnu ikke er nået frem.
-    private static let queueKey = "cns_pending_sleep_actions"
+    static let actionAwake = SleepActionSender.actionAwake
+    static let actionEnd = SleepActionSender.actionEnd
 
     /// Den delegate Capacitor selv har sat. Alt vi ikke håndterer, sendes videre
     /// hertil, så appens øvrige notifikationer opfører sig præcis som før.
     private var forwardTo: UNUserNotificationCenterDelegate?
-
-    private let session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 20
-        config.waitsForConnectivity = false
-        return URLSession(configuration: config)
-    }()
 
     // MARK: - Opsætning
 
@@ -146,26 +128,17 @@ import UserNotifications
 
     // MARK: - Handling
 
+    /// Selve afsendelsen og køen ligger i SleepActionSender, som deles med
+    /// widget-extensionen. Her holder vi kun appen i live, mens kaldet er
+    /// undervejs — UIApplication findes ikke i en extension.
     private func handle(action: String, sessionId: String?, completion: @escaping () -> Void) {
-        let stamp = Self.iso8601(Date())
-
-        // Gem ALTID først. Så er trykket registreret, også hvis appen bliver
-        // lukket ned midt i netværkskaldet.
-        enqueue(action: action, sessionId: sessionId, at: stamp)
-
         var bgTask = UIBackgroundTaskIdentifier.invalid
         bgTask = UIApplication.shared.beginBackgroundTask(withName: "cns-sleep-action") {
             UIApplication.shared.endBackgroundTask(bgTask)
             bgTask = .invalid
         }
 
-        send(action: action, sessionId: sessionId, at: stamp) { [weak self] success in
-            if success {
-                self?.dequeue(at: stamp)
-                NSLog("[CNS-NATIVE] handling sendt: %@", action)
-            } else {
-                NSLog("[CNS-NATIVE] handling lagt i kø: %@", action)
-            }
+        SleepActionSender.perform(action: action, sessionId: sessionId) { _ in
             if bgTask != .invalid {
                 UIApplication.shared.endBackgroundTask(bgTask)
                 bgTask = .invalid
@@ -174,94 +147,14 @@ import UserNotifications
         }
     }
 
-    private func send(action: String,
-                      sessionId: String?,
-                      at stamp: String,
-                      completion: @escaping (Bool) -> Void) {
-
-        let defaults = UserDefaults.standard
-        guard let token = defaults.string(forKey: Self.tokenKey), !token.isEmpty else {
-            NSLog("[CNS-NATIVE] intet token i Preferences — kan ikke sende")
-            completion(false)
-            return
-        }
-
-        let endpointString = defaults.string(forKey: Self.endpointKey) ?? Self.defaultEndpoint
-        guard let url = URL(string: endpointString) else {
-            completion(false)
-            return
-        }
-
-        var body: [String: Any] = ["token": token, "action": action, "at": stamp]
-        if let sessionId = sessionId { body["session_id"] = sessionId }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(Self.appId, forHTTPHeaderField: "X-App-Id")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        session.dataTask(with: request) { _, response, error in
-            if let error = error {
-                NSLog("[CNS-NATIVE] netværksfejl: %@", error.localizedDescription)
-                completion(false)
-                return
-            }
-            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
-            NSLog("[CNS-NATIVE] svar: %d", status)
-
-            // 4xx betyder at kaldet aldrig kommer igennem — så skal det ud af
-            // køen i stedet for at blive forsøgt i det uendelige. 404 er dog
-            // 'ingen aktiv session', hvilket også er endeligt.
-            if (200...299).contains(status) || (400...499).contains(status) {
-                completion(true)
-            } else {
-                completion(false)
-            }
-        }.resume()
-    }
-
     // MARK: - Kø
-
-    private func enqueue(action: String, sessionId: String?, at stamp: String) {
-        var queue = UserDefaults.standard.array(forKey: Self.queueKey) as? [[String: Any]] ?? []
-        var item: [String: Any] = ["action": action, "at": stamp]
-        if let sessionId = sessionId { item["session_id"] = sessionId }
-        queue.append(item)
-        // Hold køen kort — ældre end 24 timer er ikke længere brugbart.
-        if queue.count > 50 { queue = Array(queue.suffix(50)) }
-        UserDefaults.standard.set(queue, forKey: Self.queueKey)
-    }
-
-    private func dequeue(at stamp: String) {
-        let queue = UserDefaults.standard.array(forKey: Self.queueKey) as? [[String: Any]] ?? []
-        let remaining = queue.filter { ($0["at"] as? String) != stamp }
-        UserDefaults.standard.set(remaining, forKey: Self.queueKey)
-    }
 
     /// Sender ventende handlinger igen. Kaldes ved appstart.
     @objc func flushQueue() {
-        let queue = UserDefaults.standard.array(forKey: Self.queueKey) as? [[String: Any]] ?? []
-        guard !queue.isEmpty else { return }
-        NSLog("[CNS-NATIVE] tømmer kø: %d ventende", queue.count)
-
-        for item in queue {
-            guard let action = item["action"] as? String,
-                  let stamp = item["at"] as? String else { continue }
-            let sessionId = item["session_id"] as? String
-            send(action: action, sessionId: sessionId, at: stamp) { [weak self] success in
-                if success { self?.dequeue(at: stamp) }
-            }
-        }
+        SleepActionSender.flushQueue()
     }
 
     // MARK: - Hjælpere
-
-    private static func iso8601(_ date: Date) -> String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter.string(from: date)
-    }
 
     /// Capacitor pakker `extra` forskelligt afhængigt af version, så vi leder
     /// efter session_id både øverst og ét niveau nede.
