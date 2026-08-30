@@ -6,14 +6,7 @@ import { Check, Sparkles, RefreshCw, Loader2, AlertCircle, Pencil, Plus, Trash2,
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { motion } from 'framer-motion';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
-
-const DEFAULT_FEATURES_DA = [
-  { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
-  { emoji: '💬', text: 'Ubegrænsede spørgsmål til eksperter' },
-  { emoji: '🐯', text: 'Tigerspring notifikationer' },
-  { emoji: '👩‍👩‍👦', text: 'Community for mødre & fædre' },
-  { emoji: '📅', text: 'Kalender, søvnlog & dagbog' },
-];
+import { PAYWALL_FEATURES } from '@/components/subscription/paywallFeatures';
 
 export default function Subscription() {
   const { lang } = useLanguage();
@@ -163,7 +156,7 @@ export default function Subscription() {
       logo_url: content?.logo_url || '',
       media_type: content?.media_type || 'none',
       media_url: content?.media_url || '',
-      features: content?.features || DEFAULT_FEATURES_DA,
+      features: content?.features?.length ? content.features : PAYWALL_FEATURES.map(f => ({ emoji: '✓', text: `${f.title} — ${f.desc}` })),
     });
     setEditing(true);
   };
@@ -215,7 +208,7 @@ export default function Subscription() {
 
   const isActive = profile?.subscription_status === 'active' || rc.isSubscribed;
   const display = content || {};
-  const features = display.features?.length ? display.features : DEFAULT_FEATURES_DA;
+  const features = PAYWALL_FEATURES;
   const headline = display.headline || 'LALATOTO';
   const subline = display.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent');
   // Brug pris fra RevenueCat, ellers vis cms-pris
@@ -363,11 +356,13 @@ export default function Subscription() {
         >
           {features.map((f, i) => (
             <div key={i} className="flex items-center gap-3">
-              <span className="text-xl flex-shrink-0">{f.emoji}</span>
-              <span className="text-sm flex-1" style={{ color: 'var(--color-text-primary)' }}>{f.text}</span>
-              <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-accent)' }}>
-                <Check className="w-3 h-3 text-white" />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
               </div>
+              <span className="text-sm flex-1" style={{ color: 'var(--color-text-primary)' }}>
+                <span className="font-semibold">{f.title}</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
+              </span>
             </div>
           ))}
         </motion.div>

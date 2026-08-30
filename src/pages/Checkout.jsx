@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+import { PAYWALL_FEATURES } from '@/components/subscription/paywallFeatures';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -151,18 +152,15 @@ export default function Checkout() {
 
         {/* Features */}
         <div className="mb-6 space-y-2.5">
-          {[
-            t.checkoutFeature1,
-            t.checkoutFeature2,
-            t.checkoutFeature3,
-            t.checkoutFeature4,
-            t.checkoutFeature5,
-          ].map((feature, i) => (
+          {PAYWALL_FEATURES.map((f, i) => (
             <div key={i} className="flex items-center gap-2.5">
               <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{feature}</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                <span className="font-semibold">{f.title}</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
+              </p>
             </div>
           ))}
         </div>

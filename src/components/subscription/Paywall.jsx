@@ -5,31 +5,15 @@ import { isNativeApp } from '@/lib/platform';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+import { PAYWALL_FEATURES } from '@/components/subscription/paywallFeatures';
 import { Check, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-
-const FEATURES_DA = [
-  { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
-  { emoji: '💬', text: 'Ubegrænsede spørgsmål til eksperter' },
-  { emoji: '🐯', text: 'Tigerspring notifikationer' },
-  { emoji: '👩‍👩‍👦', text: 'Community for mødre & fædre' },
-  { emoji: '📅', text: 'Kalender, søvnlog & dagbog' },
-];
-
-const FEATURES_EN = [
-  { emoji: '🌙', text: 'AI sleep advice for your baby' },
-  { emoji: '💬', text: 'Unlimited expert Q&A' },
-  { emoji: '🐯', text: 'Wonder week notifications' },
-  { emoji: '👩‍👩‍👦', text: 'Community for moms & dads' },
-  { emoji: '📅', text: 'Calendar, sleep log & diary' },
-];
 
 export default function Paywall({ onSubscribed }) {
   const { lang } = useLanguage();
   const { isDark } = useTheme();
   const da = lang === 'da';
-  const features = da ? FEATURES_DA : FEATURES_EN;
   const navigate = useNavigate();
   const rc = useRevenueCat();
 
@@ -196,11 +180,15 @@ export default function Paywall({ onSubscribed }) {
           className="rounded-2xl p-5 mb-6 space-y-3.5"
           style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}
         >
-          {features.map((f, i) => (
+          {PAYWALL_FEATURES.map((f, i) => (
             <div key={i} className="flex items-center gap-3">
-              <span className="text-xl flex-shrink-0">{f.emoji}</span>
-              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{f.text}</span>
-              <Check className="w-4 h-4 ml-auto flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
+              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
+                <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
+              </div>
+              <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                <span className="font-semibold">{f.title}</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
+              </span>
             </div>
           ))}
         </motion.div>

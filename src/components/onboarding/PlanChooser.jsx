@@ -6,6 +6,7 @@ import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { PAYWALL_FEATURES } from '@/components/subscription/paywallFeatures';
 
 export default function PlanChooser({ onChoose, finishing }) {
   const [selected, setSelected] = useState(null);
@@ -76,6 +77,21 @@ export default function PlanChooser({ onChoose, finishing }) {
             ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
             : t.pricingSubtitle}
         </p>
+      </div>
+
+      {/* Features */}
+      <div style={{ marginBottom: '1.5rem', padding: '0 0.5rem' }}>
+        {PAYWALL_FEATURES.map((f, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem', marginBottom: '0.625rem' }}>
+            <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: 'var(--color-bg-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+              <Check size={12} style={{ color: 'var(--color-accent)' }} />
+            </div>
+            <p style={{ fontSize: '0.85rem', lineHeight: 1.5, margin: 0, color: 'var(--color-text-primary)' }}>
+              <span style={{ fontWeight: 600 }}>{f.title}</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Options */}
