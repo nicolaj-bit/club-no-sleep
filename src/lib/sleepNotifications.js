@@ -21,8 +21,18 @@ function isAvailable() {
 }
 
 // Register action types — call at app startup (SleepNotificationManager)
+//
+// Kun Android. På iOS registreres kategorien i native kode
+// (ios/App/App/SleepLockScreenActions.swift), fordi knaptrykket dér skal
+// håndteres uden om webviewet. Kaldes registerActionTypes fra JS på iOS,
+// overskriver Capacitor den native kategori, og knapperne forsvinder.
 export async function ensureActionTypesRegistered() {
   if (!isAvailable() || actionTypesRegistered) return;
+  if (Capacitor.getPlatform() !== 'android') {
+    console.log('[SLEEPLOG-NOTIF] action types håndteres nativt på denne platform');
+    actionTypesRegistered = true;
+    return;
+  }
   console.log('[SLEEPLOG-NOTIF] ensureActionTypesRegistered called');
 
   try {
@@ -31,8 +41,8 @@ export async function ensureActionTypesRegistered() {
         {
           id: ACTION_TYPE,
           actions: [
-            { id: 'stop', title: 'Stop' },
-            { id: 'pause', title: 'Pause' },
+            { id: 'awake', title: 'Barnet er vågent' },
+            { id: 'end', title: 'Afslut log' },
           ],
         },
       ],
@@ -132,7 +142,7 @@ async function handleAction(actionId, sessionId) {
   try {
     console.log('[SLEEPLOG-NOTIF] handleAction called', { actionId, sessionId });
 
-    if (actionId === 'stop') {
+    if (actionId === 'end' || actionId === 'stop') {
       const res = await base44.functions.invoke('manageSleepSession', {
         action: 'end',
         session_id: sessionId,
@@ -143,7 +153,7 @@ async function handleAction(actionId, sessionId) {
       return;
     }
 
-    if (actionId === 'pause') {
+    if (actionId === 'awake' || actionId === 'pause') {
       const logsRes = await base44.functions.invoke('getSleepLogs', {});
       const logsData = logsRes?.data || logsRes;
       const session = logsData?.active_session;
@@ -176,7 +186,15 @@ export async function registerSleepNotificationActions() {
           const actionId = event?.actionId;
           const sessionId = event?.notification?.extra?.session_id;
           console.log('[SLEEPLOG-NOTIF] action performed', { actionId, sessionId });
-          if (!actionId || !sessionId) return;
+          if (!actionId) return;
+          // På iOS håndteres awake/end i native kode. Skulle Capacitor
+          // alligevel levere dem her, må vi ikke behandle dem igen — det ville
+          // give to perioder i søvnloggen for ét tryk.
+          if (Capacitor.getPlatform() === 'ios' && (actionId === 'awake' || actionId === 'end')) {
+            console.log('[SLEEPLOG-NOTIF] springer over — håndteret nativt');
+            return;
+          }
+          if (!sessionId) return;
           await handleAction(actionId, sessionId);
         } catch (e) {
           console.error('[SLEEPLOG-NOTIF] action listener error:', e?.message || e);
