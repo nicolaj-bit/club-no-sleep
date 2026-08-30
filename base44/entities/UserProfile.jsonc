@@ -133,6 +133,11 @@
       "default": true,
       "description": "Notifikationer om nyt indhold"
     },
+    "trial_announcement_seen": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om brugeren har set engangs-beskeden om 7-dages gratis pr\u00f8veperiode"
+    },
     "subscription_status": {
       "type": "string",
       "enum": [

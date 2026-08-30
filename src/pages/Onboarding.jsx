@@ -129,6 +129,7 @@ export default function Onboarding() {
       }
 
       invalidateProfileCache(user.email);
+      sessionStorage.setItem('trigger_notif_prompt', '1');
       navigate('/app');
     } catch (e) {
       toast.error(e?.message || 'Noget gik galt. Prøv igen.');

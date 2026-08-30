@@ -32,6 +32,8 @@ import TrialStatusBadge from '@/components/subscription/TrialStatusBadge';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
 import { inAppLogout } from '@/lib/inAppLogout';
 import PageHeader from '@/components/ui/PageHeader';
+import { getPermissionStatus, openAppSettings } from '@/utils/notificationPermission';
+import { requestPushPermission } from '@/utils/requestPushPermission';
 
 export default function Profile() {
   const { isDark } = useTheme();
@@ -50,6 +52,7 @@ export default function Profile() {
   const [addChildOpen, setAddChildOpen] = useState(false);
   const [editingChild, setEditingChild] = useState(null);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [notifPermStatus, setNotifPermStatus] = useState('unknown');
   const [notifPrefs, setNotifPrefs] = useState({
     wonderweeks_notifications: true,
     notif_pregnancy_weekly: true,
@@ -77,6 +80,11 @@ export default function Profile() {
       notif_blog_new: profile.notif_blog_new !== false,
     });
   }, [profile?.id]);
+
+  useEffect(() => {
+    if (!notifOpen) return;
+    getPermissionStatus().then(setNotifPermStatus).catch(() => {});
+  }, [notifOpen]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -635,31 +643,72 @@ export default function Profile() {
       {/* Notification preferences */}
       <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
         <div className="px-5 py-4 space-y-5">
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
-          {[
-            { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
-            { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
-            { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
-            { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
-            { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
-          ].map(({ key, label, desc }) => (
-            <div key={key} className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
-              </div>
-              <Switch
-                checked={notifPrefs[key]}
-                onCheckedChange={async (val) => {
-                  const updated = { ...notifPrefs, [key]: val };
-                  setNotifPrefs(updated);
-                  if (profile?.id) {
-                    await base44.entities.UserProfile.update(profile.id, { [key]: val });
-                  }
+          {/* Permission status banner — only when OS permission is missing */}
+          {notifPermStatus === 'not_determined' && (
+            <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
+              <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                Notifikationer er slået fra på din telefon. Dine valg herunder træder først i kraft, når du slår dem til.
+              </p>
+              <button
+                onClick={async () => {
+                  await requestPushPermission();
+                  const status = await getPermissionStatus();
+                  setNotifPermStatus(status);
                 }}
-              />
+                className="w-full py-2.5 rounded-xl text-sm font-semibold active:opacity-80 transition-opacity"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+              >
+                Slå notifikationer til
+              </button>
             </div>
-          ))}
+          )}
+          {notifPermStatus === 'denied' && (
+            <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
+              <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+                Notifikationer er slået fra på din telefon. Dine valg herunder træder først i kraft, når du slår dem til.
+              </p>
+              <button
+                onClick={() => openAppSettings()}
+                className="w-full py-2.5 rounded-xl text-sm font-semibold active:opacity-80 transition-opacity"
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
+              >
+                Åbn indstillinger
+              </button>
+              <p className="text-xs mt-2.5 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                Gå til Notifikationer og tillad notifikationer for denne app.
+              </p>
+            </div>
+          )}
+
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
+
+          {/* Dim checkboxes when OS permission is missing */}
+          <div style={notifPermStatus === 'not_determined' || notifPermStatus === 'denied' ? { opacity: 0.45, pointerEvents: 'none' } : undefined}>
+            {[
+              { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
+              { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
+              { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
+              { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
+              { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
+            ].map(({ key, label, desc }) => (
+              <div key={key} className="flex items-center justify-between gap-4 mb-5">
+                <div>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
+                </div>
+                <Switch
+                  checked={notifPrefs[key]}
+                  onCheckedChange={async (val) => {
+                    const updated = { ...notifPrefs, [key]: val };
+                    setNotifPrefs(updated);
+                    if (profile?.id) {
+                      await base44.entities.UserProfile.update(profile.id, { [key]: val });
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          </div>
           <div className="h-2" />
         </div>
       </BottomSheet>
