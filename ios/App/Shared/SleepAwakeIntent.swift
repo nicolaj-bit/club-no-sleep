@@ -23,6 +23,13 @@ struct SleepAwakeIntent: LiveActivityIntent {
     /// Må ikke åbne appen. Hele pointen er, at trykket kan tages fra låseskærmen.
     static var openAppWhenRun: Bool = false
 
+    /// Skal kunne køre, mens telefonen er låst.
+    ///
+    /// Standarden for et AppIntent er `.requiresAuthentication`, og så beder iOS
+    /// om Face ID, før knappen udføres. Det ødelægger hele formålet: man står
+    /// med et barn på armen og skal kunne trykke ét sted uden at låse op.
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
+
     @Parameter(title: "Session")
     var sessionId: String
 

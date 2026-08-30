@@ -44,6 +44,14 @@ enum SleepActionSender {
     ///
     /// Der gemmes ALTID først, så trykket er registreret, også hvis appen bliver
     /// lukket ned midt i netværkskaldet.
+    ///
+    /// Rækkefølgen er også det, der gør trykket sikkert på en låst telefon.
+    /// UserDefaults ligger som udgangspunkt under beskyttelsesklassen
+    /// «tilgængelig efter første oplåsning siden genstart», og der er ikke sat
+    /// en strengere klasse noget sted i projektet, så tokenet kan normalt læses
+    /// fra låseskærmen. Kan det alligevel ikke — for eksempel hvis telefonen er
+    /// genstartet og aldrig låst op siden — fejler kun afsendelsen, mens
+    /// handlingen bliver liggende i køen og går igennem ved næste appstart.
     static func perform(action: String,
                         sessionId: String?,
                         completion: @escaping (Bool) -> Void) {

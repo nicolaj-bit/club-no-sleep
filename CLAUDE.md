@@ -105,6 +105,11 @@ som appen skriver i Capacitor Preferences under `cns_native_token`.
   Capacitor den native kategori, og knapperne forsvinder.
 - iOS folder altid notifikationer sammen. Knapper vises kun ved langt tryk.
   Altid synlige knapper kræver Live Activities (ActivityKit).
+- Knapper i en Live Activity skal sætte
+  `static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed`
+  på deres intent. Standarden er `.requiresAuthentication`, og så beder iOS om
+  Face ID, før knappen udføres — altså præcis den oplåsning, knappen skulle
+  gøre overflødig.
 - Capacitor-plugins, der ligger i selve app-targetet, skal registreres i hånden
   i `capacitorDidLoad()` i `MainViewController.swift` med
   `bridge?.registerPluginInstance(...)`. Capacitor 8 gennemsøger ikke runtime
