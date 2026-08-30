@@ -12,6 +12,35 @@ export function closeCurrentPeriod(periods, now) {
   return periods;
 }
 
+// Native låseskærm-knapper lægger handlingen i en kø, hvis netværkskaldet
+// fejler, og sender den igen senere med sit oprindelige tidspunkt i 'at'.
+// Bruges det ikke, får en forsinket handling modtagelsestidspunktet, og
+// søvnperioden bliver timer for lang.
+//
+// Tidspunktet kommer fra klienten og må derfor ikke bruges råt. Det klemmes
+// ind mellem starten på den periode, der lukkes, og nu, så et forkert eller
+// manipuleret ur hverken kan lave en periode med negativ længde eller datere
+// en handling ud i fremtiden.
+export function resolveActionTime(session, at) {
+  const now = new Date();
+  if (!at || typeof at !== 'string') return now.toISOString();
+
+  const parsed = new Date(at);
+  if (Number.isNaN(parsed.getTime()) || parsed > now) return now.toISOString();
+
+  const periods = session?.periods || [];
+  const last = periods[periods.length - 1];
+  const openStart = last && !last.end ? last.start : null;
+  const lowerBound = openStart || session?.session_start;
+
+  if (lowerBound) {
+    const floor = new Date(lowerBound);
+    if (!Number.isNaN(floor.getTime()) && parsed < floor) return floor.toISOString();
+  }
+
+  return parsed.toISOString();
+}
+
 // Find the single active session for the owner.
 export async function findActiveSession(base44, ownerEmail) {
   const recent = await base44.asServiceRole.entities.SleepLog.filter(
@@ -56,9 +85,9 @@ export async function resolveOwnerEmail(base44, profile) {
 }
 
 // Execute mark_awake or end action. Returns { status, body }.
-export async function executeSleepAction(base44, ownerEmail, action, sessionId) {
-  const now = new Date().toISOString();
-
+// 'at' er valgfrit: tidspunktet handlingen faktisk skete, sendt med af native
+// klienter der har haft handlingen liggende i kø. Udelades det, bruges nu.
+export async function executeSleepAction(base44, ownerEmail, action, sessionId, at) {
   const session = sessionId
     ? await findSessionById(base44, sessionId, ownerEmail)
     : await findActiveSession(base44, ownerEmail);
@@ -66,6 +95,8 @@ export async function executeSleepAction(base44, ownerEmail, action, sessionId) 
   if (!session) {
     return { status: 404, body: { error: 'Ingen aktiv session' } };
   }
+
+  const now = resolveActionTime(session, at);
 
   if (action === 'mark_awake') {
     const periods = closeCurrentPeriod(session.periods || [], now);
