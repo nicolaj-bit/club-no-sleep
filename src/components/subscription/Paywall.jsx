@@ -41,7 +41,7 @@ export default function Paywall({ onSubscribed }) {
   // Trial eligibility — kun relevant på native (butikshåndteret prøveperiode)
   const rcPrice = rc.offerings?.current?.availablePackages?.[0]?.product?.priceString;
   const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
-  const isTrialEligible = isNativeApp() && rc.trialEligibility === 'eligible';
+  const isTrialEligible = isNativeApp() && rc.trialEligibility !== 'ineligible';
   const isTrialIneligible = isNativeApp() && rc.trialEligibility === 'ineligible';
 
   const handleSubscribe = async () => {

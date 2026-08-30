@@ -16,7 +16,7 @@ export default function PlanChooser({ onChoose, finishing }) {
   const da = lang === 'da';
   const rcPrice = offerings?.current?.availablePackages?.[0]?.product?.priceString;
   const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
-  const isTrialEligible = trialEligibility === 'eligible';
+  const isTrialEligible = trialEligibility !== 'ineligible';
   const isTrialIneligible = trialEligibility === 'ineligible';
 
   const handleAppStore = async () => {
@@ -72,7 +72,9 @@ export default function PlanChooser({ onChoose, finishing }) {
           {t.choosePaymentMethod}
         </h2>
         <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
-          {t.pricingSubtitle}
+          {isTrialEligible
+            ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
+            : t.pricingSubtitle}
         </p>
       </div>
 

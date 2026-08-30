@@ -221,11 +221,21 @@ export default function Subscription() {
   // Brug pris fra RevenueCat, ellers vis cms-pris
   const iosPkg = rc.offerings?.current?.availablePackages?.[0];
   const iosPrice = iosPkg?.product?.priceString;
-  const priceLabel = iosPrice
-    ? `${iosPrice} / ${da ? 'måned' : 'month'}`
-    : display.price_label || '59 kr. / måned';
-  const ctaLabel = display.cta_label || (da ? 'Start abonnement' : 'Start subscription');
-  const footerNote = display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.');
+  const isTrialEligible = rc.trialEligibility !== 'ineligible';
+  const isTrialIneligible = rc.trialEligibility === 'ineligible';
+  const priceLabel = isTrialEligible
+    ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
+    : iosPrice
+      ? `${iosPrice} / ${da ? 'måned' : 'month'}`
+      : display.price_label || '59 kr. / måned';
+  const ctaLabel = isTrialEligible
+    ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
+    : isTrialIneligible
+      ? (da ? 'Bliv medlem' : 'Become a member')
+      : (display.cta_label || (da ? 'Start abonnement' : 'Start subscription'));
+  const footerNote = isTrialEligible
+    ? (da ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.' : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.')
+    : (display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.'));
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>

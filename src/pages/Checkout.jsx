@@ -47,7 +47,7 @@ export default function Checkout() {
   // Trial eligibility
   const rcPkg = rc.offerings?.current?.availablePackages?.[0];
   const rcPrice = rcPkg?.product?.priceString;
-  const isTrialEligible = rc.trialEligibility === 'eligible';
+  const isTrialEligible = rc.trialEligibility !== 'ineligible';
   const isTrialIneligible = rc.trialEligibility === 'ineligible';
   const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
 
@@ -143,7 +143,9 @@ export default function Checkout() {
             {t.checkoutBeccomeMember}
           </h1>
           <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-            {t.checkoutPricing}
+            {isTrialEligible
+              ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
+              : t.checkoutPricing}
           </p>
         </div>
 
