@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { syncOneSignalTags } from '@/lib/syncOneSignalTags';
 
 let _cache = null;
 let _cacheTime = 0;
@@ -22,6 +23,7 @@ export function useSubscription() {
         _cache = result;
         _cacheTime = Date.now();
         setState({ loading: false, ...result });
+        syncOneSignalTags(true, false);
         return;
       }
 
@@ -47,6 +49,7 @@ export function useSubscription() {
           _cache = result;
           _cacheTime = Date.now();
           setState({ loading: false, ...result });
+          syncOneSignalTags(true, false);
           return;
         }
 
@@ -56,18 +59,22 @@ export function useSubscription() {
           _cache = result;
           _cacheTime = Date.now();
           setState({ loading: false, ...result });
+          syncOneSignalTags(true, false);
           return;
         }
 
         const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
         if (!profiles.length) {
           setState({ loading: false, isActive: false, isTrial: false });
+          syncOneSignalTags(false, false);
           return;
         }
 
         const profile = profiles[0];
         const isTrial = profile.subscription_status === 'trial';
         const isActive = profile.subscription_status === 'active';
+
+        syncOneSignalTags(isActive || isTrial, isActive || profile.subscription_status === 'expired');
 
         const result = { isActive, isTrial };
         _cache = result;

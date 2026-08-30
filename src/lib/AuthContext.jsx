@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { inAppLogout } from '@/lib/inAppLogout';
+import { syncOneSignalTagsFromBackend } from '@/lib/syncOneSignalTags';
 
 const AuthContext = createContext();
 
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
           setUser(currentUser);
           setIsAuthenticated(true);
           localStorage.setItem('lalatoto_was_authenticated', 'true');
+          syncOneSignalTagsFromBackend();
         } catch (err) {
           console.error('User auth check failed:', err);
           setIsAuthenticated(false);

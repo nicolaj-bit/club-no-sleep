@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import { base44 } from '@/api/base44Client';
+import { syncOneSignalTags } from '@/lib/syncOneSignalTags';
 
 const RC_API_KEY_IOS = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 const RC_API_KEY_ANDROID = 'goog_UDgCHKbxGVPzooBzJOglqUUAtnS';
@@ -135,6 +136,13 @@ export function useRevenueCat(userId) {
     // Fire-and-forget — blokerer aldrig UI/opstart
     init();
   }, [userId]);
+
+  // Sync OneSignal subscription tags whenever RC entitlement or trial eligibility changes
+  useEffect(() => {
+    if (!isNative) return;
+    const trialUsed = trialEligibility === 'ineligible';
+    syncOneSignalTags(isSubscribed, trialUsed);
+  }, [isSubscribed, trialEligibility, isNative]);
 
   const purchase = async (packageToPurchase) => {
     try {
