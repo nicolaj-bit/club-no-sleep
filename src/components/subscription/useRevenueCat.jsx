@@ -38,6 +38,7 @@ export function useRevenueCat(userId) {
   const [isNative, setIsNative] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [customerInfo, setCustomerInfo] = useState(null);
+  const [trialEligibility, setTrialEligibility] = useState('unknown');
 
   const refreshCustomerInfo = useCallback(async () => {
     if (!Capacitor.isNativePlatform()) return;
@@ -96,6 +97,23 @@ export function useRevenueCat(userId) {
             console.log('[RevenueCat] first package product:', result.current.availablePackages[0].product?.identifier);
           }
           setOfferings(result);
+
+          // Tjek trial/intro-eligibility for første package
+          try {
+            const productId = result?.current?.availablePackages?.[0]?.product?.identifier;
+            if (productId) {
+              const elig = await Purchases.checkTrialOrIntroductoryPriceEligibility({
+                productIdentifiers: [productId]
+              });
+              const status = elig?.[productId];
+              setTrialEligibility(
+                status === 'eligible' ? 'eligible' :
+                status === 'ineligible' ? 'ineligible' : 'unknown'
+              );
+            }
+          } catch (eligErr) {
+            console.error('[RevenueCat] trial eligibility check failed (non-blocking):', eligErr?.message || eligErr);
+          }
         } catch (offErr) {
           console.error('[RevenueCat] getOfferings failed (non-blocking):', offErr?.message || offErr);
         }
@@ -140,7 +158,7 @@ export function useRevenueCat(userId) {
     }
   };
 
-  return { loading, offerings, error, purchase, restorePurchases, isNative, isSubscribed, customerInfo, refreshCustomerInfo };
+  return { loading, offerings, error, purchase, restorePurchases, isNative, isSubscribed, customerInfo, refreshCustomerInfo, trialEligibility };
 }
 
 export function resetRevenueCat() {

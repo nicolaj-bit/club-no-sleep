@@ -7,7 +7,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { Check, Sparkles, RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const FEATURES_DA = [
   { emoji: '🌙', text: 'AI søvnrådgivning til din baby' },
@@ -37,6 +37,12 @@ export default function Paywall({ onSubscribed }) {
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState(null);
   const [restoreMessage, setRestoreMessage] = useState(null);
+
+  // Trial eligibility — kun relevant på native (butikshåndteret prøveperiode)
+  const rcPrice = rc.offerings?.current?.availablePackages?.[0]?.product?.priceString;
+  const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
+  const isTrialEligible = isNativeApp() && rc.trialEligibility === 'eligible';
+  const isTrialIneligible = isNativeApp() && rc.trialEligibility === 'ineligible';
 
   const handleSubscribe = async () => {
     // Native iOS/iPadOS: redirect til /Subscription som håndterer RevenueCat IAP
@@ -237,7 +243,11 @@ export default function Paywall({ onSubscribed }) {
         >
           {loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
-            : (da ? 'Start abonnement' : 'Start subscription')}
+            : isTrialEligible
+              ? (da ? 'Prøv 7 dage gratis' : 'Try 7 days free')
+              : isTrialIneligible
+                ? (da ? `Bliv medlem · ${priceShort}/md.` : `Become a member · ${priceShort}/mo.`)
+                : (da ? 'Start abonnement' : 'Start subscription')}
         </motion.button>
 
         {/* Restore purchases */}
@@ -255,11 +265,20 @@ export default function Paywall({ onSubscribed }) {
             : <><RefreshCw className="w-3.5 h-3.5" /> {da ? 'Gendan eksisterende køb' : 'Restore existing purchase'}</>}
         </motion.button>
 
-        <p className="text-xs text-center mt-4" style={{ color: 'var(--color-text-muted)' }}>
-          {da
-            ? 'Abonnementet fornyes automatisk. Annuller når som helst.'
-            : 'Subscription renews automatically. Cancel anytime.'}
+        <p className="text-xs text-center mt-4 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+          {isTrialEligible
+            ? (da
+              ? `7 dage gratis, derefter ${priceShort}/md. Abonnementet fornyes automatisk. Opsig når som helst.`
+              : `7 days free, then ${priceShort}/mo. Subscription renews automatically. Cancel anytime.`)
+            : (da
+              ? 'Abonnementet fornyes automatisk. Opsig når som helst.'
+              : 'Subscription renews automatically. Cancel anytime.')}
         </p>
+
+        <div className="flex items-center justify-center gap-4 mt-3 text-xs">
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{da ? 'Vilkår' : 'Terms'}</Link>
+          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{da ? 'Privatlivspolitik' : 'Privacy Policy'}</Link>
+        </div>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ const STORE_LABELS = {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [purchasing, setPurchasing] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -42,6 +42,14 @@ export default function Checkout() {
   const rc = useRevenueCat(userId || null);
   const platform = Capacitor.getPlatform();
   const store = platform === 'android' ? STORE_LABELS.android : STORE_LABELS.ios;
+  const da = lang === 'da';
+
+  // Trial eligibility
+  const rcPkg = rc.offerings?.current?.availablePackages?.[0];
+  const rcPrice = rcPkg?.product?.priceString;
+  const isTrialEligible = rc.trialEligibility === 'eligible';
+  const isTrialIneligible = rc.trialEligibility === 'ineligible';
+  const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -220,11 +228,26 @@ export default function Checkout() {
         >
           {purchasing || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutProcessing}</>
-            : <>{t.checkoutSubscribe}</>}
+            : isTrialEligible
+              ? (da ? 'Prøv 7 dage gratis' : 'Try 7 days free')
+              : isTrialIneligible
+                ? (da ? `Bliv medlem · ${priceShort}/md.` : `Become a member · ${priceShort}/mo.`)
+                : <>{t.checkoutSubscribe}</>}
         </motion.button>
 
+        {/* Trial terms — tæt på CTA (compliance: Apple 3.1.2 / Google) */}
+        <p className="text-center text-xs mt-3 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          {isTrialEligible
+            ? (da
+              ? `7 dage gratis, derefter ${priceShort}/md. Abonnementet fornyes automatisk. Opsig når som helst.`
+              : `7 days free, then ${priceShort}/mo. Auto-renews. Cancel anytime.`)
+            : (da
+              ? 'Abonnementet fornyes automatisk. Opsig når som helst.'
+              : 'Subscription renews automatically. Cancel anytime.')}
+        </p>
+
         {/* Footer */}
-        <p className="text-center text-xs mt-4 flex items-center justify-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="text-center text-xs mt-3 flex items-center justify-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>
           <Lock className="w-3 h-3" /> {t.checkoutSecure?.replace('{store}', store.footer)}
         </p>
 

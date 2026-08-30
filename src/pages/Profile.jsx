@@ -28,6 +28,7 @@ import AddChildSheet from '@/components/children/AddChildSheet';
 import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
+import TrialStatusBadge from '@/components/subscription/TrialStatusBadge';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
 import { inAppLogout } from '@/lib/inAppLogout';
 import PageHeader from '@/components/ui/PageHeader';
@@ -178,6 +179,9 @@ export default function Profile() {
 
         {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
         {!isInvited && <CompleteMembershipBanner />}
+
+        {/* Resterende prøvedage — diskret visning for brugere i prøveperiode */}
+        {!isInvited && <TrialStatusBadge userEmail={user?.email} />}
 
         {/* Færdiggør profil — vis kun hvis ingen profil */}
         {!profile && (
