@@ -33,7 +33,9 @@ export default function SleepNotificationManager() {
         const data = res?.data || res;
         if (!mounted) return;
         await syncSleepNotification(data?.active_session || null);
-      } catch {}
+      } catch (e) {
+        console.error('[SLEEPLOG-NOTIF] sync failed:', e?.message || e);
+      }
     };
     sync();
 

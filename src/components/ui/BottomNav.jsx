@@ -11,6 +11,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { subscribeToUnreadCount } from '@/components/ui/NotificationBell';
+import { isNativeApp } from '@/lib/platform';
+import { testNotification, checkNotificationPermission } from '@/lib/sleepNotifications';
 
 export default function BottomNav() {
   const location = useLocation();
@@ -24,6 +26,8 @@ export default function BottomNav() {
   const { activeProfile } = useActiveProfile();
   const { isInvited, permissions } = useInviteAccess();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [permStatus, setPermStatus] = useState(null);
 
   // Invited users: filter menu items by permissions
   const invitedHiddenPages = isInvited ? [
@@ -41,6 +45,21 @@ export default function BottomNav() {
     const unsub = subscribeToUnreadCount(setUnreadCount);
     return unsub;
   }, []);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(auth => {
+      if (!auth) return;
+      base44.auth.me().then(u => setIsAdmin(u?.role === 'admin')).catch(() => {});
+    });
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen && isAdmin && isNativeApp()) {
+      checkNotificationPermission()
+        .then(status => setPermStatus(status))
+        .catch(e => setPermStatus('fejl: ' + (e?.message || e)));
+    }
+  }, [menuOpen, isAdmin]);
 
   // Gravid: har terminsdato i fremtiden og ingen fødselsdato
   const isExpecting = activeProfile?.child_due_date
@@ -194,6 +213,36 @@ export default function BottomNav() {
                   );
                 })}
               </div>
+
+              {isAdmin && isNativeApp() && (
+                <div className="px-4 pb-5 space-y-2">
+                  <button
+                    onClick={async () => {
+                      try {
+                        await testNotification();
+                        window.alert('Notifikation planlagt — vises om 5 sekunder');
+                      } catch (e) {
+                        window.alert('FEJL: ' + (e?.message || JSON.stringify(e)));
+                      }
+                      try {
+                        const status = await checkNotificationPermission();
+                        setPermStatus(status);
+                      } catch (e) {
+                        setPermStatus('fejl: ' + (e?.message || e));
+                      }
+                    }}
+                    className="w-full py-3 rounded-2xl text-sm font-medium active:opacity-70 transition-opacity"
+                    style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
+                  >
+                    Test notifikation
+                  </button>
+                  {permStatus !== null && (
+                    <p className="text-xs text-center" style={{ color: 'var(--color-text-muted)' }}>
+                      Tilladelse: {permStatus}
+                    </p>
+                  )}
+                </div>
+              )}
             </motion.div>
           </>
         )}

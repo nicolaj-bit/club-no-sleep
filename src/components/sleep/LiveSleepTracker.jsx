@@ -196,7 +196,9 @@ export default function LiveSleepTracker({ user, activeChild }) {
     try {
       await requestSleepNotificationPermission();
       await startSession(activeChild?.id || null, sleepType);
-    } catch {}
+    } catch (e) {
+      console.error('[SLEEPLOG-NOTIF] handleStart failed:', e?.message || e);
+    }
   };
   const handleMarkAwake = async () => {
     try { await markAwake(activeSession.id); } catch {}

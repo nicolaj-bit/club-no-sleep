@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSession';
 
 const NOTIF_ID = 1001;
+const TEST_NOTIF_ID = 9999;
 const CHANNEL_ID = 'sleep_session';
 const ACTION_SLEEPING = 'SLEEP_SESSION_SLEEPING';
 const ACTION_AWAKE = 'SLEEP_SESSION_AWAKE';
@@ -35,7 +36,9 @@ export async function ensureActionTypesRegistered() {
       visibility: 1,
       vibration: false,
     });
-  } catch {}
+  } catch (e) {
+    console.warn('[SLEEPLOG-NOTIF] defineChannel failed:', e?.message || e);
+  }
 
   try {
     await LocalNotifications.registerActionTypes({
@@ -58,7 +61,7 @@ export async function ensureActionTypesRegistered() {
     });
     actionTypesRegistered = true;
   } catch (e) {
-    console.warn('[sleepNotifications] registerActionTypes failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] registerActionTypes failed:', e?.message || e);
   }
 }
 
@@ -67,13 +70,13 @@ export async function requestSleepNotificationPermission() {
   if (!isAvailable()) return false;
   try {
     const perm = await LocalNotifications.checkPermissions();
-    if (perm.display === 'prompt') {
+    if (perm.display !== 'granted') {
       const result = await LocalNotifications.requestPermissions();
       return result.display === 'granted';
     }
-    return perm.display === 'granted';
+    return true;
   } catch (e) {
-    console.warn('[sleepNotifications] permission failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] permission failed:', e?.message || e);
     return false;
   }
 }
@@ -111,11 +114,12 @@ export async function showSleepNotification(session) {
           silent: true,
           actionTypeId: actionType,
           extra: { session_id: session.id },
+          schedule: { at: new Date(Date.now() + 3000) },
         },
       ],
     });
   } catch (e) {
-    console.warn('[sleepNotifications] show failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] show failed:', e?.message || e);
   }
 }
 
@@ -125,7 +129,7 @@ export async function clearSleepNotification() {
   try {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIF_ID }] });
   } catch (e) {
-    console.warn('[sleepNotifications] clear failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] clear failed:', e?.message || e);
   }
 }
 
@@ -164,7 +168,7 @@ async function handleAction(actionId, sessionId) {
       await showSleepNotification(session);
     }
   } catch (e) {
-    console.warn('[sleepNotifications] handleAction failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] handleAction failed:', e?.message || e);
   }
 }
 
@@ -180,11 +184,37 @@ export async function registerSleepNotificationActions() {
           const sessionId = event?.notification?.extra?.session_id;
           if (!actionId || !sessionId) return;
           await handleAction(actionId, sessionId);
-        } catch {}
+        } catch (e) {
+          console.error('[SLEEPLOG-NOTIF] action listener error:', e?.message || e);
+        }
       }
     );
     actionListenerRegistered = true;
   } catch (e) {
-    console.warn('[sleepNotifications] listener failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] listener registration failed:', e?.message || e);
   }
+}
+
+// === Test-funktioner (admin) ===
+
+export async function testNotification() {
+  if (!isAvailable()) {
+    throw new Error('LocalNotifications ikke tilgængelig på denne platform');
+  }
+  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: TEST_NOTIF_ID,
+        title: 'Test',
+        body: 'Virker',
+        schedule: { at: new Date(Date.now() + 5000) },
+      },
+    ],
+  });
+}
+
+export async function checkNotificationPermission() {
+  if (!isAvailable()) return 'unavailable';
+  const perm = await LocalNotifications.checkPermissions();
+  return perm.display;
 }
