@@ -6,5 +6,5 @@
 // Tilføj eller fjern adresser efter behov:
 // ============================================================================
 export const SUBSCRIPTION_ADMIN_EMAILS = [
-  '[INDSÆT_ADMIN_EMAIL]',
+  'nicolaj@lalatoto.dk',
 ];
