@@ -13,6 +13,10 @@ import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { subscribeToUnreadCount } from '@/components/ui/NotificationBell';
 import { isNativeApp } from '@/lib/platform';
 import { testNotification, checkNotificationPermission } from '@/lib/sleepNotifications';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+import { isLiveActivitySupported, startSleepLiveActivity } from '@/lib/sleepLiveActivity';
+
+const SleepLiveActivityPlugin = registerPlugin('SleepLiveActivity');
 
 export default function BottomNav() {
   const location = useLocation();
@@ -28,6 +32,9 @@ export default function BottomNav() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [permStatus, setPermStatus] = useState(null);
+  const [liveSupported, setLiveSupported] = useState(null);
+  const [pluginRaw, setPluginRaw] = useState(null);
+  const [startResult, setStartResult] = useState(null);
 
   // Invited users: filter menu items by permissions
   const invitedHiddenPages = isInvited ? [
@@ -58,6 +65,15 @@ export default function BottomNav() {
       checkNotificationPermission()
         .then(status => setPermStatus(status))
         .catch(e => setPermStatus('fejl: ' + (e?.message || e)));
+      // Live Activity-diagnose
+      setLiveSupported(null);
+      setPluginRaw(null);
+      isLiveActivitySupported()
+        .then(s => setLiveSupported(s))
+        .catch(e => setLiveSupported('fejl: ' + (e?.message || e)));
+      SleepLiveActivityPlugin.isSupported()
+        .then(res => setPluginRaw(JSON.stringify(res)))
+        .catch(e => setPluginRaw('FEJL: ' + (e?.message || JSON.stringify(e))));
     }
   }, [menuOpen, isAdmin]);
 
@@ -215,7 +231,7 @@ export default function BottomNav() {
               </div>
 
               {isAdmin && isNativeApp() && (
-                <div className="px-4 pb-5 space-y-2">
+                <div className="px-4 pb-5 space-y-3">
                   <button
                     onClick={async () => {
                       try {
@@ -241,6 +257,44 @@ export default function BottomNav() {
                       Tilladelse: {permStatus}
                     </p>
                   )}
+
+                  {/* Live Activity-diagnose */}
+                  <div className="rounded-2xl p-4 space-y-2.5" style={{ background: 'var(--color-bg-subtle)' }}>
+                    <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-text-muted)' }}>
+                      Live Activity
+                    </p>
+                    <div className="text-xs space-y-1.5" style={{ color: 'var(--color-text-secondary)' }}>
+                      <p><span style={{ color: 'var(--color-text-muted)' }}>Platform:</span> {Capacitor.getPlatform()}</p>
+                      <p><span style={{ color: 'var(--color-text-muted)' }}>isLiveActivitySupported():</span> {liveSupported === null ? '…' : String(liveSupported)}</p>
+                      <div>
+                        <p style={{ color: 'var(--color-text-muted)' }}>plugin.isSupported() direkte:</p>
+                        <p className="font-mono break-words" style={{ color: 'var(--color-text-primary)' }}>
+                          {pluginRaw === null ? '…' : pluginRaw}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const now = new Date().toISOString();
+                        const res = await startSleepLiveActivity({
+                          id: '',
+                          session_start: now,
+                          periods: [{ type: 'sleep', start: now, end: null }],
+                          session_status: 'active_sleep',
+                        });
+                        setStartResult(res === true ? 'true' : res === false ? 'false' : String(res));
+                      }}
+                      className="w-full py-2.5 rounded-xl text-sm font-medium active:opacity-70 transition-opacity"
+                      style={{ background: 'var(--color-accent)', color: 'var(--theme-text-on-dark)' }}
+                    >
+                      Start Live Activity nu
+                    </button>
+                    {startResult !== null && (
+                      <p className="text-xs text-center" style={{ color: 'var(--color-text-muted)' }}>
+                        Retur: {startResult}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
             </motion.div>
