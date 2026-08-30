@@ -4,7 +4,6 @@ import {
   ensureActionTypesRegistered,
   registerSleepNotificationActions,
   syncSleepNotification,
-  clearSleepNotification,
 } from '@/lib/sleepNotifications';
 import { isNativeApp } from '@/lib/platform';
 
@@ -25,14 +24,14 @@ export default function SleepNotificationManager() {
     const sync = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
-        if (!isAuth) {
-          await clearSleepNotification();
-          return;
-        }
+        if (!isAuth) return;
         const res = await base44.functions.invoke('getSleepLogs', {});
         const data = res?.data || res;
         if (!mounted) return;
-        await syncSleepNotification(data?.active_session || null);
+        const activeSession = data?.active_session;
+        if (activeSession && activeSession.session_status !== 'completed') {
+          await syncSleepNotification(activeSession);
+        }
       } catch (e) {
         console.error('[SLEEPLOG-NOTIF] sync failed:', e?.message || e);
       }

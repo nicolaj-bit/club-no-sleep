@@ -102,6 +102,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
   const [lightOn, setLightOn] = useState(false);
   const [onlineCount, setOnlineCount] = useState(0);
   const lastSyncKey = useRef('');
+  const prevNotifSessionId = useRef(null);
   const [sleepType, setSleepType] = useState(() => {
     const h = new Date().getHours();
     return (h >= 18 || h < 6) ? 'night' : 'nap';
@@ -121,15 +122,17 @@ export default function LiveSleepTracker({ user, activeChild }) {
     return () => document.removeEventListener('visibilitychange', handleVisible);
   }, []);
 
-  // Synkronisér vedvarende notifikation med session-tilstand
+  // Synkronisér notifikation — kun ved ny session ID, annullér kun ved stop
   useEffect(() => {
     if (loading) return;
-    if (activeSession) {
+    if (activeSession?.id && activeSession.id !== prevNotifSessionId.current) {
+      prevNotifSessionId.current = activeSession.id;
       syncSleepNotification(activeSession);
-    } else {
+    } else if (!activeSession && prevNotifSessionId.current) {
+      prevNotifSessionId.current = null;
       clearSleepNotification();
     }
-  }, [activeSession?.id, activeSession?.session_status, loading]);
+  }, [activeSession?.id, loading]);
 
   // Hent lys-tilstand (consent + online + count) ved opstart
   useEffect(() => {

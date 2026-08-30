@@ -5,9 +5,7 @@ import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSe
 
 const NOTIF_ID = 1001;
 const TEST_NOTIF_ID = 9999;
-const CHANNEL_ID = 'sleep_session';
-const ACTION_SLEEPING = 'SLEEP_SESSION_SLEEPING';
-const ACTION_AWAKE = 'SLEEP_SESSION_AWAKE';
+const ACTION_TYPE = 'SLEEP_SESSION';
 
 let actionTypesRegistered = false;
 let actionListenerRegistered = false;
@@ -22,56 +20,39 @@ function isAvailable() {
   }
 }
 
-// Register action types + Android channel — call at app startup
+// Register action types — call at app startup (SleepNotificationManager)
 export async function ensureActionTypesRegistered() {
   if (!isAvailable() || actionTypesRegistered) return;
-
-  // Android: define a LOW-importance, no-vibration channel
-  try {
-    await LocalNotifications.defineChannel({
-      id: CHANNEL_ID,
-      name: 'Søvnsession',
-      description: 'Vedvarende notifikation under aktiv søvnlogning',
-      importance: 1,
-      visibility: 1,
-      vibration: false,
-    });
-  } catch (e) {
-    console.warn('[SLEEPLOG-NOTIF] defineChannel failed:', e?.message || e);
-  }
+  console.log('[SLEEPLOG-NOTIF] ensureActionTypesRegistered called');
 
   try {
     await LocalNotifications.registerActionTypes({
       types: [
         {
-          id: ACTION_SLEEPING,
+          id: ACTION_TYPE,
           actions: [
-            { id: 'log_wake', title: 'Opvågning' },
-            { id: 'end_session', title: 'Afslut' },
-          ],
-        },
-        {
-          id: ACTION_AWAKE,
-          actions: [
-            { id: 'log_sleep', title: 'Sover igen' },
-            { id: 'end_session', title: 'Afslut' },
+            { id: 'stop', title: 'Stop' },
+            { id: 'pause', title: 'Pause' },
           ],
         },
       ],
     });
     actionTypesRegistered = true;
+    console.log('[SLEEPLOG-NOTIF] action types registered:', ACTION_TYPE);
   } catch (e) {
     console.error('[SLEEPLOG-NOTIF] registerActionTypes failed:', e?.message || e);
   }
 }
 
-// Request notification permission — call on first use of sleep log
+// Request notification permission — call on first sleep log start
 export async function requestSleepNotificationPermission() {
   if (!isAvailable()) return false;
   try {
     const perm = await LocalNotifications.checkPermissions();
+    console.log('[SLEEPLOG-NOTIF] permission check:', perm.display);
     if (perm.display !== 'granted') {
       const result = await LocalNotifications.requestPermissions();
+      console.log('[SLEEPLOG-NOTIF] permission request result:', result.display);
       return result.display === 'granted';
     }
     return true;
@@ -81,100 +62,112 @@ export async function requestSleepNotificationPermission() {
   }
 }
 
-// Show or update the notification to match session state
+// Show the notification — same minimal form as testNotification
 export async function showSleepNotification(session) {
-  if (!isAvailable() || !session) return;
+  if (!isAvailable()) return;
+  console.log('[SLEEPLOG-NOTIF] showSleepNotification called', {
+    sessionId: session?.id,
+    status: session?.session_status,
+  });
+
+  const perm = await LocalNotifications.checkPermissions();
+  console.log('[SLEEPLOG-NOTIF] permission status:', perm.display);
+
+  let timeStr = '';
   try {
-    const status = session.session_status;
-    const phaseStart = getCurrentPhaseStart(session);
-    const timeStr = formatClockHm(phaseStart);
+    const startTime = session ? getCurrentPhaseStart(session) : new Date().toISOString();
+    timeStr = formatClockHm(startTime);
+  } catch (e) {
+    console.warn('[SLEEPLOG-NOTIF] could not compute start time:', e?.message || e);
+    timeStr = formatClockHm(new Date().toISOString());
+  }
 
-    let title, body, actionType;
-    if (status === 'active_sleep') {
-      title = 'Barnet sover 💤';
-      body = `Startet kl. ${timeStr} · tryk for at registrere opvågning`;
-      actionType = ACTION_SLEEPING;
-    } else if (status === 'active_awake') {
-      title = 'Barnet er vågent';
-      body = `Vågen siden kl. ${timeStr}`;
-      actionType = ACTION_AWAKE;
-    } else {
-      await clearSleepNotification();
-      return;
-    }
+  const triggerAt = new Date(Date.now() + 3000);
+  console.log('[SLEEPLOG-NOTIF] scheduling', {
+    id: NOTIF_ID,
+    actionTypeId: ACTION_TYPE,
+    triggerAt: triggerAt.toISOString(),
+  });
 
-    await LocalNotifications.schedule({
+  try {
+    const result = await LocalNotifications.schedule({
       notifications: [
         {
           id: NOTIF_ID,
-          title,
-          body,
-          channelId: CHANNEL_ID,
-          ongoing: true,
-          silent: true,
-          actionTypeId: actionType,
-          extra: { session_id: session.id },
-          schedule: { at: new Date(Date.now() + 3000) },
+          title: 'Søvnlog kører',
+          body: `Startet kl. ${timeStr}`,
+          actionTypeId: ACTION_TYPE,
+          extra: { session_id: session?.id },
+          schedule: { at: triggerAt },
         },
       ],
     });
+    console.log('[SLEEPLOG-NOTIF] schedule() returned:', JSON.stringify(result));
   } catch (e) {
-    console.error('[SLEEPLOG-NOTIF] show failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] schedule() failed:', e?.message || e);
   }
 }
 
-// Clear/remove the notification
+// Cancel the notification — only call when sleep log stops
 export async function clearSleepNotification() {
   if (!isAvailable()) return;
+  console.log('[SLEEPLOG-NOTIF] clearSleepNotification — cancelling id', NOTIF_ID);
   try {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIF_ID }] });
+    console.log('[SLEEPLOG-NOTIF] cancel() done');
   } catch (e) {
-    console.error('[SLEEPLOG-NOTIF] clear failed:', e?.message || e);
+    console.error('[SLEEPLOG-NOTIF] cancel() failed:', e?.message || e);
   }
 }
 
-// Sync notification with actual session state from DB
+// Sync notification with session — only shows, never clears
 export async function syncSleepNotification(session) {
   if (!isAvailable()) return;
-  if (!session || session.session_status === 'completed') {
-    await clearSleepNotification();
-    return;
-  }
+  if (!session || session.session_status === 'completed') return;
   await showSleepNotification(session);
 }
 
-// Handle action button press — calls same backend as in-app buttons
+// Handle action button press
 async function handleAction(actionId, sessionId) {
   try {
-    let action;
-    if (actionId === 'log_wake') action = 'mark_awake';
-    else if (actionId === 'log_sleep') action = 'mark_sleeping';
-    else if (actionId === 'end_session') action = 'end';
-    else return;
+    console.log('[SLEEPLOG-NOTIF] handleAction called', { actionId, sessionId });
 
-    const res = await base44.functions.invoke('manageSleepSession', {
-      action,
-      session_id: sessionId,
-    });
-    const result = res?.data || res;
-    if (result?.error) {
+    if (actionId === 'stop') {
+      const res = await base44.functions.invoke('manageSleepSession', {
+        action: 'end',
+        session_id: sessionId,
+      });
+      const result = res?.data || res;
+      console.log('[SLEEPLOG-NOTIF] stop result, status:', result?.session?.session_status);
       await clearSleepNotification();
       return;
     }
-    const session = result?.session;
-    if (action === 'end' || !session || session.session_status === 'completed') {
-      await clearSleepNotification();
-    } else {
-      await showSleepNotification(session);
+
+    if (actionId === 'pause') {
+      const logsRes = await base44.functions.invoke('getSleepLogs', {});
+      const logsData = logsRes?.data || logsRes;
+      const session = logsData?.active_session;
+      if (!session) {
+        console.warn('[SLEEPLOG-NOTIF] pause: no active session found');
+        return;
+      }
+      const newAction = session.session_status === 'active_sleep' ? 'mark_awake' : 'mark_sleeping';
+      console.log('[SLEEPLOG-NOTIF] pause: current', session.session_status, '→ action', newAction);
+      await base44.functions.invoke('manageSleepSession', {
+        action: newAction,
+        session_id: sessionId,
+      });
+      return;
     }
   } catch (e) {
     console.error('[SLEEPLOG-NOTIF] handleAction failed:', e?.message || e);
   }
 }
 
-// Register action listener — call once at app startup
+// Register action listener — call once at app startup (SleepNotificationManager)
 export async function registerSleepNotificationActions() {
   if (!isAvailable() || actionListenerRegistered) return;
+  console.log('[SLEEPLOG-NOTIF] registerSleepNotificationActions called');
   try {
     await LocalNotifications.addListener(
       'localNotificationActionPerformed',
@@ -182,6 +175,7 @@ export async function registerSleepNotificationActions() {
         try {
           const actionId = event?.actionId;
           const sessionId = event?.notification?.extra?.session_id;
+          console.log('[SLEEPLOG-NOTIF] action performed', { actionId, sessionId });
           if (!actionId || !sessionId) return;
           await handleAction(actionId, sessionId);
         } catch (e) {
@@ -190,6 +184,7 @@ export async function registerSleepNotificationActions() {
       }
     );
     actionListenerRegistered = true;
+    console.log('[SLEEPLOG-NOTIF] action listener registered');
   } catch (e) {
     console.error('[SLEEPLOG-NOTIF] listener registration failed:', e?.message || e);
   }
