@@ -1,5 +1,6 @@
 import { base44 } from '@/api/base44Client';
-import { isNativeAndroid } from '@/lib/platform';
+import { isNativeAndroid, isNativeApp } from '@/lib/platform';
+import { Preferences } from '@capacitor/preferences';
 
 /**
  * Platform-bevidst log ud.
@@ -18,6 +19,15 @@ import { isNativeAndroid } from '@/lib/platform';
  * Android-WebView'er hvor broen ikke er injiceret (fx test-app) fanges.
  */
 export async function inAppLogout(redirectUrl) {
+  // Fjern native action token fra Preferences (kun native)
+  if (isNativeApp()) {
+    try {
+      await Preferences.remove({ key: 'cns_native_token' });
+    } catch (e) {
+      console.warn('[inAppLogout] Could not remove native token:', e);
+    }
+  }
+
   if (isNativeAndroid()) {
     try {
       localStorage.removeItem('base44_access_token');

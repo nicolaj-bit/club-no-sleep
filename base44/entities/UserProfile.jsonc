@@ -194,6 +194,10 @@
       ],
       "description": "Om brugeren er den prim\u00e6re (betalende) eller inviteret partner"
     },
+    "native_action_token": {
+      "type": "string",
+      "description": "Token til native s\u00f8vnlog-handlinger (mark_awake/end) uden login. Bruges af l\u00e5sesk\u00e6rm-knapper."
+    },
     "ai_assistant_name": {
       "type": "string",
       "maxLength": 30,

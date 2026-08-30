@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { Preferences } from '@capacitor/preferences';
 import {
   ensureActionTypesRegistered,
   registerSleepNotificationActions,
@@ -20,6 +21,23 @@ export default function SleepNotificationManager() {
       await registerSleepNotificationActions();
     };
     init();
+
+    // Hent og gem native action token efter login (kun native)
+    const ensureToken = async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) return;
+        const res = await base44.functions.invoke('ensureNativeActionToken', {});
+        const data = res?.data || res;
+        if (data?.token) {
+          await Preferences.set({ key: 'cns_native_token', value: data.token });
+          console.log('[SLEEPLOG-NOTIF] native action token stored');
+        }
+      } catch (e) {
+        console.error('[SLEEPLOG-NOTIF] could not store native action token:', e?.message || e);
+      }
+    };
+    ensureToken();
 
     const sync = async () => {
       try {
