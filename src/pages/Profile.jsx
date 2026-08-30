@@ -32,7 +32,8 @@ import TrialStatusBadge from '@/components/subscription/TrialStatusBadge';
 import { redirectToWebSubscription } from '@/lib/nativeAuth';
 import { inAppLogout } from '@/lib/inAppLogout';
 import PageHeader from '@/components/ui/PageHeader';
-import { getPermissionStatus, openAppSettings } from '@/utils/notificationPermission';
+import { Capacitor } from '@capacitor/core';
+import { getPermissionStatus } from '@/utils/notificationPermission';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 
 export default function Profile() {
@@ -664,18 +665,13 @@ export default function Profile() {
           )}
           {notifPermStatus === 'denied' && (
             <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
-              <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
+              <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
                 Notifikationer er slået fra på din telefon. Dine valg herunder træder først i kraft, når du slår dem til.
               </p>
-              <button
-                onClick={() => openAppSettings()}
-                className="w-full py-2.5 rounded-xl text-sm font-semibold active:opacity-80 transition-opacity"
-                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-              >
-                Åbn indstillinger
-              </button>
-              <p className="text-xs mt-2.5 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                Gå til Notifikationer og tillad notifikationer for denne app.
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+                {Capacitor.getPlatform() === 'ios'
+                  ? 'Sådan slår du notifikationer til: Åbn Indstillinger på din telefon → find Club No Sleep på listen → tryk Notifikationer → slå Tillad notifikationer til.'
+                  : 'Sådan slår du notifikationer til: Åbn Indstillinger på din telefon → Apps → Club No Sleep → Notifikationer → slå dem til.'}
               </p>
             </div>
           )}
