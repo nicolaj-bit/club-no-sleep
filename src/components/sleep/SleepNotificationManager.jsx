@@ -56,14 +56,11 @@ export default function SleepNotificationManager() {
     };
     sync();
 
-    const handleVisible = () => {
-      if (document.visibilityState === 'visible') sync();
-    };
-    document.addEventListener('visibilitychange', handleVisible);
+    // Forgrunds-håndtering (data + Live Activity) er samlet i SleepForegroundSync
+    // via appStateChange — her sættes kun Live Activity op ved app-start.
 
     return () => {
       mounted = false;
-      document.removeEventListener('visibilitychange', handleVisible);
     };
   }, []);
 

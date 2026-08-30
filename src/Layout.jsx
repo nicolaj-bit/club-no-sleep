@@ -11,6 +11,7 @@ import NotificationPrompt from '@/components/ui/NotificationPrompt';
 import MarketingConsentPrompt from '@/components/ui/MarketingConsentPrompt';
 import BadgeClearer from '@/components/ui/BadgeClearer';
 import AdminDebugConsole from '@/components/ui/AdminDebugConsole';
+import SleepForegroundSync from '@/components/sleep/SleepForegroundSync';
 import { InviteAccessProvider } from '@/components/auth/InviteAccessContext';
 import { ActiveProfileProvider } from '@/components/ui/ActiveProfileContext';
 import { ActiveChildProvider } from '@/components/ui/ActiveChildContext';
@@ -99,6 +100,7 @@ export default function Layout({ children, currentPageName }) {
         <MarketingConsentPrompt />
         <BadgeClearer />
         <AdminDebugConsole />
+        <SleepForegroundSync />
       </div>
     </TabStateProvider>
     </ActiveChildProvider>

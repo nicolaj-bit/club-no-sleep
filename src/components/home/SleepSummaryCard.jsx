@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Moon } from 'lucide-react';
 import { format, subDays } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { computeSessionTotals } from '../../../base44/shared/sleepSession';
@@ -10,53 +12,40 @@ import { computeSessionTotals } from '../../../base44/shared/sleepSession';
 export default function SleepSummaryCard({ userEmail }) {
   const { t, lang } = useLanguage();
   const { isInvited, inviterSleepLogs } = useInviteAccess();
-  const [log, setLog] = useState(null);
-  const [activeSession, setActiveSession] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (isInvited) {
-      if (!Array.isArray(inviterSleepLogs) || inviterSleepLogs.length === 0) {
-        setLog(null);
-        setActiveSession(null);
-        setLoading(false);
-        return;
-      }
-      const today = format(new Date(), 'yyyy-MM-dd');
-      const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
-      const active = inviterSleepLogs.find(l => l.session_status === 'active_sleep' || l.session_status === 'active_awake');
-      const recent = inviterSleepLogs.find(l =>
+  // Ikke-inviterede: delt React Query-cache (samme nøgle som useSleepSession),
+  // så én invalidering opdaterer kortet sammen med resten af appen.
+  const { data: sleepData, isLoading: sleepLoading } = useQuery({
+    queryKey: ['sleeplogs', userEmail],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('getSleepLogs', {});
+      return res?.data || res;
+    },
+    enabled: !isInvited && !!userEmail,
+  });
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+
+  let log = null;
+  let activeSession = null;
+
+  if (isInvited) {
+    if (Array.isArray(inviterSleepLogs) && inviterSleepLogs.length > 0) {
+      activeSession = inviterSleepLogs.find(l => l.session_status === 'active_sleep' || l.session_status === 'active_awake') || null;
+      log = inviterSleepLogs.find(l =>
         (l.date === today || l.date === yesterday) && l.session_status === 'completed'
-      );
-      setActiveSession(active || null);
-      setLog(recent || null);
-      setLoading(false);
-      return;
+      ) || null;
     }
+  } else if (sleepData) {
+    const logs = sleepData?.sleep_logs || [];
+    log = logs.find(l =>
+      (l.date === today || l.date === yesterday) && l.session_status === 'completed'
+    ) || null;
+    activeSession = sleepData?.active_session || null;
+  }
 
-    if (!userEmail) return;
-    let cancelled = false;
-    import('@/api/base44Client').then(({ base44 }) => {
-      base44.functions.invoke('getSleepLogs', {}).then(res => {
-        if (cancelled) return;
-        const data = res?.data || res;
-        const today = format(new Date(), 'yyyy-MM-dd');
-        const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
-        const logs = data?.sleep_logs || [];
-        const recent = logs.find(l =>
-          (l.date === today || l.date === yesterday) && l.session_status === 'completed'
-        );
-        setLog(recent || null);
-        setActiveSession(data?.active_session || null);
-        setLoading(false);
-      }).catch(() => {
-        if (cancelled) return;
-        setLog(null);
-        setLoading(false);
-      });
-    });
-    return () => { cancelled = true; };
-  }, [userEmail, isInvited, inviterSleepLogs]);
+  const loading = isInvited ? false : sleepLoading;
 
   let durMs = null;
   let wakeCount = null;
