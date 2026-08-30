@@ -1,12 +1,12 @@
 import { registerPlugin, Capacitor } from '@capacitor/core';
 import { getCurrentPhase, getCurrentPhaseStart } from '../../base44/shared/sleepSession';
-
+ 
 // Native plugin — ios/App/App/SleepLiveActivityPlugin.swift
 const SleepLiveActivity = registerPlugin('SleepLiveActivity');
-
+ 
 // Svaret ændrer sig ikke undervejs i en app-session, så det hentes kun én gang.
 let supportedCache = null;
-
+ 
 /**
  * Kan enheden vise en Live Activity med en knap, der virker fra låseskærmen?
  *
@@ -28,7 +28,7 @@ export async function isLiveActivitySupported() {
   }
   return supportedCache;
 }
-
+ 
 function phaseInfo(session) {
   const phase = getCurrentPhase(session);
   const phaseStart = getCurrentPhaseStart(session) || session?.session_start || new Date().toISOString();
@@ -37,7 +37,7 @@ function phaseInfo(session) {
   const isAwake = phase ? phase.type === 'awake' : session?.session_status === 'active_awake';
   return { phaseStart, isAwake };
 }
-
+ 
 /** Starter aktiviteten, eller opdaterer den hvis der allerede kører en. */
 export async function startSleepLiveActivity(session) {
   if (!(await isLiveActivitySupported())) return false;
@@ -56,7 +56,7 @@ export async function startSleepLiveActivity(session) {
     return false;
   }
 }
-
+ 
 export async function updateSleepLiveActivity(session) {
   if (!(await isLiveActivitySupported())) return;
   const { phaseStart, isAwake } = phaseInfo(session);
@@ -66,7 +66,7 @@ export async function updateSleepLiveActivity(session) {
     console.error('[SLEEPLOG-LIVE] opdatering fejlede:', e?.message || e);
   }
 }
-
+ 
 export async function endSleepLiveActivity() {
   if (Capacitor.getPlatform() !== 'ios') return;
   try {

@@ -3,14 +3,14 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { base44 } from '@/api/base44Client';
 import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSession';
 import { startSleepLiveActivity, endSleepLiveActivity } from './sleepLiveActivity';
-
+ 
 const NOTIF_ID = 1001;
 const TEST_NOTIF_ID = 9999;
 const ACTION_TYPE = 'SLEEP_SESSION';
-
+ 
 let actionTypesRegistered = false;
 let actionListenerRegistered = false;
-
+ 
 function isAvailable() {
   try {
     if (!Capacitor.isNativePlatform()) return false;
@@ -20,7 +20,7 @@ function isAvailable() {
     return false;
   }
 }
-
+ 
 // Register action types — call at app startup (SleepNotificationManager)
 //
 // Kun Android. På iOS registreres kategorien i native kode
@@ -35,7 +35,7 @@ export async function ensureActionTypesRegistered() {
     return;
   }
   console.log('[SLEEPLOG-NOTIF] ensureActionTypesRegistered called');
-
+ 
   try {
     await LocalNotifications.registerActionTypes({
       types: [
@@ -54,7 +54,7 @@ export async function ensureActionTypesRegistered() {
     console.error('[SLEEPLOG-NOTIF] registerActionTypes failed:', e?.message || e);
   }
 }
-
+ 
 // Request notification permission — call on first sleep log start
 export async function requestSleepNotificationPermission() {
   if (!isAvailable()) return false;
@@ -72,7 +72,7 @@ export async function requestSleepNotificationPermission() {
     return false;
   }
 }
-
+ 
 // Show the notification — same minimal form as testNotification
 export async function showSleepNotification(session) {
   if (!isAvailable()) return;
@@ -80,7 +80,7 @@ export async function showSleepNotification(session) {
     sessionId: session?.id,
     status: session?.session_status,
   });
-
+ 
   // På iOS 17 og nyere vises en Live Activity i stedet: den ligger fast på
   // låseskærmen med en tæller der løber, og knappen "Barnet er vågent" er
   // altid synlig. Kører der allerede en, opdateres den.
@@ -92,10 +92,10 @@ export async function showSleepNotification(session) {
     await cancelNotification();
     return;
   }
-
+ 
   const perm = await LocalNotifications.checkPermissions();
   console.log('[SLEEPLOG-NOTIF] permission status:', perm.display);
-
+ 
   let timeStr = '';
   try {
     const startTime = session ? getCurrentPhaseStart(session) : new Date().toISOString();
@@ -104,14 +104,14 @@ export async function showSleepNotification(session) {
     console.warn('[SLEEPLOG-NOTIF] could not compute start time:', e?.message || e);
     timeStr = formatClockHm(new Date().toISOString());
   }
-
+ 
   const triggerAt = new Date(Date.now() + 3000);
   console.log('[SLEEPLOG-NOTIF] scheduling', {
     id: NOTIF_ID,
     actionTypeId: ACTION_TYPE,
     triggerAt: triggerAt.toISOString(),
   });
-
+ 
   try {
     const result = await LocalNotifications.schedule({
       notifications: [
@@ -130,7 +130,7 @@ export async function showSleepNotification(session) {
     console.error('[SLEEPLOG-NOTIF] schedule() failed:', e?.message || e);
   }
 }
-
+ 
 async function cancelNotification() {
   try {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIF_ID }] });
@@ -139,7 +139,7 @@ async function cancelNotification() {
     console.error('[SLEEPLOG-NOTIF] cancel() failed:', e?.message || e);
   }
 }
-
+ 
 // Cancel the notification — only call when sleep log stops
 export async function clearSleepNotification() {
   if (!isAvailable()) return;
@@ -148,19 +148,19 @@ export async function clearSleepNotification() {
   // Der kan ligge en Live Activity uanset hvilken vej notifikationen gik.
   await endSleepLiveActivity();
 }
-
+ 
 // Sync notification with session — only shows, never clears
 export async function syncSleepNotification(session) {
   if (!isAvailable()) return;
   if (!session || session.session_status === 'completed') return;
   await showSleepNotification(session);
 }
-
+ 
 // Handle action button press
 async function handleAction(actionId, sessionId) {
   try {
     console.log('[SLEEPLOG-NOTIF] handleAction called', { actionId, sessionId });
-
+ 
     if (actionId === 'end' || actionId === 'stop') {
       const res = await base44.functions.invoke('manageSleepSession', {
         action: 'end',
@@ -171,7 +171,7 @@ async function handleAction(actionId, sessionId) {
       await clearSleepNotification();
       return;
     }
-
+ 
     if (actionId === 'awake' || actionId === 'pause') {
       const logsRes = await base44.functions.invoke('getSleepLogs', {});
       const logsData = logsRes?.data || logsRes;
@@ -192,7 +192,7 @@ async function handleAction(actionId, sessionId) {
     console.error('[SLEEPLOG-NOTIF] handleAction failed:', e?.message || e);
   }
 }
-
+ 
 // Register action listener — call once at app startup (SleepNotificationManager)
 export async function registerSleepNotificationActions() {
   if (!isAvailable() || actionListenerRegistered) return;
@@ -226,9 +226,9 @@ export async function registerSleepNotificationActions() {
     console.error('[SLEEPLOG-NOTIF] listener registration failed:', e?.message || e);
   }
 }
-
+ 
 // === Test-funktioner (admin) ===
-
+ 
 export async function testNotification() {
   if (!isAvailable()) {
     throw new Error('LocalNotifications ikke tilgængelig på denne platform');
@@ -244,7 +244,7 @@ export async function testNotification() {
     ],
   });
 }
-
+ 
 export async function checkNotificationPermission() {
   if (!isAvailable()) return 'unavailable';
   const perm = await LocalNotifications.checkPermissions();
