@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark, Moon, Sparkles } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -23,7 +23,6 @@ export default function BottomNav() {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
-  const [aiIconUrl, setAiIconUrl] = useState(null);
   const { saveTabPath, getTabPath, clearTabPath } = useTabState();
   const { isDark } = useTheme();
   const { t } = useLanguage();
@@ -84,6 +83,7 @@ export default function BottomNav() {
 
   const menuItemsConfig = [
     { key: 'blog', icon: BookOpen, page: 'Blog' },
+    { key: 'ai', icon: Sparkles, page: 'AIChat', name: 'AI-hjælper' },
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
@@ -103,12 +103,6 @@ export default function BottomNav() {
       ...item,
       name: item.name || t[item.key],
     }));
-
-  useEffect(() => {
-    base44.entities.AppConfig.filter({ key: 'ai_chat_icon' }).then(results => {
-      if (results?.[0]?.icon_url) setAiIconUrl(results[0].icon_url);
-    }).catch(() => {});
-  }, []);
 
   const isActive = (page) => {
     const url = createPageUrl(page);
@@ -334,22 +328,23 @@ export default function BottomNav() {
             </span>
           </Link>
 
-          <Link to={createPageUrl('AIChat')} className="flex flex-col items-center gap-0.5">
+          <button
+            onClick={() => handleNavPress('SleepLog')}
+            className={cn(
+              'flex flex-col items-center gap-0.5 transition-all',
+              isActive('SleepLog') ? 'opacity-100' : 'opacity-50 hover:opacity-75'
+            )}
+          >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden"
-              style={aiIconUrl ? {} : { background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))' }}
+              className="w-5 h-5 rounded-full flex items-center justify-center"
+              style={{ background: 'var(--color-primary)' }}
             >
-              {aiIconUrl ? (
-                <img src={aiIconUrl} alt="AI" className="w-full h-full object-cover" />
-              ) : (
-                <svg viewBox="0 0 40 44" width="22" height="24" fill="var(--theme-text-on-dark)" aria-hidden>
-                  <ellipse cx="20" cy="10" rx="7.5" ry="8" opacity="0.9" />
-                  <path d="M4 38 C4 28 8 24 20 24 C32 24 36 28 36 38" opacity="0.75" />
-                  <path d="M17 14 Q20 10 23 14 Q20 18 17 14Z" fill="var(--color-bg-card)" opacity="0.9" />
-                </svg>
-              )}
+              <Moon className="w-3 h-3" strokeWidth={2.5} style={{ color: '#FFFFFF' }} />
             </div>
-          </Link>
+            <span className="text-[10px] font-medium" style={{ color: isDark ? '#FFFFFF' : '#2C1A0E' }}>
+              {t.sleepLog}
+            </span>
+          </button>
 
           <button
             onClick={() => setMenuOpen(true)}
