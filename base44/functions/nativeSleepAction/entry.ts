@@ -2,11 +2,11 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 import { resolveOwnerEmail, executeSleepAction } from '../../shared/sleepActions.ts';
 
 // ============================================================================
-// nativeSleepAction — afslut/markér vågen på en søvnlog UDEN login.
-// Bruges af native låseskærm-knapper (Stop/Pause).
+// nativeSleepAction — afslut/markér vågen eller sovende på en søvnlog UDEN login.
+// Bruges af native låseskærm-knapper (Stop/Pause/Genoptag søvn).
 //
 // Autentificering sker via native_action_token på UserProfile.
-// Tillader kun handlingerne mark_awake og end — aldrig start eller undo.
+// Tillaler kun mark_awake, mark_sleeping og end — aldrig start eller undo.
 // ============================================================================
 
 export default async function(req) {
@@ -15,15 +15,17 @@ export default async function(req) {
     const body = await req.json();
     const { token, session_id, at, action: rawAction } = body;
 
-    // Den native klient sender 'awake'; handlingen hedder 'mark_awake' her.
-    // Der mappes før validering, så builds i App Store med den gamle streng
-    // bliver ved med at virke.
-    const action = rawAction === 'awake' ? 'mark_awake' : rawAction;
+    // Den native klient sender 'awake'/'sleeping'; handlingerne hedder
+    // 'mark_awake'/'mark_sleeping' her. Der mappes før validering, så builds i
+    // App Store med den gamle streng bliver ved med at virke.
+    const action = rawAction === 'awake' ? 'mark_awake'
+      : rawAction === 'sleeping' ? 'mark_sleeping'
+      : rawAction;
 
-    // Kun mark_awake og end er tilladt fra native
-    if (action !== 'mark_awake' && action !== 'end') {
+    // Kun mark_awake, mark_sleeping og end er tilladt fra native
+    if (action !== 'mark_awake' && action !== 'mark_sleeping' && action !== 'end') {
       return Response.json(
-        { error: 'Ugyldig handling — kun mark_awake og end tilladt' },
+        { error: 'Ugyldig handling — kun mark_awake, mark_sleeping og end tilladt' },
         { status: 400 }
       );
     }

@@ -98,12 +98,14 @@ export async function executeSleepAction(base44, ownerEmail, action, sessionId, 
 
   const now = resolveActionTime(session, at);
 
-  if (action === 'mark_awake') {
+  if (action === 'mark_awake' || action === 'mark_sleeping') {
+    const newType = action === 'mark_awake' ? 'awake' : 'sleep';
+    const newStatus = action === 'mark_awake' ? 'active_awake' : 'active_sleep';
     const periods = closeCurrentPeriod(session.periods || [], now);
-    periods.push({ type: 'awake', start: now, end: null });
+    periods.push({ type: newType, start: now, end: null });
     const updated = await base44.asServiceRole.entities.SleepLog.update(session.id, {
       periods,
-      session_status: 'active_awake',
+      session_status: newStatus,
     });
     return { status: 200, body: { ok: true, session: updated } };
   }
