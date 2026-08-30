@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
 import { toast } from 'sonner';
 import { Capacitor } from '@capacitor/core';
@@ -10,9 +10,14 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 export default function PlanChooser({ onChoose, finishing }) {
   const [selected, setSelected] = useState(null);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
-  const { offerings, purchase } = useRevenueCat();
-  const { t } = useLanguage();
+  const { offerings, purchase, trialEligibility } = useRevenueCat();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
+  const da = lang === 'da';
+  const rcPrice = offerings?.current?.availablePackages?.[0]?.product?.priceString;
+  const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
+  const isTrialEligible = trialEligibility === 'eligible';
+  const isTrialIneligible = trialEligibility === 'ineligible';
 
   const handleAppStore = async () => {
     if (window.self !== window.top) {
@@ -117,6 +122,20 @@ export default function PlanChooser({ onChoose, finishing }) {
 
       </div>
 
+      {/* Trial heading — over knappen */}
+      {isTrialEligible && (
+        <h3 style={{
+          textAlign: 'center',
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontSize: '1.3rem',
+          fontWeight: 400,
+          color: 'var(--color-text-primary)',
+          margin: '0 0 0.75rem',
+        }}>
+          {da ? 'Prøv Club No Sleep gratis i 7 dage' : 'Try Club No Sleep free for 7 days'}
+        </h3>
+      )}
+
       {/* CTA */}
       <button
         onClick={selected === 'appstore' ? handleAppStore : undefined}
@@ -141,12 +160,40 @@ export default function PlanChooser({ onChoose, finishing }) {
         {loadingPurchase
           ? <><Loader2 size={18} className="animate-spin" /> {t.processingPurchase}</>
           : !selected ? t.selectPaymentMethod
-          : `${t.buyVia} App Store →`}
+          : isTrialEligible
+            ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
+            : isTrialIneligible
+              ? (da ? 'Bliv medlem' : 'Become a member')
+              : `${t.buyVia} App Store →`}
       </button>
+
+      {/* Linje under knap */}
+      {selected && (isTrialEligible || isTrialIneligible) && (
+        <p style={{ color: 'var(--color-text-muted)', fontSize: '0.78rem', textAlign: 'center', marginTop: '0.5rem' }}>
+          {isTrialEligible
+            ? (da ? `Derefter ${priceShort}/md. Opsig når som helst.` : `Then ${priceShort}/mo. Cancel anytime.`)
+            : (da ? `${priceShort}/md. Opsig når som helst.` : `${priceShort}/mo. Cancel anytime.`)}
+        </p>
+      )}
+
+      {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
+      {isTrialEligible && (
+        <p style={{ color: 'var(--color-text-muted)', fontSize: '0.72rem', textAlign: 'center', marginTop: '0.75rem', lineHeight: 1.6 }}>
+          {da
+            ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
+            : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
+        </p>
+      )}
 
       <p style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', textAlign: 'center', marginTop: '1rem' }}>
         {t.securePaymentNote}
       </p>
+
+      {/* Terms / Privacy */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.75rem' }}>
+        <Link to="/Terms" style={{ color: 'var(--color-text-secondary)', fontSize: '0.75rem' }} className="underline underline-offset-2">{da ? 'Vilkår' : 'Terms'}</Link>
+        <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)', fontSize: '0.75rem' }} className="underline underline-offset-2">{da ? 'Privatlivspolitik' : 'Privacy Policy'}</Link>
+      </div>
 
       {/* Skip-knap — gem profil og gå til appen med begrænset adgang */}
       <button

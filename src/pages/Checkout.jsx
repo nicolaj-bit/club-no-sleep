@@ -218,6 +218,13 @@ export default function Checkout() {
           </div>
         )}
 
+        {/* Trial heading — over knappen */}
+        {isTrialEligible && (
+          <h2 className="text-center mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.4rem' }}>
+            {da ? 'Prøv Club No Sleep gratis i 7 dage' : 'Try Club No Sleep free for 7 days'}
+          </h2>
+        )}
+
         {/* CTA button */}
         <motion.button
           whileTap={{ scale: 0.98 }}
@@ -229,22 +236,29 @@ export default function Checkout() {
           {purchasing || rc.loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.checkoutProcessing}</>
             : isTrialEligible
-              ? (da ? 'Prøv 7 dage gratis' : 'Try 7 days free')
+              ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
               : isTrialIneligible
-                ? (da ? `Bliv medlem · ${priceShort}/md.` : `Become a member · ${priceShort}/mo.`)
+                ? (da ? 'Bliv medlem' : 'Become a member')
                 : <>{t.checkoutSubscribe}</>}
         </motion.button>
 
-        {/* Trial terms — tæt på CTA (compliance: Apple 3.1.2 / Google) */}
-        <p className="text-center text-xs mt-3 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+        {/* Linje under knap */}
+        <p className="text-center text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
           {isTrialEligible
-            ? (da
-              ? `7 dage gratis, derefter ${priceShort}/md. Abonnementet fornyes automatisk. Opsig når som helst.`
-              : `7 days free, then ${priceShort}/mo. Auto-renews. Cancel anytime.`)
-            : (da
-              ? 'Abonnementet fornyes automatisk. Opsig når som helst.'
-              : 'Subscription renews automatically. Cancel anytime.')}
+            ? (da ? `Derefter ${priceShort}/md. Opsig når som helst.` : `Then ${priceShort}/mo. Cancel anytime.`)
+            : isTrialIneligible
+              ? (da ? `${priceShort}/md. Opsig når som helst.` : `${priceShort}/mo. Cancel anytime.`)
+              : (da ? 'Abonnementet fornyes automatisk. Opsig når som helst.' : 'Subscription renews automatically. Cancel anytime.')}
         </p>
+
+        {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
+        {isTrialEligible && (
+          <p className="text-center text-xs mt-3 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            {da
+              ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
+              : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
+          </p>
+        )}
 
         {/* Footer */}
         <p className="text-center text-xs mt-3 flex items-center justify-center gap-1" style={{ color: 'var(--color-text-secondary)' }}>

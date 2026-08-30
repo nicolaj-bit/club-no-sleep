@@ -231,6 +231,13 @@ export default function Paywall({ onSubscribed }) {
 
         <div className="flex-1" />
 
+        {/* Trial heading — over knappen */}
+        {isTrialEligible && (
+          <h2 className="text-center mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.4rem' }}>
+            {da ? 'Prøv Club No Sleep gratis i 7 dage' : 'Try Club No Sleep free for 7 days'}
+          </h2>
+        )}
+
         {/* Subscribe CTA */}
         <motion.button
           initial={{ y: 16, opacity: 0 }}
@@ -244,9 +251,9 @@ export default function Paywall({ onSubscribed }) {
           {loading
             ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
             : isTrialEligible
-              ? (da ? 'Prøv 7 dage gratis' : 'Try 7 days free')
+              ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
               : isTrialIneligible
-                ? (da ? `Bliv medlem · ${priceShort}/md.` : `Become a member · ${priceShort}/mo.`)
+                ? (da ? 'Bliv medlem' : 'Become a member')
                 : (da ? 'Start abonnement' : 'Start subscription')}
         </motion.button>
 
@@ -265,15 +272,23 @@ export default function Paywall({ onSubscribed }) {
             : <><RefreshCw className="w-3.5 h-3.5" /> {da ? 'Gendan eksisterende køb' : 'Restore existing purchase'}</>}
         </motion.button>
 
-        <p className="text-xs text-center mt-4 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+        {/* Linje under knap */}
+        <p className="text-xs text-center mt-1" style={{ color: 'var(--color-text-muted)' }}>
           {isTrialEligible
-            ? (da
-              ? `7 dage gratis, derefter ${priceShort}/md. Abonnementet fornyes automatisk. Opsig når som helst.`
-              : `7 days free, then ${priceShort}/mo. Subscription renews automatically. Cancel anytime.`)
-            : (da
-              ? 'Abonnementet fornyes automatisk. Opsig når som helst.'
-              : 'Subscription renews automatically. Cancel anytime.')}
+            ? (da ? `Derefter ${priceShort}/md. Opsig når som helst.` : `Then ${priceShort}/mo. Cancel anytime.`)
+            : isTrialIneligible
+              ? (da ? `${priceShort}/md. Opsig når som helst.` : `${priceShort}/mo. Cancel anytime.`)
+              : (da ? 'Abonnementet fornyes automatisk. Opsig når som helst.' : 'Subscription renews automatically. Cancel anytime.')}
         </p>
+
+        {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
+        {isTrialEligible && (
+          <p className="text-xs text-center mt-3 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            {da
+              ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
+              : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
+          </p>
+        )}
 
         <div className="flex items-center justify-center gap-4 mt-3 text-xs">
           <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{da ? 'Vilkår' : 'Terms'}</Link>
