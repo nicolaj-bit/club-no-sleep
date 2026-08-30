@@ -13,7 +13,12 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    const { token, action, session_id } = body;
+    const { token, session_id, at, action: rawAction } = body;
+
+    // Den native klient sender 'awake'; handlingen hedder 'mark_awake' her.
+    // Der mappes før validering, så builds i App Store med den gamle streng
+    // bliver ved med at virke.
+    const action = rawAction === 'awake' ? 'mark_awake' : rawAction;
 
     // Kun mark_awake og end er tilladt fra native
     if (action !== 'mark_awake' && action !== 'end') {
@@ -44,7 +49,7 @@ export default async function(req) {
     }
 
     // Udfør handlingen (samme logik som manageSleepSession)
-    const result = await executeSleepAction(base44, ownerResult.ownerEmail, action, session_id);
+    const result = await executeSleepAction(base44, ownerResult.ownerEmail, action, session_id, at);
     return Response.json(result.body, { status: result.status });
   } catch (error) {
     console.error('nativeSleepAction error:', error?.message || error);
