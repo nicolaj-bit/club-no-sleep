@@ -7,7 +7,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Knapper på søvnlog-notifikationen håndteres i native kode, fordi
+        // webviewet i remote mode ikke når at loade inden for det tidsrum,
+        // iOS giver til at behandle et knaptryk. Se SleepLockScreenActions.
+        SleepLockScreenActions.shared.install()
         return true
     }
 
@@ -26,7 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        // Capacitor kan have overskrevet vores notification-delegate og
+        // kategorier undervejs. install() er idempotent og sætter dem på plads
+        // igen, og sender samtidig eventuelle handlinger fra køen af sted.
+        SleepLockScreenActions.shared.install()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
