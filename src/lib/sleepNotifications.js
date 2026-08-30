@@ -2,6 +2,7 @@ import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { base44 } from '@/api/base44Client';
 import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSession';
+import { startSleepLiveActivity, endSleepLiveActivity } from './sleepLiveActivity';
 
 const NOTIF_ID = 1001;
 const TEST_NOTIF_ID = 9999;
@@ -80,6 +81,18 @@ export async function showSleepNotification(session) {
     status: session?.session_status,
   });
 
+  // På iOS 17 og nyere vises en Live Activity i stedet: den ligger fast på
+  // låseskærmen med en tæller der løber, og knappen "Barnet er vågent" er
+  // altid synlig. Kører der allerede en, opdateres den.
+  //
+  // Kan det ikke lade sig gøre — ældre iOS, Android, eller en native build
+  // uden plugin'et — returnerer kaldet false, og vi falder tilbage til den
+  // almindelige notifikation herunder.
+  if (await startSleepLiveActivity(session)) {
+    await cancelNotification();
+    return;
+  }
+
   const perm = await LocalNotifications.checkPermissions();
   console.log('[SLEEPLOG-NOTIF] permission status:', perm.display);
 
@@ -118,16 +131,22 @@ export async function showSleepNotification(session) {
   }
 }
 
-// Cancel the notification — only call when sleep log stops
-export async function clearSleepNotification() {
-  if (!isAvailable()) return;
-  console.log('[SLEEPLOG-NOTIF] clearSleepNotification — cancelling id', NOTIF_ID);
+async function cancelNotification() {
   try {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIF_ID }] });
     console.log('[SLEEPLOG-NOTIF] cancel() done');
   } catch (e) {
     console.error('[SLEEPLOG-NOTIF] cancel() failed:', e?.message || e);
   }
+}
+
+// Cancel the notification — only call when sleep log stops
+export async function clearSleepNotification() {
+  if (!isAvailable()) return;
+  console.log('[SLEEPLOG-NOTIF] clearSleepNotification — cancelling id', NOTIF_ID);
+  await cancelNotification();
+  // Der kan ligge en Live Activity uanset hvilken vej notifikationen gik.
+  await endSleepLiveActivity();
 }
 
 // Sync notification with session — only shows, never clears
