@@ -20,6 +20,7 @@ Deno.serve(async (req) => {
       child_due_date,
       childMode,
       child_name,
+      marketing_consent,
     } = body;
 
     if (!username || !profile_label) {
@@ -45,6 +46,9 @@ Deno.serve(async (req) => {
       subscription_status: isActive ? 'active' : 'trial',
       subscription_started_at: isActive ? now : undefined,
       trial_started_at: isActive ? undefined : now,
+      marketing_consent: marketing_consent === true,
+      marketing_consent_at: marketing_consent === true ? now : undefined,
+      marketing_consent_prompted: true,
     };
 
     // Find og opdater eksisterende profil via service role (bypasser RLS)

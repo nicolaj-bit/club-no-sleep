@@ -41,6 +41,7 @@ export default function Onboarding() {
     child_due_date: '',
     accept_terms: false,
     accept_privacy: false,
+    marketing_consent: false,
   });
 
   useEffect(() => {
@@ -122,6 +123,7 @@ export default function Onboarding() {
         child_due_date: form.child_due_date,
         childMode,
         child_name: form.child_name,
+        marketing_consent: form.marketing_consent,
       });
 
       if (!response.data?.ok) {
@@ -383,6 +385,26 @@ export default function Onboarding() {
                     </span>
                   </label>
                   {errors.accept_privacy && <p className="text-xs text-red-500">{errors.accept_privacy}</p>}
+                </div>
+
+                {/* Markedsføringssamtykke — valgfrit, ikke påkrævet */}
+                <div className="rounded-2xl p-4" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.marketing_consent}
+                      onChange={e => setField('marketing_consent', e.target.checked)}
+                      className="w-5 h-5 mt-0.5 cursor-pointer flex-shrink-0"
+                    />
+                    <div>
+                      <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        Ja tak, send mig gode råd, nyt om appen og tilbud på mail.
+                      </span>
+                      <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                        Du kan altid framelde dig igen. Vi deler aldrig din mail med andre.
+                      </p>
+                    </div>
+                  </label>
                 </div>
 
               </motion.div>

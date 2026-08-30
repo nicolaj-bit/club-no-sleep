@@ -32,6 +32,15 @@ export default function NotificationPrompt() {
   const location = useLocation();
   const prevPath = useRef(location.pathname);
 
+  // Coordinate with MarketingConsentPrompt — never show two modals at once
+  useEffect(() => {
+    if (showTrial || showNotif) {
+      sessionStorage.setItem('modal_active', '1');
+    } else {
+      sessionStorage.removeItem('modal_active');
+    }
+  }, [showTrial, showNotif]);
+
   // ── DEL 3: Trial announcement (one-time, on first app open) ──────────
   useEffect(() => {
     if (subLoading || trialChecked) return;

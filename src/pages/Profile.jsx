@@ -60,6 +60,7 @@ export default function Profile() {
     notif_calendar_reminder: true,
     notif_sleep_encouragement: true,
     notif_blog_new: true,
+    marketing_consent: false,
   });
   const { children: myChildren, activeChild, setActiveChildId, refetch: refetchChildren } = useActiveChild();
 
@@ -79,6 +80,7 @@ export default function Profile() {
       notif_calendar_reminder: profile.notif_calendar_reminder !== false,
       notif_sleep_encouragement: profile.notif_sleep_encouragement !== false,
       notif_blog_new: profile.notif_blog_new !== false,
+      marketing_consent: profile.marketing_consent === true,
     });
   }, [profile?.id]);
 
@@ -675,6 +677,28 @@ export default function Profile() {
               </p>
             </div>
           )}
+
+          {/* Markedsføringssamtykke — e-mail (uafhængig af OS-notifikationstilladelse) */}
+          <div className="rounded-2xl p-4" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Gode råd og tilbud på mail</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Du kan altid framelde dig igen</p>
+              </div>
+              <Switch
+                checked={notifPrefs.marketing_consent === true}
+                onCheckedChange={async (val) => {
+                  setNotifPrefs(p => ({ ...p, marketing_consent: val }));
+                  if (profile?.id) {
+                    await base44.entities.UserProfile.update(profile.id, {
+                      marketing_consent: val,
+                      marketing_consent_at: new Date().toISOString(),
+                    });
+                  }
+                }}
+              />
+            </div>
+          </div>
 
           <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
 

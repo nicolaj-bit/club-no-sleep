@@ -133,6 +133,21 @@
       "default": true,
       "description": "Notifikationer om nyt indhold"
     },
+    "marketing_consent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Samtykke til markedsf\u00f8rings-e-mails (nyhedsbreve, tilbud)"
+    },
+    "marketing_consent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tidspunkt for seneste samtykke-\u00e6ndring"
+    },
+    "marketing_consent_prompted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Om brugeren har taget stilling til markedsf\u00f8ringsmail (engangs-modal)"
+    },
     "trial_announcement_seen": {
       "type": "boolean",
       "default": false,

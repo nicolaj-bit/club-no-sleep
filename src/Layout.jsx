@@ -8,6 +8,7 @@ import { TabStateProvider } from '@/components/ui/TabStateContext';
 import { LanguageProvider } from '@/components/ui/LanguageContext';
 import DarkModeNudge from '@/components/ui/DarkModeNudge';
 import NotificationPrompt from '@/components/ui/NotificationPrompt';
+import MarketingConsentPrompt from '@/components/ui/MarketingConsentPrompt';
 import BadgeClearer from '@/components/ui/BadgeClearer';
 import AdminDebugConsole from '@/components/ui/AdminDebugConsole';
 import { InviteAccessProvider } from '@/components/auth/InviteAccessContext';
@@ -95,6 +96,7 @@ export default function Layout({ children, currentPageName }) {
         {showNav && <BottomNav />}
         <DarkModeNudge />
         <NotificationPrompt />
+        <MarketingConsentPrompt />
         <BadgeClearer />
         <AdminDebugConsole />
       </div>
