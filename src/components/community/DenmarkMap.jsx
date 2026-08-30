@@ -3,8 +3,21 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, Attributi
 import L from 'leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import { useTheme } from '@/components/ui/ThemeProvider';
 
 const DENMARK_CENTER = [56.0, 10.5];
+
+// Esri Canvas tile-sæt — ét sted at rette hvis URL'er ændres
+const TILE_LAYERS = {
+  light: {
+    base: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    labels: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+  },
+  dark: {
+    base: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    labels: 'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+  },
+};
 
 // Create a gold pin SVG icon — size scales with zoom
 function makePinIcon(size = 22, isMe = false, nightMode = false) {
@@ -79,20 +92,15 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
   const mappedUsers = users.filter(u => u.latitude && u.longitude);
   const [zoom, setZoom] = useState(6);
 
+  const { isDark } = useTheme();
+
+  // Markører beholder tidsbaseret nattilstand — rør ikke ved pins
   const isNightMode = useMemo(() => {
     const hour = new Date().getHours();
     return hour >= 20 || hour < 5;
   }, []);
 
-  // ESRI World Light/Dark Gray Canvas — gratis, ingen API-nøgle, dæmpet stil
-  const tileUrl = isNightMode
-    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-
-  // Reference-lag (bynavne/labels) — lægges ovenpå base, under markører
-  const labelUrl = isNightMode
-    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
-    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}';
+  const tiles = isDark ? TILE_LAYERS.dark : TILE_LAYERS.light;
 
   // Pin size scales with zoom: small at zoom 6, bigger zoomed in
   const pinSize = Math.max(8, Math.min(20, (zoom - 5) * 3 + 8));
@@ -104,8 +112,9 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
   const meIcon = useMemo(() => makePinIcon(myPinSize, true, isNightMode), [myPinSize, isNightMode]);
 
   return (
-    <div style={{ height: 300, position: 'relative', zIndex: 0 }}>
+    <div style={{ height: 300, position: 'relative', zIndex: 0, backgroundColor: 'var(--color-bg)' }}>
       <style>{`
+        .leaflet-container { background: var(--color-bg) !important; }
         .leaflet-popup-content-wrapper {
           border-radius: 12px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.12);
@@ -129,8 +138,8 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         scrollWheelZoom={false}
         attributionControl={false}
       >
-        <TileLayer url={tileUrl} attribution="© Esri, HERE, Garmin" />
-        <TileLayer url={labelUrl} />
+        <TileLayer key={`base-${isDark ? 'dark' : 'light'}`} url={tiles.base} attribution="© Esri, HERE, Garmin" />
+        <TileLayer key={`labels-${isDark ? 'dark' : 'light'}`} url={tiles.labels} />
         <AttributionControl prefix={false} position="bottomright" />
         <AutoZoom location={currentUserLocation} />
         <ZoomTracker onZoom={setZoom} />
