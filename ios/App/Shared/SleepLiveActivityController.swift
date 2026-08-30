@@ -67,24 +67,32 @@ enum SleepLiveActivityController {
 
     // MARK: - Opdatering
 
-    static func update(isAwake: Bool, phaseStart: Date) {
+    /// Selve opdateringen. Skal kunne ventes på: knappens intent har kun et
+    /// kort øjeblik, før iOS må suspendere appen igen, og fyrer man opdateringen
+    /// af sted i en løsrevet Task, kan låseskærmen nå at gå i stå, før den er
+    /// nået igennem.
+    static func apply(isAwake: Bool, phaseStart: Date) async {
         guard let activity = current else { return }
         let state = SleepActivityAttributes.ContentState(isAwake: isAwake, phaseStart: phaseStart)
 
-        Task {
-            if #available(iOS 16.2, *) {
-                await activity.update(ActivityContent(state: state, staleDate: nil))
-            } else {
-                await activity.update(using: state)
-            }
-            NSLog("[CNS-LIVE] Live Activity opdateret (vågen: %@)", isAwake ? "ja" : "nej")
+        if #available(iOS 16.2, *) {
+            await activity.update(ActivityContent(state: state, staleDate: nil))
+        } else {
+            await activity.update(using: state)
         }
+        NSLog("[CNS-LIVE] Live Activity opdateret (vågen: %@)", isAwake ? "ja" : "nej")
+    }
+
+    /// Til kald fra Capacitor-plugin'et, hvor appen er i forgrunden og der ikke
+    /// er noget at vente på.
+    static func update(isAwake: Bool, phaseStart: Date) {
+        Task { await apply(isAwake: isAwake, phaseStart: phaseStart) }
     }
 
     /// Sætter aktiviteten til "vågen" med det samme. Kaldes fra knappens intent,
     /// så låseskærmen reagerer med det samme frem for at vente på netværket.
-    static func markAwake() {
-        update(isAwake: true, phaseStart: Date())
+    static func markAwake() async {
+        await apply(isAwake: true, phaseStart: Date())
     }
 
     // MARK: - Afslutning

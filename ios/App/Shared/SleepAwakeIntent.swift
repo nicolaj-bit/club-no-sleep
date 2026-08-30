@@ -40,7 +40,7 @@ struct SleepAwakeIntent: LiveActivityIntent {
         // Vis med det samme at trykket er registreret. Sker det først, når
         // netværkskaldet er ovre, når brugeren at trykke igen.
         #if canImport(ActivityKit)
-        SleepLiveActivityController.markAwake()
+        await SleepLiveActivityController.markAwake()
         #endif
 
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
