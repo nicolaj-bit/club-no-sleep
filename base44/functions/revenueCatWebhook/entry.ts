@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { SUBSCRIPTION_ADMIN_EMAILS } from '../../shared/adminEmails.js';
 
 /**
  * RevenueCat webhook — synkroniserer IAP (iOS App Store OG Google Play) til UserProfile.subscription_status
@@ -8,6 +9,90 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
  * URL: <din app url>/api/functions/revenueCatWebhook
  * Authorization header: sæt REVENUECAT_WEBHOOK_SECRET i app secrets
  */
+/**
+ * Sender admin-notifikation ved vigtige abonnementshændelser.
+ * Kalderen pakker kaldet i try/catch — mailen må aldrig fejle webhooken.
+ */
+async function sendAdminNotification(base44, event) {
+  // RENEWAL springes over — ellers 1 mail pr. medlem pr. måned
+  if (event.type === 'RENEWAL') return;
+
+  const isSandbox = event.environment === 'SANDBOX';
+  const testPrefix = isSandbox ? '[TEST] ' : '';
+
+  let subject = '';
+  let kind = '';
+
+  if (event.type === 'INITIAL_PURCHASE') {
+    if (event.period_type === 'TRIAL') {
+      kind = 'trial';
+      subject = `${testPrefix}🕯 Ny prøveperiode startet — Club No Sleep`;
+    } else {
+      kind = 'purchase';
+      subject = `${testPrefix}🎉 Nyt betalende medlem — Club No Sleep`;
+    }
+  } else if (event.type === 'CANCELLATION') {
+    kind = 'cancellation';
+    subject = `${testPrefix}Et medlem har opsagt — Club No Sleep`;
+  } else if (event.type === 'EXPIRATION') {
+    kind = 'expiration';
+    subject = `${testPrefix}Et medlemskab er udløbt — Club No Sleep`;
+  } else {
+    return; // Ikke en relevant hændelse
+  }
+
+  const storeName = event.store === 'PLAY_STORE'
+    ? 'Google Play'
+    : event.store === 'APP_STORE'
+      ? 'App Store'
+      : event.store || 'Ukendt';
+
+  const userId = event.app_user_id || 'Ukendt';
+  const productId = event.product_id || 'Ukendt';
+  const now = new Date().toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' });
+  const purchasedAt = event.purchased_at_ms
+    ? new Date(event.purchased_at_ms).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })
+    : null;
+
+  let priceLine = '';
+  if (event.price !== undefined && event.price !== null) {
+    priceLine = `<p><strong>Beløb:</strong> ${event.price} ${event.currency || ''}</p>`;
+  }
+
+  let body = `
+<h2>${subject}</h2>
+<hr />
+<p><strong>Bruger:</strong> ${userId}</p>
+<p><strong>Platform:</strong> ${storeName}</p>
+<p><strong>Produkt:</strong> ${productId}</p>
+${priceLine}
+<p><strong>Tidspunkt:</strong> ${now}</p>
+`;
+
+  if (kind === 'trial' && event.expiration_at_ms) {
+    const trialEnd = new Date(event.expiration_at_ms).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' });
+    body += `<hr /><p><strong>Prøveperiode udløber:</strong> ${trialEnd}</p>`;
+    body += `<p>Efter udløb konverteres prøveperioden til et betalende abonnement.</p>`;
+  }
+
+  if ((kind === 'cancellation' || kind === 'expiration') && event.expiration_at_ms) {
+    const accessEnd = new Date(event.expiration_at_ms).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' });
+    body += `<hr /><p><strong>Adgang ophører:</strong> ${accessEnd}</p>`;
+    if (purchasedAt) {
+      body += `<p><strong>Medlem siden:</strong> ${purchasedAt}</p>`;
+    }
+  }
+
+  await base44.asServiceRole.integrations.Core.SendEmail({
+    to: SUBSCRIPTION_ADMIN_EMAILS.join(', '),
+    from_name: 'Club No Sleep Abonnement',
+    subject,
+    body,
+  });
+
+  console.log(`[RevenueCat] admin mail sendt: ${subject}`);
+}
+
 Deno.serve(async (req) => {
   try {
     console.log('[RevenueCat] webhook modtaget');
@@ -72,6 +157,13 @@ Deno.serve(async (req) => {
     }
 
     console.log(`[RevenueCat] event: ${event.type}, app_user_id: ${event.app_user_id}`);
+
+    // Send admin-notifikation — uafhængig af profil-opslag, må aldrig fejle webhooken
+    try {
+      await sendAdminNotification(base44, event);
+    } catch (mailErr) {
+      console.error('[RevenueCat] admin mail fejl:', mailErr.message);
+    }
 
     // Find bruger via app_user_id (vi sætter user.id eller email som RC userId)
     const appUserId = event.app_user_id;
