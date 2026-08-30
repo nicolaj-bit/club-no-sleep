@@ -167,11 +167,11 @@ export default function Checkout() {
           ))}
         </div>
 
-        {/* Payment method card — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
+        {/* Payment method info — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
         <div className="mb-6">
           <div
             className="w-full rounded-2xl p-4 flex items-center gap-3"
-            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)', border: '2px solid #8B5E3C' }}
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
           >
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -181,20 +181,12 @@ export default function Checkout() {
                 ? <GooglePlayIcon className="w-5 h-5" style={{ color: '#fff' }} />
                 : <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold" style={{ color: '#fff' }}>
-                {store.title}
-              </p>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                {store.sub}
-              </p>
-            </div>
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-              style={{ backgroundColor: 'var(--color-accent-soft)' }}
-            >
-              <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-primary)' }} />
-            </div>
+            <p className="flex-1 min-w-0 text-sm" style={{ color: '#fff' }}>
+              {platform === 'android'
+                ? (da ? 'Betal via din Google-konto · Sikkert og nemt' : 'Pay via your Google account · Secure and easy')
+                : (da ? 'Betal via din Apple-konto · Sikkert og nemt' : 'Pay via your Apple account · Secure and easy')}
+            </p>
+            <Lock className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.7)' }} />
           </div>
         </div>
 
