@@ -59,14 +59,12 @@ import UserNotifications
             title: "Barnet er vågent",
             options: []
         )
-        let end = UNNotificationAction(
-            identifier: Self.actionEnd,
-            title: "Afslut log",
-            options: [.destructive]
-        )
+        // Ingen Afslut-knap på låseskærmen: loggen afsluttes inde i appen.
+        // Handlingen forstås stadig i delegaten, så et 'end', der ligger i køen
+        // fra en ældre version, stadig går igennem.
         let category = UNNotificationCategory(
             identifier: Self.categoryId,
-            actions: [awake, end],
+            actions: [awake],
             intentIdentifiers: [],
             options: []
         )

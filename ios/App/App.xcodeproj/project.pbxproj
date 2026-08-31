@@ -14,12 +14,12 @@
 		CN5300000000000000000002 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5300000000000000000001 /* MainViewController.swift */; };
 		CN5200000000000000000020 /* SleepActionSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000010 /* SleepActionSender.swift */; };
 		CN5200000000000000000021 /* SleepActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000011 /* SleepActivityAttributes.swift */; };
-		CN5200000000000000000022 /* SleepAwakeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000012 /* SleepAwakeIntent.swift */; };
+		CN5200000000000000000022 /* SleepPhaseToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000012 /* SleepPhaseToggleIntent.swift */; };
 		CN5200000000000000000023 /* SleepLiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000013 /* SleepLiveActivityController.swift */; };
 		CN5200000000000000000024 /* SleepLiveActivityPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000014 /* SleepLiveActivityPlugin.swift */; };
 		CN5200000000000000000030 /* SleepActionSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000010 /* SleepActionSender.swift */; };
 		CN5200000000000000000031 /* SleepActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000011 /* SleepActivityAttributes.swift */; };
-		CN5200000000000000000032 /* SleepAwakeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000012 /* SleepAwakeIntent.swift */; };
+		CN5200000000000000000032 /* SleepPhaseToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000012 /* SleepPhaseToggleIntent.swift */; };
 		CN5200000000000000000033 /* SleepLiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000013 /* SleepLiveActivityController.swift */; };
 		CN5200000000000000000034 /* SleepWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000015 /* SleepWidgetBundle.swift */; };
 		CN5200000000000000000035 /* SleepLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000016 /* SleepLiveActivity.swift */; };
@@ -65,7 +65,7 @@
 		CN5300000000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CN5200000000000000000010 /* SleepActionSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepActionSender.swift; sourceTree = "<group>"; };
 		CN5200000000000000000011 /* SleepActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepActivityAttributes.swift; sourceTree = "<group>"; };
-		CN5200000000000000000012 /* SleepAwakeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepAwakeIntent.swift; sourceTree = "<group>"; };
+		CN5200000000000000000012 /* SleepPhaseToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepPhaseToggleIntent.swift; sourceTree = "<group>"; };
 		CN5200000000000000000013 /* SleepLiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepLiveActivityController.swift; sourceTree = "<group>"; };
 		CN5200000000000000000014 /* SleepLiveActivityPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepLiveActivityPlugin.swift; sourceTree = "<group>"; };
 		CN5200000000000000000015 /* SleepWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWidgetBundle.swift; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 			children = (
 				CN5200000000000000000010 /* SleepActionSender.swift */,
 				CN5200000000000000000011 /* SleepActivityAttributes.swift */,
-				CN5200000000000000000012 /* SleepAwakeIntent.swift */,
+				CN5200000000000000000012 /* SleepPhaseToggleIntent.swift */,
 				CN5200000000000000000013 /* SleepLiveActivityController.swift */,
 			);
 			path = Shared;
@@ -331,7 +331,7 @@
 				CN5300000000000000000002 /* MainViewController.swift in Sources */,
 				CN5200000000000000000020 /* SleepActionSender.swift in Sources */,
 				CN5200000000000000000021 /* SleepActivityAttributes.swift in Sources */,
-				CN5200000000000000000022 /* SleepAwakeIntent.swift in Sources */,
+				CN5200000000000000000022 /* SleepPhaseToggleIntent.swift in Sources */,
 				CN5200000000000000000023 /* SleepLiveActivityController.swift in Sources */,
 				CN5200000000000000000024 /* SleepLiveActivityPlugin.swift in Sources */,
 			);
@@ -344,7 +344,7 @@
 				CN5200000000000000000034 /* SleepWidgetBundle.swift in Sources */,
 				CN5200000000000000000035 /* SleepLiveActivity.swift in Sources */,
 				CN5200000000000000000031 /* SleepActivityAttributes.swift in Sources */,
-				CN5200000000000000000032 /* SleepAwakeIntent.swift in Sources */,
+				CN5200000000000000000032 /* SleepPhaseToggleIntent.swift in Sources */,
 				CN5200000000000000000030 /* SleepActionSender.swift in Sources */,
 				CN5200000000000000000033 /* SleepLiveActivityController.swift in Sources */,
 			);
@@ -508,7 +508,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -534,7 +534,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XW26PS653R;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -559,7 +559,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XW26PS653R;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SleepWidget/Info.plist;
@@ -588,7 +588,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XW26PS653R;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SleepWidget/Info.plist;

@@ -4,7 +4,7 @@ import ActivityKit
 import AppIntents
 
 /// Live Activity'en for søvnloggen: den boks der ligger på låseskærmen med en
-/// tæller der løber, og knappen "Barnet er vågent".
+/// tæller der løber, og én knap der går begge veje.
 ///
 /// Tælleren opdateres af systemet ud fra `phaseStart`. Hverken appen eller
 /// widgeten skal være vågen for at den løber videre — der sendes altså ingen
@@ -33,7 +33,7 @@ struct SleepLiveActivity: Widget {
                         .foregroundStyle(.white)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    awakeButton(context: context)
+                    toggleButton(context: context)
                 }
             } compactLeading: {
                 Image(systemName: context.state.isAwake ? "sun.max.fill" : "moon.zzz.fill")
@@ -75,39 +75,46 @@ struct SleepLiveActivity: Widget {
                     .foregroundStyle(.white)
             }
 
-            awakeButton(context: context)
+            toggleButton(context: context)
         }
         .padding(16)
     }
 
     // MARK: - Knap
 
-    /// Knappen vises kun, mens barnet sover — er det allerede markeret vågent,
-    /// er der intet at trykke på.
+    /// Én knap, der går begge veje. Teksten og handlingen følger tilstanden, og
+    /// intentet aflæser selv tilstanden igen, når det køres.
+    ///
+    /// Knappen fylder hele bredden og er høj med vilje: den bruges om natten,
+    /// med én hånd, i mørke. Der er ingen Afslut-knap — loggen afsluttes inde i
+    /// appen.
     ///
     /// `Button(intent:)` kræver iOS 17. På 16.1–16.x tegnes aktiviteten uden
-    /// knap; dér bruger appen i stedet den almindelige notifikation, hvis
-    /// knapper ligger under et langt tryk.
+    /// knap; dér bruger appen i stedet den almindelige notifikation.
     @ViewBuilder
-    private func awakeButton(
+    private func toggleButton(
         context: ActivityViewContext<SleepActivityAttributes>
     ) -> some View {
-        if !context.state.isAwake {
-            if #available(iOS 17.0, *) {
-                Button(intent: SleepAwakeIntent(sessionId: context.attributes.sessionId)) {
-                    Text("Barnet er vågent")
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.white.opacity(0.22))
-                .foregroundStyle(.white)
+        if #available(iOS 17.0, *) {
+            Button(intent: SleepPhaseToggleIntent()) {
+                Text(buttonTitle(for: context.state))
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .padding(.vertical, 6)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.borderedProminent)
+            .tint(.white.opacity(0.22))
+            .foregroundStyle(.white)
         }
     }
 
     // MARK: - Tekst
+
+    /// Hvad knappen gør, hvis man trykker nu — ikke hvad der gælder lige nu.
+    private func buttonTitle(for state: SleepActivityAttributes.ContentState) -> String {
+        state.isAwake ? "Sover igen" : "Barnet er vågent"
+    }
 
     private func title(for state: SleepActivityAttributes.ContentState) -> String {
         state.isAwake ? "Barnet er vågent" : "Søvnlog kører"
