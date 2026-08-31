@@ -89,10 +89,14 @@ enum SleepLiveActivityController {
         Task { await apply(isAwake: isAwake, phaseStart: phaseStart) }
     }
 
-    /// Sætter aktiviteten til "vågen" med det samme. Kaldes fra knappens intent,
-    /// så låseskærmen reagerer med det samme frem for at vente på netværket.
-    static func markAwake() async {
-        await apply(isAwake: true, phaseStart: Date())
+    /// Det, aktiviteten viser lige nu.
+    ///
+    /// Knappens intent skal spørge her frem for at bruge en værdi, der blev sat,
+    /// da knappen blev tegnet — ellers sender et hurtigt dobbelttryk den samme
+    /// handling to gange i stedet for at skifte tilbage.
+    static func currentSnapshot() -> (sessionId: String?, isAwake: Bool)? {
+        guard let activity = current else { return nil }
+        return (activity.attributes.sessionId, currentState(of: activity).isAwake)
     }
 
     // MARK: - Afslutning

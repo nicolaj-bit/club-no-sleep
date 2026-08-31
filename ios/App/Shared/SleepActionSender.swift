@@ -23,7 +23,9 @@ enum SleepActionSender {
     /// Vores egen kø over handlinger, der endnu ikke er nået frem.
     static let queueKey = "cns_pending_sleep_actions"
 
+    /// Backend mapper 'awake' til mark_awake og 'sleeping' til mark_sleeping.
     static let actionAwake = "awake"
+    static let actionSleeping = "sleeping"
     static let actionEnd = "end"
 
     /// Køen holdes kort. Bliver en handling ved med at blive afvist, ryger den
