@@ -59,12 +59,18 @@ import UserNotifications
             title: "Barnet er vågent",
             options: []
         )
-        // Ingen Afslut-knap på låseskærmen: loggen afsluttes inde i appen.
-        // Handlingen forstås stadig i delegaten, så et 'end', der ligger i køen
-        // fra en ældre version, stadig går igennem.
+        // Begge knapper skal ligge her. Notifikationen er eneste overflade på
+        // Android og på iPhones uden Live Activity, og knapper i en notifikation
+        // kan ikke skifte tekst med tilstanden, som knappen i Live Activity'en
+        // gør. Derfor står de som to faste valg frem for ét der vender.
+        let end = UNNotificationAction(
+            identifier: Self.actionEnd,
+            title: "Afslut log",
+            options: [.destructive]
+        )
         let category = UNNotificationCategory(
             identifier: Self.categoryId,
-            actions: [awake],
+            actions: [awake, end],
             intentIdentifiers: [],
             options: []
         )

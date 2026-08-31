@@ -86,8 +86,12 @@ struct SleepLiveActivity: Widget {
     /// intentet aflæser selv tilstanden igen, når det køres.
     ///
     /// Knappen fylder hele bredden og er høj med vilje: den bruges om natten,
-    /// med én hånd, i mørke. Der er ingen Afslut-knap — loggen afsluttes inde i
-    /// appen.
+    /// med én hånd, i mørke.
+    ///
+    /// Her er der bevidst ingen Afslut-knap — loggen afsluttes inde i appen.
+    /// Notifikationen har den stadig, for dér kan knapperne ikke skifte tekst
+    /// med tilstanden, og den er eneste overflade på Android og på iPhones uden
+    /// Live Activity.
     ///
     /// `Button(intent:)` kræver iOS 17. På 16.1–16.x tegnes aktiviteten uden
     /// knap; dér bruger appen i stedet den almindelige notifikation.
