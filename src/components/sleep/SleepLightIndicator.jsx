@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 // Diskret, varm indikator der vises i søvnloggen mens lyset er tændt.
 // Klikbar → hopper til 'Et lys i mørket' (Community).
 export default function SleepLightIndicator({ onlineCount }) {
+  const { t } = useLanguage();
   const othersText = onlineCount > 0
-    ? `${onlineCount} ${onlineCount === 1 ? 'anden er' : 'andre er'} vågne lige nu`
-    : 'Du er ikke alene vågen nu';
+    ? (onlineCount === 1 ? t.oneOtherAwake : t.othersAwakeNow.replace('{count}', onlineCount))
+    : t.notAloneAwake;
 
   return (
     <Link
@@ -22,7 +24,7 @@ export default function SleepLightIndicator({ onlineCount }) {
         <span className="text-lg leading-none">🕯</span>
         <div className="flex-1">
           <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-            Dit lys er tændt
+            {t.yourLightIsOn}
           </p>
           <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
             {othersText}

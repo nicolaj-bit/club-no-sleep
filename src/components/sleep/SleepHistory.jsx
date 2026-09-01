@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { format } from 'date-fns';
 import { useSleepSession } from './useSleepSession';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import {
   computeSessionTotals,
   formatHoursMinutes,
@@ -25,6 +26,7 @@ function Chip({ label, color }) {
 
 export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
   const { history, loading } = useSleepSession(user);
+  const { t } = useLanguage();
   const [filter, setFilter] = useState('all'); // 'all' | 'night' | 'nap'
 
   if (loading) {
@@ -49,15 +51,15 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-3" style={{ color: 'var(--color-text-muted)' }}>
         <Moon className="w-10 h-10 opacity-30" />
-        <p className="text-sm">Ingen søvnlogs endnu</p>
+        <p className="text-sm">{t.noSleepLogsYet}</p>
       </div>
     );
   }
 
   const filterButtons = [
-    { key: 'all', label: 'Alle' },
-    { key: 'night', label: 'Nattesøvn' },
-    { key: 'nap', label: 'Lure' },
+    { key: 'all', label: t.all },
+    { key: 'night', label: t.nightSleep },
+    { key: 'nap', label: t.naps },
   ];
 
   return (
@@ -96,7 +98,7 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
                     {format(new Date(log.date || log.session_start), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
                   </span>
                   <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
-                    {isNap ? 'Lur' : 'Nattesøvn'}
+                    {isNap ? t.nap : t.nightSleep}
                   </span>
                 </div>
                 {log.session_start && (
@@ -106,12 +108,12 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
                 )}
               </div>
               <div className="flex flex-wrap gap-1.5">
-                <Chip label={`${formatHoursMinutes(totals.totalSleepMs)} søvn`} color="blue" />
+                <Chip label={`${formatHoursMinutes(totals.totalSleepMs)} ${t.sleepSuffix}`} color="blue" />
                 {totals.wakeCount > 0 && (
-                  <Chip label={`${totals.wakeCount} ${totals.wakeCount === 1 ? 'opvågning' : 'opvågninger'}`} color="yellow" />
+                  <Chip label={`${totals.wakeCount} ${totals.wakeCount === 1 ? t.wakings : t.wakingsPlural}`} color="yellow" />
                 )}
                 {totals.totalAwakeMs > 0 && (
-                  <Chip label={`${formatHoursMinutes(totals.totalAwakeMs)} vågen`} color="orange" />
+                  <Chip label={`${formatHoursMinutes(totals.totalAwakeMs)} ${t.awakeSuffix}`} color="orange" />
                 )}
               </div>
               {log.parent_note && (
@@ -138,12 +140,12 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
                 {format(new Date(log.date), lang === 'en' ? 'MMMM d' : 'd. MMMM', { locale: dateLocale })}
               </span>
               {log.bedtime && (
-                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Sengetid {log.bedtime}</span>
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.bedtime} {log.bedtime}</span>
               )}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {nightMins !== null && <Chip label={`${Math.floor(nightMins / 60)}t ${nightMins % 60}m`} color="blue" />}
-              {wakeCount > 0 && <Chip label={`${wakeCount} opvågninger`} color="yellow" />}
+              {wakeCount > 0 && <Chip label={`${wakeCount} ${t.wakingsPlural}`} color="yellow" />}
             </div>
           </div>
         );

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { toast } from 'sonner';
 
 // Hook der styrer live søvnsession-data og handlinger.
@@ -9,6 +10,7 @@ import { toast } from 'sonner';
 export function useSleepSession(user) {
   const queryClient = useQueryClient();
   const { isInvited, refresh: refreshInviteData } = useInviteAccess();
+  const { t } = useLanguage();
   const queryKey = ['sleeplogs', user?.email];
 
   const { data, isLoading } = useQuery({
@@ -45,7 +47,7 @@ export function useSleepSession(user) {
       if (isInvited) refreshInviteData();
     },
     onError: (error) => {
-      const msg = error?.message || 'Noget gik galt';
+      const msg = error?.message || t.somethingWentWrong;
       toast.error(msg);
     },
   });

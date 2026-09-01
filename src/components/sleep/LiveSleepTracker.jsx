@@ -5,6 +5,7 @@ import { syncSleepNotification, clearSleepNotification, requestSleepNotification
 import { getLightState, turnLightOn, turnLightOff } from '@/lib/sleepLight';
 import SleepLightIndicator from './SleepLightIndicator';
 import { useSleepSession } from './useSleepSession';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import {
   computeSessionTotals,
   getCurrentPhaseStart,
@@ -69,11 +70,12 @@ function OutlineButton({ onClick, disabled, children, subtitle }) {
 }
 
 function BgNote() {
+  const { t } = useLanguage();
   return (
     <div className="flex items-center justify-center gap-2 mt-6 px-4">
       <Lock className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
       <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-        Du kan trygt lukke appen. Vi fortsætter i baggrunden.
+        {t.sleepSafeToClose}
       </p>
     </div>
   );
@@ -94,6 +96,7 @@ function LiveTimer({ ms }) {
 
 export default function LiveSleepTracker({ user, activeChild }) {
   const { activeSession, startSession, markAwake, markSleeping, endSession, undoEnd, isPending, loading } = useSleepSession(user);
+  const { t } = useLanguage();
   const [justEndedSession, setJustEndedSession] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
@@ -227,7 +230,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
       const res = await base44.functions.invoke('analyzeSleepLogs', { session_id: justEndedSession.id });
       setFeedback(res?.data || res);
     } catch {
-      setFeedback({ title: 'Hov', message: 'Kunne ikke hente feedback lige nu. Prøv igen senere.' });
+      setFeedback({ title: t.feedbackErrorTitle, message: t.feedbackErrorMessage });
     }
     setFeedbackLoading(false);
   };
@@ -246,10 +249,10 @@ export default function LiveSleepTracker({ user, activeChild }) {
       <div className="px-4 py-6 max-w-lg mx-auto">
         <SleepingBabyArt />
         <h1 className="text-2xl font-semibold text-center mb-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
-          Klar til at logge søvn?
+          {t.readyToLogSleep}
         </h1>
         <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-          Tryk på knappen, når dit barn falder i søvn. Vi klarer resten.
+          {t.readyToLogSleepHint}
         </p>
         <div className="grid grid-cols-2 gap-3 mb-6">
           <button
@@ -262,7 +265,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
             }}
           >
             <Moon className="w-6 h-6 mx-auto mb-1.5" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>Nattesøvn</span>
+            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>{t.nightSleep}</span>
           </button>
           <button
             type="button"
@@ -274,11 +277,11 @@ export default function LiveSleepTracker({ user, activeChild }) {
             }}
           >
             <Sun className="w-6 h-6 mx-auto mb-1.5" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>Lur</span>
+            <span className="text-sm font-medium block" style={{ color: 'var(--color-text-primary)' }}>{t.nap}</span>
           </button>
         </div>
-        <PrimaryButton onClick={handleStart} disabled={isPending} subtitle="Barnet sover">
-          Start søvn
+        <PrimaryButton onClick={handleStart} disabled={isPending} subtitle={t.startSleepSubtitle}>
+          {t.startSleep}
         </PrimaryButton>
       </div>
     );
@@ -290,25 +293,25 @@ export default function LiveSleepTracker({ user, activeChild }) {
       <div className="px-4 py-6 max-w-lg mx-auto">
         <div className="flex items-center justify-center gap-2 mb-3">
           <StatusDot color="green" />
-          <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Søvnlog i gang</span>
+          <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.sleepLogActive}</span>
         </div>
         <h1 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
-          Barnet sover
+          {t.babySleeping}
         </h1>
         <p className="text-sm text-center mb-8" style={{ color: 'var(--color-text-secondary)' }}>
-          Startet kl. {formatClockHm(phaseStart)}
+          {t.startedAtPrefix} {formatClockHm(phaseStart)}
         </p>
 
         <LiveTimer ms={elapsedMs} />
-        <p className="text-xs text-center -mt-4 mb-6" style={{ color: 'var(--color-text-muted)' }}>Sovetid</p>
+        <p className="text-xs text-center -mt-4 mb-6" style={{ color: 'var(--color-text-muted)' }}>{t.timeAsleepLabel}</p>
 
         <div className="rounded-2xl p-4 mb-6 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
-          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Opvågninger</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.wakeupsLabel}</span>
           <span className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{totals.wakeCount}</span>
         </div>
 
-        <PrimaryButton onClick={handleMarkAwake} disabled={isPending} subtitle="Registrér opvågning">
-          Barnet er vågent
+        <PrimaryButton onClick={handleMarkAwake} disabled={isPending} subtitle={t.registerWakeup}>
+          {t.babyIsAwake}
         </PrimaryButton>
         <BgNote />
       </div>
@@ -321,30 +324,30 @@ export default function LiveSleepTracker({ user, activeChild }) {
       <div className="px-4 py-6 max-w-lg mx-auto">
         <div className="flex items-center justify-center gap-2 mb-3">
           <StatusDot color="orange" />
-          <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Opvågning i gang</span>
+          <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{t.wakeupInProgress}</span>
         </div>
         {lightOn && <SleepLightIndicator onlineCount={onlineCount} />}
         <h1 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
-          Barnet er vågent
+          {t.babyIsAwake}
         </h1>
         <p className="text-sm text-center mb-8" style={{ color: 'var(--color-text-secondary)' }}>
-          Startet kl. {formatClockHm(phaseStart)}
+          {t.startedAtPrefix} {formatClockHm(phaseStart)}
         </p>
 
         <LiveTimer ms={elapsedMs} />
-        <p className="text-xs text-center -mt-4 mb-6" style={{ color: 'var(--color-text-muted)' }}>Vågentid</p>
+        <p className="text-xs text-center -mt-4 mb-6" style={{ color: 'var(--color-text-muted)' }}>{t.timeAwakeLabel}</p>
 
         <div className="rounded-2xl p-4 mb-6 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)' }}>
-          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Opvågninger i alt</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.wakeupsTotalLabel}</span>
           <span className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>{totals.wakeCount}</span>
         </div>
 
         <div className="space-y-3">
-          <PrimaryButton onClick={handleMarkSleeping} disabled={isPending} subtitle="Start sovetid">
-            Barnet sover igen
+          <PrimaryButton onClick={handleMarkSleeping} disabled={isPending} subtitle={t.startSleepTime}>
+            {t.babyAsleepAgain}
           </PrimaryButton>
-          <OutlineButton onClick={handleEnd} disabled={isPending} subtitle="Afslut session">
-            Barnet står op
+          <OutlineButton onClick={handleEnd} disabled={isPending} subtitle={t.endSession}>
+            {t.babyGotUp}
           </OutlineButton>
         </div>
         <BgNote />
@@ -364,34 +367,34 @@ export default function LiveSleepTracker({ user, activeChild }) {
         </div>
       </div>
       <h1 className="text-3xl font-semibold text-center mb-1" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}>
-        {isNightSleep ? 'Godmorgen' : 'Luren er slut'}
+        {isNightSleep ? t.goodMorning : t.napOver}
       </h1>
       <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-        Session afsluttet
+        {t.sessionEnded}
       </p>
 
       {justEndedTotals && (
         <div className="rounded-2xl p-5 mb-6" style={{ backgroundColor: 'var(--color-bg-card)' }}>
-          <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: 'var(--color-text-muted)' }}>{isNightSleep ? 'Nattens søvn' : 'Denne lur'}</p>
+          <p className="text-xs font-medium uppercase tracking-wider mb-3" style={{ color: 'var(--color-text-muted)' }}>{isNightSleep ? t.nightsSleep : t.thisNap}</p>
           <div className="space-y-2.5">
             <div className="flex justify-between">
-              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Søvnen startede</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.sleepStartedAt}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatClockHm(justEndedSession.session_start)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Barnet stod op</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.babyWokeUpAt}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatClockHm(justEndedSession.session_end)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Samlet søvn</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.totalSleepLabel}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalSleepMs)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Antal opvågninger</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.wakeupCountLabel}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{justEndedTotals.wakeCount}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Samlet vågen i alt</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.totalAwakeLabel}</span>
               <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalAwakeMs)}</span>
             </div>
           </div>
@@ -410,8 +413,8 @@ export default function LiveSleepTracker({ user, activeChild }) {
 
       <div className="space-y-3">
         {!feedback && (
-          <PrimaryButton onClick={handleFeedback} disabled={feedbackLoading || isPending} subtitle={isNightSleep ? 'Få personlig feedback på nattens søvn' : 'Få personlig feedback på luren'}>
-            {feedbackLoading ? 'Analyserer…' : 'Modtag feedback'}
+          <PrimaryButton onClick={handleFeedback} disabled={feedbackLoading || isPending} subtitle={isNightSleep ? t.feedbackNightSubtitle : t.feedbackNapSubtitle}>
+            {feedbackLoading ? t.analyzingFeedback : t.receiveFeedback}
           </PrimaryButton>
         )}
         {feedback && (
@@ -421,11 +424,11 @@ export default function LiveSleepTracker({ user, activeChild }) {
             className="w-full py-3 rounded-2xl text-sm font-medium flex items-center justify-center gap-2 transition-colors"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Opdatér feedback
+            <RefreshCw className="w-3.5 h-3.5" /> {t.updateFeedback}
           </button>
         )}
-        <OutlineButton onClick={handleUndo} disabled={isPending} subtitle="Åbn sessionen igen og tilføj mere.">
-          Fortryd! Fortsæt session
+        <OutlineButton onClick={handleUndo} disabled={isPending} subtitle={t.undoContinueSubtitle}>
+          {t.undoContinueSession}
         </OutlineButton>
       </div>
     </div>
