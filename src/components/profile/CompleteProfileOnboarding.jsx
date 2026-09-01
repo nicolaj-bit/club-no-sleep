@@ -46,8 +46,8 @@ export default function CompleteProfileOnboarding({ user, open, onClose, onCompl
       const terms = items.find(i => i.type === 'terms');
       const privacy = items.find(i => i.type === 'privacy');
       setLegalContent({
-        terms: terms?.content || 'Handelsbetingelserne er ikke opsat endnu.',
-        privacy: privacy?.content || 'Privatlivspolitikken er ikke opsat endnu.',
+        terms: terms?.content || t.termsNotSetUp,
+        privacy: privacy?.content || t.privacyNotSetUp,
       });
     });
   }, []);
@@ -101,7 +101,7 @@ export default function CompleteProfileOnboarding({ user, open, onClose, onCompl
       accepted_at: new Date().toISOString(),
     });
     setSaving(false);
-    toast.success('Profil oprettet! 🎉');
+    toast.success(t.profileCreated);
     onComplete?.();
   };
 
@@ -216,7 +216,7 @@ export default function CompleteProfileOnboarding({ user, open, onClose, onCompl
                       <div className="flex flex-col items-center gap-2 pb-2">
                         <div className="relative">
                           <div className="w-20 h-20 rounded-full flex items-center justify-center overflow-hidden" style={{ background: 'var(--color-bg-subtle)' }}>
-                            {form.profile_image ? <img src={form.profile_image} alt="profil" className="w-full h-full object-cover" /> : <span className="text-3xl">👩</span>}
+                            {form.profile_image ? <img src={form.profile_image} alt={t.altProfile} className="w-full h-full object-cover" /> : <span className="text-3xl">👩</span>}
                           </div>
                           <label className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow" style={{ background: 'var(--color-accent)' }}>
                             <Camera className="w-3.5 h-3.5 text-white" />
@@ -236,7 +236,7 @@ export default function CompleteProfileOnboarding({ user, open, onClose, onCompl
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--color-text-muted)' }}>@</span>
                           <Input value={form.username} onChange={e => setField('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                            placeholder="dit_brugernavn" className="pl-7"
+                            placeholder={t.usernamePlaceholder} className="pl-7"
                             style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: errors.username ? '#ef4444' : 'var(--color-border)' }} />
                         </div>
                         {errors.username ? <p className="text-xs text-red-500">{errors.username}</p> : <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.usernameHint}</p>}

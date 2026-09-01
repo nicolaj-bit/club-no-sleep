@@ -1182,6 +1182,25 @@ const translations = {
     ariaGallery: 'Galleri',
     ariaFlipCamera: 'Vend kamera',
     milestoneShareText: 'Se min milepæl på LALATOTO: {headline}',
+
+    // Profile
+    nameAndUsernameRequired: 'Navn og brugernavn er påkrævet',
+    momProfileCreated: 'Mor-profil oprettet!',
+    dadProfileCreated: 'Far-profil oprettet!',
+    somethingWentWrong: 'Noget gik galt',
+    createMomProfile: 'Opret 🤍 Mor-profil',
+    createDadProfile: 'Opret 💙 Far-profil',
+    separateProfileOwnSleepLogs: 'Separat profil med egne søvnlogs',
+    altProfile: 'profil',
+    momNamePlaceholder: 'Mors navn',
+    dadNamePlaceholder: 'Fars navn',
+    usernamePlaceholder: 'dit_brugernavn',
+    childBirthdateOptional: 'Barnets fødselsdato (valgfrit)',
+    creating: 'Opretter...',
+    createProfile: 'Opret profil',
+    termsNotSetUp: 'Handelsbetingelserne er ikke opsat endnu.',
+    privacyNotSetUp: 'Privatlivspolitikken er ikke opsat endnu.',
+    profileCreated: 'Profil oprettet! 🎉',
   },
 
   en: {
@@ -2365,6 +2384,25 @@ const translations = {
     ariaGallery: 'Gallery',
     ariaFlipCamera: 'Flip camera',
     milestoneShareText: 'See my milestone on LALATOTO: {headline}',
+
+    // Profile
+    nameAndUsernameRequired: 'Name and username are required',
+    momProfileCreated: 'Mom profile created!',
+    dadProfileCreated: 'Dad profile created!',
+    somethingWentWrong: 'Something went wrong',
+    createMomProfile: 'Create 🤍 Mom profile',
+    createDadProfile: 'Create 💙 Dad profile',
+    separateProfileOwnSleepLogs: 'Separate profile with own sleep logs',
+    altProfile: 'profile',
+    momNamePlaceholder: "Mom's name",
+    dadNamePlaceholder: "Dad's name",
+    usernamePlaceholder: 'your_username',
+    childBirthdateOptional: "Child's birthdate (optional)",
+    creating: 'Creating...',
+    createProfile: 'Create profile',
+    termsNotSetUp: 'Terms and conditions are not set up yet.',
+    privacyNotSetUp: 'Privacy policy is not set up yet.',
+    profileCreated: 'Profile created! 🎉',
   },
 };
 

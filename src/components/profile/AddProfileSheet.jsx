@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AddProfileSheet({ open, onClose }) {
   const { isDark } = useTheme();
+  const { t } = useLanguage();
   const { allProfiles, refreshProfiles, switchProfile } = useActiveProfile();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -38,7 +40,7 @@ export default function AddProfileSheet({ open, onClose }) {
 
   const handleSave = async () => {
     if (!form.display_name.trim() || !form.username.trim()) {
-      toast.error('Navn og brugernavn er påkrævet');
+      toast.error(t.nameAndUsernameRequired);
       return;
     }
     setSaving(true);
@@ -55,10 +57,10 @@ export default function AddProfileSheet({ open, onClose }) {
       const updated = await base44.entities.UserProfile.filter({ user_email: user.email });
       const created = updated.find(p => p.id === newProfile.id) || updated.find(p => p.profile_label === missingLabel);
       if (created) switchProfile(created);
-      toast.success(`${missingLabel === 'mor' ? 'Mor' : 'Far'}-profil oprettet!`);
+      toast.success(missingLabel === 'mor' ? t.momProfileCreated : t.dadProfileCreated);
       onClose();
     } catch {
-      toast.error('Noget gik galt');
+      toast.error(t.somethingWentWrong);
     } finally {
       setSaving(false);
     }
@@ -97,10 +99,10 @@ export default function AddProfileSheet({ open, onClose }) {
             <div className="flex items-center justify-between px-5 pt-2 pb-4">
               <div>
                 <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-                  Opret {missingLabel === 'mor' ? '🤍 Mor' : '💙 Far'}-profil
+                  {missingLabel === 'mor' ? t.createMomProfile : t.createDadProfile}
                 </h2>
                 <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                  Separat profil med egne søvnlogs
+                  {t.separateProfileOwnSleepLogs}
                 </p>
               </div>
               <button
@@ -121,7 +123,7 @@ export default function AddProfileSheet({ open, onClose }) {
                     style={{ backgroundColor: 'var(--color-bg-subtle)' }}
                   >
                     {form.profile_image
-                      ? <img src={form.profile_image} alt="profil" className="w-full h-full object-cover" />
+                      ? <img src={form.profile_image} alt={t.altProfile} className="w-full h-full object-cover" />
                       : <span className="text-3xl">{missingLabel === 'mor' ? '👩' : '👨'}</span>
                     }
                   </div>
@@ -134,30 +136,30 @@ export default function AddProfileSheet({ open, onClose }) {
                   </label>
                 </div>
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                  {uploading ? 'Uploader...' : 'Tilføj profilbillede'}
+                  {uploading ? t.uploadingLabel : t.addProfilePic}
                 </p>
               </div>
 
               {/* Navn */}
               <div className="space-y-1.5">
-                <Label>Navn</Label>
+                <Label>{t.yourName}</Label>
                 <Input
                   value={form.display_name}
                   onChange={e => setForm(f => ({ ...f, display_name: e.target.value }))}
-                  placeholder={missingLabel === 'mor' ? 'Mors navn' : 'Fars navn'}
+                  placeholder={missingLabel === 'mor' ? t.momNamePlaceholder : t.dadNamePlaceholder}
                   style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none' }}
                 />
               </div>
 
               {/* Brugernavn */}
               <div className="space-y-1.5">
-                <Label>Brugernavn</Label>
+                <Label>{t.usernameLabel}</Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--color-text-muted)' }}>@</span>
                   <Input
                     value={form.username}
                     onChange={e => setForm(f => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
-                    placeholder="brugernavn"
+                    placeholder={t.usernamePlaceholder}
                     className="pl-7"
                     style={{ backgroundColor: 'var(--color-bg-subtle)', border: 'none' }}
                   />
@@ -166,7 +168,7 @@ export default function AddProfileSheet({ open, onClose }) {
 
               {/* Barnets fødselsdato */}
               <div className="space-y-1.5">
-                <Label>Barnets fødselsdato (valgfrit)</Label>
+                <Label>{t.childBirthdateOptional}</Label>
                 <Input
                   type="date"
                   value={form.child_birthdate}
@@ -181,9 +183,9 @@ export default function AddProfileSheet({ open, onClose }) {
                 onClick={handleSave}
                 disabled={saving || uploading}
               >
-                {saving ? 'Opretter...' : (
+                {saving ? t.creating : (
                   <>
-                    Opret profil <ArrowRight className="w-4 h-4" />
+                    {t.createProfile} <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </Button>
