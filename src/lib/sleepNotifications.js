@@ -5,7 +5,6 @@ import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSe
 import { startSleepLiveActivity, endSleepLiveActivity } from './sleepLiveActivity';
  
 const NOTIF_ID = 1001;
-const TEST_NOTIF_ID = 9999;
 const ACTION_TYPE = 'SLEEP_SESSION';
  
 let actionTypesRegistered = false;
@@ -225,28 +224,4 @@ export async function registerSleepNotificationActions() {
   } catch (e) {
     console.error('[SLEEPLOG-NOTIF] listener registration failed:', e?.message || e);
   }
-}
- 
-// === Test-funktioner (admin) ===
- 
-export async function testNotification() {
-  if (!isAvailable()) {
-    throw new Error('LocalNotifications ikke tilgængelig på denne platform');
-  }
-  await LocalNotifications.schedule({
-    notifications: [
-      {
-        id: TEST_NOTIF_ID,
-        title: 'Test',
-        body: 'Virker',
-        schedule: { at: new Date(Date.now() + 5000) },
-      },
-    ],
-  });
-}
- 
-export async function checkNotificationPermission() {
-  if (!isAvailable()) return 'unavailable';
-  const perm = await LocalNotifications.checkPermissions();
-  return perm.display;
 }
