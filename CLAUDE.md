@@ -129,6 +129,19 @@ som appen skriver i Capacitor Preferences under `cns_native_token`.
 - OneSignal skal initialiseres på Android, før nogen anden OneSignal-metode
   kaldes. Ellers crasher appen med
   `IllegalStateException: Must call 'initWithContext' before use`.
+- Søvnloggens notifikation er **bevidst ikke en foreground service**. En
+  almindelig notifikation med `setOngoing(true)` er nok: tælleren kører i
+  systemets chronometer (`setUsesChronometer(true)` plus `setWhen(periodens
+  start)`), og knaptryk håndteres af en BroadcastReceiver, der lever længe nok
+  af sig selv. En foreground service ville kræve `foregroundServiceType` og en
+  begrundelse over for Google Play uden at give os noget.
+- Knapper i en notifikation skal pege på en **BroadcastReceiver**, ikke på
+  MainActivity. Det er dét, der gør, at appen ikke åbner, og at brugeren ikke
+  skal låse op. Fra Android 12 må en notifikationsknap alligevel ikke starte en
+  activity gennem et mellemled.
+- App-lokale Capacitor-plugins registreres med `registerPlugin(...)` i
+  `MainActivity.onCreate` **før** `super.onCreate`. Det er en anden mekanisme
+  end iOS, hvor de registreres i `capacitorDidLoad`.
 
 ---
 

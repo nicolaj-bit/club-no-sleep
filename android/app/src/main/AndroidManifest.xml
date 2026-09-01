@@ -32,6 +32,20 @@
 
         </activity>
 
+        <!--
+            Knapperne i soevnlog-notifikationen peger hertil og ikke paa
+            MainActivity. Det er dét, der gør, at appen ikke aabner, og at
+            brugeren ikke skal laase op. exported=false: kun vores egen
+            PendingIntent maa sende hertil.
+        -->
+        <receiver
+            android:name=".SleepActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.base699f47a86e7e0a874d1159ed.app.SLEEP_ACTION" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

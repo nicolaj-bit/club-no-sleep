@@ -1,0 +1,17 @@
+<!--
+  Lille ikon til søvnlog-notifikationen.
+
+  Android tegner små notifikationsikoner som en ensfarvet silhuet: kun alfa-
+  kanalen bruges, farven sættes af systemet. Derfor er det en enkel, massiv
+  måneform uden detaljer — app-ikonet ville blive en grå klat.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#FFFFFFFF">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12.3,2.02c-0.6,-0.06 -1.2,0.34 -1.35,0.94c-0.14,0.55 0.08,1.12 0.55,1.44c1.6,1.09 2.65,2.93 2.65,5.02c0,3.35 -2.72,6.07 -6.07,6.07c-0.55,0 -1.09,-0.07 -1.6,-0.21c-0.59,-0.16 -1.21,0.09 -1.51,0.62c-0.3,0.53 -0.2,1.19 0.25,1.6C6.03,19.06 8.4,20.1 11,20.1c5.02,0 9.09,-4.07 9.09,-9.09C20.09,6.32 16.7,2.5 12.3,2.02z" />
+</vector>

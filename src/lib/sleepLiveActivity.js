@@ -1,21 +1,27 @@
 import { registerPlugin, Capacitor } from '@capacitor/core';
 import { getCurrentPhase, getCurrentPhaseStart } from '../../base44/shared/sleepSession';
  
-// Native plugin — ios/App/App/SleepLiveActivityPlugin.swift
+// Native plugin. Samme jsName, metoder og parametre på begge platforme:
+//   iOS      — ios/App/App/SleepLiveActivityPlugin.swift (Live Activity)
+//   Android  — android/.../SleepLiveActivityPlugin.java (vedvarende notifikation)
 const SleepLiveActivity = registerPlugin('SleepLiveActivity');
  
 // Svaret ændrer sig ikke undervejs i en app-session, så det hentes kun én gang.
 let supportedCache = null;
  
 /**
- * Kan enheden vise en Live Activity med en knap, der virker fra låseskærmen?
+ * Kan enheden vise søvnloggen på låseskærmen med knapper, der virker uden at
+ * åbne appen?
  *
- * Native siden svarer kun ja fra iOS 17, hvor knapper i en Live Activity kan
- * køre via App Intents. På 16.x ville boksen komme uden knap, og der er den
- * almindelige notifikation bedre — dér ligger knapperne under et langt tryk.
+ * iOS: kun fra 17, hvor knapper i en Live Activity kan køre via App Intents.
+ * På 16.x ville boksen komme uden knap, og der er den almindelige notifikation
+ * bedre — dér ligger knapperne under et langt tryk.
+ *
+ * Android: så snart appen må vise notifikationer. Knapperne går til en
+ * BroadcastReceiver, hvilket har virket længe før vores minimum.
  */
 export async function isLiveActivitySupported() {
-  if (Capacitor.getPlatform() !== 'ios') return false;
+  if (!Capacitor.isNativePlatform()) return false;
   if (supportedCache !== null) return supportedCache;
   try {
     const res = await SleepLiveActivity.isSupported();
@@ -68,10 +74,10 @@ export async function updateSleepLiveActivity(session) {
 }
  
 export async function endSleepLiveActivity() {
-  if (Capacitor.getPlatform() !== 'ios') return;
+  if (!Capacitor.isNativePlatform()) return;
   try {
-    // Ikke gennem isLiveActivitySupported: kører der en aktivitet fra før, skal
-    // den lukkes, også hvis understøttelsen i mellemtiden er slået fra.
+    // Ikke gennem isLiveActivitySupported: ligger der noget fra før, skal det
+    // lukkes, også hvis understøttelsen i mellemtiden er slået fra.
     await SleepLiveActivity.end();
     console.log('[SLEEPLOG-LIVE] afsluttet');
   } catch (e) {
