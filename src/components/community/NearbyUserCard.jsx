@@ -5,8 +5,10 @@ import { MapPin, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UserAvatar from './UserAvatar';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function NearbyUserCard({ user, distance, onStartChat }) {
+  const { t } = useLanguage();
   const formattedDistance = distance < 1 
     ? `${Math.round(distance * 1000)} m` 
     : `${distance.toFixed(1)} km`;
@@ -29,7 +31,7 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
             </h3>
             {user.role === 'expert' && (
               <span className="flex-shrink-0 bg-amber-100 text-amber-700 text-[10px] font-semibold px-1.5 py-0.5 rounded">
-                EKSPERT
+                {t.expert}
               </span>
             )}
           </div>
@@ -37,7 +39,7 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
           <div className="flex items-center gap-1.5 mt-1">
             <MapPin className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
             <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              {formattedDistance} væk
+              {formattedDistance} {t.away}
             </span>
             {user.city && (
               <>
@@ -55,7 +57,7 @@ export default function NearbyUserCard({ user, distance, onStartChat }) {
           onClick={() => onStartChat?.(user)}
         >
           <MessageCircle className="w-4 h-4" />
-          Chat
+          {t.chat}
         </Button>
       </div>
     </div>

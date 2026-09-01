@@ -69,7 +69,7 @@ export default function UpcomingEventCard({ userEmail }) {
           </span>
         </div>
         <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-text-muted)' }}>
-          {lang === 'da' ? 'Næste aftale' : 'Next appointment'}
+          {t.nextAppointment}
         </p>
         {loading ? (
           <div className="h-7 w-20 rounded-lg animate-pulse bg-black/10" />
@@ -82,7 +82,7 @@ export default function UpcomingEventCard({ userEmail }) {
           </>
         ) : (
           <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
-            {lang === 'da' ? 'Tilføj aftale →' : 'Add appointment →'}
+            {t.addAppointment}
           </p>
         )}
       </div>

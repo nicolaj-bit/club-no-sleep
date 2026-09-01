@@ -77,15 +77,13 @@ export default function SleepSummaryCard({ userEmail }) {
           <Moon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.8)' }} />
         </div>
         <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          {showActive
-            ? (lang === 'da' ? 'Søvn i gang' : 'Sleep in progress')
-            : (lang === 'da' ? 'Søvn i nat' : 'Sleep last night')}
+          {showActive ? t.sleepInProgress : t.sleepLastNight}
         </p>
         {loading ? (
           <div className="h-7 w-14 rounded-lg animate-pulse bg-white/20" />
         ) : showActive ? (
           <p className="text-lg text-white font-medium">
-            {lang === 'da' ? 'Se live →' : 'See live →'}
+            {t.seeLive}
           </p>
         ) : durMs !== null ? (
           <>
@@ -107,7 +105,7 @@ export default function SleepSummaryCard({ userEmail }) {
           </>
         ) : (
           <p className="text-sm mt-1 text-white/60">
-            {lang === 'da' ? 'Log søvn →' : 'Log sleep →'}
+            {t.logSleep}
           </p>
         )}
       </div>

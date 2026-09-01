@@ -11,7 +11,7 @@ function isNightTime() {
 }
 
 export default function ActiveMomsCard() {
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const [count, setCount] = useState(null);
   const [avatars, setAvatars] = useState([]);
   const isLive = isNightTime();
@@ -47,11 +47,11 @@ export default function ActiveMomsCard() {
   const displayCount = count ?? '...';
   const extra = (count ?? 0) > 3 ? count - 3 : 0;
 
-  const label = lang === 'da' ? 'Et lys i mørket' : 'A light in the dark';
+  const label = t.natteensomhed;
 
   const headline = isLive
-    ? (lang === 'da' ? `Der er ${displayCount} mødre vågne` : `${displayCount} moms are awake`)
-    : (lang === 'da' ? `Der var ${displayCount} mødre vågne` : `${displayCount} moms were awake`);
+    ? t.momsAwakeNow.replace('{count}', displayCount)
+    : t.momsAwakeEarlier.replace('{count}', displayCount);
 
   // Placeholder avatars når ingen billeder
   const placeholderImages = [
@@ -78,7 +78,7 @@ export default function ActiveMomsCard() {
               {isLive && <span className="ml-1.5 text-sm" style={{ color: '#E8B4B8' }}>●</span>}
             </p>
             <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-              {lang === 'da' ? 'Du er ikke alene' : "You're not alone"} <span style={{ color: 'var(--color-accent)' }}>♥</span>
+              {t.youAreNotAlone} <span style={{ color: 'var(--color-accent)' }}>♥</span>
             </p>
           </div>
 

@@ -4,16 +4,18 @@ import { Flag } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
-const REASONS = [
-  'Upassende indhold',
-  'Spam eller reklame',
-  'Chikane eller mobning',
-  'Falsk profil',
-  'Andet',
+const REASON_KEYS = [
+  'reportReasonInappropriate',
+  'reportReasonSpam',
+  'reportReasonHarassment',
+  'reportReasonFakeProfile',
+  'reportReasonOther',
 ];
 
 export default function ReportSheet({ open, onClose, reportedEmail, messageId = null }) {
+  const { t } = useLanguage();
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +28,7 @@ export default function ReportSheet({ open, onClose, reportedEmail, messageId = 
       message_id: messageId,
       reason,
     });
-    toast.success('Tak for din indberetning. Vi vil gennemgå den hurtigst muligt.');
+    toast.success(t.reportThanks);
     setReason('');
     setLoading(false);
     onClose();
@@ -38,26 +40,26 @@ export default function ReportSheet({ open, onClose, reportedEmail, messageId = 
         <SheetHeader className="mb-4">
           <SheetTitle className="flex items-center gap-2">
             <Flag className="w-4 h-4 text-red-500" />
-            Indberetning
+            {t.reportTitle}
           </SheetTitle>
         </SheetHeader>
         <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-          Vælg årsag til indberetning:
+          {t.selectReportReason}
         </p>
         <div className="space-y-2 mb-6">
-          {REASONS.map(r => (
+          {REASON_KEYS.map(k => (
             <button
-              key={r}
-              onClick={() => setReason(r)}
+              key={k}
+              onClick={() => setReason(t[k])}
               className="w-full text-left px-4 py-3 rounded-xl text-sm border transition-all"
               style={{
-                borderColor: reason === r ? 'var(--color-primary)' : 'var(--color-border)',
-                backgroundColor: reason === r ? 'var(--color-bg-subtle)' : 'var(--color-bg-card)',
+                borderColor: reason === t[k] ? 'var(--color-primary)' : 'var(--color-border)',
+                backgroundColor: reason === t[k] ? 'var(--color-bg-subtle)' : 'var(--color-bg-card)',
                 color: 'var(--color-text-primary)',
-                fontWeight: reason === r ? 600 : 400,
+                fontWeight: reason === t[k] ? 600 : 400,
               }}
             >
-              {r}
+              {t[k]}
             </button>
           ))}
         </div>
@@ -66,7 +68,7 @@ export default function ReportSheet({ open, onClose, reportedEmail, messageId = 
           disabled={!reason || loading}
           onClick={handleSubmit}
         >
-          {loading ? 'Sender...' : 'Send indberetning'}
+          {loading ? t.sending : t.sendReport}
         </Button>
       </SheetContent>
     </Sheet>

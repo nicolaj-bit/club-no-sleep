@@ -5,7 +5,7 @@ import { Baby } from 'lucide-react';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 
 export default function PregnancyHomeView({ profile, activeChild }) {
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const dueDate = activeChild?.due_date || profile?.child_due_date;
   const childName = activeChild?.name;
@@ -25,14 +25,14 @@ export default function PregnancyHomeView({ profile, activeChild }) {
             <div className="flex-1 p-5 flex flex-col justify-between z-10">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: 'var(--color-text-muted)' }}>
-                  {childName && activeChild?.birthdate ? childName.toUpperCase() + ' · ' : ''}{lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+                  {childName && activeChild?.birthdate ? childName.toUpperCase() + ' · ' : ''}{t.dueInLabel}
                 </p>
                 <div className="flex items-baseline gap-1.5 mb-0.5">
                   <span className="text-[72px] font-light leading-none" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)', lineHeight: 1 }}>
                     {Math.floor(pregnancy.daysUntilDue / 7)}
                   </span>
                   <span className="text-2xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                    {lang === 'da' ? 'uger' : 'weeks'}
+                    {t.weekPlural}
                   </span>
                 </div>
               </div>
@@ -44,9 +44,7 @@ export default function PregnancyHomeView({ profile, activeChild }) {
               >
                 <Baby className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
                 <span className="text-xs font-medium whitespace-nowrap" style={{ color: 'var(--color-text-primary)' }}>
-                  {lang === 'da'
-                    ? `Du er i uge ${pregnancy.ordinal} (${pregnancy.completedWeeks}+${pregnancy.days})`
-                    : `Week ${pregnancy.ordinal}`}
+                  {t.pregnancyWeekInfo.replace('{week}', pregnancy.ordinal).replace('{completed}', pregnancy.completedWeeks).replace('{days}', pregnancy.days)}
                 </span>
               </div>
             </div>
@@ -55,7 +53,7 @@ export default function PregnancyHomeView({ profile, activeChild }) {
             <div className="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-3xl">
               <img
                 src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/b0c96886b_generated_image.png"
-                alt="gravid"
+                alt={t.altPregnancy}
                 className="w-full h-full object-cover"
                 style={{ objectPosition: 'center top' }}
               />

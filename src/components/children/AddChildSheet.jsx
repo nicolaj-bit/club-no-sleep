@@ -3,8 +3,10 @@ import { base44 } from '@/api/base44Client';
 import { X, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function AddChildSheet({ open, onClose, onSaved, editChild = null }) {
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -26,8 +28,8 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
   if (!open) return null;
 
   const handleSave = async () => {
-    if (!name.trim()) { setError('Indtast barnets navn'); return; }
-    if (!birthdate && !dueDate) { setError('Angiv fødselsdato eller terminsdato'); return; }
+    if (!name.trim()) { setError(t.enterChildName); return; }
+    if (!birthdate && !dueDate) { setError(t.provideBirthdateOrDueDate); return; }
 
     setSaving(true);
     setError('');
@@ -47,7 +49,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
       }
       onSaved();
     } catch (e) {
-      setError('Kunne ikke gemme. Prøv igen.');
+      setError(t.couldNotSaveTryAgain);
     } finally {
       setSaving(false);
     }
@@ -60,7 +62,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
       await base44.entities.Child.delete(editChild.id);
       onSaved();
     } catch (e) {
-      setError('Kunne ikke slette. Prøv igen.');
+      setError(t.couldNotDeleteTryAgain);
     } finally {
       setDeleting(false);
     }
@@ -75,16 +77,16 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            {editChild ? 'Rediger barn' : 'Tilføj barn'}
+            {editChild ? t.editChild : t.addChild}
           </h2>
           <button onClick={onClose}><X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} /></button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>Navn *</label>
+            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>{t.nameRequired}</label>
             <Input
-              placeholder="Barnets navn"
+              placeholder={t.childNamePlaceholder}
               value={name}
               onChange={e => setName(e.target.value)}
               style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
@@ -92,7 +94,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
           </div>
 
           <div>
-            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>Fødselsdato</label>
+            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>{t.birthdateLabel}</label>
             <Input
               type="date"
               value={birthdate}
@@ -102,14 +104,14 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
           </div>
 
           <div>
-            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>Terminsdato</label>
+            <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-text-secondary)' }}>{t.dueDateLabel}</label>
             <Input
               type="date"
               value={dueDate}
               onChange={e => setDueDate(e.target.value)}
               style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
             />
-            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>Bruges til beregning af tigerspring 🐯</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{t.usedForWonderWeeks}</p>
           </div>
 
           {error && <p className="text-xs" style={{ color: '#e55' }}>{error}</p>}
@@ -120,7 +122,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
             className="w-full"
             style={{ background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
           >
-            {saving ? 'Gemmer…' : editChild ? 'Gem ændringer' : 'Tilføj barn'}
+            {saving ? t.saving : editChild ? t.saveChanges : t.addChild}
           </Button>
 
           {editChild && (
@@ -133,12 +135,12 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
                   className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium"
                   style={{ color: '#c44' }}
                 >
-                  <Trash2 className="w-4 h-4" /> Slet barn
+                  <Trash2 className="w-4 h-4" /> {t.deleteChild}
                 </button>
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs text-center" style={{ color: 'var(--color-text-secondary)' }}>
-                    Slet {editChild.name}? Dette kan ikke fortrydes.
+                    {t.deleteChildConfirm.replace('{name}', editChild.name)}
                   </p>
                   <div className="flex gap-2">
                     <Button
@@ -148,7 +150,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
                       className="flex-1"
                       style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
                     >
-                      Annuller
+                      {t.cancel}
                     </Button>
                     <Button
                       onClick={handleDelete}
@@ -156,7 +158,7 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
                       className="flex-1"
                       style={{ background: '#c44', color: '#fff' }}
                     >
-                      {deleting ? 'Sletter…' : 'Ja, slet'}
+                      {deleting ? t.deleting : t.yesDelete}
                     </Button>
                   </div>
                 </div>

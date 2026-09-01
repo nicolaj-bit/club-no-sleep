@@ -1,15 +1,17 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { User } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
-export default function UserAvatar({ 
-  src, 
-  name, 
+export default function UserAvatar({
+  src,
+  name,
   size = 'md',
   isOnline = false,
   showStatus = false,
-  className 
+  className
 }) {
+  const { t } = useLanguage();
   const sizeClasses = {
     xs: 'w-6 h-6',
     sm: 'w-8 h-8',
@@ -46,7 +48,7 @@ export default function UserAvatar({
         {src ? (
           <img 
             src={src} 
-            alt={name || 'User'} 
+            alt={name || t.altUser}
             className="w-full h-full object-cover"
           />
         ) : (

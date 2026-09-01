@@ -78,7 +78,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
           {/* Full background photo */}
           <img
             src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/112ea1336_1.jpg"
-            alt="gravid"
+            alt={t.altPregnancy}
             className="absolute inset-0 w-full h-full object-cover"
             style={{ objectPosition: 'center 30%' }}
           />
@@ -92,7 +92,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
           <div className="absolute inset-0 p-5 flex flex-col justify-between">
             {/* Top label */}
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-              {lang === 'da' ? 'TERMIN OM' : 'DUE IN'}
+              {t.dueInLabel}
             </p>
 
             {/* Bottom: big number + week pill */}
@@ -113,7 +113,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
               </div>
               <div className="flex items-center gap-3">
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                  {lang === 'da' ? 'til termin' : 'until due date'}
+                  {t.untilDueDate}
                 </p>
                 <div
                   className="inline-flex items-center gap-1.5 rounded-full px-3 py-1"
@@ -121,9 +121,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
                 >
                   <Baby className="w-3 h-3 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.8)' }} />
                   <span className="text-[11px] font-medium whitespace-nowrap" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    {lang === 'da'
-                      ? `Du er i uge ${age.currentWeek} (${age.currentWeek - 1}+${age.currentDayInWeek})`
-                      : `Week ${age.currentWeek} (${age.currentWeek - 1}+${age.currentDayInWeek})`}
+                    {t.pregnancyWeekInfo.replace('{week}', age.currentWeek).replace('{completed}', age.currentWeek - 1).replace('{days}', age.currentDayInWeek)}
                   </span>
                 </div>
               </div>
@@ -147,9 +145,7 @@ export default function ChildDevelopmentCard({ profile, child }) {
       >
         <Baby className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-          {lang === 'da'
-            ? `Dit barn er i uge ${ageLabel} gammel`
-            : `Your child is ${ageLabel} old`}
+          {t.childAgeWeek.replace('{ageLabel}', ageLabel)}
         </p>
       </div>
     </Link>

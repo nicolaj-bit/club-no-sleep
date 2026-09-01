@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
@@ -76,6 +77,7 @@ Gode eksempler på ønsket tone:
 }
 
 export default function DailyPersonalMessage({ userEmail, profile }) {
+  const { t } = useLanguage();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const fetchedRef = useRef(false);
@@ -111,7 +113,7 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
         className="rounded-2xl p-5 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, var(--color-bg-card), var(--color-bg-subtle))', border: '1px solid var(--color-border)' }}
       >
-        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: 'var(--color-text-muted)' }}>Daglig affirmation</p>
+        <p className="text-[9px] font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: 'var(--color-text-muted)' }}>{t.dailyAffirmation}</p>
         <p
           className="text-[16px] font-light leading-relaxed"
           style={{ textWrap: 'pretty', fontFamily: 'Cormorant Garamond, Georgia, serif', lineHeight: '1.55', color: 'var(--color-text-primary)' }}

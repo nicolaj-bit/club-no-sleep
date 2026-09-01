@@ -4,6 +4,7 @@ import L from 'leaflet';
 import { MessageCircle } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import { useTheme } from '@/components/ui/ThemeProvider';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const DENMARK_CENTER = [56.0, 10.5];
 
@@ -93,6 +94,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
   const [zoom, setZoom] = useState(6);
 
   const { isDark } = useTheme();
+  const { t } = useLanguage();
 
   // Markører beholder tidsbaseret nattilstand — rør ikke ved pins
   const isNightMode = useMemo(() => {
@@ -161,7 +163,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
                   </div>
                 )}
                 <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                  {u.display_name || u.username || 'Anonym'}
+                  {u.display_name || u.username || t.anonymous}
                 </p>
                 {u.city && <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{u.city}</p>}
                 {onStartChat && (
@@ -171,7 +173,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
                     style={{ background: 'var(--color-accent)' }}
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
-                    Start chat
+                    {t.startChat}
                   </button>
                 )}
               </div>
@@ -187,7 +189,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
           >
             <Popup>
               <div className="p-3 text-center text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                Det er dig 👋
+                {t.thatsYou}
               </div>
             </Popup>
           </Marker>

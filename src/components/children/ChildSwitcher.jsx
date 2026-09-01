@@ -4,10 +4,12 @@ import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { base44 } from '@/api/base44Client';
 import { ChevronDown, Plus, Baby, LogIn } from 'lucide-react';
 import AddChildSheet from './AddChildSheet';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ChildSwitcher({ compact = false }) {
   const { children, activeChild, setActiveChildId, refetch } = useActiveChild();
   const { isInvited } = useInviteAccess();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const ref = useRef(null);
@@ -38,7 +40,7 @@ export default function ChildSwitcher({ compact = false }) {
           style={{ background: 'var(--color-primary)' }}
         >
           <LogIn className="w-3.5 h-3.5" />
-          Log ind
+          {t.logIn}
         </button>
       );
     }
@@ -50,7 +52,7 @@ export default function ChildSwitcher({ compact = false }) {
           style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
         >
           <Plus className="w-3.5 h-3.5" />
-          Tilføj barn
+          {t.addChild}
         </button>
         <AddChildSheet open={showAdd} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); refetch(); }} />
       </>
@@ -72,7 +74,7 @@ export default function ChildSwitcher({ compact = false }) {
           style={{ background: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
         >
           <Baby className="w-3.5 h-3.5" />
-          <span>{activeChild ? getChildLabel(activeChild) : 'Vælg barn'}</span>
+          <span>{activeChild ? getChildLabel(activeChild) : t.selectChild}</span>
           {children.length > 1 && <ChevronDown className="w-3 h-3" />}
         </button>
 
@@ -103,7 +105,7 @@ export default function ChildSwitcher({ compact = false }) {
               style={{ color: 'var(--color-accent)' }}
             >
               <Plus className="w-3.5 h-3.5" />
-              Tilføj barn
+              {t.addChild}
             </button>
             )}
           </div>

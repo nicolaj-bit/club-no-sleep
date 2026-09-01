@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { additionalDa, additionalEn } from './additionalTranslations';
 
 const translations = {
   da: {
+    ...additionalDa,
     // Nav
     home: 'Hjem',
     menu: 'Menu',
@@ -1204,6 +1206,7 @@ const translations = {
   },
 
   en: {
+    ...additionalEn,
     // Nav
     home: 'Home',
     menu: 'Menu',
