@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark, Moon, Sparkles } from 'lucide-react';
+import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark, Moon } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -56,7 +56,6 @@ export default function BottomNav() {
 
   const menuItemsConfig = [
     { key: 'blog', icon: BookOpen, page: 'Blog' },
-    { key: 'ai', icon: Sparkles, page: 'AIChat', name: 'AI-hjælper' },
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
@@ -84,7 +83,7 @@ export default function BottomNav() {
 
   // Save current path to tab history whenever location changes
   useEffect(() => {
-    const allPages = ['Home', 'AIChat', 'SleepLog', 'PregnancyWeeks', ...menuItemsConfig.map(m => m.page)];
+    const allPages = ['Home', 'SleepLog', 'PregnancyWeeks', ...menuItemsConfig.map(m => m.page)];
     allPages.forEach(page => {
       const url = createPageUrl(page);
       if (currentPath === url || currentPath.startsWith(url + '?')) {
