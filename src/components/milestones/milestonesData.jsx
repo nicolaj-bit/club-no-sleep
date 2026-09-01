@@ -77,4 +77,9 @@ export const MILESTONE_FRAMES = [
   { id: 'age-3y',   category: 'Alder', label: '3 års fødselsdag', emoji: '🎂', ...A, headline: '3 års fødselsdag',  subline: 'Tillykke! 🎉' },
 ];
 
-export const CATEGORIES = ['Alle', 'Graviditet', 'Baby', 'Alder'];
+export const CATEGORIES = [
+  { key: 'Alle', labelKey: 'catAll' },
+  { key: 'Graviditet', labelKey: 'milestoneCatPregnancy' },
+  { key: 'Baby', labelKey: 'milestoneCatBaby' },
+  { key: 'Alder', labelKey: 'milestoneCatAge' },
+];

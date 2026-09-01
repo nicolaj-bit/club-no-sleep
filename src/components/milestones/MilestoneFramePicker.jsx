@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { CATEGORIES } from './milestonesData';
 import { Camera } from 'lucide-react';
 import WobblySticker from './WobblySticker';
-
-const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, onOpen }) {
+  const { t, lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('Alle');
+  const TODAY = new Date().toLocaleDateString(lang === 'da' ? 'da-DK' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   const filtered = activeCategory === 'Alle'
     ? frames
@@ -24,14 +25,14 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
       <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
         {CATEGORIES.map(cat => (
           <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
+            key={cat.key}
+            onClick={() => setActiveCategory(cat.key)}
             className="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
-            style={activeCategory === cat
+            style={activeCategory === cat.key
               ? { background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }
               : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
           >
-            {cat}
+            {t[cat.labelKey]}
           </button>
         ))}
       </div>
@@ -100,7 +101,7 @@ export default function MilestoneFramePicker({ frames, selectedFrame, onSelect, 
           style={{ background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))', color: 'var(--theme-text-on-dark)' }}
         >
           <Camera className="w-5 h-5" />
-          Tag milepælsbillede med "{selectedFrame.label}"
+          {t.milestoneCtaWithLabel.replace('{label}', selectedFrame.label)}
         </button>
       </div>
     </div>

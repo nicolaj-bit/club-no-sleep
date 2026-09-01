@@ -2,8 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Camera, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import TypeSticker from './TypeSticker';
-
-const TODAY_STR = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 // ── Canvas helpers ────────────────────────────────────────────────────────────
 
@@ -211,6 +210,7 @@ function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function MilestoneCamera({ frame, onClose }) {
+  const { t, lang } = useLanguage();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -223,6 +223,7 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [saving, setSaving] = useState(false);
   const [cameraError, setCameraError] = useState(null);
 
+  const TODAY_STR = new Date().toLocaleDateString(lang === 'da' ? 'da-DK' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
 
@@ -337,7 +338,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     a.href = capturedImage;
     a.download = `lalatoto-${frame.id}.jpg`;
     a.click();
-    toast.success('Billede gemt! 🎉');
+    toast.success(t.milestoneImageSaved);
   };
 
   // Gem på enhed + gem i Favoritter (kategori 'Milepæle') via backend (RLS-workaround)
@@ -361,10 +362,10 @@ export default function MilestoneCamera({ frame, onClose }) {
         image_url: file_url,
         frame_id: frame.id,
       });
-      toast.success('Gemt i Favoritter under Milepæle');
+      toast.success(t.milestoneSavedToFavorites);
     } catch (e) {
       console.error('MilestoneCamera: kunne ikke gemme favorit:', e.message);
-      toast.error('Kunne ikke gemme i Favoritter');
+      toast.error(t.milestoneSaveFavoriteError);
     } finally {
       setSaving(false);
     }
@@ -372,7 +373,7 @@ export default function MilestoneCamera({ frame, onClose }) {
 
   // Native dele-menu med billede vedhæftet (Web Share API). Fallback til tekst-deling eller download.
   const handleShare = async () => {
-    const shareText = `Se min milepæl på LALATOTO: ${frame.headline}`;
+    const shareText = t.milestoneShareText.replace('{headline}', frame.headline);
     try {
       const blob = await (await fetch(capturedImage)).blob();
       const file = new File([blob], `lalatoto-${frame.id}.jpg`, { type: 'image/jpeg' });
@@ -382,12 +383,12 @@ export default function MilestoneCamera({ frame, onClose }) {
         await navigator.share({ title: frame.headline, text: shareText });
       } else {
         downloadImage();
-        toast.info('Deling ikke understøttet her — billedet er downloadet i stedet');
+        toast.info(t.milestoneShareNotSupported);
       }
     } catch (e) {
       if (e && e.name === 'AbortError') return;
       console.error('MilestoneCamera: deling fejlede:', e.message);
-      toast.error('Kunne ikke dele billedet');
+      toast.error(t.milestoneShareError);
     }
   };
 
@@ -415,28 +416,28 @@ export default function MilestoneCamera({ frame, onClose }) {
           {cameraError ? (
             <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
               <AlertCircle className="w-12 h-12 text-white/60 mb-4" />
-              <p className="text-white font-semibold text-lg mb-2">Kameraet er ikke tilgængeligt</p>
-              <p className="text-white/60 text-sm mb-8">Giv appen adgang til kameraet i dine indstillinger, eller vælg et billede fra dit galleri.</p>
+              <p className="text-white font-semibold text-lg mb-2">{t.milestoneCameraUnavailable}</p>
+              <p className="text-white/60 text-sm mb-8">{t.milestoneCameraPermissionHint}</p>
               <div className="flex flex-col gap-3 w-full max-w-xs">
                 <button
                   onClick={() => startCamera()}
                   className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold"
                   style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-primary)' }}
                 >
-                  <Camera className="w-4 h-4" /> Prøv igen
+                  <Camera className="w-4 h-4" /> {t.milestoneTryAgain}
                 </button>
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold border"
                   style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)' }}
                 >
-                  <ImageIcon className="w-4 h-4" /> Vælg fra galleri
+                  <ImageIcon className="w-4 h-4" /> {t.milestoneChooseFromGallery}
                 </button>
                 <button
                   onClick={onClose}
                   className="h-12 rounded-2xl flex items-center justify-center gap-2 text-sm font-semibold text-white/60"
                 >
-                  Luk
+                  {t.close}
                 </button>
               </div>
             </div>
@@ -456,15 +457,15 @@ export default function MilestoneCamera({ frame, onClose }) {
 
               {/* Top bar — luk + label + galleri & vend kamera */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-14 pb-4 safe-top">
-                <button onClick={onClose} aria-label="Luk" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                <button onClick={onClose} aria-label={t.close} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
                   <X className="w-5 h-5 text-white" />
                 </button>
                 <p className="text-white font-semibold text-sm px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>{frame.label}</p>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => fileInputRef.current?.click()} aria-label="Galleri" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                  <button onClick={() => fileInputRef.current?.click()} aria-label={t.ariaGallery} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
                     <ImageIcon className="w-5 h-5 text-white" />
                   </button>
-                  <button onClick={flipCamera} aria-label="Vend kamera" className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                  <button onClick={flipCamera} aria-label={t.ariaFlipCamera} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
                     <SwitchCamera className="w-5 h-5 text-white" />
                   </button>
                 </div>
@@ -502,7 +503,7 @@ export default function MilestoneCamera({ frame, onClose }) {
           <div className="flex-1 flex items-center justify-center px-3 min-h-0">
             <img
               src={capturedImage}
-              alt="Milepæl"
+              alt={t.milestoneAltMilestone}
               className="rounded-3xl object-cover w-full"
               style={{ maxHeight: '64vh', maxWidth: 460, border: '3px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
             />
@@ -526,7 +527,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 <RotateCcw className="w-5 h-5" />
-                Prøv igen
+                {t.milestoneTryAgain}
               </button>
               <button
                 onClick={handleSave}
@@ -535,7 +536,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
               >
                 <Download className="w-5 h-5" />
-                {saving ? 'Gemmer...' : 'Gem'}
+                {saving ? t.saving : t.save}
               </button>
               <button
                 onClick={handleShare}
@@ -543,7 +544,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
                 <Share2 className="w-5 h-5" />
-                Del
+                {t.milestoneShare}
               </button>
             </div>
           </div>
