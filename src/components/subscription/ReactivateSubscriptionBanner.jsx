@@ -2,10 +2,12 @@ import React from 'react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function ReactivateSubscriptionBanner() {
   const { activeProfile, loading } = useActiveProfile();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   if (loading || !activeProfile) return null;
   if (activeProfile.subscription_status !== 'expired') return null;
@@ -27,8 +29,8 @@ export default function ReactivateSubscriptionBanner() {
         <RefreshCw className="w-5 h-5 text-white" />
       </div>
       <div className="flex-1">
-        <p className="text-sm font-semibold text-white leading-tight">Genaktiver dit abonnement</p>
-        <p className="text-xs text-white/75 mt-0.5">Få fuld adgang igen →</p>
+        <p className="text-sm font-semibold text-white leading-tight">{t.reactivateSubscriptionTitle}</p>
+        <p className="text-xs text-white/75 mt-0.5">{t.reactivateSubscriptionSubtitle}</p>
       </div>
     </button>
   );

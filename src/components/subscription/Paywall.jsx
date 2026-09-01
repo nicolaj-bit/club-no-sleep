@@ -11,9 +11,8 @@ import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Paywall({ onSubscribed }) {
-  const { lang } = useLanguage();
+  const { t } = useLanguage();
   const { isDark } = useTheme();
-  const da = lang === 'da';
   const navigate = useNavigate();
   const rc = useRevenueCat();
 
@@ -24,7 +23,7 @@ export default function Paywall({ onSubscribed }) {
 
   // Trial eligibility — kun relevant på native (butikshåndteret prøveperiode)
   const rcPrice = rc.offerings?.current?.availablePackages?.[0]?.product?.priceString;
-  const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
+  const priceShort = rcPrice || t.paywallPriceShort;
   const isTrialEligible = isNativeApp() && rc.trialEligibility !== 'ineligible';
   const isTrialIneligible = isNativeApp() && rc.trialEligibility === 'ineligible';
 
@@ -36,9 +35,7 @@ export default function Paywall({ onSubscribed }) {
     }
 
     if (window.self !== window.top) {
-      setError(da
-        ? 'Betaling virker kun fra den publicerede app, ikke fra forhåndsvisningen.'
-        : 'Checkout only works from the published app, not the preview.');
+      setError(t.landingPreviewPaymentAlert);
       return;
     }
 
@@ -54,9 +51,7 @@ export default function Paywall({ onSubscribed }) {
       }
     } catch (e) {
       console.error('Checkout error:', e);
-      setError(da
-        ? 'Noget gik galt. Tjek din internetforbindelse og prøv igen.'
-        : 'Something went wrong. Check your connection and try again.');
+      setError(t.paywallCheckoutError);
     } finally {
       setLoading(false);
     }
@@ -73,27 +68,23 @@ export default function Paywall({ onSubscribed }) {
         const hasActive = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
         if (hasActive) {
           await base44.functions.invoke('verifySubscription', {}).catch(() => {});
-          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+          setRestoreMessage(t.paywallSubscriptionRestored);
           setTimeout(() => { if (onSubscribed) onSubscribed(); }, 1200);
         } else {
-          setRestoreMessage(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
+          setRestoreMessage(t.paywallNoActiveSubscription);
         }
       } else {
         // Web: tjek via Stripe backend
         const response = await base44.functions.invoke('verifySubscription', {});
         if (response.data?.active) {
-          setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');
+          setRestoreMessage(t.paywallSubscriptionRestored);
           setTimeout(() => { if (onSubscribed) onSubscribed(); }, 1200);
         } else {
-          setRestoreMessage(da
-            ? 'Intet aktivt abonnement fundet på denne konto.'
-            : 'No active subscription found on this account.');
+          setRestoreMessage(t.paywallNoActiveSubscriptionAccount);
         }
       }
     } catch (e) {
-      setError(da
-        ? 'Kunne ikke tjekke abonnement. Prøv igen.'
-        : 'Could not verify subscription. Please try again.');
+      setError(t.paywallRestoreError);
     } finally {
       setRestoring(false);
     }
@@ -144,9 +135,7 @@ export default function Paywall({ onSubscribed }) {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-sm text-white/75 max-w-xs"
           >
-            {da
-              ? 'Din digitale følgesvend som forælder'
-              : 'Your digital companion as a parent'}
+            {t.paywallDigitalCompanion}
           </motion.p>
         </div>
       </div>
@@ -167,7 +156,7 @@ export default function Paywall({ onSubscribed }) {
           >
             <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
             <span className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-              {da ? '59 kr. / måned' : '59 DKK / month'}
+              {t.paywallPricePerMonth}
             </span>
           </div>
         </motion.div>
@@ -186,8 +175,8 @@ export default function Paywall({ onSubscribed }) {
                 <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
               </div>
               <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                <span className="font-semibold">{f.title}</span>
-                <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
+                <span className="font-semibold">{t[f.titleKey]}</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}> — {t[f.descKey]}</span>
               </span>
             </div>
           ))}
@@ -222,7 +211,7 @@ export default function Paywall({ onSubscribed }) {
         {/* Trial heading — over knappen */}
         {isTrialEligible && (
           <h2 className="text-center mb-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontWeight: 400, fontSize: '1.4rem' }}>
-            {da ? 'Prøv Club No Sleep gratis i 7 dage' : 'Try Club No Sleep free for 7 days'}
+            {t.paywallTryFree7Days}
           </h2>
         )}
 
@@ -237,12 +226,12 @@ export default function Paywall({ onSubscribed }) {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
           {loading
-            ? <><Loader2 className="w-4 h-4 animate-spin" /> {da ? 'Indlæser…' : 'Loading…'}</>
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> {t.loading}</>
             : isTrialEligible
-              ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
+              ? t.paywallStart7DaysFree
               : isTrialIneligible
-                ? (da ? 'Bliv medlem' : 'Become a member')
-                : (da ? 'Start abonnement' : 'Start subscription')}
+                ? t.landingBecomeMember
+                : t.paywallStartSubscription}
         </motion.button>
 
         {/* Restore purchases */}
@@ -256,31 +245,29 @@ export default function Paywall({ onSubscribed }) {
           style={{ color: 'var(--color-text-muted)' }}
         >
           {restoring
-            ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> {da ? 'Tjekker…' : 'Checking…'}</>
-            : <><RefreshCw className="w-3.5 h-3.5" /> {da ? 'Gendan eksisterende køb' : 'Restore existing purchase'}</>}
+            ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> {t.paywallChecking}</>
+            : <><RefreshCw className="w-3.5 h-3.5" /> {t.paywallRestorePurchase}</>}
         </motion.button>
 
         {/* Linje under knap */}
         <p className="text-xs text-center mt-1" style={{ color: 'var(--color-text-muted)' }}>
           {isTrialEligible
-            ? (da ? `Derefter ${priceShort}/md. Opsig når som helst.` : `Then ${priceShort}/mo. Cancel anytime.`)
+            ? t.paywallAfterTrialPrice.replace('{price}', priceShort)
             : isTrialIneligible
-              ? (da ? `${priceShort}/md. Opsig når som helst.` : `${priceShort}/mo. Cancel anytime.`)
-              : (da ? 'Abonnementet fornyes automatisk. Opsig når som helst.' : 'Subscription renews automatically. Cancel anytime.')}
+              ? t.paywallPriceCancelAnytime.replace('{price}', priceShort)
+              : t.paywallAutoRenewNote}
         </p>
 
         {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
         {isTrialEligible && (
           <p className="text-xs text-center mt-3 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            {da
-              ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
-              : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
+            {t.paywallTrialTerms}
           </p>
         )}
 
         <div className="flex items-center justify-center gap-4 mt-3 text-xs">
-          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{da ? 'Vilkår' : 'Terms'}</Link>
-          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{da ? 'Privatlivspolitik' : 'Privacy Policy'}</Link>
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.termsShort}</Link>
+          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.privacyTitle}</Link>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Lock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 /**
  * ContentLock – wraps premium content.
@@ -16,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
  */
 export default function ContentLock({ locked, loading: subscriptionLoading, children, blurHeight = '200px' }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // While subscription is still loading, show a full-height spinner overlay so nothing is clickable
   if (subscriptionLoading) {
@@ -74,10 +76,10 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
         </div>
 
         <p className="text-base font-semibold text-center mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-          Denne funktion kræver medlemskab
+          {t.contentLockTitle}
         </p>
         <p className="text-sm text-center mb-5" style={{ color: 'var(--color-text-muted)' }}>
-          Bliv medlem og få adgang til alle funktioner i appen
+          {t.contentLockSubtitle}
         </p>
 
         <button
@@ -85,7 +87,7 @@ export default function ContentLock({ locked, loading: subscriptionLoading, chil
           className="w-full py-3.5 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
-          Bliv medlem ✨
+          {t.contentLockCta}
         </button>
       </motion.div>
     </div>

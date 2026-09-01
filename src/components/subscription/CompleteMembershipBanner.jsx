@@ -2,10 +2,12 @@ import React from 'react';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function CompleteMembershipBanner() {
   const { activeProfile, loading } = useActiveProfile();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   if (loading || !activeProfile) return null;
   if (activeProfile.subscription_status !== 'trial') return null;
@@ -27,8 +29,8 @@ export default function CompleteMembershipBanner() {
         <Sparkles className="w-5 h-5 text-white" />
       </div>
       <div className="flex-1">
-        <p className="text-sm font-semibold text-white leading-tight">Færdiggør dit medlemskab</p>
-        <p className="text-xs text-white/75 mt-0.5">Få fuld adgang til alle funktioner →</p>
+        <p className="text-sm font-semibold text-white leading-tight">{t.completeMembershipTitle}</p>
+        <p className="text-xs text-white/75 mt-0.5">{t.completeMembershipSubtitle}</p>
       </div>
     </button>
   );

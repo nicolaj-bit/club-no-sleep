@@ -5,6 +5,7 @@ import { Gift, X } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 async function markTrialAnnouncementSeen() {
   try {
@@ -33,6 +34,7 @@ export default function TrialAnnouncementModal({ open, onClose }) {
 function TrialAnnouncementInner({ onClose }) {
   const navigate = useNavigate();
   const { trialEligibility, loading: rcLoading } = useRevenueCat();
+  const { t } = useLanguage();
   const isNative = Capacitor.isNativePlatform();
   const ready = !isNative || !rcLoading;
   const ineligible = ready && trialEligibility === 'ineligible';
@@ -84,11 +86,11 @@ function TrialAnnouncementInner({ onClose }) {
           </div>
 
           <h2 className="text-xl font-semibold mb-2.5" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            Nu kan du prøve gratis i 7 dage
+            {t.trialAnnouncementTitle}
           </h2>
 
           <p className="text-sm leading-relaxed mb-6 max-w-[270px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Da du oprettede dig, havde vi ikke en gratis prøveperiode. Det har vi nu — så du kan prøve det hele, før du beslutter dig.
+            {t.trialAnnouncementBody}
           </p>
 
           <div className="w-full flex flex-col gap-2.5">
@@ -97,14 +99,14 @@ function TrialAnnouncementInner({ onClose }) {
               className="w-full py-3.5 rounded-2xl text-[15px] font-semibold active:opacity-80 transition-opacity"
               style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             >
-              Start 7 dage gratis
+              {t.paywallStart7DaysFree}
             </button>
             <button
               onClick={handleClose}
               className="w-full py-3.5 rounded-2xl text-[15px] font-medium active:opacity-80 transition-opacity"
               style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
             >
-              Ikke nu
+              {t.trialAnnouncementNotNow}
             </button>
           </div>
         </div>

@@ -4,8 +4,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { Clock } from 'lucide-react';
 
 export default function TrialStatusBadge({ userEmail }) {
-  const { lang } = useLanguage();
-  const da = lang === 'da';
+  const { t } = useLanguage();
   const rc = useRevenueCat(userEmail || null);
 
   if (rc.loading || !rc.isNative || !rc.customerInfo) return null;
@@ -31,9 +30,7 @@ export default function TrialStatusBadge({ userEmail }) {
     >
       <Clock className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
       <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-        {da
-          ? `Din gratis prøve slutter om ${daysRemaining} ${daysRemaining === 1 ? 'dag' : 'dage'}`
-          : `Your free trial ends in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'}`}
+        {t.trialEndsInPrefix} {daysRemaining} {daysRemaining === 1 ? t.daySingular : t.dayPlural}
       </p>
     </div>
   );
