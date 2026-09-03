@@ -46,15 +46,17 @@
   ],
   "rls": {
     "create": {
-      "user_condition": {
-        "isAuthenticated": true
-      }
+      "created_by_id": "{{user.id}}"
     },
     "read": {
       "data.participants": "{{user.email}}"
     },
     "update": {
-      "data.participants": "{{user.email}}"
+      "data.participants": {
+        "$in": [
+          "{{user.email}}"
+        ]
+      }
     },
     "delete": {
       "user_condition": {
