@@ -1,8 +1,10 @@
 import React, { useMemo, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, AttributionControl, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import { MessageCircle, Eye } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -153,8 +155,7 @@ function ZoomTracker({ onZoom }) {
   return null;
 }
 
-export default function DenmarkMap({ users = [], currentUserLocation = null, onStartChat, isVisible = true, onToggleVisibility }) {
-  const mappedUsers = users.filter(u => u.latitude && u.longitude);
+export default function DenmarkMap({ currentUserLocation = null, onStartChat, isVisible = true, onToggleVisibility }) {
   const [zoom, setZoom] = useState(6);
   const [visibilityOpen, setVisibilityOpen] = useState(false);
 
@@ -186,21 +187,21 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
 
   const countryName = COUNTRY_NAMES[lang]?.[countryCode] || COUNTRY_NAMES.da[countryCode] || 'Danmark';
 
-  // Antal vågne i brugerens land
-  const awakeInCountry = useMemo(() => {
-    const b = COUNTRY_BOUNDS[countryCode];
-    return mappedUsers.filter(u => u.is_online && isInBounds(u.latitude, u.longitude, b)).length;
-  }, [mappedUsers, countryCode]);
+  // Hent lys i brugerens land fra getLightsInCountry — kortets eneste datakilde
+  const { data: lightsData } = useQuery({
+    queryKey: ['lights', countryCode],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('getLightsInCountry', { country_code: countryCode });
+      return res.data;
+    },
+  });
 
-  // Antal vågne i Europa (alle europæiske lande i COUNTRY_BOUNDS)
-  const awakeInEurope = useMemo(() => {
-    return mappedUsers.filter(u => u.is_online &&
-      Object.values(COUNTRY_BOUNDS).some(b => isInBounds(u.latitude, u.longitude, b))
-    ).length;
-  }, [mappedUsers]);
+  const lights = lightsData?.lights || [];
+  const count = lightsData?.count ?? 0;
+  const europeCount = lightsData?.europe_count ?? 0;
 
-  const showEuropeLine = awakeInCountry < 5;
-  const europeRest = Math.max(0, awakeInEurope - awakeInCountry);
+  const showEuropeLine = count < 5;
+  const europeRest = Math.max(0, europeCount - count);
 
   return (
     <div style={{ height: '100%', position: 'relative', zIndex: 0, backgroundColor: 'var(--color-bg)' }}>
@@ -241,7 +242,11 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         lineHeight: 1.3,
         pointerEvents: 'none',
       }}>
-        <p>{t.awakeInCountry.replace('{count}', awakeInCountry).replace('{country}', countryName)}</p>
+        {count === 0 ? (
+          <p>{t.noOneAwake.replace('{country}', countryName)}</p>
+        ) : (
+          <p>{t.awakeInCountry.replace('{count}', count).replace('{country}', countryName)}</p>
+        )}
         {showEuropeLine && europeRest > 0 && (
           <p style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2 }}>
             {t.andRestInEurope.replace('{count}', europeRest)}
@@ -287,7 +292,7 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         <FitCountryBounds countryCode={countryCode} />
         <ZoomTracker onZoom={setZoom} />
 
-        {mappedUsers.map((u, i) => (
+        {lights.map((u, i) => (
           <Marker
             key={u.id || i}
             position={[u.latitude, u.longitude]}

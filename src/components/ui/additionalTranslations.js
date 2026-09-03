@@ -63,6 +63,7 @@ export const additionalDa = {
   andRestInEurope: 'og {count} i resten af Europa',
   visibility: 'Synlighed',
   visibilityCardDesc: 'Vises på kortet for andre mødre',
+  noOneAwake: 'Ingen vågne i {country} lige nu',
 };
 
 export const additionalEn = {
@@ -127,4 +128,5 @@ export const additionalEn = {
   andRestInEurope: 'and {count} in the rest of Europe',
   visibility: 'Visibility',
   visibilityCardDesc: 'Shown on the map for other moms',
+  noOneAwake: 'No one awake in {country} right now',
 };

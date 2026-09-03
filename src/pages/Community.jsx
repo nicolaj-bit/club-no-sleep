@@ -43,11 +43,6 @@ export default function Community() {
     loadUser();
   }, []);
 
-  const { data: allVisibleUsers = [] } = useQuery({
-    queryKey: ['allVisibleUsers'],
-    queryFn: () => base44.entities.UserProfile.filter({ is_visible: true, location_enabled: true }),
-  });
-
   const { data: conversations = [] } = useQuery({
     queryKey: ['conversations', user?.email],
     queryFn: () => base44.entities.ChatConversation.filter(
@@ -97,7 +92,7 @@ export default function Community() {
   };
 
   const handleRefresh = async () => {
-    await queryClient.invalidateQueries(['allVisibleUsers']);
+    await queryClient.invalidateQueries(['lights']);
     await queryClient.invalidateQueries(['conversations', user?.email]);
     await queryClient.invalidateQueries(['unreadMessages', user?.email]);
   };
@@ -141,7 +136,6 @@ export default function Community() {
         {(isMom || isAdmin) && (
           <div style={{ height: 'calc(100dvh - 160px)', minHeight: 320 }}>
             <DenmarkMap
-              users={allVisibleUsers.filter(u => u.user_email !== user?.email)}
               currentUserLocation={userLocation}
               onStartChat={handleStartChat}
               isVisible={isVisible}
