@@ -18,7 +18,7 @@ import { ActiveChildProvider } from '@/components/ui/ActiveChildContext';
 
 // Pages that should NOT show bottom nav
 // AIChat is a full-screen immersive UI — suppress the nav, but it remains accessible via the bottom tab AI button
-const noNavPages = ['Login', 'Chat', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding', 'Subscription'];
+const noNavPages = ['Login', 'Chat', 'ChatList', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding', 'Subscription'];
 
 
 // Root-level tab pages — use crossfade (no slide) to feel like native tab switch

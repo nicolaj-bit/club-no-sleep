@@ -32,6 +32,7 @@ import Privacy from './pages/Privacy';
 import AdminTermsPrivacy from './pages/AdminTermsPrivacy';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
+import ChatList from './pages/ChatList';
 
 import NativeAuthGate from './components/auth/NativeAuthGate';
 import ProfileGate from './components/auth/ProfileGate';
@@ -137,6 +138,7 @@ const AuthenticatedApp = () => {
         <Route path="/AdminTermsPrivacy" element={<LayoutWrapper currentPageName="AdminTermsPrivacy"><AdminTermsPrivacy /></LayoutWrapper>} />
         <Route path="/Checkout" element={<Checkout />} />
         <Route path="/CheckoutSuccess" element={<CheckoutSuccess />} />
+        <Route path="/ChatList" element={<LayoutWrapper currentPageName="ChatList"><ChatList /></LayoutWrapper>} />
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>
