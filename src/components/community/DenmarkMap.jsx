@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, AttributionControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, AttributionControl, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import { MessageCircle, Eye } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
@@ -214,10 +214,12 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         }
         .leaflet-popup-content { margin: 0; }
         .leaflet-popup-tip-container { display: none; }
-        .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.13) !important; border-radius: 10px !important; overflow: hidden; }
+        .leaflet-control-zoom { display: flex !important; flex-direction: row !important; border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.13) !important; border-radius: 10px !important; overflow: hidden; }
         .leaflet-control-zoom-in, .leaflet-control-zoom-out { width: 36px !important; height: 36px !important; line-height: 36px !important; font-size: 18px !important; color: var(--color-text-primary) !important; background: var(--color-bg-card) !important; border: none !important; }
+        .leaflet-control-zoom-in { border-right: 1px solid var(--color-border) !important; border-radius: 10px 0 0 10px !important; }
+        .leaflet-control-zoom-out { border-radius: 0 10px 10px 0 !important; }
         .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover { background: var(--color-bg-subtle) !important; }
-        .leaflet-bottom.leaflet-right { bottom: 12px; right: 12px; }
+        .leaflet-bottom.leaflet-right { bottom: 16px; right: 16px; }
         .leaflet-control-attribution { background: transparent !important; font-size: 8px !important; padding: 0 4px !important; color: var(--color-text-muted) !important; opacity: 0.55; text-shadow: 0 0 3px rgba(255,253,249,0.8); }
         .leaflet-control-attribution a { color: var(--color-text-muted) !important; }
       `}</style>
@@ -274,10 +276,11 @@ export default function DenmarkMap({ users = [], currentUserLocation = null, onS
         center={currentUserLocation ? [currentUserLocation.lat, currentUserLocation.lng] : [56.0, 10.5]}
         zoom={6}
         style={{ height: '100%', width: '100%' }}
-        zoomControl={true}
+        zoomControl={false}
         scrollWheelZoom={false}
         attributionControl={false}
       >
+        <ZoomControl position="bottomright" />
         <TileLayer key={`base-${isDark ? 'dark' : 'light'}`} url={tiles.base} attribution="© Esri, HERE, Garmin" />
         <TileLayer key={`labels-${isDark ? 'dark' : 'light'}`} url={tiles.labels} />
         <AttributionControl prefix={false} position="bottomright" />
