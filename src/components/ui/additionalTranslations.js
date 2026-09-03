@@ -58,6 +58,10 @@ export const additionalDa = {
   sendReport: 'Send indberetning',
   altUser: 'Bruger',
 
+  // Chat
+  chatActiveNow: 'Aktiv nu',
+  chatEmptyStateDesc: 'I kan skrive sammen her. Skriv det første',
+
   // Community map
   awakeInCountry: '{count} vågne i {country}',
   andRestInEurope: 'og {count} i resten af Europa',
@@ -122,6 +126,10 @@ export const additionalEn = {
   sending: 'Sending...',
   sendReport: 'Send report',
   altUser: 'User',
+
+  // Chat
+  chatActiveNow: 'Active now',
+  chatEmptyStateDesc: 'You can chat here. Write the first message',
 
   // Community map
   awakeInCountry: '{count} awake in {country}',
