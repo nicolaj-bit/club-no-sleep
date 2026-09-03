@@ -57,6 +57,12 @@ export const additionalDa = {
   sending: 'Sender...',
   sendReport: 'Send indberetning',
   altUser: 'Bruger',
+
+  // Community map
+  awakeInCountry: '{count} vågne i {country}',
+  andRestInEurope: 'og {count} i resten af Europa',
+  visibility: 'Synlighed',
+  visibilityCardDesc: 'Vises på kortet for andre mødre',
 };
 
 export const additionalEn = {
@@ -115,4 +121,10 @@ export const additionalEn = {
   sending: 'Sending...',
   sendReport: 'Send report',
   altUser: 'User',
+
+  // Community map
+  awakeInCountry: '{count} awake in {country}',
+  andRestInEurope: 'and {count} in the rest of Europe',
+  visibility: 'Visibility',
+  visibilityCardDesc: 'Shown on the map for other moms',
 };

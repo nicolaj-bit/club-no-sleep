@@ -5,7 +5,7 @@ import { showInAppLogin } from '@/lib/showInAppLogin';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight, Sparkles } from 'lucide-react';
+import { Camera, LogOut, Bookmark, HelpCircle, Shield, MapPin, Settings, Bell, Globe, Mail, Phone, UserPlus, ChevronRight, Sparkles, Eye } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -503,6 +503,27 @@ export default function Profile() {
             );
           })}
         </div>
+
+        {/* Synlighed */}
+        {!isInvited && (
+        <>
+        <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
+          {lang === 'da' ? 'Synlighed' : 'Visibility'}
+        </p>
+        <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${cardBorder}` }}>
+          <div className="flex items-center gap-3 px-5 py-4" style={{ background: cardBgSolid }}>
+            <Eye className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
+            <div className="flex-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.showMeVisible}</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                {lang === 'da' ? 'Vises på kortet for andre mødre' : 'Shown on the map for other moms'}
+              </p>
+            </div>
+            <Switch checked={profile?.is_visible !== false} onCheckedChange={(checked) => updateProfileMutation.mutate({ is_visible: checked })} />
+          </div>
+        </div>
+        </>
+        )}
 
         {/* Section label */}
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
