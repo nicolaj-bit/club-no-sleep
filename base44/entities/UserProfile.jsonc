@@ -182,6 +182,23 @@
       "format": "date-time",
       "description": "Planlagt opsigelsesdato (l\u00f8bende m\u00e5ned + 1 mdr.)"
     },
+    "subscription_will_renew": {
+      "type": "boolean",
+      "description": "Om automatisk fornyelse er sl\u00e5et til. false ved CANCELLATION, true ved INITIAL_PURCHASE/RENEWAL/UNCANCELLATION."
+    },
+    "subscription_period_type": {
+      "type": "string",
+      "enum": [
+        "trial",
+        "normal"
+      ],
+      "description": "Typen af den aktuelle periode: 'trial' under pr\u00f8veperiode, 'normal' ved betaling. S\u00e6ttes ud fra RevenueCat event.period_type."
+    },
+    "subscription_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tidspunkt hvorn\u00e5r adgangen udl\u00f8ber (fra RevenueCat event.expiration_at_ms)."
+    },
     "family_id": {
       "type": "string",
       "description": "F\u00e6lles familie-ID \u2014 deles af prim\u00e6r bruger og inviterede partnere. Kopi af prim\u00e6r brugers UserProfile ID."

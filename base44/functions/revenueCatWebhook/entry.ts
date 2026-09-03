@@ -192,21 +192,49 @@ Deno.serve(async (req) => {
       case 'INITIAL_PURCHASE':
       case 'RENEWAL':
       case 'UNCANCELLATION': {
-        await base44.asServiceRole.entities.UserProfile.update(profile.id, {
+        const update: Record<string, unknown> = {
           subscription_status: 'active',
           subscription_id: event.product_id || event.original_transaction_id || '',
           subscription_started_at: new Date().toISOString(),
-        });
+          subscription_will_renew: true,
+        };
+        // period_type: 'trial' under prøveperiode, ellers 'normal' — kun ved køb/fornylse
+        if (event.type === 'INITIAL_PURCHASE' || event.type === 'RENEWAL') {
+          update.subscription_period_type = event.period_type === 'TRIAL' ? 'trial' : 'normal';
+        }
+        if (event.expiration_at_ms) {
+          update.subscription_expires_at = new Date(event.expiration_at_ms).toISOString();
+        }
+        await base44.asServiceRole.entities.UserProfile.update(profile.id, update);
         console.log(`[RevenueCat] aktiverede abonnement for ${appUserId}`);
         break;
       }
 
-      case 'CANCELLATION':
+      case 'CANCELLATION': {
+        // CANCELLATION = auto-fornyelse slået fra; adgangen består perioden ud.
+        // Rører IKKE subscription_status — kun subscription_will_renew.
+        const cancelUpdate: Record<string, unknown> = {
+          subscription_will_renew: false,
+        };
+        if (event.expiration_at_ms) {
+          cancelUpdate.subscription_expires_at = new Date(event.expiration_at_ms).toISOString();
+        }
+        await base44.asServiceRole.entities.UserProfile.update(profile.id, cancelUpdate);
+        console.log(`[RevenueCat] opsigelse registreret (adgang består) for ${appUserId}`);
+        break;
+      }
+
       case 'EXPIRATION': {
-        await base44.asServiceRole.entities.UserProfile.update(profile.id, {
+        // EXPIRATION = adgangen er reelt ophørt.
+        const expireUpdate: Record<string, unknown> = {
           subscription_status: 'expired',
-        });
-        console.log(`[RevenueCat] afsluttede abonnement for ${appUserId}`);
+          subscription_will_renew: false,
+        };
+        if (event.expiration_at_ms) {
+          expireUpdate.subscription_expires_at = new Date(event.expiration_at_ms).toISOString();
+        }
+        await base44.asServiceRole.entities.UserProfile.update(profile.id, expireUpdate);
+        console.log(`[RevenueCat] abonnement udløbet for ${appUserId}`);
         break;
       }
 
