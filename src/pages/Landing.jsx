@@ -137,22 +137,6 @@ export default function Landing() {
 
           {/* Left copy */}
           <div className="lnd-hero1-copy" style={{ flex: '1 1 340px', minWidth: 260 }}>
-            {(landingHero?.badge_text || t.landingHeroBadge)?.trim() ? (
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.2rem' }}>
-                <span style={{
-                  backgroundColor: '#C8A882',
-                  color: '#2B1A0F',
-                  borderRadius: 999,
-                  padding: '7px 18px',
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.02em',
-                  display: 'inline-block'
-                }}>
-                  {landingHero?.badge_text || t.landingHeroBadge}
-                </span>
-              </div>
-            ) : null}
             <h1 className="lnd-hero1-h1" style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(2.4rem, 4.5vw, 3.4rem)',
@@ -188,6 +172,22 @@ export default function Landing() {
               <button onClick={scrollToMembership} style={{ background: 'none', border: 'none', color: '#7A665A', fontSize: '0.85rem', fontWeight: 500, cursor: 'pointer', padding: '6px 0', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationColor: '#D4B89A' }}>
                 {t.landingBecomeMember} →
               </button>
+              {(landingHero?.badge_text || t.landingHeroBadge)?.trim() ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <span style={{
+                    backgroundColor: '#C8A882',
+                    color: '#2B1A0F',
+                    borderRadius: 999,
+                    padding: '7px 18px',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.02em',
+                    display: 'inline-block'
+                  }}>
+                    {landingHero?.badge_text || t.landingHeroBadge}
+                  </span>
+                </div>
+              ) : null}
             </div>
           </div>
 
