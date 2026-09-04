@@ -207,13 +207,36 @@ export default function Landing() {
             <p style={{ color: '#7A665A', fontSize: '0.88rem', lineHeight: 1.6, margin: '0 0 2rem', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
               {t.landingPaywallSubtitle}
             </p>
-            {/* Price */}
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6, marginBottom: '0.3rem' }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '3rem', fontWeight: 500, color: '#3A2416', lineHeight: 1 }}>59</span>
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.3rem', fontWeight: 400, color: '#B08D72' }}>kr.</span>
-              <span style={{ color: '#9A7A6A', fontSize: '0.82rem' }}>{t.landingPerMonth}</span>
+            {/* Trial pill — lys guld, mørk tekst, centreret over prisen */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.1rem' }}>
+              <span style={{
+                backgroundColor: '#C8A882',
+                color: '#2B1A0F',
+                borderRadius: 999,
+                padding: '7px 18px',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+                display: 'inline-block'
+              }}>
+                {t.landingTryFreePill}
+              </span>
             </div>
-            <p style={{ color: '#9A7A6A', fontSize: '0.72rem', fontStyle: 'italic', margin: '0 0 2.2rem' }}>{t.landingPaywallNoBinding}</p>
+
+            {/* Price — 7 dage gratis stort, derefter-pris almindelig */}
+            <div style={{ marginBottom: '0.9rem' }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.6rem', fontWeight: 500, color: '#3A2416', lineHeight: 1.1, margin: 0 }}>
+                {t.landingTrialBig}
+              </p>
+              <p style={{ color: '#7A665A', fontSize: '0.95rem', margin: '0.4rem 0 0' }}>
+                {t.landingThenPrice}
+              </p>
+            </div>
+
+            {/* Auto-renew — stores' krav ved nævnelse af prøveperiode */}
+            <p style={{ color: '#9A7A6A', fontSize: '0.7rem', lineHeight: 1.55, margin: '0 0 2.2rem', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+              {t.landingAutoRenewTerms}
+            </p>
 
             {/* Divider */}
             <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #EDE4DB, transparent)', margin: '0 0 1.8rem' }} />
