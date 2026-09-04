@@ -18,6 +18,7 @@ export default function Landing() {
   const [isAuth, setIsAuth] = useState(false);
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
   const [hero1Image, setHero1Image] = useState('');
+  const [landingHero, setLandingHero] = useState(null);
 
   const handleBecomeMember = () => {
     if (window.self !== window.top) {
@@ -45,6 +46,11 @@ export default function Landing() {
         const hero1Config = Array.isArray(configs) && configs.find((c) => c.key === 'landing_hero1_image');
         if (hero1Config?.hero1_image_url) {
           setHero1Image(hero1Config.hero1_image_url);
+        }
+
+        const heroes = await base44.entities.LandingHero.list();
+        if (Array.isArray(heroes) && heroes.length > 0) {
+          setLandingHero(heroes[0]);
         }
       } catch (e) {
         setPhoneUrls({
@@ -131,6 +137,22 @@ export default function Landing() {
 
           {/* Left copy */}
           <div className="lnd-hero1-copy" style={{ flex: '1 1 340px', minWidth: 260 }}>
+            {(landingHero?.badge_text || t.landingHeroBadge)?.trim() ? (
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.2rem' }}>
+                <span style={{
+                  backgroundColor: '#C8A882',
+                  color: '#2B1A0F',
+                  borderRadius: 999,
+                  padding: '7px 18px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  display: 'inline-block'
+                }}>
+                  {landingHero?.badge_text || t.landingHeroBadge}
+                </span>
+              </div>
+            ) : null}
             <h1 className="lnd-hero1-h1" style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: 'clamp(2.4rem, 4.5vw, 3.4rem)',
