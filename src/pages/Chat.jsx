@@ -196,14 +196,14 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col" style={{ height: '100dvh', backgroundColor: 'var(--color-bg)' }}>
+    <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Toppen — fast */}
       <header
         className="flex-shrink-0 flex items-center gap-2.5 px-3 py-2 border-b"
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border)',
-          paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
         }}
       >
         <Link to={createPageUrl('ChatList')}>

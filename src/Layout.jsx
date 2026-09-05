@@ -20,6 +20,9 @@ import { ActiveChildProvider } from '@/components/ui/ActiveChildContext';
 // AIChat is a full-screen immersive UI — suppress the nav, but it remains accessible via the bottom tab AI button
 const noNavPages = ['Login', 'Chat', 'ChatList', 'ProductDetail', 'BlogPost', 'ArticleDetail', 'ExpertDetail', 'Booking', 'AIChat', 'Onboarding', 'Subscription'];
 
+// Fullskærmssider styrer selv deres højde (100dvh, overflow hidden) — ingen safe-area padding fra rammen.
+const fullHeightPages = ['Chat'];
+
 
 // Root-level tab pages — use crossfade (no slide) to feel like native tab switch
 const rootTabPages = ['Home', 'Shop', 'Blog', 'SleepLog', 'Knowledge', 'Community', 'Profile', 'AIChat'];
@@ -27,6 +30,7 @@ const rootTabPages = ['Home', 'Shop', 'Blog', 'SleepLog', 'Knowledge', 'Communit
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const showNav = !noNavPages.includes(currentPageName);
+  const isFullHeight = fullHeightPages.includes(currentPageName);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -52,7 +56,13 @@ export default function Layout({ children, currentPageName }) {
     <ActiveProfileProvider>
     <ActiveChildProvider>
     <TabStateProvider>
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text-primary)', minHeight: '100dvh' }}>
+      <div className="min-h-screen" style={{
+        backgroundColor: 'var(--color-bg)',
+        color: 'var(--color-text-primary)',
+        ...(isFullHeight
+          ? { height: '100dvh', overflow: 'hidden' }
+          : { minHeight: '100dvh' })
+      }}>
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
           body { background-color: var(--color-bg) !important; color: var(--color-text-primary) !important; }
@@ -88,7 +98,10 @@ export default function Layout({ children, currentPageName }) {
               : { opacity: 0, x: -20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className={showNav ? "pb-20" : ""}
-            style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+            style={isFullHeight
+              ? { height: '100dvh', overflow: 'hidden' }
+              : { paddingTop: 'env(safe-area-inset-top, 0px)' }
+            }
           >
             {children}
           </motion.main>
