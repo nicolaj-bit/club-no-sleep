@@ -60,7 +60,10 @@ export const additionalDa = {
 
   // Chat
   chatActiveNow: 'Aktiv nu',
+  chatAwakeNow: 'Vågen nu',
   chatEmptyStateDesc: 'I kan skrive sammen her. Skriv det første',
+  chatEmptyLine1: 'I kan skrive sammen her.',
+  chatEmptyLine2: 'Skriv det første.',
 
   // Community map
   awakeInCountry: '{count} vågne i {country}',
@@ -129,7 +132,10 @@ export const additionalEn = {
 
   // Chat
   chatActiveNow: 'Active now',
+  chatAwakeNow: 'Awake now',
   chatEmptyStateDesc: 'You can chat here. Write the first message',
+  chatEmptyLine1: 'You can chat here.',
+  chatEmptyLine2: 'Write the first message.',
 
   // Community map
   awakeInCountry: '{count} awake in {country}',

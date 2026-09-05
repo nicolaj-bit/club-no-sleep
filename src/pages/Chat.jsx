@@ -6,12 +6,41 @@ import { createPageUrl } from '@/utils';
 import { ChevronLeft, Send, MoreVertical, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import UserAvatar from '@/components/community/UserAvatar';
 import ReportSheet from '@/components/community/ReportSheet';
 import { format, isToday, isYesterday } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useLanguage } from '@/components/ui/LanguageContext';
+
+// Rundt profilbillede i en fast pixelstørrelse — bruger appens farvevariabler.
+function RoundAvatar({ src, name, size }) {
+  const { t } = useLanguage();
+  const initial = (name || '?')[0]?.toUpperCase() || '?';
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: 999,
+        overflow: 'hidden',
+        flexShrink: 0,
+        backgroundColor: 'var(--color-accent-warm)',
+        color: 'var(--color-primary)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 600,
+        fontSize: size * 0.4,
+      }}
+    >
+      {src ? (
+        <img src={src} alt={name || t.altUser} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      ) : (
+        initial
+      )}
+    </div>
+  );
+}
 
 export default function Chat() {
   const { t, lang } = useLanguage();
@@ -145,6 +174,8 @@ export default function Chat() {
     return format(date, 'd. MMM HH.mm', { locale: lang === 'da' ? da : undefined });
   };
 
+  const hasText = !!message.trim();
+
   if (loadingConv) {
     return (
       <div className="flex items-center justify-center" style={{ height: '100dvh', backgroundColor: 'var(--color-bg)' }}>
@@ -166,9 +197,9 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col" style={{ height: '100dvh', backgroundColor: 'var(--color-bg)' }}>
-      {/* Header — fast toppen */}
+      {/* Toppen — fast */}
       <header
-        className="flex-shrink-0 border-b px-3 py-2 flex items-center gap-2.5"
+        className="flex-shrink-0 flex items-center gap-2.5 px-3 py-2 border-b"
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border)',
@@ -180,11 +211,16 @@ export default function Chat() {
             <ChevronLeft className="w-6 h-6" />
           </button>
         </Link>
-        <UserAvatar src={otherImage} name={otherName} size="sm" />
+        <RoundAvatar src={otherImage} name={otherName} size={36} />
         <div className="flex-1 min-w-0">
-          <h1 className="font-semibold text-[15px] truncate" style={{ color: 'var(--color-text-primary)' }}>{otherName}</h1>
+          <h1 className="font-semibold truncate" style={{ fontSize: '14.5px', color: 'var(--color-text-primary)' }}>
+            {otherName}
+          </h1>
           {isOtherOnline && (
-            <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{t.chatActiveNow}</p>
+            <div className="flex items-center gap-1.5" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+              <span className="bg-emerald-500 rounded-full" style={{ width: 7, height: 7 }} />
+              {t.chatAwakeNow}
+            </div>
           )}
         </div>
         <DropdownMenu>
@@ -216,17 +252,11 @@ export default function Chat() {
             ))}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center" style={{ height: '100%' }}>
-            {otherImage ? (
-              <img src={otherImage} alt="" className="w-20 h-20 rounded-full object-cover mb-4" />
-            ) : (
-              <div className="w-20 h-20 rounded-full flex items-center justify-center font-bold text-2xl mb-4"
-                style={{ background: 'var(--color-accent-warm)', color: 'var(--color-primary)' }}>
-                {(otherName || '?')[0].toUpperCase()}
-              </div>
-            )}
-            <p className="font-semibold text-lg mb-1" style={{ color: 'var(--color-text-primary)' }}>{otherName}</p>
-            <p className="text-sm text-center px-8" style={{ color: 'var(--color-text-muted)' }}>{t.chatEmptyStateDesc}</p>
+          <div className="flex flex-col items-center justify-center text-center" style={{ height: '100%' }}>
+            <RoundAvatar src={otherImage} name={otherName} size={76} />
+            <p className="font-semibold mt-4 mb-3" style={{ color: 'var(--color-text-primary)' }}>{otherName}</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.chatEmptyLine1}</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.chatEmptyLine2}</p>
           </div>
         ) : (
           messages.map((msg, i) => {
@@ -235,35 +265,40 @@ export default function Chat() {
             const nextMsg = messages[i + 1];
             const isFirstInGroup = !prevMsg || prevMsg.sender_email !== msg.sender_email;
             const isLastInGroup = !nextMsg || nextMsg.sender_email !== msg.sender_email;
-            const showTimestamp = !prevMsg || (new Date(msg.created_date).getTime() - new Date(prevMsg.created_date).getTime()) > 20 * 60 * 1000;
-            const showAvatar = !isOwn && isLastInGroup;
-            const gap = isFirstInGroup ? (prevMsg ? '12px' : '0') : '2px';
+            const showSeparator = !prevMsg || (new Date(msg.created_date).getTime() - new Date(prevMsg.created_date).getTime()) > 20 * 60 * 1000;
+            const marginTop = isFirstInGroup ? (prevMsg ? 12 : 0) : 2;
 
-            const bubbleRadius = isOwn
+            const borderRadius = isOwn
               ? (isLastInGroup ? '18px 18px 4px 18px' : '18px')
               : (isLastInGroup ? '18px 18px 18px 4px' : '18px');
 
             return (
               <div key={msg.id}>
-                {showTimestamp && (
-                  <div className="flex items-center justify-center" style={{ marginTop: 12, marginBottom: 12 }}>
-                    <span className="text-[11px] px-3 py-1 rounded-full" style={{ color: 'var(--color-text-muted)', backgroundColor: 'var(--color-bg-subtle)' }}>
+                {showSeparator && (
+                  <div className="flex items-center justify-center" style={{ marginTop: 14, marginBottom: 14 }}>
+                    <span style={{ fontSize: '10.5px', color: 'var(--color-text-muted)' }}>
                       {formatSeparator(msg.created_date)}
                     </span>
                   </div>
                 )}
-                <div className={`flex items-end gap-1.5 ${isOwn ? 'justify-end' : 'justify-start'}`} style={{ marginTop: gap }}>
+                <div className={`flex items-end ${isOwn ? 'justify-end' : 'justify-start'}`} style={{ marginTop }}>
                   {!isOwn && (
-                    <div className="w-7 flex-shrink-0">
-                      {showAvatar && <UserAvatar src={msg.sender_image} name={msg.sender_username} size="sm" />}
+                    <div style={{ width: 24, flexShrink: 0 }}>
+                      {isLastInGroup && <RoundAvatar src={msg.sender_image} name={msg.sender_username} size={24} />}
                     </div>
                   )}
-                  <div className={`max-w-[75%] ${isOwn ? 'order-1' : ''}`}>
-                    <div className="px-3.5 py-2 text-[14px] whitespace-pre-wrap break-words" style={{
-                      backgroundColor: isOwn ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
-                      color: isOwn ? 'var(--color-bg)' : 'var(--color-text-primary)',
-                      borderRadius: bubbleRadius,
-                    }}>
+                  <div style={{ maxWidth: '74%' }}>
+                    <div
+                      className="whitespace-pre-wrap break-words"
+                      style={{
+                        backgroundColor: isOwn ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
+                        color: isOwn ? 'var(--color-bg)' : 'var(--color-text-primary)',
+                        borderRadius,
+                        padding: '9px 13px',
+                        fontSize: '13.5px',
+                        lineHeight: 1.45,
+                      }}
+                    >
                       {msg.content}
                     </div>
                   </div>
@@ -281,12 +316,11 @@ export default function Chat() {
         messageId={reportTarget?.messageId}
       />
 
-      {/* Skrivefelt — fast i bunden, følger tastatur og hjemmeindikator */}
+      {/* Skrivefelt — fast i bunden */}
       <div
-        className="flex-shrink-0 border-t px-3 py-2 flex items-end gap-2"
+        className="flex-shrink-0 flex items-end gap-2 px-3 py-2"
         style={{
           backgroundColor: 'var(--color-bg-card)',
-          borderColor: 'var(--color-border)',
           paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
         }}
       >
@@ -302,22 +336,27 @@ export default function Chat() {
               handleSend();
             }
           }}
-          className="flex-1 resize-none rounded-2xl px-4 py-2.5 text-[15px] outline-none"
+          className="flex-1 resize-none outline-none"
           style={{
             backgroundColor: 'var(--color-bg-subtle)',
             color: 'var(--color-text-primary)',
-            maxHeight: 96,
+            borderRadius: 999,
+            padding: '10px 16px',
+            fontSize: '15px',
             lineHeight: '1.4',
+            maxHeight: 96,
           }}
         />
         <button
           onClick={handleSend}
-          disabled={!message.trim() || sendMutation.isPending}
-          className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-opacity"
+          disabled={!hasText || sendMutation.isPending}
+          className="flex-shrink-0 flex items-center justify-center transition-colors"
           style={{
-            backgroundColor: 'var(--color-primary)',
-            color: 'var(--color-bg)',
-            opacity: message.trim() ? 1 : 0.4,
+            width: 38,
+            height: 38,
+            borderRadius: 999,
+            backgroundColor: hasText ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
+            color: hasText ? 'var(--color-bg)' : 'var(--color-text-muted)',
           }}
         >
           <Send className="w-[18px] h-[18px]" />
