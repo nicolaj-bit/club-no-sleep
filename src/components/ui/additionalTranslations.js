@@ -64,6 +64,7 @@ export const additionalDa = {
   chatEmptyStateDesc: 'I kan skrive sammen her. Skriv det første',
   chatEmptyLine1: 'I kan skrive sammen her.',
   chatEmptyLine2: 'Skriv det første.',
+  chatInputPlaceholder: 'Skriv en besked…',
 
   // Community map
   awakeInCountry: '{count} vågne i {country}',
@@ -136,6 +137,7 @@ export const additionalEn = {
   chatEmptyStateDesc: 'You can chat here. Write the first message',
   chatEmptyLine1: 'You can chat here.',
   chatEmptyLine2: 'Write the first message.',
+  chatInputPlaceholder: 'Write a message…',
 
   // Community map
   awakeInCountry: '{count} awake in {country}',

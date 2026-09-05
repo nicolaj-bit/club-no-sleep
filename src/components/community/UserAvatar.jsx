@@ -12,6 +12,7 @@ export default function UserAvatar({
   className
 }) {
   const { t } = useLanguage();
+  const isNumeric = typeof size === 'number';
   const sizeClasses = {
     xs: 'w-6 h-6',
     sm: 'w-8 h-8',
@@ -41,18 +42,24 @@ export default function UserAvatar({
 
   return (
     <div className={cn("relative inline-flex", className)}>
-      <div className={cn(
-        "rounded-full overflow-hidden bg-slate-100 flex items-center justify-center",
-        sizeClasses[size]
-      )}>
+      <div
+        className={cn(
+          "rounded-full overflow-hidden bg-slate-100 flex items-center justify-center",
+          !isNumeric && sizeClasses[size]
+        )}
+        style={isNumeric ? { width: size, height: size } : undefined}
+      >
         {src ? (
-          <img 
-            src={src} 
+          <img
+            src={src}
             alt={name || t.altUser}
             className="w-full h-full object-cover"
           />
         ) : (
-          <User className={cn("text-slate-400", iconSizeClasses[size])} />
+          <User
+            className={cn("text-slate-400", !isNumeric && iconSizeClasses[size])}
+            style={isNumeric ? { width: size * 0.4, height: size * 0.4 } : undefined}
+          />
         )}
       </div>
       

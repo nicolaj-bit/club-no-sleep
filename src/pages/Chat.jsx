@@ -7,6 +7,7 @@ import { ChevronLeft, Send, MoreVertical, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import ReportSheet from '@/components/community/ReportSheet';
+import UserAvatar from '@/components/community/UserAvatar';
 import { format, isToday, isYesterday } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -90,18 +91,15 @@ export default function Chat() {
   });
 
   const otherEmail = conversation?.participants?.find(p => p !== user?.email);
-
   const { data: otherProfile } = useQuery({
-    queryKey: ['otherProfile', otherEmail],
+    queryKey: ['profile', otherEmail],
     queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_email: otherEmail });
-      return profiles?.[0] || null;
+      const rows = await base44.entities.UserProfile.filter({ user_email: otherEmail });
+      return rows?.[0] || null;
     },
     enabled: !!otherEmail,
-    refetchInterval: 30000,
   });
-
-  const isOtherOnline = otherProfile?.is_online === true;
+  const otherIsOnline = otherProfile?.is_online === true;
 
   useEffect(() => {
     if (!conversationId) return;
@@ -199,8 +197,9 @@ export default function Chat() {
     <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Toppen — fast */}
       <header
-        className="flex-shrink-0 flex items-center px-3 py-2 border-b" style={{ gap: 11 }}
+        className="flex-shrink-0 flex items-center px-3 py-2 border-b"
         style={{
+          gap: 11,
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border)',
           paddingTop: 'env(safe-area-inset-top, 0px)',
@@ -212,14 +211,14 @@ export default function Chat() {
           </button>
         </Link>
         <RoundAvatar src={otherImage} name={otherName} size={36} />
-        <div className="flex-1 min-w-0" style={{ marginLeft: 11 }}>
-          <div className="truncate" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: '14.5px', color: 'var(--color-text-primary)' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 600, fontSize: '14.5px', color: 'var(--color-text-primary)', lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {otherName}
           </div>
-          {isOtherOnline && (
-            <div className="flex items-center gap-1.5" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
-              <span className="bg-emerald-500 rounded-full" style={{ width: 7, height: 7 }} />
-              {t.chatAwakeNow}
+          {otherIsOnline && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '11px', color: 'var(--color-text-muted)', marginTop: 1 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#5FAE7E' }} />
+              Vågen nu
             </div>
           )}
         </div>
@@ -252,11 +251,16 @@ export default function Chat() {
             ))}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center" style={{ height: '100%', gap: 10 }}>
-            <RoundAvatar src={otherImage} name={otherName} size={76} />
-            <p style={{ fontWeight: 600, fontSize: '16px', color: 'var(--color-text-primary)' }}>{otherName}</p>
-            <p style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.chatEmptyLine1}</p>
-            <p style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.chatEmptyLine2}</p>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '0 40px', textAlign: 'center' }}>
+            <div style={{ width: 76, height: 76 }}>
+              <UserAvatar src={otherImage} name={otherName} size={76} />
+            </div>
+            <div style={{ fontFamily: "'Inter', -apple-system, sans-serif", fontWeight: 600, fontSize: '16px', color: 'var(--color-text-primary)' }}>
+              {otherName}
+            </div>
+            <p style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>
+              {t.chatEmptyLine1}<br />{t.chatEmptyLine2}
+            </p>
           </div>
         ) : (
           messages.map((msg, i) => {
@@ -317,50 +321,27 @@ export default function Chat() {
       />
 
       {/* Skrivefelt — fast i bunden */}
-      <div
-        className="flex-shrink-0 flex items-end px-3 py-2"
-        style={{
-          backgroundColor: 'var(--color-bg-card)',
-          paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
-          gap: 9,
-        }}
-      >
-        <textarea
-          ref={textareaRef}
-          rows={1}
-          placeholder={t.writeMessagePlaceholder}
-          value={message}
-          onChange={(e) => setMessage(e.target.value.slice(0, 1000))}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSend();
-            }
-          }}
-          className="flex-1 resize-none outline-none"
-          style={{
-            backgroundColor: 'var(--color-bg-subtle)',
-            color: 'var(--color-text-primary)',
-            borderRadius: 999,
-            padding: '11px 16px',
-            fontSize: '16px',
-            lineHeight: '1.4',
-            maxHeight: 96,
-          }}
-        />
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 9, padding: '10px 12px', paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 0px))', backgroundColor: 'var(--color-bg-card)', borderTop: '1px solid var(--color-border)' }}>
+        <div style={{ flex: 1, backgroundColor: 'var(--color-bg-subtle)', borderRadius: 999, padding: '2px 16px', display: 'flex', alignItems: 'center' }}>
+          <textarea
+            rows={1}
+            value={message}
+            placeholder={t.chatInputPlaceholder}
+            onChange={(e) => {
+              setMessage(e.target.value.slice(0, 1000));
+              e.target.style.height = 'auto';
+              e.target.style.height = Math.min(e.target.scrollHeight, 96) + 'px';
+            }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+            style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: '16px', lineHeight: 1.4, padding: '9px 0', maxHeight: 96, color: 'var(--color-text-primary)', fontFamily: 'inherit' }}
+          />
+        </div>
         <button
           onClick={handleSend}
-          disabled={!hasText || sendMutation.isPending}
-          className="flex-shrink-0 flex items-center justify-center transition-colors"
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: 999,
-            backgroundColor: hasText ? 'var(--color-primary)' : 'var(--color-bg-subtle)',
-            color: hasText ? 'var(--color-bg)' : 'var(--color-text-muted)',
-          }}
+          disabled={!message.trim() || sendMutation.isPending}
+          style={{ width: 38, height: 38, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', padding: 0, backgroundColor: message.trim() ? 'var(--color-primary)' : 'var(--color-bg-subtle)', color: message.trim() ? 'var(--color-bg)' : 'var(--color-text-muted)' }}
         >
-          <Send className="w-[17px] h-[17px]" />
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" /></svg>
         </button>
       </div>
     </div>
