@@ -199,7 +199,7 @@ export default function Chat() {
     <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Toppen — fast */}
       <header
-        className="flex-shrink-0 flex items-center gap-2.5 px-3 py-2 border-b"
+        className="flex-shrink-0 flex items-center px-3 py-2 border-b" style={{ gap: 11 }}
         style={{
           backgroundColor: 'var(--color-bg-card)',
           borderColor: 'var(--color-border)',
@@ -212,10 +212,10 @@ export default function Chat() {
           </button>
         </Link>
         <RoundAvatar src={otherImage} name={otherName} size={36} />
-        <div className="flex-1 min-w-0">
-          <h1 className="font-semibold truncate" style={{ fontSize: '14.5px', color: 'var(--color-text-primary)' }}>
+        <div className="flex-1 min-w-0" style={{ marginLeft: 11 }}>
+          <div className="truncate" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: '14.5px', color: 'var(--color-text-primary)' }}>
             {otherName}
-          </h1>
+          </div>
           {isOtherOnline && (
             <div className="flex items-center gap-1.5" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
               <span className="bg-emerald-500 rounded-full" style={{ width: 7, height: 7 }} />
@@ -252,11 +252,11 @@ export default function Chat() {
             ))}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center" style={{ height: '100%' }}>
+          <div className="flex flex-col items-center justify-center text-center" style={{ height: '100%', gap: 10 }}>
             <RoundAvatar src={otherImage} name={otherName} size={76} />
-            <p className="font-semibold mt-4 mb-3" style={{ color: 'var(--color-text-primary)' }}>{otherName}</p>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.chatEmptyLine1}</p>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.chatEmptyLine2}</p>
+            <p style={{ fontWeight: 600, fontSize: '16px', color: 'var(--color-text-primary)' }}>{otherName}</p>
+            <p style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.chatEmptyLine1}</p>
+            <p style={{ fontSize: '12.5px', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.chatEmptyLine2}</p>
           </div>
         ) : (
           messages.map((msg, i) => {
@@ -318,10 +318,11 @@ export default function Chat() {
 
       {/* Skrivefelt — fast i bunden */}
       <div
-        className="flex-shrink-0 flex items-end gap-2 px-3 py-2"
+        className="flex-shrink-0 flex items-end px-3 py-2"
         style={{
           backgroundColor: 'var(--color-bg-card)',
           paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
+          gap: 9,
         }}
       >
         <textarea
@@ -341,8 +342,8 @@ export default function Chat() {
             backgroundColor: 'var(--color-bg-subtle)',
             color: 'var(--color-text-primary)',
             borderRadius: 999,
-            padding: '10px 16px',
-            fontSize: '15px',
+            padding: '11px 16px',
+            fontSize: '16px',
             lineHeight: '1.4',
             maxHeight: 96,
           }}
@@ -359,7 +360,7 @@ export default function Chat() {
             color: hasText ? 'var(--color-bg)' : 'var(--color-text-muted)',
           }}
         >
-          <Send className="w-[18px] h-[18px]" />
+          <Send className="w-[17px] h-[17px]" />
         </button>
       </div>
     </div>
