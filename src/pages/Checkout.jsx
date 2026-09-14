@@ -238,10 +238,13 @@ export default function Checkout() {
               : (da ? 'Abonnementet fornyes automatisk. Opsig når som helst.' : 'Subscription renews automatically. Cancel anytime.')}
         </p>
 
-        {/* Betalingsmetode — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
-        <div className="mt-3">
-          <div
-            className="w-full rounded-2xl p-4 flex items-center gap-3"
+        {/* Betalingsmetode — kalder samme handlePurchase som knappen. Skjules på web. */}
+        {platform !== 'web' && (
+          <button
+            type="button"
+            onClick={handlePurchase}
+            disabled={purchasing || rc.loading}
+            className="mt-3 w-full rounded-2xl p-4 flex items-center gap-3 disabled:opacity-60 active:opacity-90 transition-opacity"
             style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
           >
             <div
@@ -257,9 +260,11 @@ export default function Checkout() {
                 ? (da ? 'Betal via din Google-konto · Sikkert og nemt' : 'Pay via your Google account · Secure and easy')
                 : (da ? 'Betal via din Apple-konto · Sikkert og nemt' : 'Pay via your Apple account · Secure and easy')}
             </p>
-            <Lock className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.7)' }} />
-          </div>
-        </div>
+            {purchasing || rc.loading
+              ? <Loader2 className="w-4 h-4 shrink-0 animate-spin" style={{ color: 'rgba(255,255,255,0.9)' }} />
+              : <Lock className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.7)' }} />}
+          </button>
+        )}
 
         {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
         {isTrialEligible && (
