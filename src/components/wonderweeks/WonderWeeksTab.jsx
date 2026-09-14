@@ -9,6 +9,7 @@ import { useWonderWeekEmojis } from './useWonderWeekEmojis';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import KraeverBarn from '@/components/children/KraeverBarn';
 
 // Byg et map fra slug → KnowledgeArticle for hurtig opslag
 // Understøtter både "tigerspring-1" og "tigerspring" + "uge X" tag-formater
@@ -97,6 +98,7 @@ export default function WonderWeeksTab() {
   };
 
   return (
+    <KraeverBarn field="birthdate" reason="kraeverBarnReasonTigerspring">
     <div className="space-y-5">
       {/* Intro */}
       <div
@@ -197,5 +199,6 @@ export default function WonderWeeksTab() {
       </div>
       </ContentLock>
     </div>
+    </KraeverBarn>
   );
 }

@@ -54,11 +54,7 @@ export default function ProfileGate({ children }) {
     const email = user.email;
 
     if (profileCache[email] !== undefined) {
-      if (!profileCache[email]) {
-        navigate('/Onboarding', { replace: true });
-      } else {
-        setReady(true);
-      }
+      setReady(true);
       return;
     }
 
@@ -76,13 +72,13 @@ export default function ProfileGate({ children }) {
         console.error('Invite check failed, proceeding with normal flow:', e);
       }
 
-      // Normal flow: check profile, auto-create minimal, redirect to onboarding if not completed
+      // Normal flow: ensure a minimal profile exists. Onboarding vises ikke
+      // længere — manglende oplysninger (fx fødselsdato) indsamles dér hvor de
+      // bruges, via KraeverBarn. Adgang til appen styres af AccessGate.
       try {
         const profiles = await base44.entities.UserProfile.filter({ user_email: email });
         let profile = profiles && profiles[0];
 
-        // Auto-create a minimal profile if none exists, so the user appears in data
-        // even before completing onboarding.
         if (!profile) {
           const username = (email.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, '');
           try {
@@ -99,17 +95,12 @@ export default function ProfileGate({ children }) {
               location_enabled: false,
             });
           } catch (e) {
-            // If creation fails (e.g. race condition), proceed to onboarding anyway
+            // Race condition — fortsæt alligevel
           }
         }
 
-        const completed = profile?.onboarding_completed === true;
-        profileCache[email] = completed;
-        if (!completed) {
-          navigate('/Onboarding', { replace: true });
-        } else {
-          setReady(true);
-        }
+        profileCache[email] = true;
+        setReady(true);
       } catch {
         setReady(true);
       }

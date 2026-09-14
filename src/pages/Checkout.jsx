@@ -86,6 +86,8 @@ export default function Checkout() {
       // Synkroniser profil med backend
       await base44.functions.invoke('verifySubscription', {}).catch(() => {});
       setTimeout(() => requestPushPermission(), 1500);
+      // Efter start af prøveperiode/køb lander brugeren på forsiden.
+      setTimeout(() => navigate('/app'), 1400);
     } catch (e) {
       const errMsg = e?.message || (typeof e === 'string' ? e : 'Køb fejlede');
       if (!errMsg.toLowerCase().includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {

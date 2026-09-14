@@ -67,6 +67,15 @@ export const additionalDa = {
   chatInputPlaceholder: 'Skriv en besked…',
   chatSendError: 'Beskeden kunne ikke sendes. Prøv igen.',
   chatBlocked: 'Du kan ikke skrive med denne bruger.',
+  kraeverBarnBirthdateLabel: 'Barnets fødselsdato',
+  kraeverBarnDueDateLabel: 'Din terminsdato',
+  kraeverBarnReasonSleep: 'For at kunne regne søvn ud har vi brug for barnets fødselsdato.',
+  kraeverBarnReasonMilestones: 'Milepæle knyttes til barnets fødselsdato.',
+  kraeverBarnReasonTigerspring: 'Tigerspring beregnes ud fra fødselsdatoen.',
+  kraeverBarnReasonPregnancy: 'Graviditetsugerne regnes ud fra din terminsdato.',
+  kraeverBarnSave: 'Gem og fortsæt',
+  kraeverBarnRequired: 'Vælg en dato for at fortsætte.',
+  kraeverBarnError: 'Kunne ikke gemme. Prøv igen.',
 
   // Community map
   awakeInCountry: '{count} vågne i {country}',
@@ -142,6 +151,15 @@ export const additionalEn = {
   chatInputPlaceholder: 'Write a message…',
   chatSendError: 'Message could not be sent. Try again.',
   chatBlocked: 'You cannot message this user.',
+  kraeverBarnBirthdateLabel: "Baby's date of birth",
+  kraeverBarnDueDateLabel: 'Your due date',
+  kraeverBarnReasonSleep: "To calculate sleep we need your baby's date of birth.",
+  kraeverBarnReasonMilestones: "Milestones are tied to your baby's date of birth.",
+  kraeverBarnReasonTigerspring: 'Wonder weeks are calculated from the date of birth.',
+  kraeverBarnReasonPregnancy: 'Pregnancy weeks are calculated from your due date.',
+  kraeverBarnSave: 'Save and continue',
+  kraeverBarnRequired: 'Pick a date to continue.',
+  kraeverBarnError: 'Could not save. Try again.',
 
   // Community map
   awakeInCountry: '{count} awake in {country}',

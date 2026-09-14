@@ -194,36 +194,6 @@ export default function Profile() {
         {/* Resterende prøvedage — diskret visning for brugere i prøveperiode */}
         {!isInvited && <TrialStatusBadge userEmail={user?.email} />}
 
-        {/* Færdiggør profil — vis kun hvis ingen profil */}
-        {!profile && (
-          <>
-            <button
-              onClick={() => navigate('/Onboarding')}
-              className="w-full rounded-3xl overflow-hidden relative active:opacity-90 transition-opacity text-left"
-              style={{
-                background: 'linear-gradient(135deg, var(--color-accent), var(--color-brown-light))',
-                minHeight: 110,
-                border: 'none',
-              }}
-            >
-              <div className="flex items-center gap-4 p-5">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-                  <Sparkles className="w-7 h-7 text-white" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xl font-light text-white leading-snug" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                    Færdiggør din profil
-                  </p>
-                  <p className="text-sm text-white/75 mt-1">Fortæl os lidt om dig og dit barn</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-white/60 flex-shrink-0" />
-              </div>
-            </button>
-
-
-          </>
-        )}
-
         {/* Hero profile card — kun når profil eksisterer */}
         {profile && <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <div

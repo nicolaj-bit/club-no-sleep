@@ -141,22 +141,6 @@ export default function Home() {
       {/* Færdiggør medlemskab banner — vises hvis bruger sprang betaling over (skjules for inviterede) */}
       {user && !isInvited && <div className="mx-5 mb-4"><CompleteMembershipBanner /></div>}
 
-      {/* Færdiggør profil banner — kun hvis ingen profil */}
-      {!profile && (
-        <div className="mx-5 mb-4">
-          <Link
-            to="/Profile"
-            className="flex items-center gap-3 rounded-2xl px-4 py-3.5 active:opacity-80 transition-opacity"
-            style={{ background: 'var(--color-primary)', boxShadow: '0 2px 12px rgba(160,120,80,0.25)' }}
-          >
-            <span className="text-2xl">✨</span>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-white leading-tight">Færdiggør din profil</p>
-              <p className="text-xs text-white/75 mt-0.5">Det tager kun 2 minutter →</p>
-            </div>
-          </Link>
-        </div>
-      )}
 
 
 

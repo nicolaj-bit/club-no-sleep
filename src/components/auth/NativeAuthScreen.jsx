@@ -103,7 +103,8 @@ export default function NativeAuthScreen({ resetToken } = {}) {
         throw new Error('Login mislykkedes efter bekræftelse');
       }
       localStorage.setItem('base44_access_token', access_token);
-      navigateAfterLogin();
+      // Efter oprettelse sendes brugeren direkte til abonnementssiden.
+      window.location.href = '/Subscription';
     } catch (e) {
       console.error('[NativeAuthScreen] Verify OTP error:', e);
       setError(e?.message || 'Koden er forkert eller udløbet. Prøv igen.');

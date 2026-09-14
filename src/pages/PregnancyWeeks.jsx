@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useState } from 'react';
 import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
-import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
 import { getGestationalAge } from '../../base44/shared/getGestationalAge';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
+import { useQueryClient } from '@tanstack/react-query';
+import KraeverBarn from '@/components/children/KraeverBarn';
 
 function WeekCard({ week, data, isCurrent }) {
   const { t } = useLanguage();
@@ -63,37 +65,19 @@ function WeekCard({ week, data, isCurrent }) {
 
 export default function PregnancyWeeks() {
   const { t } = useLanguage();
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const { activeChild, refetch: refetchChild } = useActiveChild();
+  const { activeProfile, refreshProfiles } = useActiveProfile();
 
   const handleRefresh = async () => {
-    setLoading(true);
-    try {
-      const user = await base44.auth.me();
-      const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-      setProfile(profiles[0] || null);
-    } catch {}
-    setLoading(false);
+    await queryClient.invalidateQueries();
+    refreshProfiles?.();
+    refetchChild?.();
   };
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const user = await base44.auth.me();
-        const profiles = await base44.entities.UserProfile.filter({ user_email: user.email });
-        setProfile(profiles[0] || null);
-      } catch {
-        // ignore
-      }
-      setLoading(false);
-    };
-    load();
-  }, []);
-
-  const dueDateStr = profile?.child_due_date;
+  const dueDateStr = activeChild?.due_date || activeProfile?.child_due_date;
   const currentWeek = dueDateStr ? getGestationalAge(dueDateStr)?.ordinal : null;
   const isPregnant = currentWeek !== null && currentWeek >= 4 && currentWeek <= 42;
-  const isPostTerm = currentWeek !== null && currentWeek > 42;
 
   const weeksToShow = Object.keys(PREGNANCY_WEEKS).map(Number).sort((a, b) => a - b);
 
@@ -102,19 +86,13 @@ export default function PregnancyWeeks() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
       <PageHeader title={t.pregnancyWeeksTitle} />
 
-      <div className="px-4 pt-5 pb-6 space-y-5">
-        {/* Week list */}
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
-            {t.pregnancyWeeksAllWeeks}
-          </p>
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-14 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--color-bg-card)' }} />
-              ))}
-            </div>
-          ) : (
+      <KraeverBarn field="due_date" reason="kraeverBarnReasonPregnancy">
+        <div className="px-4 pt-5 pb-6 space-y-5">
+          {/* Week list */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-text-muted)' }}>
+              {t.pregnancyWeeksAllWeeks}
+            </p>
             <div className="space-y-2">
               {weeksToShow.map(week => (
                 <WeekCard
@@ -125,9 +103,9 @@ export default function PregnancyWeeks() {
                 />
               ))}
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      </KraeverBarn>
     </div>
     </PullToRefresh>
   );

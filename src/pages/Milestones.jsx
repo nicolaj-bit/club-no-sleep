@@ -10,6 +10,7 @@ import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { Camera, Lock } from 'lucide-react';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
+import KraeverBarn from '@/components/children/KraeverBarn';
 
 const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -104,6 +105,7 @@ export default function Milestones() {
       <PageHeader title={t.milestonesTitle} />
 
       <ContentLock locked={!hasSubscription && !isInvited} loading={subscriptionLoading} blurHeight="320px">
+        <KraeverBarn field="birthdate" reason="kraeverBarnReasonMilestones">
         <div className="px-4 pt-2 space-y-8">
           {CATEGORY_ORDER.map(cat => (
             <div key={cat}>
@@ -126,6 +128,7 @@ export default function Milestones() {
             </div>
           ))}
         </div>
+        </KraeverBarn>
       </ContentLock>
     </div>
   );
