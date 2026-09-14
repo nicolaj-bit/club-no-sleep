@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { requestPushPermission } from '@/utils/requestPushPermission';
 import { useRevenueCat } from '@/components/subscription/useRevenueCat';
-import { PAYWALL_FEATURES } from '@/components/subscription/paywallFeatures';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { Loader2, Check, ArrowLeft, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -28,6 +27,26 @@ function GooglePlayIcon({ className, style }) {
 const STORE_LABELS = {
   ios: { name: 'App Store', title: 'In-App Purchase (App Store)', sub: 'Betal via din Apple-konto · Sikker og nem', footer: 'Apple' },
   android: { name: 'Google Play', title: 'In-App Purchase (Google Play)', sub: 'Betal via din Google-konto · Sikker og nem', footer: 'Google Play' },
+};
+
+// Faste salgspunkter på Checkout — aldrig tomme. Tomme streng springes over.
+const CHECKOUT_FEATURES = {
+  da: [
+    'Live søvnlog med historik og overblik',
+    'Et lys i mørket — se hvem der er vågne',
+    'Tigerspring og udviklingsspring',
+    'Milepæle med billeder',
+    'Over hundrede danske vidensartikler',
+    'Din partner med, uden ekstra betaling',
+  ],
+  en: [
+    'Live sleep log with history and overview',
+    'A light in the dark — see who’s awake',
+    'Wonder weeks and developmental leaps',
+    'Milestones with photos',
+    'Over a hundred Danish knowledge articles',
+    'Your partner included, at no extra cost',
+  ],
 };
 
 export default function Checkout() {
@@ -152,42 +171,16 @@ export default function Checkout() {
           </p>
         </div>
 
-        {/* Features */}
+        {/* Features — faste tekster, tomme linjer springes over */}
         <div className="mb-6 space-y-2.5">
-          {PAYWALL_FEATURES.map((f, i) => (
+          {(CHECKOUT_FEATURES[da ? 'da' : 'en'] || []).filter(Boolean).map((text, i) => (
             <div key={i} className="flex items-center gap-2.5">
               <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                 <Check className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
               </div>
-              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                <span className="font-semibold">{f.title}</span>
-                <span style={{ color: 'var(--color-text-secondary)' }}> — {f.desc}</span>
-              </p>
+              <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{text}</p>
             </div>
           ))}
-        </div>
-
-        {/* Payment method info — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
-        <div className="mb-6">
-          <div
-            className="w-full rounded-2xl p-4 flex items-center gap-3"
-            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
-          >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
-            >
-              {platform === 'android'
-                ? <GooglePlayIcon className="w-5 h-5" style={{ color: '#fff' }} />
-                : <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />}
-            </div>
-            <p className="flex-1 min-w-0 text-sm" style={{ color: '#fff' }}>
-              {platform === 'android'
-                ? (da ? 'Betal via din Google-konto · Sikkert og nemt' : 'Pay via your Google account · Secure and easy')
-                : (da ? 'Betal via din Apple-konto · Sikkert og nemt' : 'Pay via your Apple account · Secure and easy')}
-            </p>
-            <Lock className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.7)' }} />
-          </div>
         </div>
 
         {/* Success message */}
@@ -244,6 +237,29 @@ export default function Checkout() {
               ? (da ? `${priceShort}/md. Opsig når som helst.` : `${priceShort}/mo. Cancel anytime.`)
               : (da ? 'Abonnementet fornyes automatisk. Opsig når som helst.' : 'Subscription renews automatically. Cancel anytime.')}
         </p>
+
+        {/* Betalingsmetode — platform-specifik IAP via RevenueCat (StoreKit / Play Billing) */}
+        <div className="mt-3">
+          <div
+            className="w-full rounded-2xl p-4 flex items-center gap-3"
+            style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
+          >
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+            >
+              {platform === 'android'
+                ? <GooglePlayIcon className="w-5 h-5" style={{ color: '#fff' }} />
+                : <AppleIcon className="w-5 h-5" style={{ color: '#fff' }} />}
+            </div>
+            <p className="flex-1 min-w-0 text-sm" style={{ color: '#fff' }}>
+              {platform === 'android'
+                ? (da ? 'Betal via din Google-konto · Sikkert og nemt' : 'Pay via your Google account · Secure and easy')
+                : (da ? 'Betal via din Apple-konto · Sikkert og nemt' : 'Pay via your Apple account · Secure and easy')}
+            </p>
+            <Lock className="w-4 h-4 shrink-0" style={{ color: 'rgba(255,255,255,0.7)' }} />
+          </div>
+        </div>
 
         {/* Vilkårstekst — compliance (Apple 3.1.2 / Google) */}
         {isTrialEligible && (
