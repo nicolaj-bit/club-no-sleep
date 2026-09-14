@@ -65,6 +65,8 @@ export const additionalDa = {
   chatEmptyLine1: 'I kan skrive sammen her.',
   chatEmptyLine2: 'Skriv det første.',
   chatInputPlaceholder: 'Skriv en besked…',
+  chatSendError: 'Beskeden kunne ikke sendes. Prøv igen.',
+  chatBlocked: 'Du kan ikke skrive med denne bruger.',
 
   // Community map
   awakeInCountry: '{count} vågne i {country}',
@@ -138,6 +140,8 @@ export const additionalEn = {
   chatEmptyLine1: 'You can chat here.',
   chatEmptyLine2: 'Write the first message.',
   chatInputPlaceholder: 'Write a message…',
+  chatSendError: 'Message could not be sent. Try again.',
+  chatBlocked: 'You cannot message this user.',
 
   // Community map
   awakeInCountry: '{count} awake in {country}',

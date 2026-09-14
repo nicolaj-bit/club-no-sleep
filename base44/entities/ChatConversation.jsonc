@@ -28,6 +28,14 @@
       "type": "string",
       "format": "date-time"
     },
+    "read_at": {
+      "type": "object",
+      "description": "Kort over email -> ISO-tidsstempel for hvorn\u00e5r hver deltager senest l\u00e6ste tr\u00e5den",
+      "additionalProperties": {
+        "type": "string",
+        "format": "date-time"
+      }
+    },
     "is_group": {
       "type": "boolean",
       "default": false

@@ -34,10 +34,10 @@ export default function ChatList() {
 
   const { data: conversations = [], isLoading: loadingChats } = useQuery({
     queryKey: ['conversations', user?.email],
-    queryFn: () => base44.entities.ChatConversation.filter(
-      { participants: user.email },
-      '-last_message_at'
-    ),
+    queryFn: async () => {
+      const res = await base44.functions.invoke('chatApi', { action: 'list_conversations' });
+      return res.data?.conversations || [];
+    },
     enabled: !!user?.email,
   });
 

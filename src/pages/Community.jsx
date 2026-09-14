@@ -43,25 +43,16 @@ export default function Community() {
     loadUser();
   }, []);
 
-  const { data: conversations = [] } = useQuery({
-    queryKey: ['conversations', user?.email],
-    queryFn: () => base44.entities.ChatConversation.filter(
-      { participants: user.email },
-      '-last_message_at'
-    ),
-    enabled: !!user?.email,
-  });
-
-  const { data: unreadMessages = [] } = useQuery({
-    queryKey: ['unreadMessages', user?.email],
+  const { data: unreadData } = useQuery({
+    queryKey: ['chatUnread', user?.email],
     queryFn: async () => {
-      const msgs = await base44.entities.ChatMessage.filter({ is_read: false });
-      return msgs.filter(m => m.sender_email !== user?.email);
+      const res = await base44.functions.invoke('chatApi', { action: 'has_unread' });
+      return res.data;
     },
     enabled: !!user?.email,
   });
 
-  const hasUnread = unreadMessages.length > 0;
+  const hasUnread = unreadData?.has_unread === true;
 
   const handleToggleVisibility = async (checked) => {
     setIsVisible(checked);
@@ -73,28 +64,25 @@ export default function Community() {
   };
 
   const handleStartChat = async (targetUser) => {
-    const existing = conversations.find(c =>
-      c.participants.includes(targetUser.user_email)
-    );
-
-    if (existing) {
-      window.location.href = createPageUrl(`Chat?id=${existing.id}`);
-      return;
-    }
-
-    const conv = await base44.entities.ChatConversation.create({
-      participants: [user.email, targetUser.user_email],
-      participant_usernames: [userProfile?.username || user.full_name, targetUser.username],
-      participant_images: [userProfile?.profile_image, targetUser.profile_image],
-    });
-
-    window.location.href = createPageUrl(`Chat?id=${conv.id}`);
+    try {
+      const res = await base44.functions.invoke('chatApi', {
+        action: 'start_conversation',
+        target_email: targetUser.user_email,
+        target_username: targetUser.username,
+        target_image: targetUser.profile_image,
+      });
+      const conv = res.data?.conversation;
+      if (conv) {
+        queryClient.invalidateQueries(['chatUnread', user?.email]);
+        window.location.href = createPageUrl(`Chat?id=${conv.id}`);
+      }
+    } catch {}
   };
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries(['lights']);
     await queryClient.invalidateQueries(['conversations', user?.email]);
-    await queryClient.invalidateQueries(['unreadMessages', user?.email]);
+    await queryClient.invalidateQueries(['chatUnread', user?.email]);
   };
 
   return (

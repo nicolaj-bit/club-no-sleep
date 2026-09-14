@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { ChevronLeft, Send, MoreVertical, Flag } from 'lucide-react';
+import { ChevronLeft, MoreVertical, Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import ReportSheet from '@/components/community/ReportSheet';
@@ -50,70 +50,96 @@ export default function Chat() {
   const queryClient = useQueryClient();
 
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [message, setMessage] = useState('');
   const [reportTarget, setReportTarget] = useState(null);
+  const [sendError, setSendError] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
   const scrollRef = useRef(null);
-  const textareaRef = useRef(null);
   const hasScrolledRef = useRef(false);
+  const sinceRef = useRef(null);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const u = await base44.auth.me();
         setUser(u);
-        const profiles = await base44.entities.UserProfile.filter({ user_email: u.email });
-        if (profiles.length > 0) setUserProfile(profiles[0]);
       } catch {}
     };
     loadUser();
   }, []);
 
-  const { data: conversation, isLoading: loadingConv } = useQuery({
+  const { data: convData, isLoading: loadingConv, isError: convError } = useQuery({
     queryKey: ['conversation', conversationId],
     queryFn: async () => {
-      const convs = await base44.entities.ChatConversation.filter({ id: conversationId });
-      const conv = convs[0];
-      if (conv && user && !conv.participants?.includes(user.email)) return null;
-      return conv;
+      const res = await base44.functions.invoke('chatApi', {
+        action: 'get_conversation',
+        conversation_id: conversationId,
+      });
+      return res.data;
     },
     enabled: !!conversationId && !!user,
+    retry: false,
   });
 
-  const { data: messages = [], isLoading: loadingMessages } = useQuery({
-    queryKey: ['messages', conversationId],
-    queryFn: () => base44.entities.ChatMessage.filter(
-      { conversation_id: conversationId },
-      'created_date'
-    ),
-    enabled: !!conversationId,
-    refetchInterval: 3000,
-  });
+  const conversation = convData?.conversation || null;
+  const otherIsOnline = convData?.other_is_online === true;
 
-  const otherEmail = conversation?.participants?.find(p => p !== user?.email);
-  const { data: otherProfile } = useQuery({
-    queryKey: ['profile', otherEmail],
-    queryFn: async () => {
-      const rows = await base44.entities.UserProfile.filter({ user_email: otherEmail });
-      return rows?.[0] || null;
-    },
-    enabled: !!otherEmail,
-  });
-  const otherIsOnline = otherProfile?.is_online === true;
-
-  useEffect(() => {
-    if (!conversationId) return;
-    const unsubscribe = base44.entities.ChatMessage.subscribe((event) => {
-      if (event.data?.conversation_id === conversationId) {
-        queryClient.invalidateQueries(['messages', conversationId]);
-      }
+  // Hent beskeder (alle, eller kun nye siden et tidsstempel).
+  const fetchMessages = useCallback(async (since) => {
+    const res = await base44.functions.invoke('chatApi', {
+      action: 'list_messages',
+      conversation_id: conversationId,
+      since: since || undefined,
     });
-    return unsubscribe;
-  }, [conversationId, queryClient]);
-
-  useEffect(() => {
-    hasScrolledRef.current = false;
+    return res.data?.messages || [];
   }, [conversationId]);
+
+  // Indlæs hele tråden ved åbning / conversation-skift.
+  useEffect(() => {
+    if (!conversationId || !user || !conversation) return;
+    let cancelled = false;
+    setLoadingMessages(true);
+    setMessages([]);
+    sinceRef.current = null;
+    hasScrolledRef.current = false;
+    (async () => {
+      try {
+        const initial = await fetchMessages(null);
+        if (cancelled) return;
+        setMessages(initial);
+        if (initial.length > 0) sinceRef.current = initial[initial.length - 1].created_date;
+      } catch {}
+      if (!cancelled) setLoadingMessages(false);
+    })();
+    return () => { cancelled = true; };
+  }, [conversationId, user, conversation, fetchMessages]);
+
+  // Afstemning hvert 3. sekund — kun nye beskeder.
+  useEffect(() => {
+    if (!conversationId || !user || !conversation) return;
+    const poll = setInterval(async () => {
+      try {
+        const newer = await fetchMessages(sinceRef.current);
+        if (newer.length === 0) return;
+        setMessages((prev) => {
+          const map = new Map(prev.map((m) => [m.id, m]));
+          newer.forEach((m) => map.set(m.id, m));
+          return Array.from(map.values()).sort((a, b) => (a.created_date < b.created_date ? -1 : 1));
+        });
+        sinceRef.current = newer[newer.length - 1].created_date;
+      } catch {}
+    }, 3000);
+    return () => clearInterval(poll);
+  }, [conversationId, user, conversation, fetchMessages]);
+
+  // Marker som læst ved åbning.
+  useEffect(() => {
+    if (!conversationId || !user || !conversation) return;
+    base44.functions.invoke('chatApi', { action: 'mark_read', conversation_id: conversationId })
+      .then(() => queryClient.invalidateQueries(['chatUnread', user.email]))
+      .catch(() => {});
+  }, [conversationId, user, conversation, queryClient]);
 
   useEffect(() => {
     if (!scrollRef.current || messages.length === 0) return;
@@ -128,30 +154,32 @@ export default function Chat() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    ta.style.height = 'auto';
-    ta.style.height = Math.min(ta.scrollHeight, 96) + 'px';
-  }, [message]);
-
   const sendMutation = useMutation({
     mutationFn: async (content) => {
-      await base44.entities.ChatMessage.create({
+      const res = await base44.functions.invoke('chatApi', {
+        action: 'send_message',
         conversation_id: conversationId,
-        sender_email: user.email,
-        sender_username: userProfile?.username || user.full_name,
-        sender_image: userProfile?.profile_image,
         content,
       });
-      await base44.entities.ChatConversation.update(conversationId, {
-        last_message: content,
-        last_message_at: new Date().toISOString(),
-      });
+      return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setMessage('');
-      queryClient.invalidateQueries(['messages', conversationId]);
+      setSendError(null);
+      if (data?.message) {
+        setMessages((prev) => {
+          const map = new Map(prev.map((m) => [m.id, m]));
+          map.set(data.message.id, data.message);
+          return Array.from(map.values()).sort((a, b) => (a.created_date < b.created_date ? -1 : 1));
+        });
+        sinceRef.current = data.message.created_date;
+      }
+      queryClient.invalidateQueries(['chatUnread', user.email]);
+    },
+    onError: (err) => {
+      const code = err?.response?.data?.error;
+      if (code === 'blocked') setSendError(t.chatBlocked);
+      else setSendError(code || t.chatSendError);
     },
   });
 
@@ -172,8 +200,6 @@ export default function Chat() {
     return format(date, 'd. MMM HH.mm', { locale: lang === 'da' ? da : undefined });
   };
 
-  const hasText = !!message.trim();
-
   if (loadingConv) {
     return (
       <div className="flex items-center justify-center" style={{ height: '100dvh', backgroundColor: 'var(--color-bg)' }}>
@@ -182,7 +208,7 @@ export default function Chat() {
     );
   }
 
-  if (!loadingConv && conversation === null) {
+  if (!loadingConv && (convError || !conversation)) {
     return (
       <div className="flex flex-col items-center justify-center gap-4" style={{ height: '100dvh', backgroundColor: 'var(--color-bg)' }}>
         <p style={{ color: 'var(--color-text-muted)' }}>{t.noAccessToConversation}</p>
@@ -319,6 +345,12 @@ export default function Chat() {
         reportedEmail={reportTarget?.email || ''}
         messageId={reportTarget?.messageId}
       />
+
+      {sendError && (
+        <div style={{ padding: '6px 12px 0', fontSize: '12px', textAlign: 'center', color: '#c0392b' }}>
+          {sendError}
+        </div>
+      )}
 
       {/* Skrivefelt — fast i bunden */}
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 9, padding: '10px 12px', paddingBottom: 'calc(10px + env(safe-area-inset-bottom, 0px))', backgroundColor: 'var(--color-bg-card)', borderTop: '1px solid var(--color-border)' }}>
