@@ -161,48 +161,48 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, subline, da
 }
 
 function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
-  const FS = canvasW * 0.042;
-  const DATE_FS = canvasW * 0.034;
-  const LINE_H = FS * 1.4;
-  const PAD_X = canvasW * 0.04;
-  const PAD_Y = canvasW * 0.022;
-  const GAP = canvasW * 0.018;
-  const maxWidth = canvasW * 0.72;
-
   ctx.save();
-  ctx.font = `400 ${FS}px 'Courier New', Courier, monospace`;
-  ctx.textBaseline = 'alphabetic';
+
+  // Blød mørk forløbning over nederste fjerdedel — teksten ligger på billedet, ikke i en boks
+  const gradHeight = canvasH * 0.3;
+  const gradY = canvasH - gradHeight;
+  const gradient = ctx.createLinearGradient(0, gradY, 0, canvasH);
+  gradient.addColorStop(0, 'rgba(0,0,0,0)');
+  gradient.addColorStop(1, 'rgba(0,0,0,0.72)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, gradY, canvasW, gradHeight);
+
+  const PAD_X = canvasW * 0.055;
+  const maxWidth = canvasW - PAD_X * 2;
   ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
 
-  // Wrap headline
-  const lines = wrapTextCanvas(ctx, headline, maxWidth);
+  // Auto-fit headline i Cormorant Garamond, max 2 linjer
+  let headlineFs = canvasW * 0.065;
+  let lines;
+  for (let fs = headlineFs; fs >= canvasW * 0.035; fs -= canvasW * 0.003) {
+    ctx.font = `500 ${fs}px 'Cormorant Garamond', serif`;
+    lines = wrapTextCanvas(ctx, headline, maxWidth);
+    if (lines.length <= 2) { headlineFs = fs; break; }
+  }
 
-  const headlineBlockH = lines.length * LINE_H;
-  const totalH = headlineBlockH + GAP + DATE_FS + PAD_Y * 2;
+  const dateFs = canvasW * 0.032;
+  const lineH = headlineFs * 1.15;
+  const bottomPad = canvasH * 0.06;
+  const dateGap = canvasH * 0.018;
 
-  const x = canvasW * 0.05;
-  const y = canvasH - totalH - canvasH * 0.07;
+  let y = canvasH - bottomPad - dateFs - dateGap - (lines.length - 1) * lineH;
 
-  // Headline rect
-  ctx.fillStyle = '#000';
-  ctx.fillRect(x - PAD_X, y - PAD_Y, maxWidth + PAD_X * 2, headlineBlockH + PAD_Y * 2);
-
-  // Headline text
-  ctx.fillStyle = '#fff';
-  lines.forEach((line, i) => {
-    ctx.font = `400 ${FS}px 'Courier New', Courier, monospace`;
-    ctx.fillText(line, x, y + FS + i * LINE_H);
+  ctx.fillStyle = '#FFFFFF';
+  lines.forEach((line) => {
+    ctx.font = `500 ${headlineFs}px 'Cormorant Garamond', serif`;
+    ctx.fillText(line, PAD_X, y);
+    y += lineH;
   });
 
-  // Date rect
-  ctx.font = `400 ${DATE_FS}px 'Courier New', Courier, monospace`;
-  const dateW = ctx.measureText(dateStr).width + PAD_X * 2;
-  ctx.fillStyle = '#000';
-  ctx.fillRect(x - PAD_X, y + headlineBlockH + PAD_Y * 2, dateW, DATE_FS + PAD_Y * 2);
-
-  // Date text
-  ctx.fillStyle = '#fff';
-  ctx.fillText(dateStr, x, y + headlineBlockH + PAD_Y * 2 + PAD_Y + DATE_FS);
+  ctx.font = `400 ${dateFs}px 'Inter', sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(dateStr, PAD_X, y + dateGap + dateFs * 0.75);
 
   ctx.restore();
 }
@@ -503,13 +503,12 @@ export default function MilestoneCamera({ frame, onClose }) {
             <div className="w-10" />
           </div>
 
-          {/* Billede i blød ramme */}
-          <div className="flex-1 flex items-center justify-center px-3 min-h-0">
+          {/* Billedvisning — fylder al plads mellem header og knapper, altid mørk baggrund */}
+          <div className="flex-1 min-h-0" style={{ padding: 12, backgroundColor: '#050505' }}>
             <img
               src={capturedImage}
               alt={t.milestoneAltMilestone}
-              className="rounded-3xl object-contain"
-              style={{ maxHeight: '64vh', maxWidth: 460, width: 'auto', height: 'auto', border: '3px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
+              className="w-full h-full object-contain"
             />
           </div>
 
