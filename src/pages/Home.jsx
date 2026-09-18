@@ -25,12 +25,7 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import { useAuth } from '@/lib/AuthContext';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
-
-function getDailyAffirmationIndex() {
-  const today = new Date();
-  const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-  return dayOfYear;
-}
+import { useDailyAffirmationIndex } from '@/hooks/useDailyAffirmationIndex';
 
 function getGreeting(lang, name) {
   const hour = new Date().getHours();
@@ -91,8 +86,8 @@ export default function Home() {
   const ageInWeeks = getAgeInWeeks(childDueDate, childBirthdate);
   const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
 
-  const affirmationIndex = getDailyAffirmationIndex();
-  const affirmation = t.affirmations[affirmationIndex % t.affirmations.length];
+  const affirmationIndex = useDailyAffirmationIndex(t.affirmations.length);
+  const affirmation = t.affirmations[affirmationIndex] || t.affirmations[0];
   const todayStr = format(new Date(), "EEEE 'd.' d. MMMM", { locale: lang === 'en' ? enUS : da });
   const displayName = profile?.display_name || user?.full_name || (profile?.gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom'));
   const greeting = getGreeting(lang, displayName);
