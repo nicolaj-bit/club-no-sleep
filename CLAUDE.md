@@ -110,6 +110,12 @@ som appen skriver i Capacitor Preferences under `cns_native_token`.
   på deres intent. Standarden er `.requiresAuthentication`, og så beder iOS om
   Face ID, før knappen udføres — altså præcis den oplåsning, knappen skulle
   gøre overflødig.
+- Gem til fotobiblioteket bruger kun `NSPhotoLibraryAddUsageDescription`, altså
+  lov til at *tilføje*. Et navngivet album kan ikke lade sig gøre med den
+  adgang: at oprette et album kræver `.readWrite` og dermed
+  `NSPhotoLibraryUsageDescription`, som giver læseadgang, vi ikke skal have.
+  Derfor lander milepælsbilleder i kamerarullen på iOS og i et album på
+  Android. Læg ikke albummet tilbage på iOS uden at tage den samtale først.
 - Capacitor-plugins, der ligger i selve app-targetet, skal registreres i hånden
   i `capacitorDidLoad()` i `MainViewController.swift` med
   `bridge?.registerPluginInstance(...)`. Capacitor 8 gennemsøger ikke runtime
@@ -126,6 +132,10 @@ som appen skriver i Capacitor Preferences under `cns_native_token`.
 - `versionCode` i `android/app/build.gradle` skal hæves ved hver upload.
 - `READ_MEDIA_IMAGES` fjernes bevidst med `tools:node="remove"` i manifestet.
   Google Play afviser appen, hvis den er der. Læg den ikke tilbage.
+- `@capacitor-community/media` kræver ingen tilladelser, så længe
+  `androidGalleryMode` bliver stående som slået fra. Slås den til, skal
+  `READ_MEDIA_IMAGES` med i manifestet — og så afviser Google Play appen. Lad
+  den være slukket.
 - OneSignal skal initialiseres på Android, før nogen anden OneSignal-metode
   kaldes. Ellers crasher appen med
   `IllegalStateException: Must call 'initWithContext' before use`.
