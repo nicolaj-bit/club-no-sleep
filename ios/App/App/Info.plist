@@ -64,7 +64,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Club No Sleep bruger dit fotoalbum, så du kan vælge billeder til dine milepæle.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Club No Sleep gemmer dine milepælsbilleder i dit fotoalbum.</string>
+	<string>Club No Sleep gemmer dine milepælsbilleder i dine egne billeder, når du beder om det.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleURLTypes</key>
