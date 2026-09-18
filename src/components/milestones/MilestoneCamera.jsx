@@ -288,26 +288,31 @@ export default function MilestoneCamera({ frame, onClose }) {
     await startCamera(next);
   };
 
+  const MAX_WIDTH = 1600;
+
   const renderPhoto = async (drawSource) => {
     await loadFont();
     const canvas = canvasRef.current;
     drawSource(canvas);
     drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
-    setCapturedImage(canvas.toDataURL('image/jpeg', 0.95));
+    setCapturedImage(canvas.toDataURL('image/jpeg', 0.9));
     setMode('preview');
     sendMilestoneNotification();
   };
 
+  // Beholder billedets eget format — ingen kvadratisk beskæring. Nedskalerer kun
+  // via bredden (aldrig bredde+højde samtidig), så højden følger proportionalt med.
   const capturePhoto = () => {
     const video = videoRef.current;
     if (!video || !canvasRef.current) return;
-    const size = Math.min(video.videoWidth, video.videoHeight);
-    canvasRef.current.width = size;
-    canvasRef.current.height = size;
+    const srcW = video.videoWidth;
+    const srcH = video.videoHeight;
+    const w = Math.min(srcW, MAX_WIDTH);
+    const h = Math.round(w * (srcH / srcW));
+    canvasRef.current.width = w;
+    canvasRef.current.height = h;
     const ctx = canvasRef.current.getContext('2d');
-    const sx = (video.videoWidth - size) / 2;
-    const sy = (video.videoHeight - size) / 2;
-    ctx.drawImage(video, sx, sy, size, size, 0, 0, size, size);
+    ctx.drawImage(video, 0, 0, srcW, srcH, 0, 0, w, h);
     renderPhoto(() => {}); // canvas already drawn
   };
 
@@ -319,13 +324,12 @@ export default function MilestoneCamera({ frame, onClose }) {
       const img = new Image();
       img.onload = () => {
         const canvas = canvasRef.current;
-        const size = Math.min(img.width, img.height);
-        canvas.width = size;
-        canvas.height = size;
+        const w = Math.min(img.width, MAX_WIDTH);
+        const h = Math.round(w * (img.height / img.width));
+        canvas.width = w;
+        canvas.height = h;
         const ctx = canvas.getContext('2d');
-        const sx = (img.width - size) / 2;
-        const sy = (img.height - size) / 2;
-        ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size);
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, w, h);
         renderPhoto(() => {});
       };
       img.src = ev.target.result;
@@ -504,8 +508,8 @@ export default function MilestoneCamera({ frame, onClose }) {
             <img
               src={capturedImage}
               alt={t.milestoneAltMilestone}
-              className="rounded-3xl object-cover w-full"
-              style={{ maxHeight: '64vh', maxWidth: 460, border: '3px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
+              className="rounded-3xl object-contain"
+              style={{ maxHeight: '64vh', maxWidth: 460, width: 'auto', height: 'auto', border: '3px solid var(--color-bg-card)', boxShadow: '0 12px 40px rgba(0,0,0,0.18)' }}
             />
           </div>
 
