@@ -55,11 +55,11 @@ export default function BottomNav() {
     && new Date(activeProfile.child_due_date) > new Date();
 
   const menuItemsConfig = [
-    { key: 'blog', icon: BookOpen, page: 'Blog' },
+    { key: 'community', icon: Users, page: 'Community', name: 'Et lys i mørket' },
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
-    { key: 'community', icon: Users, page: 'Community', name: 'Et lys i mørket' },
+    { key: 'blog', icon: BookOpen, page: 'Blog' },
     { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
     { key: 'cafes', icon: ShoppingBag, page: 'BabyFriendlyCafes', name: 'Babyvenlige caféer' },
     { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },

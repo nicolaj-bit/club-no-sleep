@@ -402,12 +402,15 @@ export default function LiveSleepTracker({ user, activeChild }) {
       )}
 
       {feedback && (
-        <div className="rounded-2xl p-5 mb-6" style={{ background: 'linear-gradient(135deg, var(--color-accent-warm), var(--color-bg-subtle))' }}>
+        <div
+          className="rounded-2xl p-5 mb-6"
+          style={{ background: 'linear-gradient(135deg, rgba(200,168,130,0.12), rgba(200,168,130,0.04)), var(--color-bg-card)' }}
+        >
           <div className="flex items-start gap-2 mb-2">
             <Sparkles className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
-            <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{feedback.title}</p>
+            <p className="font-semibold text-sm" style={{ color: 'var(--color-accent)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>{feedback.title}</p>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{feedback.message}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{feedback.message}</p>
         </div>
       )}
 

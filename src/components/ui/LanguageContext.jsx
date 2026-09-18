@@ -189,7 +189,7 @@ const translations = {
     historyBtn: 'Historik',
     logTodayBtn: 'Log i dag',
     todayLog: 'Dagens log',
-    nightSleep: 'Natsøvn',
+    nightSleep: 'Nattesøvn',
     nightWakings: 'Natlige opvågninger',
     naps: 'Lure',
     nap: 'Lur',
