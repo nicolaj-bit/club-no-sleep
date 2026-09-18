@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -11,6 +12,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // webviewet i remote mode ikke når at loade inden for det tidsrum,
         // iOS giver til at behandle et knaptryk. Se SleepLockScreenActions.
         SleepLockScreenActions.shared.install()
+
+        // Appen henter hele brugerfladen fra base44.app, og webviewets diskcache
+        // overlever appstart. Uden det her kan brugeren sidde med en uger gammel
+        // udgave af siden, længe efter at Base44 er publiceret.
+        clearWebViewCache()
+
         return true
     }
 
@@ -20,8 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        // Det er FØRST OG FREMMEST denne rydning, der virker.
+        //
+        // Rydningen er asynkron, og ved kold opstart når den sjældent at blive
+        // færdig, før webviewet begynder at hente siden. Rydder vi derimod, når
+        // appen går i baggrunden, er der god tid — og næste opstart er ren.
+        // Rydningen i didFinishLaunchingWithOptions er stadig med, så en app,
+        // der aldrig har været i baggrunden, også bliver ryddet.
+        clearWebViewCache()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -37,6 +50,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+
+    // MARK: - Webview-cache
+
+    /// Rydder webviewets cache, så appen altid viser den publicerede udgave af
+    /// siden.
+    ///
+    /// ⚠️ Listen herunder må IKKE udvides med lagringstyper.
+    ///
+    /// `WKWebsiteDataTypeLocalStorage`, `WKWebsiteDataTypeCookies`,
+    /// `WKWebsiteDataTypeIndexedDBDatabases` og
+    /// `WKWebsiteDataTypeSessionStorage` er bevidst udeladt. Brugerens login og
+    /// Capacitor Preferences ligger dér. Ryddes de, bliver alle brugere logget
+    /// ud ved hver opstart, og `cns_native_token` til låseskærmens knapper
+    /// forsvinder — så holder søvnloggen op med at virke fra låseskærmen.
+    ///
+    /// Det ser ud som oplagt oprydning at tage resten med. Det er det ikke.
+    private func clearWebViewCache() {
+        let cacheTypes: Set<String> = [
+            WKWebsiteDataTypeDiskCache,
+            WKWebsiteDataTypeMemoryCache,
+            WKWebsiteDataTypeOfflineWebApplicationCache,
+            WKWebsiteDataTypeFetchCache,
+            WKWebsiteDataTypeServiceWorkerRegistrations
+        ]
+
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: cacheTypes,
+            modifiedSince: Date(timeIntervalSince1970: 0)
+        ) {
+            NSLog("[CNS-CACHE] webview-cache ryddet")
+        }
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
