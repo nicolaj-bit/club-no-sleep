@@ -18,11 +18,9 @@ struct SleepLiveActivity: Widget {
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { context in
             DynamicIsland {
+                // Samme opbygning som låseskærmen: teksten til venstre,
+                // tælleren til højre, knappen nedenunder.
                 DynamicIslandExpandedRegion(.leading) {
-                    Image(systemName: context.state.isAwake ? "sun.max.fill" : "moon.zzz.fill")
-                        .foregroundStyle(.white)
-                }
-                DynamicIslandExpandedRegion(.center) {
                     Text(title(for: context.state))
                         .font(.caption)
                         .foregroundStyle(.white)
@@ -36,13 +34,15 @@ struct SleepLiveActivity: Widget {
                     toggleButton(context: context)
                 }
             } compactLeading: {
-                Image(systemName: context.state.isAwake ? "sun.max.fill" : "moon.zzz.fill")
+                // Tomt med vilje — ikonet er fjernet, tælleren står til højre.
+                EmptyView()
             } compactTrailing: {
                 timer(from: context.state.phaseStart)
                     .monospacedDigit()
                     .frame(maxWidth: 44)
             } minimal: {
-                Image(systemName: context.state.isAwake ? "sun.max.fill" : "moon.zzz.fill")
+                timer(from: context.state.phaseStart)
+                    .monospacedDigit()
             }
         }
     }
@@ -54,19 +54,13 @@ struct SleepLiveActivity: Widget {
         context: ActivityViewContext<SleepActivityAttributes>
     ) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            // Teksten går helt ud til venstre kant; tælleren bliver stående til
+            // højre i samme størrelse som før. HStack centrerer dem lodret i
+            // forhold til hinanden.
             HStack(spacing: 10) {
-                Image(systemName: context.state.isAwake ? "sun.max.fill" : "moon.zzz.fill")
-                    .font(.title3)
+                Text(title(for: context.state))
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title(for: context.state))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white)
-                    Text(subtitle(for: context.state))
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.7))
-                }
 
                 Spacer(minLength: 8)
 
@@ -122,10 +116,6 @@ struct SleepLiveActivity: Widget {
 
     private func title(for state: SleepActivityAttributes.ContentState) -> String {
         state.isAwake ? "Barnet er vågent" : "Søvnlog kører"
-    }
-
-    private func subtitle(for state: SleepActivityAttributes.ContentState) -> String {
-        state.isAwake ? "Vågen siden" : "Sover siden"
     }
 
     /// Tæller opad fra `start`. Vinduet på et døgn er blot en øvre grænse for,
