@@ -54,7 +54,7 @@ export default function ChildSwitcher({ compact = false }) {
           <Plus className="w-3.5 h-3.5" />
           {t.addChild}
         </button>
-        <AddChildSheet open={showAdd} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); refetch(); }} />
+        <AddChildSheet open={showAdd} onClose={() => setShowAdd(false)} onSaved={(child) => { setShowAdd(false); refetch(); if (child?.id) setActiveChildId(child.id); }} />
       </>
     );
   }
@@ -112,7 +112,7 @@ export default function ChildSwitcher({ compact = false }) {
         )}
       </div>
 
-      <AddChildSheet open={showAdd} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); refetch(); }} />
+      <AddChildSheet open={showAdd} onClose={() => setShowAdd(false)} onSaved={(child) => { setShowAdd(false); refetch(); if (child?.id) setActiveChildId(child.id); }} />
     </>
   );
 }

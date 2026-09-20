@@ -42,12 +42,13 @@ export default function AddChildSheet({ open, onClose, onSaved, editChild = null
         due_date: dueDate || null,
       };
 
+      let savedChild;
       if (editChild) {
-        await base44.entities.Child.update(editChild.id, data);
+        savedChild = await base44.entities.Child.update(editChild.id, data);
       } else {
-        await base44.entities.Child.create(data);
+        savedChild = await base44.entities.Child.create(data);
       }
-      onSaved();
+      onSaved(savedChild);
     } catch (e) {
       setError(t.couldNotSaveTryAgain);
     } finally {

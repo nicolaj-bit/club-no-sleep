@@ -420,7 +420,13 @@ export default function Profile() {
         <AddChildSheet
           open={addChildOpen}
           onClose={() => { setAddChildOpen(false); setEditingChild(null); }}
-          onSaved={() => { setAddChildOpen(false); setEditingChild(null); refetchChildren(); }}
+          onSaved={(child) => {
+            const wasNew = !editingChild;
+            setAddChildOpen(false);
+            setEditingChild(null);
+            refetchChildren();
+            if (wasNew && child?.id) setActiveChildId(child.id);
+          }}
           editChild={editingChild}
         />
         </>
