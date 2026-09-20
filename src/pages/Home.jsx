@@ -134,6 +134,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Terminskort — vises lige efter velkomsthilsen */}
+      {isExpecting && <PregnancyHomeView profile={profile} activeChild={activeChild} />}
+
       {/* Genaktiver abonnement banner — vises kun ved udløbet abonnement (skjules for inviterede) */}
       {user && !isInvited && <div className="mx-5 mb-4"><ReactivateSubscriptionBanner /></div>}
 
@@ -164,9 +167,7 @@ export default function Home() {
       {user && profile && <DailyPersonalMessage userEmail={user.email} profile={profile} />}
 
       {/* Fase-specifikt indhold */}
-      {isExpecting ? (
-        <PregnancyHomeView profile={profile} activeChild={activeChild} />
-      ) : (
+      {!isExpecting && (
         <>
           {/* Wonder Week Card — kun dashboard (født barn) */}
           {canSeeWonderWeeks && wonderWeek && wonderWeek.status !== 'complete' && (
