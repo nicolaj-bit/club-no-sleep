@@ -76,9 +76,13 @@ export default function Home() {
 
   const profile = activeProfile;
 
-  // Brug aktivt barn hvis det findes, ellers fald tilbage til profil
-  const childBirthdate = activeChild?.birthdate || profile?.child_birthdate;
-  const childDueDate = activeChild?.due_date || profile?.child_due_date;
+  // Terminsdato/fødselsdato bor på Child. Findes et aktivt barn, læses BÅDE
+  // birthdate og due_date fra det samme barn — aldrig et fra Child og et fra
+  // UserProfile, som kan give en umulig kombination (ny terminsdato + gammel,
+  // efterladt fødselsdato fra profilen). Kun uden noget Child-data falder vi
+  // tilbage til profilen (legacy).
+  const childBirthdate = activeChild ? activeChild.birthdate : profile?.child_birthdate;
+  const childDueDate = activeChild ? activeChild.due_date : profile?.child_due_date;
 
   // Kommende forældre: har terminsdato i fremtiden men ikke fødselsdato
   const isExpecting = childDueDate && !childBirthdate && new Date(childDueDate) > new Date();

@@ -75,7 +75,9 @@ export default function PregnancyWeeks() {
     refetchChild?.();
   };
 
-  const dueDateStr = activeChild?.due_date || activeProfile?.child_due_date;
+  // Samme kilde-regel som på forsiden: findes et aktivt barn, læses due_date
+  // udelukkende derfra — aldrig blandet med et efterladt UserProfile-felt.
+  const dueDateStr = activeChild ? activeChild.due_date : activeProfile?.child_due_date;
   const currentWeek = dueDateStr ? getGestationalAge(dueDateStr)?.ordinal : null;
   const isPregnant = currentWeek !== null && currentWeek >= 4 && currentWeek <= 42;
 
