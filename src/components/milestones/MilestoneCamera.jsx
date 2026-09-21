@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Camera, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import TypeSticker from './TypeSticker';
+import MilestoneSticker, { drawMilestoneStickerOnCanvas } from './MilestoneSticker';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 // ── Canvas helpers ────────────────────────────────────────────────────────────
@@ -160,74 +160,12 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, subline, da
   ctx.restore();
 }
 
-function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
-  ctx.save();
-
-  // Skalér mærkatet efter billedets KORTESTE led (ikke bredde/højde blandet), så det
-  // fylder lige meget på et højkant- som på et tværformat-billede. Mindst 4% margin.
-  const base = Math.min(canvasW, canvasH);
-  const MARGIN = base * 0.04;
-
-  // Blød mørk forløbning over nederste del af billedet — teksten ligger på billedet, ikke i en boks
-  const gradHeight = Math.min(canvasH * 0.35, base * 0.55);
-  const gradY = canvasH - gradHeight;
-  const gradient = ctx.createLinearGradient(0, gradY, 0, canvasH);
-  gradient.addColorStop(0, 'rgba(0,0,0,0)');
-  gradient.addColorStop(1, 'rgba(0,0,0,0.72)');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, gradY, canvasW, gradHeight);
-
-  const PAD_X = MARGIN;
-  const maxWidth = canvasW - PAD_X * 2;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'alphabetic';
-
-  // Auto-fit headline i Cormorant Garamond, max 2 linjer
-  let headlineFs = base * 0.09;
-  let lines;
-  for (let fs = headlineFs; fs >= base * 0.045; fs -= base * 0.004) {
-    ctx.font = `500 ${fs}px 'Cormorant Garamond', serif`;
-    lines = wrapTextCanvas(ctx, headline, maxWidth);
-    if (lines.length <= 2) { headlineFs = fs; break; }
-  }
-
-  let dateFs = base * 0.042;
-  let lineH = headlineFs * 1.15;
-  let dateGap = base * 0.02;
-
-  // Sikrer at hele tekstblokken altid holder sig inden for billedet lodret —
-  // skalerer ned hvis den ellers ville blive skubbet uden for kanten (beskæring).
-  const totalBlockH = lines.length * lineH + dateGap + dateFs;
-  const availableH = canvasH - MARGIN * 2;
-  if (totalBlockH > availableH) {
-    const shrink = availableH / totalBlockH;
-    headlineFs *= shrink;
-    dateFs *= shrink;
-    lineH = headlineFs * 1.15;
-    dateGap *= shrink;
-  }
-
-  let y = canvasH - MARGIN - dateFs - dateGap - (lines.length - 1) * lineH;
-
-  ctx.fillStyle = '#FFFFFF';
-  lines.forEach((line) => {
-    ctx.font = `500 ${headlineFs}px 'Cormorant Garamond', serif`;
-    ctx.fillText(line, PAD_X, y);
-    y += lineH;
-  });
-
-  ctx.font = `400 ${dateFs}px 'Inter', sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText(dateStr, PAD_X, y + dateGap + dateFs * 0.75);
-
-  ctx.restore();
-}
-
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function MilestoneCamera({ frame, onClose }) {
   const { t, lang } = useLanguage();
   const videoRef = useRef(null);
+  const videoWrapRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
@@ -238,21 +176,25 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [cameraReady, setCameraReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [cameraError, setCameraError] = useState(null);
+  const [videoAspect, setVideoAspect] = useState(null);
+  const [videoWrapWidth, setVideoWrapWidth] = useState(0);
 
   const TODAY_STR = new Date().toLocaleDateString(lang === 'da' ? 'da-DK' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
 
-  // Load Caveat font into canvas context before drawing
-  const loadFont = async () => {
-    const font = new FontFace('Caveat', 'url(https://fonts.gstatic.com/s/caveat/v22/Qw3fZQtZyJ6M2scV61ZJ.woff2)');
-    try {
-      const loaded = await font.load();
-      document.fonts.add(loaded);
-    } catch (e) {
-      // fallback: use system cursive
-    }
-  };
+  // Måler videoboksens reelle bredde på skærmen, så MilestoneSticker kan
+  // regne størrelse/margin som procent af den samme bredde som canvas bruger.
+  useEffect(() => {
+    const el = videoWrapRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width;
+      if (w) setVideoWrapWidth(w);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [videoAspect, mode]);
 
   const startCamera = useCallback(async (facing = facingMode) => {
     if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
@@ -275,7 +217,11 @@ export default function MilestoneCamera({ frame, onClose }) {
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.onloadedmetadata = () => setCameraReady(true);
+        videoRef.current.onloadedmetadata = () => {
+          setCameraReady(true);
+          const v = videoRef.current;
+          if (v?.videoWidth && v?.videoHeight) setVideoAspect(v.videoWidth / v.videoHeight);
+        };
       }
     } catch (e) {
       setCameraError(e);
@@ -292,7 +238,6 @@ export default function MilestoneCamera({ frame, onClose }) {
   }, []);
 
   useEffect(() => {
-    loadFont();
     if (mode === 'camera') startCamera();
     else stopCamera();
     return () => stopCamera();
@@ -307,10 +252,11 @@ export default function MilestoneCamera({ frame, onClose }) {
   const MAX_WIDTH = 1600;
 
   const renderPhoto = async (drawSource) => {
-    await loadFont();
+    // Vent til skrivemaskineskriften er klar, så det gemte billede ikke bruger en reserveskrift.
+    if (document.fonts?.ready) await document.fonts.ready;
     const canvas = canvasRef.current;
     drawSource(canvas);
-    drawStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
+    drawMilestoneStickerOnCanvas(canvas.getContext('2d'), canvas.width, canvas.height, cleanHeadline, dateStr);
     setCapturedImage(canvas.toDataURL('image/jpeg', 0.9));
     setMode('preview');
     sendMilestoneNotification();
@@ -463,16 +409,22 @@ export default function MilestoneCamera({ frame, onClose }) {
             </div>
           ) : (
             <>
-              <video
-                ref={videoRef}
-                autoPlay playsInline muted
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
-              />
-
-              {/* Live sticker overlay */}
-              <div className="absolute bottom-28 left-5 pointer-events-none">
-                <TypeSticker headline={cleanHeadline} date={dateStr} size={200} />
+              {/* Videoboks — låst til kameraets rigtige billedformat (samme som det gemte billede),
+                  så stickeren står det samme sted i live-visning som i det gemte/delte billede. */}
+              <div className="flex-1 flex items-center justify-center overflow-hidden">
+                <div
+                  ref={videoWrapRef}
+                  className="relative"
+                  style={videoAspect ? { height: '100%', width: 'auto', maxWidth: '100%', aspectRatio: videoAspect } : { width: '100%', height: '100%' }}
+                >
+                  <video
+                    ref={videoRef}
+                    autoPlay playsInline muted
+                    className="absolute inset-0 w-full h-full object-contain"
+                    style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+                  />
+                  <MilestoneSticker headline={cleanHeadline} date={dateStr} width={videoWrapWidth} />
+                </div>
               </div>
 
               {/* Top bar — luk + label + galleri & vend kamera */}
