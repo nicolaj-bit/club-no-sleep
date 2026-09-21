@@ -163,8 +163,13 @@ function drawBalloonStickerOnCanvas(ctx, canvasW, canvasH, headline, subline, da
 function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   ctx.save();
 
-  // Blød mørk forløbning over nederste fjerdedel — teksten ligger på billedet, ikke i en boks
-  const gradHeight = canvasH * 0.3;
+  // Skalér mærkatet efter billedets KORTESTE led (ikke bredde/højde blandet), så det
+  // fylder lige meget på et højkant- som på et tværformat-billede. Mindst 4% margin.
+  const base = Math.min(canvasW, canvasH);
+  const MARGIN = base * 0.04;
+
+  // Blød mørk forløbning over nederste del af billedet — teksten ligger på billedet, ikke i en boks
+  const gradHeight = Math.min(canvasH * 0.35, base * 0.55);
   const gradY = canvasH - gradHeight;
   const gradient = ctx.createLinearGradient(0, gradY, 0, canvasH);
   gradient.addColorStop(0, 'rgba(0,0,0,0)');
@@ -172,26 +177,37 @@ function drawStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, gradY, canvasW, gradHeight);
 
-  const PAD_X = canvasW * 0.055;
+  const PAD_X = MARGIN;
   const maxWidth = canvasW - PAD_X * 2;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
 
   // Auto-fit headline i Cormorant Garamond, max 2 linjer
-  let headlineFs = canvasW * 0.065;
+  let headlineFs = base * 0.09;
   let lines;
-  for (let fs = headlineFs; fs >= canvasW * 0.035; fs -= canvasW * 0.003) {
+  for (let fs = headlineFs; fs >= base * 0.045; fs -= base * 0.004) {
     ctx.font = `500 ${fs}px 'Cormorant Garamond', serif`;
     lines = wrapTextCanvas(ctx, headline, maxWidth);
     if (lines.length <= 2) { headlineFs = fs; break; }
   }
 
-  const dateFs = canvasW * 0.032;
-  const lineH = headlineFs * 1.15;
-  const bottomPad = canvasH * 0.06;
-  const dateGap = canvasH * 0.018;
+  let dateFs = base * 0.042;
+  let lineH = headlineFs * 1.15;
+  let dateGap = base * 0.02;
 
-  let y = canvasH - bottomPad - dateFs - dateGap - (lines.length - 1) * lineH;
+  // Sikrer at hele tekstblokken altid holder sig inden for billedet lodret —
+  // skalerer ned hvis den ellers ville blive skubbet uden for kanten (beskæring).
+  const totalBlockH = lines.length * lineH + dateGap + dateFs;
+  const availableH = canvasH - MARGIN * 2;
+  if (totalBlockH > availableH) {
+    const shrink = availableH / totalBlockH;
+    headlineFs *= shrink;
+    dateFs *= shrink;
+    lineH = headlineFs * 1.15;
+    dateGap *= shrink;
+  }
+
+  let y = canvasH - MARGIN - dateFs - dateGap - (lines.length - 1) * lineH;
 
   ctx.fillStyle = '#FFFFFF';
   lines.forEach((line) => {

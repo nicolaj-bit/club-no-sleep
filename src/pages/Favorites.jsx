@@ -12,11 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import PageHeader from '@/components/ui/PageHeader';
 import { useListScrollRestoration } from '@/hooks/useListScrollRestoration';
+import MilestoneImageViewer from '@/components/favorites/MilestoneImageViewer';
 
 export default function Favorites() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [viewerIndex, setViewerIndex] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -62,6 +64,11 @@ export default function Favorites() {
   const typeLink = { product: 'ProductDetail', blog: 'BlogPost', article: 'ArticleDetail' };
   const stripCount = (label) => (label || '').replace(/\s*\([^)]*count[^)]*\)/gi, '').trim();
 
+  const openMilestoneViewer = (item) => {
+    const idx = milestoneFavorites.findIndex(f => f.id === item.id);
+    if (idx >= 0) setViewerIndex(idx);
+  };
+
   const FavoriteItem = ({ item }) => {
     const Icon = typeIcon[item.item_type] || FileText;
     const isMilestone = item.item_type === 'milestone';
@@ -88,7 +95,9 @@ export default function Favorites() {
         className="flex items-center gap-3 rounded-2xl p-3"
         style={{ background: 'var(--color-bg-card)' }}
       >
-        {isMilestone ? Thumb : <Link to={linkUrl} className="block flex-shrink-0">{Thumb}</Link>}
+        {isMilestone
+          ? <button onClick={() => openMilestoneViewer(item)} className="block flex-shrink-0" aria-label={item.item_title}>{Thumb}</button>
+          : <Link to={linkUrl} className="block flex-shrink-0">{Thumb}</Link>}
         <div className="flex-1 min-w-0">
           {isMilestone ? (
             <h3 className="text-sm font-medium line-clamp-2 leading-snug" style={{ color: 'var(--color-text-primary)' }}>
@@ -163,6 +172,14 @@ export default function Favorites() {
           </Tabs>
         )}
       </div>
+
+      {viewerIndex !== null && (
+        <MilestoneImageViewer
+          items={milestoneFavorites}
+          initialIndex={viewerIndex}
+          onClose={() => setViewerIndex(null)}
+        />
+      )}
     </div>
     </PullToRefresh>
   );
