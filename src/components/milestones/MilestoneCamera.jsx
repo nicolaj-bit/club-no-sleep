@@ -1,7 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Camera, AlertCircle } from 'lucide-react';
+import { ImageIcon, Download, Share2, RotateCcw, X, SwitchCamera, Camera, AlertCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import MilestoneSticker, { drawMilestoneStickerOnCanvas } from './MilestoneSticker';
+import { saveMilestonePhotoToLibrary } from '@/lib/savePhotoToLibrary';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 // ── Canvas helpers ────────────────────────────────────────────────────────────
@@ -317,16 +318,14 @@ export default function MilestoneCamera({ frame, onClose }) {
     toast.success(t.milestoneImageSaved);
   };
 
-  // Gem på enhed + gem i Favoritter (kategori 'Milepæle') via backend (RLS-workaround)
+  // Gem direkte i telefonens fotoalbum + gem i Favoritter (kategori 'Milepæle') via backend (RLS-workaround)
   const handleSave = async () => {
     if (saving) return;
     setSaving(true);
     try {
-      const a = document.createElement('a');
-      a.href = capturedImage;
-      a.download = `lalatoto-${frame.id}.jpg`;
-      a.click();
-    } catch (e) { /* enhedsgem er best-effort */ }
+      const saveDataUrl = canvasRef.current.toDataURL('image/jpeg', 0.92);
+      await saveMilestonePhotoToLibrary(saveDataUrl, { fileName: `club-no-sleep-milepael-${new Date().toISOString().slice(0, 10)}.jpg` });
+    } catch (e) { /* fejl/adgang er allerede vist til brugeren i saveMilestonePhotoToLibrary */ }
     try {
       const { base44 } = await import('@/api/base44Client');
       const blob = await (await fetch(capturedImage)).blob();
@@ -511,7 +510,7 @@ export default function MilestoneCamera({ frame, onClose }) {
                 className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium text-white disabled:opacity-50"
                 style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
               >
-                <Download className="w-5 h-5" />
+                {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
                 {saving ? t.saving : t.save}
               </button>
               <button
