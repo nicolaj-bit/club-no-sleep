@@ -35,6 +35,19 @@ function canvasWobblePath(ctx, cx, cy, r, seed) {
   ctx.closePath();
 }
 
+// Beregner samme udsnit som CSS object-fit: cover — beskærer kilden så den
+// matcher målformatet (skærmens format), centreret. Bruges til at gøre det
+// gemte billede identisk med det udsnit man ser i det fulde-skærm kamera.
+function getCoverCrop(srcW, srcH, targetAspect) {
+  const srcAspect = srcW / srcH;
+  if (srcAspect > targetAspect) {
+    const cropW = srcH * targetAspect;
+    return { cropX: (srcW - cropW) / 2, cropY: 0, cropW, cropH: srcH };
+  }
+  const cropH = srcW / targetAspect;
+  return { cropX: 0, cropY: (srcH - cropH) / 2, cropW: srcW, cropH };
+}
+
 function wrapTextCanvas(ctx, text, maxWidth) {
   const words = text.split(' ');
   const lines = [];
@@ -176,14 +189,13 @@ export default function MilestoneCamera({ frame, onClose }) {
   const [cameraReady, setCameraReady] = useState(false);
   const [saving, setSaving] = useState(false);
   const [cameraError, setCameraError] = useState(null);
-  const [videoAspect, setVideoAspect] = useState(null);
   const [videoWrapWidth, setVideoWrapWidth] = useState(0);
 
   const TODAY_STR = new Date().toLocaleDateString(lang === 'da' ? 'da-DK' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   const cleanHeadline = frame.headline.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').trim();
   const dateStr = TODAY_STR;
 
-  // Måler videoboksens reelle bredde på skærmen, så MilestoneSticker kan
+  // Måler den fulde-skærm videoboks' reelle bredde, så MilestoneSticker kan
   // regne størrelse/margin som procent af den samme bredde som canvas bruger.
   useEffect(() => {
     const el = videoWrapRef.current;
@@ -194,7 +206,7 @@ export default function MilestoneCamera({ frame, onClose }) {
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [videoAspect, mode]);
+  }, [mode]);
 
   const startCamera = useCallback(async (facing = facingMode) => {
     if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
@@ -217,11 +229,7 @@ export default function MilestoneCamera({ frame, onClose }) {
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.onloadedmetadata = () => {
-          setCameraReady(true);
-          const v = videoRef.current;
-          if (v?.videoWidth && v?.videoHeight) setVideoAspect(v.videoWidth / v.videoHeight);
-        };
+        videoRef.current.onloadedmetadata = () => setCameraReady(true);
       }
     } catch (e) {
       setCameraError(e);
@@ -262,19 +270,19 @@ export default function MilestoneCamera({ frame, onClose }) {
     sendMilestoneNotification();
   };
 
-  // Beholder billedets eget format — ingen kvadratisk beskæring. Nedskalerer kun
-  // via bredden (aldrig bredde+højde samtidig), så højden følger proportionalt med.
+  // Beskærer billedet til skærmens format (samme udsnit som object-fit: cover
+  // i det fulde-skærm kamera), så det gemte billede er præcis det man ser.
   const capturePhoto = () => {
     const video = videoRef.current;
     if (!video || !canvasRef.current) return;
-    const srcW = video.videoWidth;
-    const srcH = video.videoHeight;
-    const w = Math.min(srcW, MAX_WIDTH);
-    const h = Math.round(w * (srcH / srcW));
+    const targetAspect = window.innerWidth / window.innerHeight;
+    const { cropX, cropY, cropW, cropH } = getCoverCrop(video.videoWidth, video.videoHeight, targetAspect);
+    const w = Math.min(cropW, MAX_WIDTH);
+    const h = Math.round(w / targetAspect);
     canvasRef.current.width = w;
     canvasRef.current.height = h;
     const ctx = canvasRef.current.getContext('2d');
-    ctx.drawImage(video, 0, 0, srcW, srcH, 0, 0, w, h);
+    ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, w, h);
     renderPhoto(() => {}); // canvas already drawn
   };
 
@@ -286,12 +294,14 @@ export default function MilestoneCamera({ frame, onClose }) {
       const img = new Image();
       img.onload = () => {
         const canvas = canvasRef.current;
-        const w = Math.min(img.width, MAX_WIDTH);
-        const h = Math.round(w * (img.height / img.width));
+        const targetAspect = window.innerWidth / window.innerHeight;
+        const { cropX, cropY, cropW, cropH } = getCoverCrop(img.width, img.height, targetAspect);
+        const w = Math.min(cropW, MAX_WIDTH);
+        const h = Math.round(w / targetAspect);
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, w, h);
+        ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, w, h);
         renderPhoto(() => {});
       };
       img.src = ev.target.result;
@@ -409,23 +419,20 @@ export default function MilestoneCamera({ frame, onClose }) {
             </div>
           ) : (
             <>
-              {/* Videoboks — låst til kameraets rigtige billedformat (samme som det gemte billede),
-                  så stickeren står det samme sted i live-visning som i det gemte/delte billede. */}
-              <div className="flex-1 flex items-center justify-center overflow-hidden">
-                <div
-                  ref={videoWrapRef}
-                  className="relative"
-                  style={videoAspect ? { height: '100%', width: 'auto', maxWidth: '100%', aspectRatio: videoAspect } : { width: '100%', height: '100%' }}
-                >
-                  <video
-                    ref={videoRef}
-                    autoPlay playsInline muted
-                    className="absolute inset-0 w-full h-full object-contain"
-                    style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
-                  />
-                  <MilestoneSticker headline={cleanHeadline} date={dateStr} width={videoWrapWidth} />
-                </div>
+              {/* Video — fylder hele skærmen, object-fit: cover. Det gemte billede
+                  beskæres til samme udsnit, så stickeren ligger samme sted i alle tre visninger. */}
+              <div ref={videoWrapRef} className="absolute inset-0">
+                <video
+                  ref={videoRef}
+                  autoPlay playsInline muted
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+                />
+                <MilestoneSticker headline={cleanHeadline} date={dateStr} width={videoWrapWidth} />
               </div>
+
+              {/* Mørk gradient bag topbaren, så knapperne altid kan ses */}
+              <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0))' }} />
 
               {/* Top bar — luk + label + galleri & vend kamera */}
               <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-14 pb-4 safe-top">
@@ -442,6 +449,9 @@ export default function MilestoneCamera({ frame, onClose }) {
                   </button>
                 </div>
               </div>
+
+              {/* Mørk gradient bag udløserknappen */}
+              <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0))' }} />
 
               {/* Shutter — kun centreret udløser, overlay-tekst holdes fri */}
               <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pb-16 safe-bottom">
@@ -461,41 +471,36 @@ export default function MilestoneCamera({ frame, onClose }) {
 
       {/* ── PREVIEW MODE ── */}
       {mode === 'preview' && capturedImage && (
-        <div className="flex flex-col h-full" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="absolute inset-0">
+          {/* Billedet fylder hele skærmen — samme udsnit og sticker-placering som i kameraet, bagt ind i billedet */}
+          <img
+            src={capturedImage}
+            alt={t.milestoneAltMilestone}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Mørk gradient bag topbaren */}
+          <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0))' }} />
+
           {/* Top bar */}
-          <div className="flex items-center justify-between px-4 pt-14 pb-3 safe-top">
-            <button onClick={retake} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-              <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
+          <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 pt-14 pb-4 safe-top">
+            <button onClick={retake} aria-label={t.close} className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+              <X className="w-5 h-5 text-white" />
             </button>
-            <p className="font-display text-base font-medium" style={{ color: 'var(--color-text-primary)' }}>{frame.label}</p>
+            <p className="text-white font-semibold text-sm px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>{frame.label}</p>
             <div className="w-10" />
           </div>
 
-          {/* Billedvisning — fylder al plads mellem header og knapper, altid mørk baggrund */}
-          <div className="flex-1 min-h-0" style={{ padding: 12, backgroundColor: '#050505' }}>
-            <img
-              src={capturedImage}
-              alt={t.milestoneAltMilestone}
-              className="w-full h-full object-contain"
-            />
-          </div>
+          {/* Mørk gradient bag handlingsknapperne */}
+          <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))' }} />
 
-          {/* Dele-panel i appens palet */}
-          <div
-            className="px-5 pb-10 pt-5 safe-bottom"
-            style={{
-              backgroundColor: 'var(--color-bg-card)',
-              borderTopLeftRadius: 28,
-              borderTopRightRadius: 28,
-              boxShadow: '0 -10px 30px rgba(0,0,0,0.08)',
-            }}
-          >
-            {/* Primære handlinger — ensartet række */}
+          {/* Handlingsknapper — retake / gem / del */}
+          <div className="absolute bottom-0 left-0 right-0 px-5 pb-10 safe-bottom">
             <div className="grid grid-cols-3 gap-2.5">
               <button
                 onClick={retake}
-                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium"
-                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium text-white"
+                style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
               >
                 <RotateCcw className="w-5 h-5" />
                 {t.milestoneTryAgain}
@@ -503,8 +508,8 @@ export default function MilestoneCamera({ frame, onClose }) {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium disabled:opacity-50"
-                style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)' }}
+                className="h-16 rounded-2xl flex flex-col items-center justify-center gap-1 text-xs font-medium text-white disabled:opacity-50"
+                style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
               >
                 <Download className="w-5 h-5" />
                 {saving ? t.saving : t.save}

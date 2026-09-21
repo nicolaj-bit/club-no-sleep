@@ -1,9 +1,10 @@
 /**
  * MilestoneSticker — ÉN fælles kilde til milepæls-stickeren:
- * sorte kasser med hvid skrivemaskineskrift, headline i første kasse,
- * dato i næste. Alt regnes som procent af billedets/videoens bredde,
- * så den ser ens ud i live-kameraet, i forhåndsvisningen (bagt ind i
- * billedet) og i det gemte/delte billede.
+ * sorte kasser (#000, ingen runde hjørner) med hvid skrivemaskineskrift,
+ * headline i første kasse, dato i en mindre kasse under. Alt regnes som
+ * procent af billedets bredde (tekst/kasser) og højde (bundmargin), så
+ * stickeren ser ens ud og ligger samme sted i live-kameraet, i
+ * forhåndsvisningen og i det gemte/delte billede.
  *
  * `computeStickerLayout` er den delte geometri-udregning.
  * `drawMilestoneStickerOnCanvas` bruger den til at tegne på canvas (capture/gem/del).
@@ -14,10 +15,14 @@ import React from 'react';
 export const STICKER_FONT = "'Courier New', Courier, monospace";
 const CHAR_W = 0.6; // ca. tegnbredde-ratio for monospace-skrift
 
+const MARGIN_X_RATIO = 0.05; // venstre margin, % af bredde
+// Bundmargin er % af HØJDE — holder stickeren over udløser/handlingsknapperne,
+// som altid ligger i samme relative afstand fra skærmens bund.
+export const MARGIN_BOTTOM_RATIO = 0.22;
+
 const RATIOS = {
-  margin: 0.05,
   headlineFontSize: 0.042,
-  dateFontSize: 0.034,
+  dateFontSize: 0.032,
   padX: 0.022,
   padY: 0.016,
   gap: 0.012,
@@ -42,7 +47,6 @@ function wrapText(text, maxChars) {
 }
 
 export function computeStickerLayout(width, headline, date) {
-  const margin = width * RATIOS.margin;
   const headlineFs = width * RATIOS.headlineFontSize;
   const dateFs = width * RATIOS.dateFontSize;
   const padX = width * RATIOS.padX;
@@ -69,7 +73,6 @@ export function computeStickerLayout(width, headline, date) {
     : null;
 
   return {
-    margin,
     gap,
     headline: { lines, fontSize: headlineFs, lineHeight, padX, padY, boxWidth: headlineBoxWidth, boxHeight: headlineBoxHeight },
     date: dateBox,
@@ -79,11 +82,13 @@ export function computeStickerLayout(width, headline, date) {
 // ── Canvas — bruges ved capture/gem/del ─────────────────────────────────────
 export function drawMilestoneStickerOnCanvas(ctx, canvasW, canvasH, headline, dateStr) {
   const layout = computeStickerLayout(canvasW, headline, dateStr);
-  const { margin, gap, headline: h, date: d } = layout;
+  const { gap, headline: h, date: d } = layout;
 
+  const marginX = canvasW * MARGIN_X_RATIO;
+  const marginBottom = canvasH * MARGIN_BOTTOM_RATIO;
   const totalHeight = h.boxHeight + (d ? gap + d.boxHeight : 0);
-  const x = margin;
-  let y = canvasH - margin - totalHeight;
+  const x = marginX;
+  let y = canvasH - marginBottom - totalHeight;
 
   ctx.save();
   ctx.textBaseline = 'alphabetic';
@@ -114,10 +119,20 @@ export function drawMilestoneStickerOnCanvas(ctx, canvasW, canvasH, headline, da
 export default function MilestoneSticker({ headline, date, width }) {
   if (!width || !headline) return null;
   const layout = computeStickerLayout(width, headline, date);
-  const { margin, gap, headline: h, date: d } = layout;
+  const { gap, headline: h, date: d } = layout;
+  const marginX = width * MARGIN_X_RATIO;
 
   return (
-    <div className="absolute" style={{ left: margin, bottom: margin, display: 'flex', flexDirection: 'column', gap }}>
+    <div
+      className="absolute"
+      style={{
+        left: marginX,
+        bottom: `calc(${MARGIN_BOTTOM_RATIO * 100}% + env(safe-area-inset-bottom, 0px))`,
+        display: 'flex',
+        flexDirection: 'column',
+        gap,
+      }}
+    >
       <div style={{ backgroundColor: '#000', width: h.boxWidth, paddingLeft: h.padX, paddingTop: h.padY, paddingBottom: h.padY, boxSizing: 'border-box' }}>
         {h.lines.map((line, i) => (
           <p
