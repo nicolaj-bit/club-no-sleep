@@ -44,7 +44,11 @@ const getAppParams = () => {
 		token: getAppParamValue("access_token", { removeFromUrl: true }),
 		fromUrl: getAppParamValue("from_url", { defaultValue: window.location.href }),
 		functionsVersion: getAppParamValue("functions_version", { defaultValue: import.meta.env.VITE_BASE44_FUNCTIONS_VERSION }),
-		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || "https://clubnosleep.com" }),
+		// appBaseUrl bruges af getWebAppUrl i src/lib/nativeAuth.js, når native-appen sender
+		// brugeren ud i systembrowseren for at logge ind. clubnosleep.com bliver en
+		// Shopify-butik — peger reserveværdien stadig derhen, lander brugeren i butikken
+		// i stedet for i appen. Derfor er reserveværdien ændret til den publicerede app-URL.
+		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || "https://lalatoto.base44.app" }),
 	}
 }
 
