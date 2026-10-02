@@ -1,15 +1,15 @@
 {
   "name": "Kalender motor (daglig)",
-  "description": "Sender alle kalendernotifikationer: graviditetsuger, aldersmilep\u00e6le, tigerspring, milep\u00e6le og brugerens egne aftaler. K\u00f8rer dagligt. Kalder den f\u00e6lles notificationEngine (standard t\u00f8r-tilstand, ingen afsendelse f\u00f8r aktivering).",
+  "description": "Sender alle kalendernotifikationer: graviditetsuger, aldersmilep\u00e6le, tigerspring, milep\u00e6le og brugerens egne aftaler. K\u00f8rer dagligt kl. 09:00 dansk tid. Kalder den f\u00e6lles notificationEngine (standard t\u00f8r-tilstand, ingen afsendelse f\u00f8r aktivering).",
   "trigger": {
     "condition": null,
     "config": {
       "trigger_type": "scheduled",
       "events": [],
       "schedule_mode": "recurring",
-      "cron_expression": "0 8 * * *",
+      "cron_expression": "0 9 * * *",
       "one_time_date": null,
-      "timezone": "UTC",
+      "timezone": "Europe/Copenhagen",
       "interval_value": null,
       "interval_unit": null,
       "interval_anchor": null,

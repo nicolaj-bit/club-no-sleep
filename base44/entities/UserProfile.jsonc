@@ -116,12 +116,17 @@
     },
     "last_notified_pregnancy_week": {
       "type": "number",
-      "description": "Sidste graviditetsuge der er sendt 'ny uge'-notifikation for (idempotens)"
+      "description": "Udg\u00e5et: Sidste graviditetsuge der er sendt notifikation for (nu h\u00e5ndteres af NotificationLog)"
     },
     "notif_calendar_reminder": {
       "type": "boolean",
       "default": true,
       "description": "Kalender p\u00e5mindelser"
+    },
+    "notif_partner_calendar": {
+      "type": "boolean",
+      "default": true,
+      "description": "Besked n\u00e5r min partner \u00e6ndrer i kalenderen"
     },
     "notif_sleep_encouragement": {
       "type": "boolean",

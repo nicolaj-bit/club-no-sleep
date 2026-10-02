@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, parseISO, isToday, isValid } from 'date-fns';
 import { da, enUS } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight, Plus, X, Clock, Trash2, Bell } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -52,7 +52,8 @@ export default function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [form, setForm] = useState({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false, child_id: '' });
 
   const CATEGORIES = [
     { key: 'jordemoder', label: lang === 'en' ? 'Midwife' : 'Jordemoder', color: '#C29A73' },
@@ -79,6 +80,43 @@ export default function Calendar() {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
+  // Åbn kalenderen på en bestemt dag via ?date=YYYY-MM-DD (fra partnernotifikation)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const d = params.get('date');
+    if (d) {
+      const parsed = parseISO(d);
+      if (isValid(parsed)) {
+        setSelectedDay(parsed);
+        setCurrentMonth(parsed);
+      }
+    }
+  }, []);
+
+  const notifyPartner = async (action, event, oldStartDatetime) => {
+    if (!event) return;
+    try {
+      await base44.functions.invoke('notifyCalendarPartnerChange', { action, event, oldStartDatetime });
+    } catch (e) {
+      console.warn('notifyCalendarPartnerChange fejlede:', e);
+    }
+  };
+
+  const openEdit = (item) => {
+    setEditingEvent(item);
+    setForm({
+      title: item.title || '',
+      description: item.description || '',
+      start_datetime: item.start_datetime ? format(parseISO(item.start_datetime), "yyyy-MM-dd'T'HH:mm") : '',
+      end_datetime: item.end_datetime ? format(parseISO(item.end_datetime), "yyyy-MM-dd'T'HH:mm") : '',
+      category: item.category || 'andet',
+      notify_day_before: item.notify_day_before !== false,
+      notify_30min_before: item.notify_30min_before === true,
+      child_id: item.child_id || ''
+    });
+    setShowForm(true);
+  };
+
   const { data: events = [] } = useQuery({
     queryKey: ['calendarEvents', user?.email],
     queryFn: () => base44.entities.CalendarEvent.filter({ user_email: user.email }, 'start_datetime'),
@@ -103,27 +141,52 @@ export default function Calendar() {
         queryClient.invalidateQueries(['calendarEvents', user?.email]);
       }
       setShowForm(false);
-      setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false });
+      setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false, child_id: '' });
       toast.success(t.eventCreated);
       await addToNativeCalendar({ ...variables, user_email: user?.email || '' });
+      await notifyPartner('created', savedEvent);
+    }
+  });
+
+  const updateEvent = useMutation({
+    mutationFn: async ({ id, data }) => {
+      if (isInvited) {
+        const result = await base44.functions.invoke('updateInvitedCalendarEvent', { event_id: id, eventData: data });
+        return result?.data?.event || result?.event;
+      }
+      return base44.entities.CalendarEvent.update(id, data);
+    },
+    onSuccess: async (updatedEvent, { oldStartDatetime }) => {
+      if (isInvited) {
+        refreshInviteData();
+      } else {
+        queryClient.invalidateQueries(['calendarEvents', user?.email]);
+      }
+      setShowForm(false);
+      setEditingEvent(null);
+      setForm({ title: '', description: '', start_datetime: '', end_datetime: '', category: 'andet', notify_day_before: true, notify_30min_before: false, child_id: '' });
+      toast.success(lang === 'en' ? 'Appointment updated' : 'Aftale opdateret');
+      await notifyPartner('updated', updatedEvent, oldStartDatetime);
     }
   });
 
   const deleteEvent = useMutation({
-    mutationFn: async (id) => {
+    mutationFn: async (item) => {
       if (isInvited) {
-        await base44.functions.invoke('deleteInvitedCalendarEvent', { event_id: id });
-        return;
+        await base44.functions.invoke('deleteInvitedCalendarEvent', { event_id: item.id });
+        return item;
       }
-      return base44.entities.CalendarEvent.delete(id);
+      await base44.entities.CalendarEvent.delete(item.id);
+      return item;
     },
-    onSuccess: () => {
+    onSuccess: (item) => {
       if (isInvited) {
         refreshInviteData();
       } else {
         queryClient.invalidateQueries(['calendarEvents', user?.email]);
       }
       toast.success(t.eventDeleted);
+      notifyPartner('deleted', item);
     }
   });
 
@@ -208,12 +271,17 @@ export default function Calendar() {
       toast.error(t.fillTitleAndTime);
       return;
     }
-    createEvent.mutate(form);
+    if (editingEvent) {
+      updateEvent.mutate({ id: editingEvent.id, data: form, oldStartDatetime: editingEvent.start_datetime });
+    } else {
+      createEvent.mutate(form);
+    }
   };
 
   const prefillTime = () => {
     const d = format(selectedDay, 'yyyy-MM-dd');
-    setForm((f) => ({ ...f, start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00`, category: 'andet', notify_day_before: true, notify_30min_before: false }));
+    setEditingEvent(null);
+    setForm({ title: '', description: '', start_datetime: `${d}T09:00`, end_datetime: `${d}T10:00`, category: 'andet', notify_day_before: true, notify_30min_before: false, child_id: '' });
     setShowForm(true);
   };
 
@@ -361,7 +429,7 @@ export default function Calendar() {
                   key={item.id || `dyn-${idx}`}
                   className={`flex items-start gap-3 rounded-2xl p-4 border ${isDynamic ? 'cursor-pointer active:opacity-70' : ''}`}
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}
-                  onClick={() => isDynamic && handleItemClick(item)}
+                  onClick={() => isUserEvent ? openEdit(item) : handleItemClick(item)}
                 >
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                     <span className="w-3 h-3 rounded-full" style={{ backgroundColor: getItemColor(item) }} />
@@ -394,7 +462,7 @@ export default function Calendar() {
                   </div>
                   {isUserEvent && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); deleteEvent.mutate(item.id); }}
+                      onClick={(e) => { e.stopPropagation(); deleteEvent.mutate(item); }}
                       className="p-1.5 rounded-lg active:opacity-60"
                       style={{ color: 'var(--color-text-muted)' }}>
                       <Trash2 className="w-4 h-4" />
@@ -429,7 +497,7 @@ export default function Calendar() {
             style={{ backgroundColor: 'var(--color-bg-card)', maxHeight: '92dvh', paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}>
 
               <div className="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0">
-                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.newEvent}</h3>
+                <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>{editingEvent ? (lang === 'en' ? 'Edit appointment' : 'Rediger aftale') : t.newEvent}</h3>
                 <button onClick={() => setShowForm(false)}>
                   <X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} />
                 </button>
@@ -488,6 +556,39 @@ export default function Calendar() {
                   placeholder={t.eventDescPlaceholder}
                   style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }} />
                 </div>
+                {children.length > 0 && (
+                <div className="!space-y-1.5">
+                  <Label style={{ color: 'var(--color-text-primary)' }}>{lang === 'en' ? 'Child (optional)' : 'Barn (valgfrit)'}</Label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, child_id: '' }))}
+                      className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                      style={!form.child_id
+                        ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
+                        : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}>
+                      {lang === 'en' ? 'None' : 'Ingen'}
+                    </button>
+                    {children.map((c) => {
+                      const active = form.child_id === c.id;
+                      const color = getChildColor(children, c.id);
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setForm((f) => ({ ...f, child_id: c.id }))}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5"
+                          style={active
+                            ? { background: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }
+                            : { backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}>
+                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                          {c.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                )}
                 <div className="rounded-2xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                   <p className="text-xs font-semibold uppercase tracking-wide flex items-center gap-1.5" style={{ color: 'var(--color-text-muted)' }}>
                     <Bell className="w-3.5 h-3.5" /> {lang === 'da' ? 'Notifikationer' : 'Notifications'}
@@ -516,8 +617,8 @@ export default function Calendar() {
                 type="submit"
                 className="w-full h-12 rounded-xl font-semibold"
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
-                disabled={createEvent.isPending}>
-                  {createEvent.isPending ? t.saving : t.saveEvent}
+                disabled={createEvent.isPending || updateEvent.isPending}>
+                  {(createEvent.isPending || updateEvent.isPending) ? t.saving : (editingEvent ? (lang === 'en' ? 'Save changes' : 'Gem ændringer') : t.saveEvent)}
                 </Button>
               </form>
               </div>

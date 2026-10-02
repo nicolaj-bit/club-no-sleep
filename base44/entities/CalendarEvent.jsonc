@@ -45,6 +45,10 @@
       "default": "andet",
       "description": "Aftalekategori"
     },
+    "child_id": {
+      "type": "string",
+      "description": "Valgfrit: barn aftalen knytter sig til (for navn i partnernotifikation)"
+    },
     "notify_day_before": {
       "type": "boolean",
       "default": true,

@@ -43,12 +43,14 @@ export default function Settings() {
   const [profile, setProfile] = useState(null);
   const [termsOpen, setTermsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [hasPartner, setHasPartner] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     wonderweeks_notifications: true,
     notif_pregnancy_weekly: true,
     notif_calendar_reminder: true,
     notif_sleep_encouragement: true,
     notif_blog_new: true,
+    notif_partner_calendar: true,
     auto_light_enabled: false
   });
   const [notifSaving, setNotifSaving] = useState(false);
@@ -72,8 +74,20 @@ export default function Settings() {
             notif_calendar_reminder: p.notif_calendar_reminder !== false,
             notif_sleep_encouragement: p.notif_sleep_encouragement !== false,
             notif_blog_new: p.notif_blog_new !== false,
+            notif_partner_calendar: p.notif_partner_calendar !== false,
             auto_light_enabled: p.auto_light_enabled === true
           });
+          // Find ud af om brugeren har en partner (accepteret invitation)
+          if (p.is_invited) {
+            setHasPartner(true);
+          } else {
+            try {
+              const invites = await base44.entities.FamilyInvite.filter({ inviter_email: u.email });
+              setHasPartner((invites || []).some((i) => i.status === 'accepted'));
+            } catch {
+              setHasPartner(false);
+            }
+          }
         }
       } catch {
         showInAppLogin('/Settings');
@@ -355,6 +369,25 @@ export default function Settings() {
               }} />
             
             </div>
+          )}
+          {hasPartner && (
+          <div className="border-t pt-4 mt-2" style={{ borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Besked når min partner ændrer i kalenderen</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Få besked når din partner tilføjer, flytter eller sletter en aftale</p>
+              </div>
+              <Switch
+                checked={notifPrefs.notif_partner_calendar}
+                onCheckedChange={async (val) => {
+                  setNotifPrefs((prev) => ({ ...prev, notif_partner_calendar: val }));
+                  if (profile?.id) {
+                    await base44.entities.UserProfile.update(profile.id, { notif_partner_calendar: val });
+                  }
+                }}
+              />
+            </div>
+          </div>
           )}
           {/* Auto light setting — 'Et lys i mørket' */}
           <div className="border-t pt-4 mt-2" style={{ borderColor: 'var(--color-border)' }}>

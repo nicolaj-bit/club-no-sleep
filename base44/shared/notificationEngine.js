@@ -360,3 +360,124 @@ export async function backfillNotificationLog(base44) {
   console.log(`[backfillNotificationLog] Oprettet ${created} log-rækker ud fra gamle markører.`);
   return Response.json({ success: true, created, profiles: profiles.length, children: children.length, withLeapMarker: children.filter((c) => typeof c.last_notified_leap === 'number').length, withPregnancyMarker: profiles.filter((p) => typeof p.last_notified_pregnancy_week === 'number').length });
 }
+
+// ============================================================================
+// PARTNER-NOTIFIKATION VED KALENDERAFTALE-ÆNDRING
+// ----------------------------------------------------------------------------
+// Når en bruger opretter, ændrer eller sletter en aftale, får den ANDEN
+// familiemedlem (partneren) en notifikation. Aktøren selv får ingenting.
+//
+// Idempotens via NotificationLog:
+//   - created/deleted: key = appointment-<id>-<action>-<partnerId> blokerer
+//     for altid (én begivenhed).
+//   - updated: samme key, men kun blokeret hvis en log-række findes inden for
+//     de seneste 5 minutter (punkt 8) — ellers sendes igen og logges på ny.
+//
+// Afsendes kun hvis partneren findes (delt family_id) og partneren ikke har
+// slået `notif_partner_calendar` fra (standard til).
+// ============================================================================
+
+async function findPartner(base44, actorEmail) {
+  const actorRows = await base44.asServiceRole.entities.UserProfile.filter({ user_email: actorEmail });
+  const actor = actorRows?.[0];
+  if (!actor || !actor.family_id) return null;
+  const family = await base44.asServiceRole.entities.UserProfile.filter({ family_id: actor.family_id });
+  return (family || []).find((p) => p.user_email && p.user_email !== actorEmail) || null;
+}
+
+async function isLoggedEver(base44, key) {
+  const rows = await base44.asServiceRole.entities.NotificationLog.filter({ key });
+  return Array.isArray(rows) && rows.length > 0;
+}
+
+async function isLoggedRecent(base44, key, withinMs) {
+  const rows = await base44.asServiceRole.entities.NotificationLog.filter({ key });
+  if (!Array.isArray(rows) || rows.length === 0) return false;
+  const cutoff = Date.now() - withinMs;
+  return rows.some((r) => { try { return new Date(r.sentAt).getTime() > cutoff; } catch { return false; } });
+}
+
+function formatDayDa(dtStr) {
+  try {
+    return new Date(dtStr).toLocaleDateString('da-DK', { weekday: 'long', timeZone: 'Europe/Copenhagen' }).toLowerCase();
+  } catch { return ''; }
+}
+function formatTimeDa(dtStr) {
+  try {
+    return new Date(dtStr).toLocaleTimeString('da-DK', { hour: 'numeric', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
+  } catch { return ''; }
+}
+function formatDateParam(dtStr) {
+  try {
+    return new Date(dtStr).toLocaleDateString('sv-SE', { timeZone: 'Europe/Copenhagen' });
+  } catch { return ''; }
+}
+
+export async function notifyCalendarPartnerChange(base44, { action, event, oldStartDatetime } = {}) {
+  try {
+    if (!event || !event.id) return Response.json({ skipped: true, reason: 'no event' });
+    if (!['created', 'updated', 'deleted'].includes(action)) {
+      return Response.json({ skipped: true, reason: 'invalid action' });
+    }
+
+    let me = null;
+    try { me = await base44.auth.me(); } catch {}
+    if (!me || !me.email) return Response.json({ skipped: true, reason: 'no auth' });
+    const actorEmail = me.email;
+
+    const partner = await findPartner(base44, actorEmail);
+    if (!partner) return Response.json({ skipped: true, reason: 'no partner' });
+    if (partner.notif_partner_calendar === false) return Response.json({ skipped: true, reason: 'partner opt-out' });
+
+    const actorRows = await base44.asServiceRole.entities.UserProfile.filter({ user_email: actorEmail });
+    const actorProfile = actorRows?.[0];
+    const actorName = (actorProfile && (actorProfile.display_name || actorProfile.username)) || 'Din partner';
+
+    let childName = null;
+    if (event.child_id) {
+      try {
+        const child = await base44.asServiceRole.entities.Child.get(event.child_id);
+        if (child && child.name) childName = child.name;
+      } catch {}
+    }
+    const childSuffix = childName ? ` for ${childName}` : '';
+
+    const title = event.title || 'Aftale';
+    const day = formatDayDa(event.start_datetime);
+    const time = formatTimeDa(event.start_datetime);
+    const dateParam = formatDateParam(event.start_datetime);
+    const link = `/Calendar?date=${dateParam}`;
+    const partnerId = partner.id;
+    const key = `appointment-${event.id}-${action}-${partnerId}`;
+
+    if (action === 'created' || action === 'deleted') {
+      if (await isLoggedEver(base44, key)) return Response.json({ skipped: true, reason: 'already logged', key });
+    } else {
+      if (await isLoggedRecent(base44, key, 5 * 60 * 1000)) return Response.json({ skipped: true, reason: 'deduped 5min', key });
+    }
+
+    let message;
+    if (action === 'created') {
+      message = `${actorName} har tilføjet: ${title}${childSuffix}, ${day} kl. ${time}`;
+    } else if (action === 'updated') {
+      const moved = oldStartDatetime && event.start_datetime &&
+        new Date(oldStartDatetime).getTime() !== new Date(event.start_datetime).getTime();
+      message = moved
+        ? `${actorName} har flyttet: ${title}${childSuffix} til ${day} kl. ${time}`
+        : `${actorName} har ændret: ${title}${childSuffix}, ${day} kl. ${time}`;
+    } else {
+      message = `${actorName} har slettet: ${title}${childSuffix}, ${day}`;
+    }
+
+    // Log FØR afsendelse (race-beskyttelse).
+    await base44.asServiceRole.entities.NotificationLog.create({ profilId: partnerId, childId: event.child_id || null, type: 'appointment', key, sentAt: new Date().toISOString() });
+    await base44.asServiceRole.entities.AppNotification.create({ title: 'Kalender', message, link, target_emails: [partner.user_email], published_at: new Date().toISOString() });
+    await sendPush(partner.user_email, 'Kalender', message, link);
+
+    console.log(`[notifyCalendarPartnerChange] ${action}/${key} → ${partner.user_email}: ${message}`);
+    return Response.json({ success: true, action, partner: partner.user_email, key, message });
+  } catch (error) {
+    console.error('[notifyCalendarPartnerChange] Fejl:', error.message);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}
