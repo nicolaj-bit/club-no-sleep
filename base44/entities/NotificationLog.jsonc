@@ -1,0 +1,55 @@
+{
+  "name": "NotificationLog",
+  "type": "object",
+  "properties": {
+    "profilId": {
+      "type": "string",
+      "description": "Ejerens UserProfile-ID"
+    },
+    "childId": {
+      "type": "string",
+      "description": "Barnets Child-ID. Null for kontobegivenheder."
+    },
+    "type": {
+      "type": "string",
+      "description": "Begivenhedstype: wonderweek, pregnancy-week, termin, age-milestone, birthday, pregnancy-milestone"
+    },
+    "key": {
+      "type": "string",
+      "description": "Forudsigelig entydig noegle, fx wonderweek-5, pregnancy-week-24, termin, age-6m, preg-12"
+    },
+    "sentAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tidspunkt for afsendelse"
+    }
+  },
+  "required": [
+    "profilId",
+    "type",
+    "key",
+    "sentAt"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
