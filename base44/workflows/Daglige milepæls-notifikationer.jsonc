@@ -1,6 +1,6 @@
 {
   "name": "Daglige milep\u00e6ls-notifikationer",
-  "description": "",
+  "description": "Kaldte tidligere checkMilestoneNotifications. Kalder nu den f\u00e6lles notificationEngine (inaktiv \u2014 overfl\u00f8dig daglig k\u00f8rsel).",
   "trigger": {
     "condition": null,
     "config": {
@@ -30,7 +30,7 @@
         "run_function": {
           "call": "invoke_backend_function",
           "with": {
-            "function_name": "checkMilestoneNotifications",
+            "function_name": "notificationEngine",
             "args": {}
           },
           "then": "end"

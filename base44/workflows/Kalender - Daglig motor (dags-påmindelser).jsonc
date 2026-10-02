@@ -1,6 +1,6 @@
 {
   "name": "Kalender - Daglig motor (dags-p\u00e5mindelser)",
-  "description": "K\u00f8rer dagligt kl 08:00 \u2014 sender notifikationer for aftaler i dag og i morgen, plus graviditetsuger, tigerspring og milep\u00e6le.",
+  "description": "K\u00f8rer dagligt \u2014 sender notifikationer for aftaler i dag og i morgen, plus graviditetsuger, tigerspring og milep\u00e6le. Kalder nu den f\u00e6lles notificationEngine (standard t\u00f8r-tilstand, ingen afsendelse f\u00f8r aktivering).",
   "trigger": {
     "condition": null,
     "config": {
@@ -30,7 +30,7 @@
         "run_function": {
           "call": "invoke_backend_function",
           "with": {
-            "function_name": "calendarEngine",
+            "function_name": "notificationEngine",
             "args": {}
           },
           "then": "end"
