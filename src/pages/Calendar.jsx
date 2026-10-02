@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useActiveChild } from '@/components/ui/ActiveChildContext';
+import { getChildColor } from '@/lib/childColor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,8 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
-import { getDynamicItemsForDay, getCalendarMode, getPregnancyWeek, getBabyAgeInMonths } from '@/components/calendar/calendarUtils';
-import { WONDER_WEEKS, getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
+import { getDynamicItemsForDay } from '@/components/calendar/calendarUtils';
 
 const isCapacitor = typeof window !== 'undefined' && !!window.Capacitor;
 
@@ -45,7 +45,7 @@ export default function Calendar() {
   const { t, lang } = useLanguage();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const { isInvited, inviterCalendarEvents, refresh: refreshInviteData } = useInviteAccess();
-  const { activeChild } = useActiveChild();
+  const { children } = useActiveChild();
   const navigate = useNavigate();
   const dateLocale = lang === 'en' ? enUS : da;
   const [user, setUser] = useState(null);
@@ -69,11 +69,8 @@ export default function Calendar() {
 
   const getCategoryColor = (cat) => CATEGORIES.find(c => c.key === cat)?.color ?? '#B7A79A';
   const getItemColor = (item) => {
+    if (item.childColor) return item.childColor;
     if (item.id) return getCategoryColor(item.category);
-    if (item.type === 'pregnancy_week') return '#C29A73';
-    if (item.type === 'wonder_week') return '#8B5E3C';
-    if (item.type === 'age_milestone') return '#D8B89A';
-    if (item.type === 'birthday') return '#B08D72';
     return '#B7A79A';
   };
   const queryClient = useQueryClient();
@@ -130,32 +127,73 @@ export default function Calendar() {
     }
   });
 
-  // Determine dates from active child or user profile
-  const dueDate = activeChild?.due_date || user?.child_due_date;
-  const birthDate = activeChild?.birthdate || user?.child_birthdate;
-  const calendarMode = getCalendarMode(dueDate, birthDate);
+  // Multi-child calendar: dynamic items are built for every child on the
+  // account, each tagged with the child's name and fixed colour. The filter
+  // is local to the calendar — it never changes the active child used in the
+  // rest of the app.
+  const [filterChild, setFilterChild] = useState('all');
+  const showFilter = children.length > 1;
+  const showNameLabels = children.length > 1;
 
-  // Calculate dynamic items for any given day
-  const dynamicItemsOnDay = (day) => {
-    return getDynamicItemsForDay(dueDate, birthDate, day);
+  // Per-child dynamic items (pregnancy weeks, wonder weeks, age milestones,
+  // birthdays) for a given day, plus the due date itself for an unborn child.
+  const childItemsForDay = (day) => {
+    const items = [];
+    for (const child of children) {
+      const color = getChildColor(children, child.id);
+      for (const d of getDynamicItemsForDay(child.due_date, child.birthdate, day)) {
+        items.push({ ...d, childId: child.id, childName: child.name, childColor: color });
+      }
+      if (child.due_date && !child.birthdate) {
+        const dueD = new Date(child.due_date); dueD.setHours(0, 0, 0, 0);
+        const tgt = new Date(day); tgt.setHours(0, 0, 0, 0);
+        if (isSameDay(dueD, tgt)) {
+          items.push({
+            type: 'due_date',
+            title: lang === 'en' ? 'Due date' : 'Termin',
+            headline: lang === 'en' ? 'Due date today' : 'Termin i dag',
+            message: lang === 'en' ? 'Today is your due date.' : 'I dag er jeres terminsdato.',
+            link: '/PregnancyWeeks',
+            childId: child.id, childName: child.name, childColor: color,
+          });
+        }
+      }
+    }
+    return items;
   };
 
-  // All items on a day (user events + dynamic)
-  const allItemsOnDay = (day) => {
-    const userEvents = allEvents.filter((e) => {
-      const start = parseISO(e.start_datetime);
-      if (isSameDay(start, day)) return true;
-      if (e.end_datetime) {
-        const end = parseISO(e.end_datetime);
-        const d = new Date(day.getFullYear(), day.getMonth(), day.getDate());
-        const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-        const en = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-        return d >= s && d <= en;
-      }
-      return false;
-    });
-    const dynamic = dynamicItemsOnDay(day);
-    return [...userEvents, ...dynamic];
+  const userEventsOnDay = (day) => allEvents.filter((e) => {
+    const start = parseISO(e.start_datetime);
+    if (isSameDay(start, day)) return true;
+    if (e.end_datetime) {
+      const end = parseISO(e.end_datetime);
+      const d = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+      const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const en = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+      return d >= s && d <= en;
+    }
+    return false;
+  });
+
+  const filteredChildItemsForDay = (day) => {
+    let items = childItemsForDay(day);
+    if (filterChild !== 'all') items = items.filter((i) => i.childId === filterChild);
+    return items;
+  };
+
+  // All items on a day: appointments (account-level, always shown) + per-child
+  // dynamic items (filtered by the local calendar filter).
+  const allItemsOnDay = (day) => [...userEventsOnDay(day), ...filteredChildItemsForDay(day)];
+
+  // Distinct children with activity on a day — drives the month-view dots.
+  const childDotsForDay = (day) => {
+    const items = filteredChildItemsForDay(day);
+    const ids = []; const colors = [];
+    for (const it of items) {
+      if (!ids.includes(it.childId)) { ids.push(it.childId); colors.push(it.childColor); }
+    }
+    if (userEventsOnDay(day).length > 0 && colors.length === 0) colors.push('#B7A79A');
+    return colors;
   };
 
   const monthDays = eachDayOfInterval({ start: startOfMonth(currentMonth), end: endOfMonth(currentMonth) });
@@ -163,12 +201,6 @@ export default function Calendar() {
   const blanks = Array(startWeekday).fill(null);
 
   const selectedDayItems = allItemsOnDay(selectedDay);
-
-  // Status banner info
-  const pregnancyWeek = calendarMode === 'pregnancy' ? getPregnancyWeek(dueDate) : null;
-  const babyAgeMonths = calendarMode === 'baby' ? getBabyAgeInMonths(birthDate) : null;
-  const wwAge = dueDate ? getAgeInWeeks(dueDate, birthDate) : null;
-  const currentWW = wwAge !== null ? getCurrentWonderWeek(wwAge) : null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -190,15 +222,15 @@ export default function Calendar() {
   };
 
   const renderDayDot = (day) => {
-    const items = allItemsOnDay(day);
-    if (items.length === 0) return null;
-    const dots = items.slice(0, 3);
+    const colors = childDotsForDay(day);
+    if (colors.length === 0) return null;
+    const dots = colors.slice(0, 3);
     return (
       <div className="flex items-center gap-0.5 justify-center">
-        {dots.map((item, i) => (
-          <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getItemColor(item) }} />
+        {dots.map((c, i) => (
+          <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c }} />
         ))}
-        {items.length > 3 && (
+        {colors.length > 3 && (
           <span className="text-[8px] leading-none ml-0.5" style={{ color: 'var(--color-text-muted)' }}>+</span>
         )}
       </div>
@@ -220,6 +252,41 @@ export default function Calendar() {
       />
 
       <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="500px">
+        {/* Child filter — only when more than one child. Does not change the
+            active child used elsewhere in the app. */}
+        {showFilter && (
+          <div className="px-5 mb-4 flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            <button
+              onClick={() => setFilterChild('all')}
+              className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+              style={filterChild === 'all'
+                ? { background: 'var(--color-primary)', color: 'var(--color-bg)' }
+                : { background: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }
+              }
+            >
+              {lang === 'en' ? 'All' : 'Alle'}
+            </button>
+            {children.map((c) => {
+              const active = filterChild === c.id;
+              const color = getChildColor(children, c.id);
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setFilterChild(c.id)}
+                  className="px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5"
+                  style={active
+                    ? { background: 'var(--color-primary)', color: 'var(--color-bg)' }
+                    : { background: 'var(--color-bg-card)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }
+                  }
+                >
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                  {c.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* Month navigation */}
         <div className="px-5 mb-4 flex items-center justify-between">
           <button onClick={() => setCurrentMonth((m) => subMonths(m, 1))} className="p-2 rounded-full active:opacity-60" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
@@ -303,6 +370,12 @@ export default function Calendar() {
                     <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>
                       {isUserEvent ? item.title : item.headline || item.title}
                     </p>
+                    {showNameLabels && item.childName && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.childColor }} />
+                        <span className="text-[11px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{item.childName}</span>
+                      </div>
+                    )}
                     {isUserEvent && (
                       <div className="flex items-center gap-1 mt-0.5">
                         <Clock className="w-3 h-3" style={{ color: 'var(--color-text-muted)' }} />
