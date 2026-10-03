@@ -32,10 +32,36 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+# Diagnose. Der skrives kun, OM en værdi er sat — aldrig hvad den er.
+#
+# CI_-tællingen fortæller, om scriptet overhovedet kan se Xcode Clouds eget
+# miljø. Er den 0, er det ikke vores variabler, der er problemet, men måden
+# scriptet køres på. Er den over 0, mens vores to mangler, ligger de ikke på
+# det workflow, der kører.
+if [ -n "$FACEBOOK_APP_ID" ]; then
+  echo "Diagnose: FACEBOOK_APP_ID er sat"
+else
+  echo "Diagnose: FACEBOOK_APP_ID MANGLER"
+fi
+if [ -n "$FACEBOOK_CLIENT_TOKEN" ]; then
+  echo "Diagnose: FACEBOOK_CLIENT_TOKEN er sat"
+else
+  echo "Diagnose: FACEBOOK_CLIENT_TOKEN MANGLER"
+fi
+echo "Diagnose: scriptet kan se $(env | grep -c '^CI_' || true) CI_-variabler fra Xcode Cloud"
+
 if [ -z "$FACEBOOK_APP_ID" ] || [ -z "$FACEBOOK_CLIENT_TOKEN" ]; then
   echo "FEJL: FACEBOOK_APP_ID og FACEBOOK_CLIENT_TOKEN skal være sat." >&2
   echo "      Uden dem kan Meta-SDK'et ikke måle noget, og buildet stoppes" >&2
   echo "      her frem for at ende i App Store uden måling." >&2
+  echo "" >&2
+  echo "      I Xcode Cloud sættes de pr. workflow — ikke pr. app:" >&2
+  echo "      App Store Connect → Xcode Cloud → Manage Workflows → vælg det" >&2
+  echo "      workflow, der kører → Environment → Environment Variables →" >&2
+  echo "      tilføj begge → Save. Start derefter et nyt build." >&2
+  echo "" >&2
+  echo "      Ligger de på et andet workflow end det, der kører, er de ikke" >&2
+  echo "      med her. Se Diagnose-linjerne ovenfor." >&2
   exit 1
 fi
 
