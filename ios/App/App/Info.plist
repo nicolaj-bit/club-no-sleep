@@ -65,14 +65,47 @@
 	<string>Club No Sleep bruger dit fotoalbum, så du kan vælge billeder til dine milepæle.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Club No Sleep gemmer dine milepælsbilleder i dine egne billeder, når du beder om det.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Vi bruger det kun til at se, om vores annoncer virker. Du kan sige nej, og appen fungerer præcis som før.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!--
+		Metas app-id og client token.
+
+		$(FACEBOOK_APP_ID) og $(FACEBOOK_CLIENT_TOKEN) er build-indstillinger,
+		som ios/App/ci_scripts/inject_meta_config.sh skriver ind fra
+		miljøvariabler ved build. Værdierne står altså aldrig i repoet.
+
+		autoLogAppEventsEnabled og advertiserIDCollectionEnabled står med
+		vilje IKKE her. De styres i koden — se MetaEventsController.swift —
+		fordi de skal kunne skiftes igen, når brugeren har svaret på
+		sporingsdialogen.
+	-->
+	<key>FacebookAppID</key>
+	<string>$(FACEBOOK_APP_ID)</string>
+	<key>FacebookClientToken</key>
+	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
+	<key>FacebookDisplayName</key>
+	<string>Club No Sleep</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>clubnosleep</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb$(FACEBOOK_APP_ID)</string>
 			</array>
 		</dict>
 	</array>

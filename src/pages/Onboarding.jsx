@@ -14,6 +14,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import PlanChooser from '@/components/onboarding/PlanChooser';
 import { invalidateProfileCache } from '@/components/auth/ProfileGate';
+import { logMetaOnboardingComplete } from '@/lib/metaEvents';
 
 export default function Onboarding() {
   const { t } = useLanguage();
@@ -132,6 +133,11 @@ export default function Onboarding() {
 
       invalidateProfileCache(user.email);
       sessionStorage.setItem('trigger_notif_prompt', '1');
+
+      // Onboarding gennemført — hændelsen til Meta. Den afventes ikke:
+      // brugeren skal ikke vente på et målekald.
+      logMetaOnboardingComplete();
+
       navigate('/app');
     } catch (e) {
       toast.error(e?.message || 'Noget gik galt. Prøv igen.');

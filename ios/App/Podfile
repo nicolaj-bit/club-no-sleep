@@ -23,6 +23,18 @@ end
 target 'App' do
   capacitor_pods
   # Add your Pods here
+
+  # Metas SDK — måler installationer og køb fra annoncer.
+  #
+  # FacebookCore og FacebookAEM hedder FBSDKCoreKit og FBAEMKit i CocoaPods.
+  # AEM står for Aggregated Event Measurement og er det, der gør det muligt at
+  # henføre et køb til en annonce, når brugeren har sagt nej til sporing.
+  #
+  # Versionerne er låst med vilje. Repoet har ingen Podfile.lock, så hvert
+  # Xcode Cloud-build løser pods forfra — uden låsen kunne en helt ny udgave af
+  # SDK'et snige sig ind i en build, vi aldrig har prøvet.
+  pod 'FBSDKCoreKit', '18.1.1'
+  pod 'FBAEMKit', '18.1.1'
 end
 
 post_install do |installer|

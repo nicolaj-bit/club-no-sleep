@@ -31,4 +31,10 @@ echo "Installing CocoaPods dependencies..."
 cd "$REPO_ROOT/ios/App"
 pod install
 
+# Metas app-id og client token skrives ind i buildet fra miljøvariabler.
+# Skal ligge EFTER pod install: scriptet skriver i den xcconfig, CocoaPods
+# netop har genereret. Se inject_meta_config.sh for hvorfor.
+echo "Injecting Meta SDK configuration..."
+"$REPO_ROOT/ios/App/ci_scripts/inject_meta_config.sh"
+
 echo "ci_post_clone.sh completed successfully"

@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import { base44 } from '@/api/base44Client';
 import { syncOneSignalTags } from '@/lib/syncOneSignalTags';
+import { syncMetaAttributesToRevenueCat } from '@/lib/metaEvents';
 
 const RC_API_KEY_IOS = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 const RC_API_KEY_ANDROID = 'goog_UDgCHKbxGVPzooBzJOglqUUAtnS';
@@ -87,6 +88,10 @@ export function useRevenueCat(userId) {
           return;
         }
 
+        // Giv RevenueCat Metas anonyme id og brugerens sporingssvar, så deres
+        // Meta-integration kan sende køb videre. Skal ske efter configure.
+        syncMetaAttributesToRevenueCat();
+
         // KRITISK FIX — MÅ IKKE RULLES TILBAGE: getOfferings() returnerer { all, current } direkte
         try {
           const result = await Purchases.getOfferings();
@@ -148,6 +153,8 @@ export function useRevenueCat(userId) {
     try {
       const result = await Purchases.purchasePackage({ aPackage: packageToPurchase });
       await refreshCustomerInfo();
+      // Købet sendes IKKE til Meta herfra. RevenueCat gør det server til
+      // server — se SEND_PURCHASES_FROM_APP i src/lib/metaEvents.js.
       return result;
     } catch (err) {
       console.error('[RevenueCat] purchase failed (non-blocking):', err?.message || err);

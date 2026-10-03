@@ -170,6 +170,75 @@ RevenueCat (`@revenuecat/purchases-capacitor` v13) på begge platforme.
 
 ---
 
+## Måling af annoncer (Meta)
+
+Metas SDK er med på begge platforme, så installationer og køb fra annoncer kan
+måles. `facebook-ios-sdk` hedder **FBSDKCoreKit** og **FBAEMKit** i CocoaPods;
+på Android er det `com.facebook.android:facebook-android-sdk`.
+
+- **Appen skal starte, selv om nøglerne mangler.** Både
+  `MetaEventsController.isConfigured` (iOS) og `MetaEventsPlugin.load()`
+  (Android) tjekker værdierne, før SDK'et startes, og Android-siden ligger i
+  en try/catch, fordi `load()` kører mens broen bygges. Et lokalt build uden
+  miljøvariabler virker præcis som før — der måles bare ingenting.
+- **App-id og client token står ikke i repoet.** De læses fra
+  miljøvariablerne `FACEBOOK_APP_ID` og `FACEBOOK_CLIENT_TOKEN`: på iOS af
+  `ios/App/ci_scripts/inject_meta_config.sh`, der skriver dem ind som
+  build-indstillinger efter `pod install`; på Android af `resValue` i
+  `android/app/build.gradle`, der laver dem til string-ressourcer. De skrives
+  bevidst ikke ind i `strings.xml` eller `Info.plist` som faste værdier.
+- Info.plist bruger `$(FACEBOOK_APP_ID)`. Netop derfor skal app-id'et være en
+  build-indstilling og ikke bare noget, Swift læser: styresystemet registrerer
+  URL-skemaet `fb<app-id>` ud fra Info.plist, længe før vores kode kører.
+- `autoLogAppEventsEnabled` og `advertiserIDCollectionEnabled` sættes i koden og
+  **ikke** i plist eller manifest. De skal kunne skiftes igen, når brugeren har
+  svaret på sporingsdialogen. Se `MetaEventsController.swift`.
+- På Android står `com.facebook.sdk.AutoInitEnabled` til `false`. Ellers
+  starter SDK'et sig selv gennem en ContentProvider, før vores kode kører, og
+  så er det for sent at sætte flagene. Det startes i stedet i
+  `MetaEventsPlugin.load()`.
+- **ATT-dialogen vises kun ét sted:** `NotificationPrompt.jsx`, efter
+  onboarding og efter de øvrige beskeder. iOS spørger kun én gang i en apps
+  levetid — vises dialogen på splash-skærmen, siger de fleste nej, og så er
+  chancen brugt. Blev dialogen ikke vist (appen var ikke aktiv), svarer
+  plugin'et `prompted: false`, og så skal der ikke skrives ned, at brugeren er
+  spurgt.
+- **Først vores egen bløde forespørgsel, så Apples.** `TrackingPrePrompt.jsx`
+  spørger med vores egne ord, og Apples dialog vises kun ved et ja. Et nej
+  huskes for altid, og Apples dialog vises aldrig — så har brugeren ikke brugt
+  sit ene svar hos Apple, og hun kan sige ja senere, hvis vi får brug for det.
+  Forespørgslen har bevidst intet kryds: de to knapper er de to svar.
+  Forespørgslen vises kun, hvis `getTrackingStatus()` svarer
+  `notDetermined` — på Android og i et build uden Meta-nøgler svarer den
+  `unavailable`, og så bliver brugeren ikke spurgt om noget.
+- Siger brugeren nej, må enheds-id ikke sendes, men anonyme hændelser gerne.
+  Derfor bliver `autoLogAppEvents` slået til, mens `advertiserIDCollection` og
+  `advertiserTracking` bliver slået fra.
+- **`graph.facebook.com` må ikke stå i `NSPrivacyTrackingDomains`.** iOS
+  blokerer alle kald til domæner på listen, hvis brugeren har sagt nej — også
+  de anonyme hændelser, vi stadig må sende. `NSPrivacyTracking` skal til
+  gengæld stå til `true`, ellers modsiger privacy-manifestet og
+  `NSUserTrackingUsageDescription` hinanden, og indsendelsen afvises.
+- Metas Android-SDK tilføjer selv `com.google.android.gms.permission.AD_ID` og
+  `ACCESS_ADSERVICES_*` til manifestet. Det er tilladt af Google Play, men
+  **annonce-id skal være oplyst i Play Console under datasikkerhed.** Fjern
+  ikke tilladelsen — så holder målingen op med at virke.
+- **Penge-hændelser sendes kun fra RevenueCat.** `SEND_PURCHASES_FROM_APP` i
+  `src/lib/metaEvents.js` står til `false` og skal blive der, så længe
+  RevenueCats Meta-integration er slået til. RevenueCat oversætter selv til
+  Metas standardnavne: Trial Started → `StartTrial`, Initial Purchase, Trial
+  Converted og Renewal → `Subscribe`, Non-Renewing Purchase → `Purchase`.
+  Meta frasorterer kun dubletter ved fælles `event_id`, og det aftaler Metas
+  SDK og RevenueCat ikke — sendte appen de samme hændelser, blev hvert køb
+  tælt to gange. Appen sender derfor kun `cns_first_open` og
+  `fb_mobile_complete_registration`, som RevenueCat ikke kender.
+- RevenueCat skal have `setFBAnonymousID(...)` — det er den metode, der skriver
+  til den reserverede attribut `$fbAnonId`. En egen attribut ved navn
+  `fb_anon_id` ville integrationen ikke kigge på. ATT-svaret sættes som
+  `$attConsentStatus`.
+
+---
+
 ## Kort
 
 `DenmarkMap.jsx` bruger Esri Canvas-fliser og følger appens dark mode:

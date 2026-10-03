@@ -14,6 +14,7 @@ public class MainActivity extends BridgeActivity {
         // bygges. Det er Androids mekanisme; på iOS sker det i stedet i
         // capacitorDidLoad i MainViewController.
         registerPlugin(SleepLiveActivityPlugin.class);
+        registerPlugin(MetaEventsPlugin.class);
 
         super.onCreate(savedInstanceState);
 
