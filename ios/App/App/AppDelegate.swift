@@ -18,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // udgave af siden, længe efter at Base44 er publiceret.
         clearWebViewCache()
 
+        // Metas SDK. Starter med automatisk logning og annonce-id slået FRA og
+        // venter på, at brugeren svarer på sporingsdialogen efter onboarding.
+        MetaEventsController.applicationDidFinishLaunching(application, launchOptions: launchOptions)
+
         return true
     }
 
@@ -87,6 +91,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         // Called when the app was launched with a url. Feel free to add additional processing here,
         // but if you want the App API to support tracking app url opens, make sure to keep this call
+
+        // Metas AEM-rapportering hænger på dette kald — det er dén vej, et køb
+        // kan henføres til en annonce, når brugeren har sagt nej til sporing.
+        // Svaret bruges ikke: Capacitor skal stadig have sit eget svar, og
+        // begge kan have brug for samme url.
+        MetaEventsController.application(app, open: url, options: options)
+
         return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
     }
 

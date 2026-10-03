@@ -2,12 +2,42 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!--
+		Sat til true, fordi appen måler, om Facebook- og Instagram-annoncer
+		fører til installationer og køb. Apple regner det som sporing, og så
+		SKAL den stå til true — ellers afvises indsendelsen, fordi
+		NSUserTrackingUsageDescription og privacy-manifestet modsiger hinanden.
+	-->
 	<key>NSPrivacyTracking</key>
-	<false/>
+	<true/>
+	<!--
+		⚠️ graph.facebook.com må IKKE stå på denne liste.
+
+		iOS blokerer alle netværkskald til domæner på listen, hvis brugeren har
+		sagt nej til sporing. Metas hændelser går gennem graph.facebook.com —
+		også de anonyme, som vi stadig gerne må sende. Stod domænet her, ville
+		et nej slukke målingen helt i stedet for bare at fjerne enheds-id'et.
+
+		Metas eget SDK har sit privacy-manifest med i pakken. Vores skal ikke
+		gentage det.
+	-->
 	<key>NSPrivacyTrackingDomains</key>
 	<array/>
 	<key>NSPrivacyCollectedDataTypes</key>
 	<array>
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeDeviceID</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<true/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<true/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
+			</array>
+		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
 			<string>NSPrivacyCollectedDataTypeEmailAddress</string>

@@ -11,6 +11,7 @@ import Landing from './pages/Landing';
 import { Capacitor } from '@capacitor/core';
 import SubscriptionGate from './components/subscription/SubscriptionGate';
 import SleepNotificationManager from '@/components/sleep/SleepNotificationManager';
+import MetaEventsInit from '@/components/MetaEventsInit';
 
 import Onboarding from './pages/Onboarding';
 import AboutUs from './pages/AboutUs';
@@ -169,6 +170,7 @@ function PublicOrAuth() {
   return (
     <AuthProvider>
       <SleepNotificationManager />
+      <MetaEventsInit />
       <AppRoutes />
     </AuthProvider>
   );

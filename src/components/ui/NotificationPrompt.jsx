@@ -6,8 +6,10 @@ import { useSubscription } from '@/components/subscription/useSubscription';
 import { getPermissionStatus } from '@/utils/notificationPermission';
 import NotificationPrePrompt, { shouldShowNotifPrompt } from '@/components/ui/NotificationPrePrompt';
 import TrialAnnouncementModal from '@/components/subscription/TrialAnnouncementModal';
+import { requestMetaTracking } from '@/lib/metaEvents';
 
 const TRIAL_SESSION_KEY = 'trial_announcement_checked';
+const ATT_ASKED_KEY = 'cns_att_asked';
 
 /**
  * Orchestrator for two one-time prompts:
@@ -19,9 +21,16 @@ const TRIAL_SESSION_KEY = 'trial_announcement_checked';
  * DEL 3 — Trial announcement: shown once to non-subscribed, trial-eligible
  *         users on first app open after the update.
  *
- * The two are mutually exclusive — the trial announcement takes priority.
- * The notification pre-prompt waits until the trial check finishes and the
- * trial modal (if shown) is closed.
+ * DEL 4 — Sporingstilladelse (App Tracking Transparency, kun iOS): vises
+ *         sidst af alle, når både prøveperiode-beskeden og notifikations-
+ *         beskeden er afklaret. Aldrig på splash- eller onboarding-skærmen:
+ *         brugeren skal have set, hvad appen er til, før hun bliver spurgt,
+ *         om vi må måle, hvilken annonce hun kom fra.
+ *
+ * The two first are mutually exclusive — the trial announcement takes
+ * priority. The notification pre-prompt waits until the trial check finishes
+ * and the trial modal (if shown) is closed. ATT venter på dem begge, for iOS
+ * viser kun én systemdialog ad gangen.
  */
 export default function NotificationPrompt() {
   const { isActive: isSubscribed, loading: subLoading } = useSubscription();
@@ -29,6 +38,8 @@ export default function NotificationPrompt() {
   const [showNotif, setShowNotif] = useState(false);
   const [trialChecked, setTrialChecked] = useState(false);
   const [trialCheckDone, setTrialCheckDone] = useState(false);
+  const [notifDecided, setNotifDecided] = useState(false);
+  const [attHandled, setAttHandled] = useState(false);
   const location = useLocation();
   const prevPath = useRef(location.pathname);
 
@@ -99,20 +110,75 @@ export default function NotificationPrompt() {
       if (!sessionStorage.getItem('sleeplog_notif_checked')) {
         sessionStorage.setItem('sleeplog_notif_checked', '1');
         maybeShowNotif();
+        prevPath.current = currentPath;
+        return;
       }
     }
 
+    // Ingen af de to udløsere ramte, så der kommer ingen notifikations-
+    // besked lige nu. Det skal ATT-delen vide — ellers venter den for evigt.
+    setNotifDecided(true);
     prevPath.current = currentPath;
   }, [location.pathname, showTrial, trialCheckDone]);
 
   const maybeShowNotif = async () => {
-    if (!shouldShowNotifPrompt()) return;
-    // Only show the pre-prompt if we can still request permission.
-    // On iOS, once denied there is no second chance — don't waste it.
-    const status = await getPermissionStatus();
-    if (status === 'granted' || status === 'denied') return;
-    setShowNotif(true);
+    try {
+      if (!shouldShowNotifPrompt()) return;
+      // Only show the pre-prompt if we can still request permission.
+      // On iOS, once denied there is no second chance — don't waste it.
+      const status = await getPermissionStatus();
+      if (status === 'granted' || status === 'denied') return;
+      setShowNotif(true);
+    } finally {
+      // Afgørelsen er truffet — uanset om beskeden blev vist.
+      setNotifDecided(true);
+    }
   };
+
+  // ── DEL 4: Sporingstilladelse (kun iOS) ─────────────────────────────────
+  //
+  // Her ligger ATT-dialogen. Det er det eneste sted i appen, den vises.
+  //
+  // Betingelserne er med vilje strenge. iOS spørger kun én gang i en apps
+  // levetid, og bliver dialogen vist på et dårligt tidspunkt — eller mens en
+  // anden dialog er på skærmen — er chancen brugt.
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    if (attHandled) return;
+    if (!trialCheckDone || !notifDecided) return;
+    if (showTrial || showNotif) return; // kun én besked ad gangen
+
+    // Aldrig på splash, marketingside eller midt i onboarding.
+    const path = location.pathname;
+    if (path === '/' || path === '/Landing' || path === '/Onboarding') return;
+
+    let asked = null;
+    try {
+      asked = window.localStorage.getItem(ATT_ASKED_KEY);
+    } catch {
+      // Spærret lagring. Så spørger vi igen næste gang — iOS viser alligevel
+      // ikke dialogen to gange.
+    }
+    if (asked) {
+      setAttHandled(true);
+      return;
+    }
+
+    setAttHandled(true);
+
+    (async () => {
+      const { status } = await requestMetaTracking();
+      // Kun et rigtigt svar skrives ned. Blev dialogen ikke vist — f.eks.
+      // fordi appen ikke var aktiv — skal vi prøve igen næste gang.
+      if (status && status !== 'notDetermined') {
+        try {
+          window.localStorage.setItem(ATT_ASKED_KEY, status);
+        } catch {
+          // ignoreres med vilje
+        }
+      }
+    })();
+  }, [trialCheckDone, notifDecided, showTrial, showNotif, location.pathname, attHandled]);
 
   return (
     <>

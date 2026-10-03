@@ -33,6 +33,11 @@ jobs:
 
       - name: Byg release AAB
         working-directory: android
+        env:
+          # Metas app-id og client token. Laeses af resValue i
+          # app/build.gradle, saa de ikke behoever staa i repoet.
+          FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
+          FACEBOOK_CLIENT_TOKEN: ${{ secrets.FACEBOOK_CLIENT_TOKEN }}
         run: |
           chmod +x gradlew
           ./gradlew bundleRelease
