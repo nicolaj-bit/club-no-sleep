@@ -199,9 +199,13 @@ export default function Profile() {
           <div
             className="rounded-3xl overflow-hidden relative"
             style={{
-              backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bdc519741_4.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              ...(isDark
+                ? { backgroundColor: 'var(--color-bg-card)' }
+                : {
+                    backgroundImage: 'url(https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bdc519741_4.png)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }),
               border: `1px solid ${cardBorder}`,
               minHeight: 110
             }}
