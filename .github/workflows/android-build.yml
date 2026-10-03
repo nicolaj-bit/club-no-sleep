@@ -31,11 +31,33 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Tjek Meta-nøgler
+        env:
+          FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
+          FACEBOOK_CLIENT_TOKEN: ${{ secrets.FACEBOOK_CLIENT_TOKEN }}
+        run: |
+          # Mangler nøglerne, bygger gradle alligevel en AAB — den måler bare
+          # ingenting, og det opdages først uger senere i Events Manager.
+          # Derfor stoppes buildet her i stedet.
+          #
+          # Værdierne vises ikke. Der siges kun, om de er sat.
+          if [ -z "$FACEBOOK_APP_ID" ] || [ -z "$FACEBOOK_CLIENT_TOKEN" ]; then
+            echo "FEJL: FACEBOOK_APP_ID og/eller FACEBOOK_CLIENT_TOKEN mangler i GitHub Secrets." >&2
+            exit 1
+          fi
+          case "$FACEBOOK_APP_ID" in
+            ''|*[!0-9]*)
+              echo "FEJL: FACEBOOK_APP_ID skal kun bestå af cifre. Er app-id og client token byttet om?" >&2
+              exit 1
+              ;;
+          esac
+          echo "Meta-nøglerne er sat. Værdierne vises ikke."
+
       - name: Byg release AAB
         working-directory: android
         env:
-          # Metas app-id og client token. Laeses af resValue i
-          # app/build.gradle, saa de ikke behoever staa i repoet.
+          # Metas app-id og client token. Læses af resValue i
+          # app/build.gradle, så de ikke behøver stå i repoet.
           FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
           FACEBOOK_CLIENT_TOKEN: ${{ secrets.FACEBOOK_CLIENT_TOKEN }}
         run: |
