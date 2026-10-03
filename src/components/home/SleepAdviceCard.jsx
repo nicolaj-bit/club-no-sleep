@@ -43,7 +43,6 @@ export default function SleepAdviceCard({ userEmail }) {
     <div className="mx-5 mb-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-base">🌙</span>
           <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.sleepAdviceTitle}</h2>
         </div>
         <Link to={createPageUrl('SleepLog')} className="text-sm font-medium" style={{ color: 'var(--color-text-muted)' }}>
@@ -54,18 +53,15 @@ export default function SleepAdviceCard({ userEmail }) {
       <Link to={createPageUrl('SleepLog')} className="block cursor-pointer">
         <div
           className="rounded-3xl p-5 relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #2D1B69 100%)' }}
+          style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}
         >
-          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-15 bg-white" />
-          <div className="absolute -bottom-8 -left-4 w-20 h-20 rounded-full opacity-10 bg-white" />
-
-          <p className="text-white font-semibold text-sm mb-2 relative z-10">{advice.title}</p>
-          <p className="text-white/70 text-sm leading-relaxed relative z-10" style={{ textWrap: 'pretty' }}>
+          <p className="font-semibold text-sm mb-2" style={{ color: 'var(--color-text-primary)' }}>{advice.title}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)', textWrap: 'pretty' }}>
             {advice.message}
           </p>
-          <div className="flex items-center gap-1 mt-3 relative z-10">
-            <span className="text-white/40 text-xs">{t.basedOnLogs} {logsCount} {t.logsLabel}</span>
-            <ChevronRight className="w-3 h-3 text-white/30" />
+          <div className="flex items-center gap-1 mt-3">
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.basedOnLogs} {logsCount} {t.logsLabel}</span>
+            <ChevronRight className="w-3 h-3" style={{ color: 'var(--color-text-muted)' }} />
           </div>
         </div>
       </Link>
