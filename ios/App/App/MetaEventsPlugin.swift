@@ -60,7 +60,13 @@ public class MetaEventsPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
+    /// Er SDK'et ikke sat op, svares «unavailable» — samme svar som Android.
+    /// Så viser websiden ikke en forespørgsel, der ikke fører nogen steder.
     @objc func getTrackingStatus(_ call: CAPPluginCall) {
+        guard MetaEventsController.isConfigured else {
+            call.resolve(["status": "unavailable"])
+            return
+        }
         call.resolve(["status": MetaEventsController.name(for: MetaEventsController.trackingStatus)])
     }
 

@@ -18,9 +18,13 @@ const MetaEvents = registerPlugin('MetaEvents');
 
 // ── Hændelsesnavne ────────────────────────────────────────────────────────
 //
-// De fire første er Metas egne standardnavne. Dem kender Events Manager, og
-// kun dem kan bruges til at optimere annoncer. Navne, der begynder med cns_,
-// er vores egne og optræder som brugerdefinerede hændelser.
+// Alle på nær cns_first_open er Metas egne standardnavne. Dem kender Events
+// Manager, og kun dem kan bruges til at optimere annoncer. Navne, der
+// begynder med cns_, er vores egne og optræder som brugerdefinerede
+// hændelser.
+//
+// Kun firstOpen og onboardingComplete sendes faktisk af appen. De tre
+// øvrige kommer fra RevenueCat — se SEND_PURCHASES_FROM_APP nedenfor.
 const EVENT = {
   firstOpen: 'cns_first_open',
   onboardingComplete: 'fb_mobile_complete_registration',
@@ -30,20 +34,34 @@ const EVENT = {
 };
 
 /**
- * Skal appen selv sende køb til Meta?
+ * ⚠️ SLÅET FRA MED VILJE. Må ikke sættes til true uden at slå RevenueCats
+ * Meta-integration fra først.
  *
- * ⚠️ Køb kan komme til Meta ad to veje: fra appen (her) og fra RevenueCat,
- * som sender dem server-til-server. Er begge slået til, tæller Meta det samme
- * køb to gange, og annoncernes afkast ser dobbelt så godt ud, som det er.
+ * Penge-hændelserne — StartTrial, fb_mobile_purchase og Subscribe — sendes
+ * **udelukkende fra RevenueCat**, server til server. RevenueCat oversætter
+ * selv sine egne hændelser til Metas standardnavne:
  *
- * Vælg én. Står den til true, sender appen købet; vil du i stedet lade
- * RevenueCat stå for det alene, sæt den til false — resten af hændelserne
- * sendes stadig.
+ *   Trial Started         → StartTrial
+ *   Initial Purchase      → Subscribe
+ *   Trial Converted       → Subscribe
+ *   Renewal               → Subscribe
+ *   Non-Renewing Purchase → Purchase
+ *
+ * Meta frasorterer kun dubletter, hvis de to kilder sender samme `event_id`.
+ * Metas SDK og RevenueCat aftaler ikke et fælles id, så sendte appen de samme
+ * hændelser, ville hvert køb tælle to gange — og annoncernes afkast se dobbelt
+ * så godt ud, som det er.
+ *
+ * RevenueCat er den rigtige kilde, fordi den også ser det, appen ikke kan:
+ * fornyelser, der sker mens appen er lukket, og trials der bliver betalende
+ * uden at nogen åbner appen.
+ *
+ * Tilbage fra appen er derfor kun de to hændelser, RevenueCat ikke kender:
+ * `cns_first_open` og `fb_mobile_complete_registration`.
  */
-const SEND_PURCHASES_FROM_APP = true;
+const SEND_PURCHASES_FROM_APP = false;
 
 const FIRST_OPEN_KEY = 'cns_meta_first_open_sent';
-const LAST_PURCHASE_KEY = 'cns_meta_last_purchase_date';
 
 function readLocal(key) {
   try {
@@ -229,38 +247,43 @@ export async function logMetaOnboardingComplete() {
   return logMetaEvent(EVENT.onboardingComplete, { fb_registration_method: 'onboarding' });
 }
 
-/**
- * Prøveperiode startet.
- *
- * Sendes uden beløb. En prøveperiode koster ingenting, og et beløb her ville
- * lægge sig til omsætningen i Events Manager.
- */
+// ── Penge-hændelser: slået fra ───────────────────────────────────────────
+//
+// De tre funktioner herunder sender ingenting. De står tilbage, fordi det
+// skal kunne ses på kaldstedet, hvorfor appen ikke sender køb — og fordi
+// valget skal kunne laves om på ét sted, hvis RevenueCats integration en dag
+// slås fra. Se SEND_PURCHASES_FROM_APP øverst i filen for hele begrundelsen.
+
+/** Prøveperiode startet. Sendes af RevenueCat som StartTrial. */
 export async function logMetaTrialStarted({ productId, currency } = {}) {
+  if (!SEND_PURCHASES_FROM_APP) {
+    console.log('[META] trial sendes fra RevenueCat, ikke fra appen');
+    return false;
+  }
   return logMetaEvent(EVENT.trialStarted, {
     fb_content_id: productId,
     fb_currency: currency,
   });
 }
 
-/** Køb gennemført. Det er denne hændelse, Metas afkasttal bygger på. */
+/** Køb gennemført. Sendes af RevenueCat som Subscribe. */
 export async function logMetaPurchaseCompleted({ amount, currency, productId } = {}) {
-  if (!SEND_PURCHASES_FROM_APP) return false;
+  if (!SEND_PURCHASES_FROM_APP) {
+    console.log('[META] køb sendes fra RevenueCat, ikke fra appen');
+    return false;
+  }
   return logMetaPurchase(amount, currency, {
     fb_content_id: productId,
     cns_purchase_kind: 'new',
   });
 }
 
-/**
- * Abonnement fornyet.
- *
- * Kender vi beløbet, sendes det som et køb. Gør vi ikke — og det gør vi ikke
- * ved en fornyelse, appen selv opdager, for RevenueCat oplyser ikke prisen —
- * sendes Subscribe uden beløb. Så kan Meta se, at kunden blev, uden at
- * omsætningen bliver gættet.
- */
+/** Abonnement fornyet. Sendes af RevenueCat som Subscribe. */
 export async function logMetaSubscriptionRenewed({ amount, currency, productId } = {}) {
-  if (!SEND_PURCHASES_FROM_APP) return false;
+  if (!SEND_PURCHASES_FROM_APP) {
+    console.log('[META] fornyelse sendes fra RevenueCat, ikke fra appen');
+    return false;
+  }
 
   const value = Number(amount);
   if (Number.isFinite(value) && value > 0 && currency) {
@@ -295,57 +318,4 @@ export function exposeMetaEventsOnWindow() {
     subscriptionRenewed: logMetaSubscriptionRenewed,
     syncRevenueCat: syncMetaAttributesToRevenueCat,
   };
-}
-
-/**
- * Husker, hvornår brugerens seneste køb blev gjort, og melder en fornyelse,
- * når datoen flytter sig.
- *
- * RevenueCat fortæller ikke appen, at et abonnement er fornyet — det sker, mens
- * appen er lukket. Men `latestPurchaseDate` på rettigheden flytter sig, og det
- * kan ses, næste gang appen åbnes. Første gang gemmes datoen uden at sende
- * noget: ellers ville alle nuværende abonnenter melde en fornyelse, den dag
- * opdateringen kommer ud.
- *
- * Fornyelser kommer mere præcist fra RevenueCats egen Meta-integration, som
- * ser dem med det samme. Se SEND_PURCHASES_FROM_APP ovenfor.
- */
-export async function reportMetaRenewalIfAny(customerInfo) {
-  if (!Capacitor.isNativePlatform()) return false;
-
-  const active = customerInfo?.entitlements?.active;
-  if (!active) return false;
-
-  let latest = null;
-  let productId = null;
-  for (const entitlement of Object.values(active)) {
-    const date = entitlement?.latestPurchaseDate;
-    if (!date) continue;
-    if (!latest || new Date(date) > new Date(latest)) {
-      latest = date;
-      productId = entitlement?.productIdentifier || null;
-    }
-  }
-  if (!latest) return false;
-
-  const previous = readLocal(LAST_PURCHASE_KEY);
-  writeLocal(LAST_PURCHASE_KEY, latest);
-
-  if (!previous) return false;
-  if (new Date(latest) <= new Date(previous)) return false;
-
-  return logMetaSubscriptionRenewed({ productId });
-}
-
-/** Skrives ned, så et køb lige nu ikke også bliver meldt som en fornyelse. */
-export function rememberMetaPurchaseDate(customerInfo) {
-  const active = customerInfo?.entitlements?.active;
-  if (!active) return;
-  let latest = null;
-  for (const entitlement of Object.values(active)) {
-    const date = entitlement?.latestPurchaseDate;
-    if (!date) continue;
-    if (!latest || new Date(date) > new Date(latest)) latest = date;
-  }
-  if (latest) writeLocal(LAST_PURCHASE_KEY, latest);
 }

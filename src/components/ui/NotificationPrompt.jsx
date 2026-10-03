@@ -6,10 +6,27 @@ import { useSubscription } from '@/components/subscription/useSubscription';
 import { getPermissionStatus } from '@/utils/notificationPermission';
 import NotificationPrePrompt, { shouldShowNotifPrompt } from '@/components/ui/NotificationPrePrompt';
 import TrialAnnouncementModal from '@/components/subscription/TrialAnnouncementModal';
-import { requestMetaTracking } from '@/lib/metaEvents';
+import TrackingPrePrompt, { hasDeclinedTracking } from '@/components/ui/TrackingPrePrompt';
+import { requestMetaTracking, getMetaTrackingStatus } from '@/lib/metaEvents';
 
 const TRIAL_SESSION_KEY = 'trial_announcement_checked';
 const ATT_ASKED_KEY = 'cns_att_asked';
+
+/**
+ * Skriver ned, at Apple har fået et rigtigt svar.
+ *
+ * Blev dialogen ikke vist — f.eks. fordi appen ikke var aktiv i det øjeblik —
+ * svarer plugin'et stadig 'notDetermined'. Så skal der ikke skrives noget ned,
+ * for brugerens ene svar hos Apple er ikke brugt endnu.
+ */
+function rememberAttStatus(status) {
+  if (!status || status === 'notDetermined') return;
+  try {
+    localStorage.setItem(ATT_ASKED_KEY, status);
+  } catch {
+    // ignoreres med vilje
+  }
+}
 
 /**
  * Orchestrator for two one-time prompts:
@@ -27,6 +44,10 @@ const ATT_ASKED_KEY = 'cns_att_asked';
  *         brugeren skal have set, hvad appen er til, før hun bliver spurgt,
  *         om vi må måle, hvilken annonce hun kom fra.
  *
+ *         Først vises vores egen bløde forespørgsel (TrackingPrePrompt), og
+ *         kun hvis hun siger ja dér, vises Apples dialog. Siger hun nej, bliver
+ *         Apples dialog aldrig vist, og valget huskes.
+ *
  * The two first are mutually exclusive — the trial announcement takes
  * priority. The notification pre-prompt waits until the trial check finishes
  * and the trial modal (if shown) is closed. ATT venter på dem begge, for iOS
@@ -40,17 +61,18 @@ export default function NotificationPrompt() {
   const [trialCheckDone, setTrialCheckDone] = useState(false);
   const [notifDecided, setNotifDecided] = useState(false);
   const [attHandled, setAttHandled] = useState(false);
+  const [showTracking, setShowTracking] = useState(false);
   const location = useLocation();
   const prevPath = useRef(location.pathname);
 
   // Coordinate with MarketingConsentPrompt — never show two modals at once
   useEffect(() => {
-    if (showTrial || showNotif) {
+    if (showTrial || showNotif || showTracking) {
       sessionStorage.setItem('modal_active', '1');
     } else {
       sessionStorage.removeItem('modal_active');
     }
-  }, [showTrial, showNotif]);
+  }, [showTrial, showNotif, showTracking]);
 
   // ── DEL 3: Trial announcement (one-time, on first app open) ──────────
   useEffect(() => {
@@ -152,6 +174,12 @@ export default function NotificationPrompt() {
     const path = location.pathname;
     if (path === '/' || path === '/Landing' || path === '/Onboarding') return;
 
+    // Har hun sagt nej i vores egen forespørgsel, er sagen afgjort for altid.
+    if (hasDeclinedTracking()) {
+      setAttHandled(true);
+      return;
+    }
+
     let asked = null;
     try {
       asked = window.localStorage.getItem(ATT_ASKED_KEY);
@@ -167,23 +195,36 @@ export default function NotificationPrompt() {
     setAttHandled(true);
 
     (async () => {
-      const { status } = await requestMetaTracking();
-      // Kun et rigtigt svar skrives ned. Blev dialogen ikke vist — f.eks.
-      // fordi appen ikke var aktiv — skal vi prøve igen næste gang.
-      if (status && status !== 'notDetermined') {
-        try {
-          window.localStorage.setItem(ATT_ASKED_KEY, status);
-        } catch {
-          // ignoreres med vilje
-        }
+      // Vis ikke en forespørgsel, der ikke fører nogen steder. Er svaret
+      // allerede givet — eller er vi på Android, hvor der ingen dialog er —
+      // skal brugeren ikke spørges om noget.
+      const status = await getMetaTrackingStatus();
+      if (status !== 'notDetermined') {
+        rememberAttStatus(status);
+        return;
       }
+      setShowTracking(true);
     })();
   }, [trialCheckDone, notifDecided, showTrial, showNotif, location.pathname, attHandled]);
+
+  /** Svaret på vores egen forespørgsel. Kun et ja fører til Apples dialog. */
+  const handleTrackingChoice = async (accepted) => {
+    setShowTracking(false);
+    if (!accepted) {
+      // TrackingPrePrompt har allerede husket nejet. Apples dialog vises
+      // aldrig, og brugerens ene svar hos Apple er dermed ikke brugt.
+      console.log('[META] bruger sagde nej i den bløde forespørgsel');
+      return;
+    }
+    const { status } = await requestMetaTracking();
+    rememberAttStatus(status);
+  };
 
   return (
     <>
       <TrialAnnouncementModal open={showTrial} onClose={() => setShowTrial(false)} />
       <NotificationPrePrompt open={showNotif} onClose={() => setShowNotif(false)} />
+      <TrackingPrePrompt open={showTracking} onClose={handleTrackingChoice} />
     </>
   );
 }

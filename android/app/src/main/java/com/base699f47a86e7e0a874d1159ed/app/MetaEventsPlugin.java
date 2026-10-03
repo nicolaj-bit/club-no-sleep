@@ -57,30 +57,41 @@ public class MetaEventsPlugin extends Plugin {
         String clientToken = getContext().getString(R.string.facebook_client_token);
 
         if (appId == null || appId.isEmpty() || clientToken == null || clientToken.isEmpty()) {
-            // Buildet er lavet uden FACEBOOK_APP_ID/FACEBOOK_CLIENT_TOKEN.
-            // Appen skal virke som før — der måles bare ingenting.
+            // Buildet er lavet uden FACEBOOK_APP_ID/FACEBOOK_CLIENT_TOKEN —
+            // f.eks. et lokalt build. Appen skal virke præcis som før; der
+            // måles bare ingenting.
             Log.w(TAG, "facebook_app_id eller facebook_client_token mangler — SDK'et startes ikke");
             return;
         }
 
-        // Flagene sættes her i koden og bevidst ikke i manifestet. Det er samme
-        // sted, iOS styrer dem fra, så de to platforme kan læses sammen.
-        //
-        // På Android er der ingen tilladelse at vente på: annonce-id'et (GAID)
-        // slår brugeren selv fra under Indstillinger → Google → Annoncer, og
-        // det respekterer SDK'et af sig selv.
-        FacebookSdk.setAutoLogAppEventsEnabled(true);
-        FacebookSdk.setAdvertiserIDCollectionEnabled(true);
-        FacebookSdk.fullyInitialize();
+        // Alt herunder ligger i en try/catch. load() kaldes, mens Capacitor
+        // bygger broen, og en undtagelse herfra ville tage hele appen med sig,
+        // før brugeren har set noget. Måling må aldrig kunne det.
+        try {
+            // Flagene sættes her i koden og bevidst ikke i manifestet. Det er
+            // samme sted, iOS styrer dem fra, så de to platforme kan læses
+            // sammen.
+            //
+            // På Android er der ingen tilladelse at vente på: annonce-id'et
+            // (GAID) slår brugeren selv fra under Indstillinger → Google →
+            // Annoncer, og det respekterer SDK'et af sig selv.
+            FacebookSdk.setAutoLogAppEventsEnabled(true);
+            FacebookSdk.setAdvertiserIDCollectionEnabled(true);
+            FacebookSdk.fullyInitialize();
 
-        Activity activity = getActivity();
-        if (activity != null) {
-            AppEventsLogger.activateApp(activity.getApplication(), appId);
+            Activity activity = getActivity();
+            if (activity != null) {
+                AppEventsLogger.activateApp(activity.getApplication(), appId);
+            }
+
+            logger = AppEventsLogger.newLogger(getContext());
+            ready = true;
+            Log.i(TAG, "Meta-SDK klar");
+        } catch (RuntimeException e) {
+            ready = false;
+            logger = null;
+            Log.w(TAG, "Meta-SDK kunne ikke startes: " + e.getMessage());
         }
-
-        logger = AppEventsLogger.newLogger(getContext());
-        ready = true;
-        Log.i(TAG, "Meta-SDK klar");
     }
 
     @PluginMethod

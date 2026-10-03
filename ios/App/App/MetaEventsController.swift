@@ -43,7 +43,24 @@ enum MetaEventsController {
         return raw
     }
 
-    static var isConfigured: Bool { configuredAppID != nil }
+    /// Client tokenet er en blanding af bogstaver og cifre, så der kan ikke
+    /// tjekkes på formen. Til gengæld kan det ses, om build-indstillingen
+    /// aldrig blev erstattet — så står der stadig `$(...)` i teksten.
+    private static var configuredClientToken: String? {
+        guard
+            let raw = Bundle.main.object(forInfoDictionaryKey: "FacebookClientToken") as? String,
+            !raw.isEmpty,
+            !raw.contains("$(")
+        else { return nil }
+        return raw
+    }
+
+    /// Begge værdier skal være på plads. Mangler bare én, startes SDK'et
+    /// ikke, og appen kører videre præcis som før — bare uden måling. Det er
+    /// det, der sker i et lokalt build uden miljøvariabler.
+    static var isConfigured: Bool {
+        configuredAppID != nil && configuredClientToken != nil
+    }
 
     // MARK: - Opstart
 
@@ -53,7 +70,7 @@ enum MetaEventsController {
         launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) {
         guard isConfigured else {
-            NSLog("[\(tag)] FacebookAppID mangler i Info.plist — SDK'et startes ikke")
+            NSLog("[\(tag)] FacebookAppID eller FacebookClientToken mangler i Info.plist — SDK'et startes ikke")
             return
         }
 
@@ -127,8 +144,11 @@ enum MetaEventsController {
         DispatchQueue.main.async {
             let current = trackingStatus
 
+            // Er SDK'et ikke sat op, er der ingen grund til at bruge brugerens
+            // ene svar hos Apple. Samme svar som Android, så websiden kan
+            // behandle de to tilfælde ens.
             guard isConfigured else {
-                completion(name(for: current), false)
+                completion("unavailable", false)
                 return
             }
 

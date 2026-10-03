@@ -3,13 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { Purchases, LOG_LEVEL } from '@revenuecat/purchases-capacitor';
 import { base44 } from '@/api/base44Client';
 import { syncOneSignalTags } from '@/lib/syncOneSignalTags';
-import {
-  syncMetaAttributesToRevenueCat,
-  logMetaTrialStarted,
-  logMetaPurchaseCompleted,
-  reportMetaRenewalIfAny,
-  rememberMetaPurchaseDate,
-} from '@/lib/metaEvents';
+import { syncMetaAttributesToRevenueCat } from '@/lib/metaEvents';
 
 const RC_API_KEY_IOS = 'appl_wnxSPgRzCNCnElnssJGLPnIPbRZ';
 const RC_API_KEY_ANDROID = 'goog_UDgCHKbxGVPzooBzJOglqUUAtnS';
@@ -39,34 +33,6 @@ async function configure(userId) {
   }
 }
 
-/**
- * Sender købet videre til Meta.
- *
- * Startede købet en gratis prøveperiode, er der ikke betalt noget endnu — og
- * så må det ikke tælle som omsætning. RevenueCat siger det selv: rettighedens
- * periodType står til TRIAL.
- */
-async function reportPurchaseToMeta(packageToPurchase, customerInfo) {
-  try {
-    const product = packageToPurchase?.product;
-    const productId = product?.identifier || null;
-    const currency = product?.currencyCode || null;
-    const amount = typeof product?.price === 'number' ? product.price : null;
-
-    const active = customerInfo?.entitlements?.active || {};
-    const isTrial = Object.values(active).some((e) => e?.periodType === 'TRIAL');
-
-    if (isTrial) {
-      await logMetaTrialStarted({ productId, currency });
-      return;
-    }
-    await logMetaPurchaseCompleted({ amount, currency, productId });
-  } catch (e) {
-    // Måling må aldrig kunne vælte et køb.
-    console.log('[META] kunne ikke sende købshændelse:', e?.message || e);
-  }
-}
-
 export function useRevenueCat(userId) {
   const [loading, setLoading] = useState(true);
   const [offerings, setOfferings] = useState(null);
@@ -83,8 +49,6 @@ export function useRevenueCat(userId) {
       setCustomerInfo(info);
       const active = info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0;
       setIsSubscribed(active);
-      // Er abonnementet fornyet, mens appen var lukket, kan det ses her.
-      reportMetaRenewalIfAny(info);
       return active;
     } catch (err) {
       console.error('[RevenueCat] getCustomerInfo error (non-blocking):', err?.message || err);
@@ -188,11 +152,9 @@ export function useRevenueCat(userId) {
   const purchase = async (packageToPurchase) => {
     try {
       const result = await Purchases.purchasePackage({ aPackage: packageToPurchase });
-      // Købsdatoen skrives ned FØR refreshCustomerInfo. Ellers ser
-      // fornyelses-tjekket det nye køb som en fornyelse og melder det to gange.
-      rememberMetaPurchaseDate(result?.customerInfo);
       await refreshCustomerInfo();
-      await reportPurchaseToMeta(packageToPurchase, result?.customerInfo);
+      // Købet sendes IKKE til Meta herfra. RevenueCat gør det server til
+      // server — se SEND_PURCHASES_FROM_APP i src/lib/metaEvents.js.
       return result;
     } catch (err) {
       console.error('[RevenueCat] purchase failed (non-blocking):', err?.message || err);
@@ -203,9 +165,6 @@ export function useRevenueCat(userId) {
   const restorePurchases = async () => {
     try {
       const result = await Purchases.restorePurchases();
-      // En gendannelse er ikke et nyt køb og skal ikke sendes til Meta — men
-      // datoen skrives ned, så den heller ikke bliver meldt som en fornyelse.
-      rememberMetaPurchaseDate(result?.customerInfo);
       await refreshCustomerInfo();
       return result.customerInfo;
     } catch (err) {
