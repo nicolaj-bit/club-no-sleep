@@ -214,11 +214,16 @@ på Android er det `com.facebook.android:facebook-android-sdk`.
 - Siger brugeren nej, må enheds-id ikke sendes, men anonyme hændelser gerne.
   Derfor bliver `autoLogAppEvents` slået til, mens `advertiserIDCollection` og
   `advertiserTracking` bliver slået fra.
-- **`graph.facebook.com` må ikke stå i `NSPrivacyTrackingDomains`.** iOS
-  blokerer alle kald til domæner på listen, hvis brugeren har sagt nej — også
-  de anonyme hændelser, vi stadig må sende. `NSPrivacyTracking` skal til
-  gengæld stå til `true`, ellers modsiger privacy-manifestet og
-  `NSUserTrackingUsageDescription` hinanden, og indsendelsen afvises.
+- **`NSPrivacyTrackingDomains` skal indeholde præcis ét domæne:
+  `ep1.facebook.com`.** Listen må ikke være tom, så længe `NSPrivacyTracking`
+  er `true` — så afviser Apple indsendelsen med ITMS-91064. Og
+  `graph.facebook.com` må ikke stå der: iOS blokerer alle kald til domæner på
+  listen, når brugeren har sagt nej, og Meta sender de anonyme hændelser
+  netop gennem graph. Metas eget SDK angiver også kun `ep1.facebook.com`.
+  `NSPrivacyTracking` skal stå til `true`, ellers modsiger privacy-manifestet
+  og `NSUserTrackingUsageDescription` hinanden.
+  `ios/App/ci_scripts/check_privacy_manifest.sh` tjekker begge dele, før der
+  bygges, så fejlen ikke først findes efter en upload.
 - Metas Android-SDK tilføjer selv `com.google.android.gms.permission.AD_ID` og
   `ACCESS_ADSERVICES_*` til manifestet. Det er tilladt af Google Play, men
   **annonce-id skal være oplyst i Play Console under datasikkerhed.** Fjern
