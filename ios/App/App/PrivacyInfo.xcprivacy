@@ -11,18 +11,24 @@
 	<key>NSPrivacyTracking</key>
 	<true/>
 	<!--
-		⚠️ graph.facebook.com må IKKE stå på denne liste.
+		Listen SKAL indeholde mindst ét domæne, så længe NSPrivacyTracking er
+		true. Står den tom, afviser Apple indsendelsen med ITMS-91064.
 
-		iOS blokerer alle netværkskald til domæner på listen, hvis brugeren har
-		sagt nej til sporing. Metas hændelser går gennem graph.facebook.com —
-		også de anonyme, som vi stadig gerne må sende. Stod domænet her, ville
-		et nej slukke målingen helt i stedet for bare at fjerne enheds-id'et.
+		Domænet er ep1.facebook.com og ikke graph.facebook.com. Det er samme
+		domæne, Metas eget SDK angiver i sit privacy-manifest, og det er med
+		vilje: iOS blokerer alle kald til domæner på listen, når brugeren har
+		sagt nej til sporing. Meta sender de sporede hændelser gennem
+		ep1.facebook.com og de anonyme gennem graph.facebook.com. Står kun
+		ep1 her, forsvinder enheds-id'et ved et nej — mens de anonyme
+		hændelser stadig når frem. Stod graph.facebook.com her, ville et nej
+		slukke målingen helt.
 
-		Metas eget SDK har sit privacy-manifest med i pakken. Vores skal ikke
-		gentage det.
+		⚠️ Tilføj ikke graph.facebook.com.
 	-->
 	<key>NSPrivacyTrackingDomains</key>
-	<array/>
+	<array>
+		<string>ep1.facebook.com</string>
+	</array>
 	<key>NSPrivacyCollectedDataTypes</key>
 	<array>
 		<dict>

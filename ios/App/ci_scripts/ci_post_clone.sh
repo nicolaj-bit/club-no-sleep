@@ -27,6 +27,11 @@ npm run build
 echo "Syncing Capacitor iOS project..."
 npx cap sync
 
+# Privacy-manifestet tjekkes, før der bygges. Apple finder først fejlen efter
+# upload, og så skal hele runden gøres om. Se check_privacy_manifest.sh.
+echo "Checking privacy manifest..."
+"$REPO_ROOT/ios/App/ci_scripts/check_privacy_manifest.sh"
+
 echo "Installing CocoaPods dependencies..."
 cd "$REPO_ROOT/ios/App"
 pod install
