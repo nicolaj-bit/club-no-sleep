@@ -1,0 +1,46 @@
+{
+  "name": "Bruger-aktivitet mail",
+  "description": "Sender mail til admin n\u00e5r en ny brugerprofil oprettes, n\u00e5r v\u00e6sentlige profilfelter \u00e6ndres, eller n\u00e5r en profil slettes. St\u00f8jende felter (online-status, sidst aktiv, notifikationspr\u00e6ferencer osv.) filtreres fra.",
+  "trigger": {
+    "condition": "${ .trigger.event_type != \"update\" or any((.trigger.changed_fields // [])[]; . as $f | [\"username\",\"display_name\",\"profile_label\",\"gender\",\"city\",\"profile_image\",\"child_birthdate\",\"child_due_date\",\"onboarding_completed\",\"is_invited\",\"inviter_email\",\"family_id\",\"family_role\",\"subscription_status\",\"subscription_period_type\",\"subscription_expires_at\",\"subscription_cancel_at\",\"subscription_will_renew\",\"marketing_consent\",\"role\",\"user_email\"] | index($f) != null) }",
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "UserProfile",
+      "events": [
+        "create",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "bruger_aktivitet_mail",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_mail": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "userActivityMail",
+            "args": {
+              "event_type": "${ .trigger.event_type }",
+              "entity_id": "${ .trigger.entity_id }",
+              "data": "${ .trigger.data }",
+              "old_data": "${ .trigger.old_data }",
+              "changed_fields": "${ .trigger.changed_fields }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send mail til admin",
+            "description": "Ny bruger eller \u00e6ndring"
+          }
+        }
+      }
+    ]
+  }
+}
