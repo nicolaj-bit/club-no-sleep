@@ -244,6 +244,21 @@ på Android er det `com.facebook.android:facebook-android-sdk`.
 
 ---
 
+## Dobbeltkode i søvnloggen
+
+`base44/shared/sleepSession.js` er eneste kilde til sandhed for søvnberegninger,
+og flere frontend-filer importerer direkte derfra — det virker i buildet. Men
+Base44s redigeringsværktøj **afviser nye** frontend-filer, der gør det
+(«Frontend code cannot import from base44/»). Derfor har den manuelle søvnlog
+kopier i `src/lib/manualSleepPeriods.js` og `src/lib/sleepSessionTotals.js`.
+
+Skrider kopierne fra den delte kode, viser skemaet ét søvntal til brugeren,
+mens der gemmes et andet. `scripts/check-sleep-duplicates.mjs` sammenligner dem
+på opførsel ved hvert push, se `.github/workflows/checks.yml`. Fejler det, skal
+kopierne rettes **i Base44** — en rettelse her i repoet slår ikke igennem.
+
+---
+
 ## Kort
 
 `DenmarkMap.jsx` bruger Esri Canvas-fliser og følger appens dark mode:

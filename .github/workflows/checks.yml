@@ -1,0 +1,32 @@
+name: Tjek
+
+# Kører ved hvert push til main og på pull requests.
+#
+# Formålet er at fange, at frontend-kopierne af søvnlogikken i src/lib/ skrider
+# fra den delte kode i base44/shared/. Kopierne findes, fordi Base44s
+# redigeringsværktøj ikke tillader nye frontend-filer at importere fra base44/.
+# Skrider de fra hinanden, viser skemaet ét søvntal til brugeren, mens der
+# gemmes et andet — og det ville ellers først blive opdaget i tallene.
+#
+# Tjekket har ingen afhængigheder og tager et par sekunder.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  soevnlogik:
+    name: Søvnlogikken skal være ens begge steder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hent koden
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Sammenlign src/lib med base44/shared
+        run: node scripts/check-sleep-duplicates.mjs
