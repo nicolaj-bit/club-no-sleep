@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { format } from 'date-fns';
 import { useSleepSession } from './useSleepSession';
+import ManualSleepDialog from './ManualSleepDialog';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import {
   computeSessionTotals,
@@ -28,6 +29,7 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
   const { history, loading } = useSleepSession(user);
   const { t } = useLanguage();
   const [filter, setFilter] = useState('all'); // 'all' | 'night' | 'nap'
+  const [editLog, setEditLog] = useState(null); // manuel post der rettes
 
   if (loading) {
     return (
@@ -64,6 +66,8 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
 
   return (
     <div className="px-4 py-5 space-y-3 max-w-lg mx-auto">
+      <ManualSleepDialog open={!!editLog} onOpenChange={(o) => { if (!o) setEditLog(null); }} user={user} activeChild={activeChild} editLog={editLog} />
+
       {/* Filter */}
       <div className="flex gap-2 mb-1">
         {filterButtons.map(btn => (
@@ -86,8 +90,14 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
         // Nyt format: period-baseret
         if (log.periods && log.periods.length > 0) {
           const totals = computeSessionTotals(log);
+          const isManual = log.entry_mode === 'manual';
           return (
-            <div key={log.id} className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-card)' }}>
+            <div
+              key={log.id}
+              className={`rounded-2xl p-4${isManual ? ' cursor-pointer' : ''}`}
+              style={{ backgroundColor: 'var(--color-bg-card)' }}
+              onClick={isManual ? () => setEditLog(log) : undefined}
+            >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   {isNap
@@ -100,6 +110,7 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
                   <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>
                     {isNap ? t.nap : t.nightSleep}
                   </span>
+                  {isManual && <Chip label={t.manualBadge} color="brown" />}
                 </div>
                 {log.session_start && (
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>

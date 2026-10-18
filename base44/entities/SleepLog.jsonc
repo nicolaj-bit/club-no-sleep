@@ -41,6 +41,14 @@
       "default": "night",
       "description": "S\u00f8vntype: lur eller nattes\u00f8vn. Eksisterende sessioner uden type behandles som nattes\u00f8vn."
     },
+    "entry_mode": {
+      "type": "string",
+      "enum": [
+        "live",
+        "manual"
+      ],
+      "description": "Hvordan posten er oprettet: live (timer) eller manual (tilf\u00f8jet bagud). Poster uden felt behandles som live."
+    },
     "session_start": {
       "type": "string",
       "format": "date-time",

@@ -11,6 +11,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import ContentLock from '@/components/subscription/ContentLock';
 import LiveSleepTracker from '@/components/sleep/LiveSleepTracker';
 import SleepHistory from '@/components/sleep/SleepHistory';
+import ManualSleepButton from '@/components/sleep/ManualSleepButton';
 import KraeverBarn from '@/components/children/KraeverBarn';
 import { da, enUS } from 'date-fns/locale';
 
@@ -56,10 +57,14 @@ export default function SleepLog() {
 
         <KraeverBarn field="birthdate" reason="kraeverBarnReasonSleep">
           {view === 'history' ? (
-            <SleepHistory user={user} activeChild={activeChild} lang={lang} dateLocale={dateLocale} />
+            <>
+              {hasSubscription && <ManualSleepButton user={user} activeChild={activeChild} />}
+              <SleepHistory user={user} activeChild={activeChild} lang={lang} dateLocale={dateLocale} />
+            </>
           ) : (
             <ContentLock locked={!hasSubscription} loading={subscriptionLoading} blurHeight="300px">
               <LiveSleepTracker user={user} activeChild={activeChild} />
+              <ManualSleepButton user={user} activeChild={activeChild} />
             </ContentLock>
           )}
         </KraeverBarn>

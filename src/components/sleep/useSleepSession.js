@@ -52,6 +52,22 @@ export function useSleepSession(user) {
     },
   });
 
+  // Manuel søvn: fejl vises som de kommer fra serveren (allerede på dansk).
+  const manualMutation = useMutation({
+    mutationFn: async (payload) => {
+      try {
+        const res = await base44.functions.invoke('createManualSleepLog', payload);
+        return res?.data || res;
+      } catch (e) {
+        throw new Error(e?.response?.data?.error || e?.message || t.somethingWentWrong);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      if (isInvited) refreshInviteData();
+    },
+  });
+
   const refresh = async () => {
     await queryClient.invalidateQueries(queryKey);
     if (isInvited) await refreshInviteData();
@@ -70,6 +86,7 @@ export function useSleepSession(user) {
     markSleeping: (session_id) => actionMutation.mutateAsync({ action: 'mark_sleeping', session_id }),
     endSession: (session_id) => actionMutation.mutateAsync({ action: 'end', session_id }),
     undoEnd: (session_id) => actionMutation.mutateAsync({ action: 'undo_end', session_id }),
+    addManualSession: (payload) => manualMutation.mutateAsync(payload),
     refresh,
     isPending: actionMutation.isPending,
   };
