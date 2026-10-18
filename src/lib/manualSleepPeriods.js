@@ -1,5 +1,4 @@
-// Frontend-kopi af base44/shared/manualSleepPeriods.js (klienten kan ikke importere fra base44/).
-// Holdes identisk, så forhåndsvisningen svarer til det backend gemmer.
+// Frontend-kopi af base44/shared/manualSleepPeriods.js. Skal holdes identisk.
 export function buildManualPeriods(startIso, endIso, wakings) {
   const sorted = [...(wakings || [])].sort(
     (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()

@@ -1,5 +1,5 @@
 // Frontend-kopi af computeSessionTotals / formatHoursMinutes fra base44/shared/sleepSession.js
-// (nye klientfiler kan ikke importere fra base44/). Skal holdes identisk med den delte fil.
+// Skal holdes identisk med den delte fil.
 export function computeSessionTotals(session, nowMs) {
   const periods = session?.periods || [];
   let totalSleepMs = 0;

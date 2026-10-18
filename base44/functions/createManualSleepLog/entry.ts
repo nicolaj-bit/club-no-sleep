@@ -78,6 +78,9 @@ Deno.serve(async (req) => {
     if (end.getTime() <= start.getTime()) {
       return fail('Sluttidspunktet skal ligge efter starttidspunktet.', 400);
     }
+    if (end.getTime() > Date.now() + 5 * 60 * 1000) {
+      return fail('Sluttidspunktet ligger i fremtiden. Registrér søvnen, når den er slut.', 400);
+    }
     if (start.getTime() > Date.now() + 5 * 60 * 1000) {
       return fail('Starttidspunktet ligger i fremtiden. Du kan kun registrere søvn, der allerede er begyndt.', 400);
     }
@@ -126,7 +129,7 @@ Deno.serve(async (req) => {
       '-created_date',
       1000
     );
-    const sameChild = (c) => (c || null) === (child_id || null);
+    const sameChild = (c) => !c || !child_id || c === child_id;
     for (const o of others || []) {
       if (existing && o.id === existing.id) continue;
       if (!o.session_start || !sameChild(o.child_id)) continue;
