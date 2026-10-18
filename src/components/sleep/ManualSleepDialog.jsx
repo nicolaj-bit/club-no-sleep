@@ -6,6 +6,7 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 import { computeSessionTotals, formatHoursMinutes } from '@/lib/sleepSessionTotals';
 import { useSleepSession } from './useSleepSession';
 import ManualWakingRows from './ManualWakingRows';
+import ManualPickerField from './ManualPickerField';
 import { emptyForm, formFromLog, resolveForm } from './manualSleepForm';
 
 const inputStyle = { backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' };
@@ -57,7 +58,7 @@ export default function ManualSleepDialog({ open, onOpenChange, user, activeChil
         <DialogHeader>
           <DialogTitle>{editLog ? t.manualEditSleep : t.manualAddSleep}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex gap-2">
             {[['night', t.nightSleep], ['nap', t.nap]].map(([key, label]) => (
               <button
@@ -75,20 +76,11 @@ export default function ManualSleepDialog({ open, onOpenChange, user, activeChil
             ))}
           </div>
 
-          <label className="block text-xs" style={labelStyle}>
-            {t.manualDate}
-            <input type="date" value={form.date} max={format(new Date(), 'yyyy-MM-dd')} onChange={e => set({ date: e.target.value })} className="w-full rounded-xl px-3 py-2 border" style={inputStyle} />
-          </label>
+          <ManualPickerField label={t.manualDate} type="date" value={form.date} max={format(new Date(), 'yyyy-MM-dd')} onChange={e => set({ date: e.target.value })} placeholder={t.manualPickDate} />
 
           <div className="flex gap-2">
-            <label className="flex-1 text-xs" style={labelStyle}>
-              {t.manualStartTime}
-              <input type="time" value={form.startTime} onChange={e => set({ startTime: e.target.value })} className="w-full rounded-xl px-3 py-2 border" style={inputStyle} />
-            </label>
-            <label className="flex-1 text-xs" style={labelStyle}>
-              {t.manualEndTime}
-              <input type="time" value={form.endTime} onChange={e => set({ endTime: e.target.value })} className="w-full rounded-xl px-3 py-2 border" style={inputStyle} />
-            </label>
+            <ManualPickerField className="flex-1" label={t.manualStartTime} type="time" value={form.startTime} onChange={e => set({ startTime: e.target.value })} placeholder={t.manualPickTime} />
+            <ManualPickerField className="flex-1" label={t.manualEndTime} type="time" value={form.endTime} onChange={e => set({ endTime: e.target.value })} placeholder={t.manualPickTime} />
           </div>
           {r.endsNextDay && (
             <p className="text-xs -mt-2" style={labelStyle}>{r.endsEarly ? t.manualEndsTomorrowMorning : t.manualEndsTomorrow}</p>

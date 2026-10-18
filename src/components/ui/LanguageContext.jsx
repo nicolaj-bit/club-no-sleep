@@ -287,6 +287,8 @@ const translations = {
     // SleepLog — history
     noSleepLogsYet: 'Ingen søvnlogs endnu',
     manualAddSleep: 'Tilføj søvn manuelt',
+    manualPickTime: 'Vælg tidspunkt',
+    manualPickDate: 'Vælg dato',
     manualEditSleep: 'Ret søvn',
     manualDate: 'Dato',
     manualStartTime: 'Starttidspunkt',
@@ -1511,6 +1513,8 @@ const translations = {
     // SleepLog — history
     noSleepLogsYet: 'No sleep logs yet',
     manualAddSleep: 'Add sleep manually',
+    manualPickTime: 'Pick a time',
+    manualPickDate: 'Pick a date',
     manualEditSleep: 'Edit sleep',
     manualDate: 'Date',
     manualStartTime: 'Start time',

@@ -2,8 +2,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-const inputCls = 'w-full rounded-xl px-3 py-2 border';
-const inputStyle = { backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' };
+import ManualPickerField from './ManualPickerField';
 
 export default function ManualWakingRows({ wakings, onChange }) {
   const { t } = useLanguage();
@@ -14,14 +13,8 @@ export default function ManualWakingRows({ wakings, onChange }) {
     <div className="space-y-2">
       {wakings.map((w, i) => (
         <div key={i} className="flex items-end gap-2">
-          <label className="flex-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-            {t.manualWakingFrom}
-            <input type="time" value={w.from} onChange={e => update(i, { from: e.target.value })} className={inputCls} style={inputStyle} />
-          </label>
-          <label className="flex-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-            {t.manualWakingTo}
-            <input type="time" value={w.to} onChange={e => update(i, { to: e.target.value })} className={inputCls} style={inputStyle} />
-          </label>
+          <ManualPickerField className="flex-1" label={t.manualWakingFrom} type="time" value={w.from} onChange={e => update(i, { from: e.target.value })} placeholder={t.manualPickTime} />
+          <ManualPickerField className="flex-1" label={t.manualWakingTo} type="time" value={w.to} onChange={e => update(i, { to: e.target.value })} placeholder={t.manualPickTime} />
           <button
             type="button"
             onClick={() => remove(i)}
