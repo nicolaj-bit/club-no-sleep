@@ -10,6 +10,7 @@
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
 		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
+		CN5600000000000000000002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5600000000000000000001 /* SceneDelegate.swift */; };
 		CN5100000000000000000002 /* SleepLockScreenActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5100000000000000000001 /* SleepLockScreenActions.swift */; };
 		CN5300000000000000000002 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5300000000000000000001 /* MainViewController.swift */; };
 		CN5200000000000000000020 /* SleepActionSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CN5200000000000000000010 /* SleepActionSender.swift */; };
@@ -63,6 +64,7 @@
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CN5600000000000000000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		CN5100000000000000000001 /* SleepLockScreenActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepLockScreenActions.swift; sourceTree = "<group>"; };
 		CN5300000000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CN5200000000000000000010 /* SleepActionSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepActionSender.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				CN5100000000000000000001 /* SleepLockScreenActions.swift */,
 				CN5300000000000000000001 /* MainViewController.swift */,
+				CN5600000000000000000001 /* SceneDelegate.swift */,
 				CN5200000000000000000014 /* SleepLiveActivityPlugin.swift */,
 				CN5400000000000000000001 /* MetaEventsController.swift */,
 				CN5400000000000000000011 /* MetaEventsPlugin.swift */,
@@ -335,6 +338,7 @@
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				CN5100000000000000000002 /* SleepLockScreenActions.swift in Sources */,
 				CN5300000000000000000002 /* MainViewController.swift in Sources */,
+				CN5600000000000000000002 /* SceneDelegate.swift in Sources */,
 				CN5200000000000000000020 /* SleepActionSender.swift in Sources */,
 				CN5200000000000000000021 /* SleepActivityAttributes.swift in Sources */,
 				CN5200000000000000000022 /* SleepPhaseToggleIntent.swift in Sources */,
