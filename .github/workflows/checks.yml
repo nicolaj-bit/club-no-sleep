@@ -30,3 +30,18 @@ jobs:
 
       - name: Sammenlign src/lib med base44/shared
         run: node scripts/check-sleep-duplicates.mjs
+
+  ios-opstart:
+    name: iOS-opstartsmodellen skal hænge sammen
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hent koden
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Tjek scene-livscyklussen
+        run: node scripts/check-ios-scene-lifecycle.mjs

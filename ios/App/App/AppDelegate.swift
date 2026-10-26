@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Appen henter hele brugerfladen fra base44.app, og webviewets diskcache
         // overlever appstart. Uden det her kan brugeren sidde med en uger gammel
         // udgave af siden, længe efter at Base44 er publiceret.
-        clearWebViewCache()
+        Self.clearWebViewCache()
 
         // Metas SDK. Starter med automatisk logning og annonce-id slået FRA og
         // venter på, at brugeren svarer på sporingsdialogen efter onboarding.
@@ -25,32 +25,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        // Det er FØRST OG FREMMEST denne rydning, der virker.
-        //
-        // Rydningen er asynkron, og ved kold opstart når den sjældent at blive
-        // færdig, før webviewet begynder at hente siden. Rydder vi derimod, når
-        // appen går i baggrunden, er der god tid — og næste opstart er ren.
-        // Rydningen i didFinishLaunchingWithOptions er stadig med, så en app,
-        // der aldrig har været i baggrunden, også bliver ryddet.
-        clearWebViewCache()
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        // Capacitor kan have overskrevet vores notification-delegate og
-        // kategorier undervejs. install() er idempotent og sætter dem på plads
-        // igen, og sender samtidig eventuelle handlinger fra køen af sted.
-        SleepLockScreenActions.shared.install()
-    }
+    // ⚠️ Her stod før applicationWillResignActive, applicationDidEnterBackground,
+    // applicationWillEnterForeground og applicationDidBecomeActive.
+    //
+    // De er FJERNET med vilje. Når appen bruger den scene-baserede
+    // opstartsmodel — og det gør den, se UIApplicationSceneManifest i
+    // Info.plist — kalder iOS dem ikke længere på app-delegaten. Scenen får
+    // dem i stedet. Arbejdet ligger nu i sceneDidBecomeActive og
+    // sceneDidEnterBackground i SceneDelegate.swift.
+    //
+    // Læg dem ikke tilbage her. De ville se fuldstændig rigtige ud og aldrig
+    // blive kaldt. scripts/check-ios-scene-lifecycle.mjs fejler, hvis de
+    // dukker op igen.
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -71,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// forsvinder — så holder søvnloggen op med at virke fra låseskærmen.
     ///
     /// Det ser ud som oplagt oprydning at tage resten med. Det er det ikke.
-    private func clearWebViewCache() {
+    static func clearWebViewCache() {
         let cacheTypes: Set<String> = [
             WKWebsiteDataTypeDiskCache,
             WKWebsiteDataTypeMemoryCache,
