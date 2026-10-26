@@ -98,8 +98,16 @@ som appen skriver i Capacitor Preferences under `cns_native_token`.
 
 - Deployment target er **15.0** og skal blive der. Skal en widget-extension
   bruge nyere API, giver man extensionen sit eget, højere target.
-- Bygges med Xcode Cloud. `MARKETING_VERSION` skal hæves ved hver indsendelse,
-  ellers fejler «Preparing build for App Store Connect».
+- Bygges med Xcode Cloud. **`MARKETING_VERSION` skal hæves, så snart den
+  forrige version er udgivet** — ikke kun ved hver indsendelse. Er versionen
+  allerede sluppet igennem review, er den lukket, og Apple afviser uploaden
+  med ITMS-90186 («The train version is closed for new build submissions») og
+  ITMS-90062. Begge targets skal have samme tal, ellers afvises indsendelsen.
+- **Build-nummeret sættes af Xcode Cloud selv**, ikke af
+  `CURRENT_PROJECT_VERSION` i repoet. Derfor driver de to tal fra hinanden —
+  repoet stod på 202, mens App Store Connect var nået til 204. Hæv tallet i
+  repoet til noget højere end det, butikken viser, når du alligevel er i
+  filen, så det ikke ligner et fald.
 - Notifikations-knapper: kategorien registreres i **native kode**, ikke fra JS.
   Kalder JS `LocalNotifications.registerActionTypes` på iOS, overskriver
   Capacitor den native kategori, og knapperne forsvinder.
