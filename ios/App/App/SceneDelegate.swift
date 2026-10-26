@@ -38,6 +38,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         forwardActivity(userActivity)
     }
 
+    // MARK: - Livscyklus
+    //
+    // Disse to stod før i AppDelegate som applicationDidBecomeActive og
+    // applicationDidEnterBackground. Med den scene-baserede opstartsmodel
+    // kalder iOS dem ikke længere dér — scenen får dem i stedet. Flyttes de
+    // tilbage, holder begge dele op med at virke uden at noget fejler.
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        // Capacitor kan have overskrevet vores notification-delegate og
+        // kategorier undervejs. install() er idempotent og sætter dem på plads
+        // igen, og sender samtidig eventuelle handlinger fra køen af sted.
+        SleepLockScreenActions.shared.install()
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        // Det er FØRST OG FREMMEST denne rydning, der virker.
+        //
+        // Rydningen er asynkron, og ved kold opstart når den sjældent at blive
+        // færdig, før webviewet begynder at hente siden. Rydder vi derimod, når
+        // appen går i baggrunden, er der god tid — og næste opstart er ren.
+        // Rydningen i didFinishLaunchingWithOptions er stadig med, så en app,
+        // der aldrig har været i baggrunden, også bliver ryddet.
+        AppDelegate.clearWebViewCache()
+    }
+
     // MARK: - Videresendelse
 
     /// Samme håndtering som AppDelegate.application(_:open:options:): Meta
