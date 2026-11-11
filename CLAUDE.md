@@ -175,6 +175,21 @@ RevenueCat (`@revenuecat/purchases-capacitor` v13) på begge platforme.
 - 7 dages gratis prøveperiode er sat op i begge butikker. Eligibility fra
   RevenueCat er `'unknown'` for nye brugere, så betingelser skal skrives som
   `!== 'ineligible'` — ikke som `=== 'eligible'`, da teksten så aldrig vises.
+- **Der er ingen Stripe.** Betaling sker udelukkende i App Store og Google Play.
+  Stripe-checkout, det faste betalingslink og funktionerne
+  `createCheckoutSession` og `cancelSubscription` blev fjernet i november 2026.
+  Ingen abonnementer var nogensinde oprettet gennem Stripe. Læg det ikke
+  tilbage: indhold, der låses op inde i appen, skal betales gennem butikken
+  (Apple 3.1.1). På web sendes brugeren derfor hen for at hente appen i stedet
+  for til en betalingsside.
+- **Opsigelse sker i butikken, ikke i appen.** Knappen i `Settings.jsx` åbner
+  App Stores eller Google Plays egen abonnementsside. En app kan ikke opsige et
+  køb, som butikken ejer — det kald, der lå der før, kunne aldrig lykkes.
+- **Prisen er 29 kr./md.** fra 11.–12. november 2026, nedsat fra 59 kr. i begge
+  butikker. Nuværende abonnenter fulgte med ned. Teksterne står hardkodet flere
+  steder i `src/`, så en ny pris skal rettes både i butikkerne og der — søg
+  efter `kr` og `DKK`. Den gemte prislabel på entiteten `SubscriptionContent`
+  vinder over koden og skal rettes med.
 
 ---
 
