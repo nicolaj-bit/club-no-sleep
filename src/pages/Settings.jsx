@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { inAppLogout } from '@/lib/inAppLogout';
-import { openExternalUrl } from '@/lib/nativeAuth';
+import { openExternalUrl } from '@/lib/openExternalUrl';
 import { Capacitor } from '@capacitor/core';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
