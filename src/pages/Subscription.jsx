@@ -96,21 +96,16 @@ export default function Subscription() {
       return;
     }
 
-    // Web: brug Stripe checkout
-    setLoading(true);
+    // Web: abonnementet købes kun i App Store og Google Play, så her sender vi
+    // brugeren hen for at hente appen.
+    //
+    // Her lå før en Stripe-betaling. Den er fjernet: indhold, der låses op inde
+    // i appen, skal betales gennem butikken (Apple 3.1.1), og vi tager
+    // alligevel ikke imod penge uden om den.
     setError(null);
-    try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      if (response.data?.url) {
-        window.location.href = response.data.url;
-      } else {
-        setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout. Please try again.');
-      }
-    } catch (e) {
-      setError(da ? 'Kunne ikke starte betaling. Prøv igen.' : 'Could not start checkout. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = /Android/i.test(navigator.userAgent) ?
+      'https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app' :
+      'https://apps.apple.com/dk/app/id6764388095';
   };
 
   const handleRestore = async () => {
