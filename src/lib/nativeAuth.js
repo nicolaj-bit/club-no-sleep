@@ -55,7 +55,7 @@ export function buildAppDeepLink(params = {}) {
 /**
  * Åbner en ekstern URL i systembrowseren på native (SFSafariViewController / Chrome Custom Tab).
  * På web: almindelig window.location.href.
- * Brug dette til Stripe checkout URLs og andre eksterne betalingssider.
+ * Brug dette til eksterne sider, fx butikkernes abonnementsindstillinger.
  */
 export async function openExternalUrl(url) {
   const isNative = Capacitor.isNativePlatform();
@@ -73,13 +73,6 @@ export async function openExternalUrl(url) {
   window.location.href = url;
 }
 
-/**
- * Redirect til betaling — åbner Stripe checkout i systembrowseren.
- * Bruger Stripe Payment Link (absolut URL) så det altid virker,
- * også på native hvor appBaseUrl ikke er tilgængelig.
- */
-export async function redirectToWebSubscription(accessToken) {
-  // Stripe Payment Link — håndterer hele betalingsflowet
-  const stripeCheckoutUrl = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
-  await openExternalUrl(stripeCheckoutUrl);
-}
+// Her lå før redirectToWebSubscription(), som åbnede et fast Stripe-betalingslink.
+// Den er fjernet: abonnementet købes kun i App Store og Google Play, og appen må
+// ikke sende brugeren til betaling uden om butikken (Apple 3.1.1).
