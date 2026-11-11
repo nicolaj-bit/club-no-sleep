@@ -150,8 +150,8 @@ export default function Subscription() {
     setDraft({
       headline: content?.headline || 'LALATOTO',
       subline: content?.subline || (da ? 'Din digitale følgesvend som forælder' : 'Your digital companion as a parent'),
-      price_label: content?.price_label || (da ? '59 kr. / måned' : '59 DKK / month'),
-      cta_label: content?.cta_label || (da ? 'Abonner — 59 kr./md.' : 'Subscribe — 59 DKK/mo.'),
+      price_label: content?.price_label || (da ? '29 kr. / måned' : '29 DKK / month'),
+      cta_label: content?.cta_label || (da ? 'Abonner — 29 kr./md.' : 'Subscribe — 29 DKK/mo.'),
       footer_note: content?.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.'),
       logo_url: content?.logo_url || '',
       media_type: content?.media_type || 'none',
@@ -217,17 +217,17 @@ export default function Subscription() {
   const isTrialEligible = rc.trialEligibility !== 'ineligible';
   const isTrialIneligible = rc.trialEligibility === 'ineligible';
   const priceLabel = isTrialEligible
-    ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
+    ? (da ? '7 dage gratis · Derefter 29 kr./md. · Opsig når som helst' : '7 days free · Then 29 DKK/mo. · Cancel anytime')
     : iosPrice
       ? `${iosPrice} / ${da ? 'måned' : 'month'}`
-      : display.price_label || '59 kr. / måned';
+      : display.price_label || '29 kr. / måned';
   const ctaLabel = isTrialEligible
     ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
     : isTrialIneligible
       ? (da ? 'Bliv medlem' : 'Become a member')
       : (display.cta_label || (da ? 'Start abonnement' : 'Start subscription'));
   const footerNote = isTrialEligible
-    ? (da ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.' : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.')
+    ? (da ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 29 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.' : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 29 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.')
     : (display.footer_note || (da ? 'Abonnementet fornyes automatisk. Annuller når som helst.' : 'Subscription renews automatically. Cancel anytime.'));
 
   return (
