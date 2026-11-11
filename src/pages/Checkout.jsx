@@ -69,7 +69,7 @@ export default function Checkout() {
   const rcPrice = rcPkg?.product?.priceString;
   const isTrialEligible = rc.trialEligibility !== 'ineligible';
   const isTrialIneligible = rc.trialEligibility === 'ineligible';
-  const priceShort = rcPrice || (da ? '59 kr.' : '59 DKK');
+  const priceShort = rcPrice || (da ? '29 kr.' : '29 DKK');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -166,7 +166,7 @@ export default function Checkout() {
           </h1>
           <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             {isTrialEligible
-              ? (da ? '7 dage gratis · Derefter 59 kr./md. · Opsig når som helst' : '7 days free · Then 59 DKK/mo. · Cancel anytime')
+              ? (da ? '7 dage gratis · Derefter 29 kr./md. · Opsig når som helst' : '7 days free · Then 29 DKK/mo. · Cancel anytime')
               : t.checkoutPricing}
           </p>
         </div>
@@ -270,8 +270,8 @@ export default function Checkout() {
         {isTrialEligible && (
           <p className="text-center text-xs mt-3 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             {da
-              ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 59 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
-              : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 59 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
+              ? 'Din gratis prøveperiode starter med det samme. Efter 7 dage fornyes dit medlemskab automatisk til 29 kr./md., indtil du opsiger. Du kan opsige når som helst i App Store eller Google Play.'
+              : 'Your free trial starts immediately. After 7 days, your membership automatically renews at 29 DKK/mo. until you cancel. You can cancel anytime in the App Store or Google Play.'}
           </p>
         )}
 
