@@ -39,22 +39,18 @@ export default function Paywall({ onSubscribed }) {
       return;
     }
 
-    // Web: brug Stripe checkout
-    setLoading(true);
+    // Web: abonnementet købes kun i App Store og Google Play, så her sender vi
+    // brugeren hen for at hente appen.
+    //
+    // Her lå før en Stripe-betaling. Den er fjernet: indhold, der låses op inde
+    // i appen, skal betales gennem butikken (Apple 3.1.1), og vi tager
+    // alligevel ikke imod penge uden om den.
     setError(null);
-    try {
-      const response = await base44.functions.invoke('createCheckoutSession', {});
-      if (response.data?.url) {
-        await openExternalUrl(response.data.url);
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-    } catch (e) {
-      console.error('Checkout error:', e);
-      setError(t.paywallCheckoutError);
-    } finally {
-      setLoading(false);
-    }
+    await openExternalUrl(
+      /Android/i.test(navigator.userAgent) ?
+        'https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app' :
+        'https://apps.apple.com/dk/app/id6764388095'
+    );
   };
 
   const handleRestore = async () => {
