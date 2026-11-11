@@ -22,7 +22,7 @@ export default function Onboarding() {
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(-1);
   const hasPaid = new URLSearchParams(window.location.search).get('subscription') === 'success';
-  const [hasStripeSub, setHasStripeSub] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -54,9 +54,9 @@ export default function Onboarding() {
           display_name: u.full_name || '',
           username: (u.email?.split('@')[0] || '').toLowerCase().replace(/[^a-z0-9_]/g, ''),
         }));
-        // Tjek om brugeren allerede har betalt via Stripe (landing page)
+        // Tjek om brugeren allerede har et aktivt abonnement fra butikken
         base44.functions.invoke('verifySubscription', {})
-          .then(res => { if (res.data?.active) setHasStripeSub(true); })
+          .then(res => { if (res.data?.active) setHasSubscription(true); })
           .catch(() => {});
       })
       .catch(() => showInAppLogin('/Onboarding'));
@@ -72,12 +72,12 @@ export default function Onboarding() {
     });
   }, []);
 
-  // Hvis Stripe-subscription opdages mens brugeren er ved plan-steppet, spring over
+  // Opdages et aktivt abonnement, mens brugeren er ved plan-steppet, springes det over
   useEffect(() => {
-    if (hasStripeSub && step === 3 && !saving) {
+    if (hasSubscription && step === 3 && !saving) {
       handleFinish('paid');
     }
-  }, [hasStripeSub, step]);
+  }, [hasSubscription, step]);
 
   const setField = (key, value) => {
     setForm(f => ({ ...f, [key]: value }));
@@ -566,7 +566,7 @@ export default function Onboarding() {
                   return;
                 }
                 setDateError('');
-                if (hasStripeSub || hasPaid) {
+                if (hasSubscription || hasPaid) {
                   handleFinish('paid');
                 } else {
                   setStep(3);
