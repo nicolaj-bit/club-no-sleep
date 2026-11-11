@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
-import { openExternalUrl } from '@/lib/openExternalUrl';
 import LegalModal from '@/components/landing/LegalModal';
 import IPhoneMockup from '@/components/landing/IPhoneMockup';
 import FeaturesList from '@/components/landing/FeaturesList';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-const STRIPE_CHECKOUT_URL = 'https://buy.stripe.com/00wdR9eRue256hG11J3cc00';
 
 export default function Landing() {
   const isNativeApp = (() => {
@@ -19,14 +17,6 @@ export default function Landing() {
   const [phoneUrls, setPhoneUrls] = useState({ a: '', b: '' });
   const [hero1Image, setHero1Image] = useState('');
   const [landingHero, setLandingHero] = useState(null);
-
-  const handleBecomeMember = () => {
-    if (window.self !== window.top) {
-      alert(t.landingPreviewPaymentAlert);
-      return;
-    }
-    openExternalUrl(STRIPE_CHECKOUT_URL);
-  };
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(setIsAuth).catch(() => {});
