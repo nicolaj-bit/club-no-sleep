@@ -12,7 +12,7 @@
     },
     "price_label": {
       "type": "string",
-      "description": "Prislabel (fx '59 kr. / m\u00e5ned')"
+      "description": "Prislabel (fx '29 kr. / m\u00e5ned')"
     },
     "cta_label": {
       "type": "string",
