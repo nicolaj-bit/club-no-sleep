@@ -29,7 +29,6 @@ import { Baby, Pencil } from 'lucide-react';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 import TrialStatusBadge from '@/components/subscription/TrialStatusBadge';
-import { redirectToWebSubscription } from '@/lib/nativeAuth';
 import { inAppLogout } from '@/lib/inAppLogout';
 import PageHeader from '@/components/ui/PageHeader';
 import { Capacitor } from '@capacitor/core';
