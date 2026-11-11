@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { inAppLogout } from '@/lib/inAppLogout';
+import { openExternalUrl } from '@/lib/nativeAuth';
+import { Capacitor } from '@capacitor/core';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronLeft, Lock, Bell, Shield, HelpCircle, Mail, Trash2, Moon, FileText, Sun, CreditCard } from 'lucide-react';
@@ -39,7 +41,6 @@ export default function Settings() {
   const [supportContent, setSupportContent] = useState(null);
   const [helpLoaded, setHelpLoaded] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
-  const [cancelLoading, setCancelLoading] = useState(false);
   const [profile, setProfile] = useState(null);
   const [termsOpen, setTermsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -96,19 +97,18 @@ export default function Settings() {
     loadUser();
   }, []);
 
+  // Abonnementet er købt i App Store eller Google Play, og kun butikken kan
+  // opsige det. Appen sender derfor brugeren hen i butikkens egne
+  // abonnementsindstillinger i stedet for at forsøge at opsige selv.
+  //
+  // Her lå før et kald til Stripe. Det kunne aldrig lykkes, fordi ingen
+  // abonnementer bliver købt gennem Stripe — knappen gav bare en fejl.
   const handleCancelSubscription = async () => {
-    setCancelLoading(true);
-    try {
-      const res = await base44.functions.invoke('cancelSubscription', {});
-      const cancelDate = new Date(res.data.cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
-      toast.success(`Abonnement opsagt. Du har adgang til ${cancelDate}.`);
-      setCancelOpen(false);
-      setProfile((p) => ({ ...p, subscription_cancel_at: res.data.cancel_at }));
-    } catch (e) {
-      toast.error(e.message || 'Noget gik galt. Prøv igen.');
-    } finally {
-      setCancelLoading(false);
-    }
+    const url = Capacitor.getPlatform() === 'android' ?
+      'https://play.google.com/store/account/subscriptions' :
+      'https://apps.apple.com/account/subscriptions';
+    setCancelOpen(false);
+    await openExternalUrl(url);
   };
 
   const isAdmin = user?.role === 'admin';
@@ -421,7 +421,7 @@ export default function Settings() {
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            Du kan til enhver tid opsige dit abonnement. Opsigelse træder i kraft ved udløbet af den <strong>løbende måned</strong> — ingen binding.
+            Du kan til enhver tid opsige dit abonnement. Det er købt i App Store eller Google Play, så det er også dér, du opsiger — vi åbner siden for dig. Opsigelse træder i kraft ved udløbet af den <strong>løbende måned</strong> — ingen binding.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
@@ -436,11 +436,10 @@ export default function Settings() {
           <Button
             variant="destructive"
             className="w-full"
-            onClick={handleCancelSubscription}
-            disabled={cancelLoading}>
+            onClick={handleCancelSubscription}>
             
             <CreditCard className="w-4 h-4 mr-2" />
-            {cancelLoading ? 'Opsiger…' : 'Bekræft opsigelse'}
+            Åbn mine abonnementer
           </Button>
           <button onClick={() => setCancelOpen(false)} className="w-full py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
             Fortryd
