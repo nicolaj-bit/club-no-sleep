@@ -56,7 +56,7 @@ export default function SubscriptionGate({ children }) {
         return;
       }
 
-      // Synkroniser Stripe-abonnement for tilbagevendende brugere
+      // Synkroniser abonnementsstatus for tilbagevendende brugere
       const profile = profiles[0];
       if (profile.subscription_status !== 'active') {
         try {

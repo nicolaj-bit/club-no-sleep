@@ -170,7 +170,7 @@
     },
     "subscription_id": {
       "type": "string",
-      "description": "Stripe subscription ID"
+      "description": "Abonnements-id fra RevenueCat (butikkens produkt-id)"
     },
     "subscription_started_at": {
       "type": "string",

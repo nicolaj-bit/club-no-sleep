@@ -59,7 +59,7 @@ export default function Subscription() {
     }
   }, []);
 
-  // Køb via RevenueCat IAP (native) eller Stripe (web)
+  // Køb via RevenueCat i butikken (native). På web sendes brugeren hen for at hente appen.
   const handleIAPSubscribe = async () => {
     // /Subscription: naviger til /Checkout (dedikeret betalingsside)
     navigate('/Checkout');
@@ -124,7 +124,7 @@ export default function Subscription() {
           setRestoreMessage(da ? 'Intet aktivt abonnement fundet.' : 'No active subscription found.');
         }
       } else {
-        // Web/Android: tjek via Stripe backend
+        // Web: tjek abonnementsstatus hos backend
         const response = await base44.functions.invoke('verifySubscription', {});
         if (response.data?.active) {
           setRestoreMessage(da ? '✓ Abonnement gendannet!' : '✓ Subscription restored!');

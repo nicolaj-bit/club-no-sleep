@@ -57,7 +57,7 @@ export default function Home() {
   const canSeeWonderWeeks = !isInvited || permissions?.can_see_wonder_weeks;
   const canSeeKnowledge = !isInvited || permissions?.can_see_knowledge;
 
-  // Handle return from Stripe checkout — trigger subscription verification
+  // Tilbage fra et gennemført køb — bekræft abonnementet hos backend
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('subscription') === 'success') {

@@ -70,7 +70,7 @@ export default function Paywall({ onSubscribed }) {
           setRestoreMessage(t.paywallNoActiveSubscription);
         }
       } else {
-        // Web: tjek via Stripe backend
+        // Web: tjek abonnementsstatus hos backend
         const response = await base44.functions.invoke('verifySubscription', {});
         if (response.data?.active) {
           setRestoreMessage(t.paywallSubscriptionRestored);
