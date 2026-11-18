@@ -7,7 +7,6 @@ import { da, enUS } from 'date-fns/locale';
 import WonderWeekCard from '@/components/wonderweeks/WonderWeekCard';
 import { getAgeInWeeks, getCurrentWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { useTranslation } from '@/components/hooks/useTranslation';
 import { useActiveProfile } from '@/components/ui/ActiveProfileContext';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import ChildDevelopmentCard from '@/components/home/ChildDevelopmentCard';
@@ -89,14 +88,7 @@ export default function Home() {
   const displayName = profile?.display_name || user?.full_name || (profile?.gender === 'male' ? (lang === 'da' ? 'far' : 'dad') : (lang === 'da' ? 'mor' : 'mom'));
   const greeting = getGreeting(lang, displayName);
 
-  const affirmationItems = useMemo(
-    () => (lang === 'da' && affirmation ? [{ text: affirmation }] : []),
-    [lang, affirmation]
-  );
-  const translatedAffirmations = useTranslation(affirmationItems);
-  const displayAffirmation = lang === 'da' && translatedAffirmations[0]?.text
-    ? translatedAffirmations[0].text
-    : affirmation;
+  const displayAffirmation = affirmation;
 
   // Vent til BÅDE profil OG user er loaded før vi beslutter view
   if (profileLoading || childLoading || isLoadingAuth) {
