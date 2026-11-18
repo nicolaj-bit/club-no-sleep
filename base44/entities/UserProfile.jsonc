@@ -241,7 +241,7 @@
         "en"
       ],
       "default": "da",
-      "description": "Brugerens valgte sprog. Skrives af setUserLanguage. Backend laeser det her, naar den sender push og mails \u2014 sprogvalget i browseren kan den ikke se."
+      "description": "Brugerens valgte sprog. Skrives af funktionen userLanguage. Backend laeser det her, naar den sender push og mails \u2014 sprogvalget i browseren kan den ikke se."
     }
   },
   "required": [
