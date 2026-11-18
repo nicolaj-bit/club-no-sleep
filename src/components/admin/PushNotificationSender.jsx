@@ -11,6 +11,8 @@ export default function PushNotificationSender() {
   const { t } = useLanguage();
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const [titleEn, setTitleEn] = useState('');
+  const [messageEn, setMessageEn] = useState('');
   const [url, setUrl] = useState('');
   const [sending, setSending] = useState(false);
 
@@ -20,13 +22,18 @@ export default function PushNotificationSender() {
       return;
     }
     setSending(true);
-    const res = await base44.functions.invoke('sendPushNotification', { title, message, url: url || undefined });
+    const res = await base44.functions.invoke('sendPushNotification', {
+      title, message, url: url || undefined,
+      title_en: titleEn || undefined, message_en: messageEn || undefined,
+    });
     setSending(false);
 
     if (res.data?.success) {
       toast.success(t.pushNotificationSenderSuccess.replace('{recipients}', res.data.recipients ?? 'alle'));
       setTitle('');
       setMessage('');
+      setTitleEn('');
+      setMessageEn('');
       setUrl('');
     } else {
       toast.error(t.pushNotificationSenderFailed);
@@ -57,6 +64,29 @@ export default function PushNotificationSender() {
           value={message}
           onChange={e => setMessage(e.target.value)}
           placeholder="fx. Vi har netop tilføjet en ny babypleje-pakke med 20% rabat..."
+          rows={3}
+          className="w-full rounded-md border px-3 py-2 text-sm resize-none"
+          style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+        />
+      </div>
+
+      {/* Engelsk udgave. Lades felterne tomme, faar alle den danske tekst. */}
+      <div className="space-y-1.5">
+        <Label style={{ color: 'var(--color-text-secondary)' }}>Titel (engelsk)</Label>
+        <Input
+          value={titleEn}
+          onChange={e => setTitleEn(e.target.value)}
+          placeholder="Tom = brug den danske"
+          style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label style={{ color: 'var(--color-text-secondary)' }}>Besked (engelsk)</Label>
+        <textarea
+          value={messageEn}
+          onChange={e => setMessageEn(e.target.value)}
+          placeholder="Tom = brug den danske"
           rows={3}
           className="w-full rounded-md border px-3 py-2 text-sm resize-none"
           style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}

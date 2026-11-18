@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { normalizeLanguage } from '../../shared/i18n.js';
 
 // Send email-notifikation til alle brugere (OneSignal er fjernet)
 Deno.serve(async (req) => {
@@ -10,7 +11,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { title, message, url } = await req.json();
+    const { title, message, url, title_en, message_en } = await req.json();
 
     if (!title || !message) {
       return Response.json({ error: 'title og message er påkrævet' }, { status: 400 });
@@ -21,10 +22,16 @@ Deno.serve(async (req) => {
     let sent = 0;
     for (const profile of profiles) {
       if (!profile.user_email) continue;
+      // Hver bruger faar mailen paa sit eget sprog. Er der ikke skrevet en
+      // engelsk udgave, faar alle den danske — bedre end ingen besked.
+      const lang = normalizeLanguage(profile.language);
+      const subj = lang === 'en' ? (title_en || title) : title;
+      const msg = lang === 'en' ? (message_en || message) : message;
+      const readMore = lang === 'en' ? 'Read more' : 'Læs mere';
       await base44.asServiceRole.integrations.Core.SendEmail({
         to: profile.user_email,
-        subject: title,
-        body: `<p>${message}</p>${url ? `<p><a href="${url}">Læs mere</a></p>` : ''}`,
+        subject: subj,
+        body: `<p>${msg}</p>${url ? `<p><a href="${url}">${readMore}</a></p>` : ''}`,
       });
       sent++;
     }
