@@ -146,11 +146,11 @@ export default function Profile() {
           className="w-20 h-20 rounded-3xl mb-6 object-contain"
         />
         <h1 className="text-3xl font-light mb-2 text-center" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-          {lang === 'da' ? 'Opret din profil' : 'Create your profile'}
+          {lang === 'da' ? t.profCreateProfile : 'Create your profile'}
         </h1>
         <p className="text-sm text-center mb-8" style={{ color: 'var(--color-text-muted)' }}>
           {lang === 'da'
-            ? 'Log ind eller opret en konto for at gemme dine data og blive medlem.'
+            ? t.profSignInToSave
             : 'Log in or create an account to save your data and become a member.'}
         </p>
         <button
@@ -158,7 +158,7 @@ export default function Profile() {
           className="w-full max-w-xs py-4 rounded-2xl text-base font-semibold"
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
         >
-          {lang === 'da' ? 'Log ind / Opret konto' : 'Log in / Sign up'}
+          {lang === 'da' ? t.profSignInOrCreate : 'Log in / Sign up'}
         </button>
       </div>
     );
@@ -234,7 +234,7 @@ export default function Profile() {
                   {displayName}
                 </p>
                 <p className="mt-1.5" style={{ color: 'var(--color-text-secondary)', fontSize: '0.72rem', letterSpacing: '0.03em', fontStyle: 'italic' }}>
-                  {lang === 'da' ? 'Dit rum, kun for dig' : 'Your space, just for you'}
+                  {lang === 'da' ? t.profYourSpace : 'Your space, just for you'}
                 </p>
 
               </div>
@@ -269,7 +269,7 @@ export default function Profile() {
                 {/* Navn */}
                 <div className="space-y-1.5">
                   <Label htmlFor="display_name" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.displayName}</Label>
-                  <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder="Dit navn" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  <Input id="display_name" value={editForm.display_name || ''} onChange={(e) => setEditForm({ ...editForm, display_name: e.target.value })} placeholder={t.profYourName} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
                 </div>
 
                 {/* Brugernavn */}
@@ -284,7 +284,7 @@ export default function Profile() {
                 {/* By */}
                 <div className="space-y-1.5">
                   <Label htmlFor="city" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>{t.city}</Label>
-                  <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder="København" style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
+                  <Input id="city" value={editForm.city || ''} onChange={(e) => setEditForm({ ...editForm, city: e.target.value })} placeholder={t.profCityPlaceholder} style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }} />
                 </div>
 
                 {/* Divider */}
@@ -294,11 +294,11 @@ export default function Profile() {
                 {!isInvited && (
                 <div className="space-y-2">
                   <p className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                    {lang === 'da' ? 'Mine børn' : 'My children'}
+                    {lang === 'da' ? t.profMyChildren : 'My children'}
                   </p>
                   {myChildren.length === 0 && (
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                      {lang === 'da' ? 'Ingen børn tilføjet endnu' : 'No children added yet'}
+                      {lang === 'da' ? t.profNoChildren : 'No children added yet'}
                     </p>
                   )}
                   {myChildren.map((child) => (
@@ -336,7 +336,7 @@ export default function Profile() {
                     className="text-xs px-3 py-1.5 rounded-full"
                     style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)', color: 'var(--color-accent)' }}
                   >
-                    + {lang === 'da' ? 'Tilføj barn' : 'Add child'}
+                    + {lang === 'da' ? t.profAddChild : 'Add child'}
                   </button>
                 </div>
                 )}
@@ -362,7 +362,7 @@ export default function Profile() {
         {!isInvited && (
         <>
         <p className="text-xs font-semibold uppercase tracking-widest px-1 pt-1" style={{ color: 'var(--color-text-muted)' }}>
-          {lang === 'da' ? 'Mine børn' : 'My children'}
+          {lang === 'da' ? t.profMyChildren : 'My children'}
         </p>
 
         <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${cardBorder}` }}>
@@ -415,7 +415,7 @@ export default function Profile() {
               <Baby className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
             </div>
             <p className="text-sm font-medium" style={{ color: 'var(--color-accent)' }}>
-              {lang === 'da' ? '+ Tilføj barn' : '+ Add child'}
+              {lang === 'da' ? t.profAddChildPlus : '+ Add child'}
             </p>
           </button>
         </div>
@@ -443,10 +443,10 @@ export default function Profile() {
         {/* 2x2 grid */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { icon: Bookmark, label: t.favorites, sub: lang === 'da' ? 'Dine gemte øjeblikke' : 'Your saved moments', page: 'Favorites' },
-            ...(isInvited ? [] : [{ icon: Bell, label: t.notifications, sub: lang === 'da' ? 'Hvad du vil have besked om' : 'What to be notified of', action: () => setNotifOpen(true) }]),
-            { icon: Settings, label: t.settings, sub: lang === 'da' ? 'Tilpas appen til dig' : 'Customise the app', page: 'Settings' },
-            ...(isInvited ? [] : [{ icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? 'Inviter en du stoler på' : 'Invite someone you trust', page: 'FamilyInvite' }]),
+            { icon: Bookmark, label: t.favorites, sub: lang === 'da' ? t.profSavedMoments : 'Your saved moments', page: 'Favorites' },
+            ...(isInvited ? [] : [{ icon: Bell, label: t.notifications, sub: lang === 'da' ? t.profNotifyAbout : 'What to be notified of', action: () => setNotifOpen(true) }]),
+            { icon: Settings, label: t.settings, sub: lang === 'da' ? t.profCustomise : 'Customise the app', page: 'Settings' },
+            ...(isInvited ? [] : [{ icon: UserPlus, label: lang === 'da' ? 'Deling & adgang' : 'Sharing & access', sub: lang === 'da' ? t.profInviteTrusted : 'Invite someone you trust', page: 'FamilyInvite' }]),
           ].map((item, i) => {
             const Icon = item.icon;
             const inner = (
@@ -495,7 +495,7 @@ export default function Profile() {
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.showMeVisible}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                {lang === 'da' ? 'Vises på kortet for andre mødre' : 'Shown on the map for other moms'}
+                {lang === 'da' ? t.profShowOnMap : 'Shown on the map for other moms'}
               </p>
             </div>
             <Switch checked={profile?.is_visible !== false} onCheckedChange={(checked) => updateProfileMutation.mutate({ is_visible: checked })} />
@@ -535,7 +535,7 @@ export default function Profile() {
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.shareLocation}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                {lang === 'da' ? 'Se relevante mødre i nærheden' : 'See nearby moms'}
+                {lang === 'da' ? t.profSeeNearby : 'See nearby moms'}
               </p>
             </div>
             <Switch checked={profile?.location_enabled || false} onCheckedChange={(checked) => updateProfileMutation.mutate({ location_enabled: checked })} />
@@ -620,7 +620,7 @@ export default function Profile() {
                 <div className="px-4 py-3 rounded-2xl" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
                   <p className="text-xs font-semibold mb-1" style={{ color: 'var(--color-text-secondary)' }}>{t.aboutApp}</p>
                   <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-                    {lang === 'da' ? (helpConfig?.help_about_text_da || 'LALATOTO er din digitale følgesvend som forælder.') : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent.')}
+                    {lang === 'da' ? (helpConfig?.help_about_text_da || t.profCompanion) : (helpConfig?.help_about_text_en || 'LALATOTO is your digital companion as a parent.')}
                   </p>
                 </div>
                 <a href={`mailto:${helpConfig?.help_contact_email || 'hej@lalatoto.dk'}`} className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
@@ -672,8 +672,8 @@ export default function Profile() {
               </p>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                 {Capacitor.getPlatform() === 'ios'
-                  ? 'Sådan slår du notifikationer til: Åbn Indstillinger på din telefon → find Club No Sleep på listen → tryk Notifikationer → slå Tillad notifikationer til.'
-                  : 'Sådan slår du notifikationer til: Åbn Indstillinger på din telefon → Apps → Club No Sleep → Notifikationer → slå dem til.'}
+                  ? t.notifHowToIos
+                  : t.notifHowToAndroid}
               </p>
             </div>
           )}
@@ -682,8 +682,8 @@ export default function Profile() {
           <div className="rounded-2xl p-4" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Gode råd og tilbud på mail</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Du kan altid framelde dig igen</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.notifMarketingMail}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.notifUnsubscribeAnytime}</p>
               </div>
               <Switch
                 checked={notifPrefs.marketing_consent === true}
@@ -700,16 +700,16 @@ export default function Profile() {
             </div>
           </div>
 
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.notifChooseWhich}</p>
 
           {/* Dim checkboxes when OS permission is missing */}
           <div style={notifPermStatus === 'not_determined' || notifPermStatus === 'denied' ? { opacity: 0.45, pointerEvents: 'none' } : undefined}>
             {[
-              { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
-              { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
-              { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
-              { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
-              { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' },
+              { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: t.notifWonderWeekDesc },
+              { key: 'notif_pregnancy_weekly', label: t.notifPregnancyTitle, desc: t.notifPregnancyDesc },
+              { key: 'notif_calendar_reminder', label: t.notifCalendarTitle, desc: t.notifCalendarDesc },
+              { key: 'notif_sleep_encouragement', label: t.notifSleepTitle, desc: t.notifSleepDesc },
+              { key: 'notif_blog_new', label: t.notifContentTitle, desc: t.notifContentDesc },
             ].map(({ key, label, desc }) => (
               <div key={key} className="flex items-center justify-between gap-4 mb-5">
                 <div>

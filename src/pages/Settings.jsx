@@ -344,14 +344,14 @@ export default function Settings() {
       {/* Notification preferences */}
       <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
         <div className="px-5 py-4 space-y-5">
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Vælg hvilke notifikationer du vil modtage.</p>
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.notifChooseWhich}</p>
 
           {[
-          { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: 'Når dit barn nærmer sig et nyt tigerspring' },
-          { key: 'notif_pregnancy_weekly', label: 'Ugentlig graviditetsopdatering', desc: 'Hvad sker der i din graviditetsuge' },
-          { key: 'notif_calendar_reminder', label: 'Kalender påmindelser', desc: 'Notifikation om kommende aftaler' },
-          { key: 'notif_sleep_encouragement', label: 'Søvnopmuntring', desc: 'Personlige råd baseret på dine søvnlogs' },
-          { key: 'notif_blog_new', label: 'Nyt indhold', desc: 'Nye blogindlæg og artikler' }].
+          { key: 'wonderweeks_notifications', label: 'Tigerspring', desc: t.notifWonderWeekDesc },
+          { key: 'notif_pregnancy_weekly', label: t.notifPregnancyTitle, desc: t.notifPregnancyDesc },
+          { key: 'notif_calendar_reminder', label: t.notifCalendarTitle, desc: t.notifCalendarDesc },
+          { key: 'notif_sleep_encouragement', label: t.notifSleepTitle, desc: t.notifSleepDesc },
+          { key: 'notif_blog_new', label: t.notifContentTitle, desc: t.notifContentDesc }].
           map(({ key, label, desc }) =>
           <div key={key} className="flex items-center justify-between gap-4">
               <div>
@@ -374,8 +374,8 @@ export default function Settings() {
           <div className="border-t pt-4 mt-2" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Besked når min partner ændrer i kalenderen</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Få besked når din partner tilføjer, flytter eller sletter en aftale</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.notifPartnerCalendarTitle}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.notifPartnerCalendarDesc}</p>
               </div>
               <Switch
                 checked={notifPrefs.notif_partner_calendar}
@@ -393,8 +393,8 @@ export default function Settings() {
           <div className="border-t pt-4 mt-2" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Tænd lys automatisk</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Vis dig som vågen for andre mødre i 'Et lys i mørket'</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.notifAutoLightTitle}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.notifAutoLightDesc}</p>
               </div>
               <Switch
                 checked={notifPrefs.auto_light_enabled === true}
@@ -421,7 +421,7 @@ export default function Settings() {
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            Du kan til enhver tid opsige dit abonnement. Det er købt i App Store eller Google Play, så det er også dér, du opsiger — vi åbner siden for dig. Opsigelse træder i kraft ved udløbet af den <strong>løbende måned</strong> — ingen binding.
+            Du kan til enhver tid opsige dit abonnement. Det er købt i App Store eller Google Play, så det er også dér, du opsiger — vi åbner siden for dig. Opsigelse træder i kraft ved udløbet af den <strong>{t.setCancelCurrentMonth}</strong> — ingen binding.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
