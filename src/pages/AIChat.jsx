@@ -283,7 +283,7 @@ export default function AIChat() {
           if (logs?.length > 0) {
             setIsLoading(true);
             const logsText = JSON.stringify(logs, null, 2);
-            const prompt = `Analyser venligst mine søvnlogs fra de seneste dage og giv mig konkrete observationer og råd:\n\n\`\`\`json\n${logsText}\n\`\`\``;
+            const prompt = `${t.aiPromptAnalyseLogs}\n\n\`\`\`json\n${logsText}\n\`\`\``;
             await base44.agents.addMessage(conv, { role: 'user', content: prompt });
           }
         } catch (e) {
@@ -313,7 +313,7 @@ export default function AIChat() {
               contextParts.push(`Jeg er i graviditetsuge ${currentWeek} (termin om ca. ${weeksLeft} uger).`);
             }
             if (diaryText) contextParts.push(`Her er mine dagbogsnotater fra graviditeten:\n${diaryText}`);
-            const prompt = `${contextParts.join('\n\n')}\n\nBrug denne kontekst til at give mig personlige og relevante svar fremover. Du behøver ikke at kommentere det nu — bare svar med en kort bekræftelse på at du har set mine oplysninger og er klar til at hjælpe.`;
+            const prompt = `${contextParts.join('\n\n')}\n\n${t.aiPromptContext}`;
             await base44.agents.addMessage(conv, { role: 'user', content: prompt });
           }
         } catch (e) {
