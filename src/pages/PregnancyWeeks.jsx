@@ -65,7 +65,7 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyWeeks() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const queryClient = useQueryClient();
   const { activeChild, refetch: refetchChild } = useActiveChild();
   const { activeProfile, refreshProfiles } = useActiveProfile();
