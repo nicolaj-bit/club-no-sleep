@@ -21,7 +21,7 @@ export default function SleepLog() {
   const { activeChild } = useActiveChild();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const { isInvited, refresh: refreshInviteData } = useInviteAccess();
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const dateLocale = lang === 'en' ? enUS : da;
   const queryClient = useQueryClient();
 

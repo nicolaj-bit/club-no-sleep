@@ -18,7 +18,7 @@ import PageHeader from '@/components/ui/PageHeader';
 export default function QuestionDetail() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const questionId = urlParams.get('id');
   const queryClient = useQueryClient();
