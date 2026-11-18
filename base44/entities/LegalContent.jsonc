@@ -16,10 +16,19 @@
       "type": "string",
       "description": "Titel"
     },
+    "title_en": {
+      "type": "string",
+      "description": "Overskrift p\u00e5 engelsk (valgfri). Tom = den danske bruges."
+    },
     "content": {
       "type": "string",
       "format": "html",
       "description": "Indhold (rich text)"
+    },
+    "content_en": {
+      "type": "string",
+      "format": "html",
+      "description": "Dokumentet p\u00e5 engelsk. Tomt = den danske tekst vises, s\u00e5 en manglende overs\u00e6ttelse aldrig bliver til en tom side."
     },
     "pdf_url": {
       "type": "string",
