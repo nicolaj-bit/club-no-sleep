@@ -25,7 +25,7 @@ const fullHeightPages = ['Chat'];
 
 
 // Root-level tab pages — use crossfade (no slide) to feel like native tab switch
-const rootTabPages = ['Home', 'Shop', 'Blog', 'SleepLog', 'Knowledge', 'Community', 'Profile', 'AIChat'];
+const rootTabPages = ['Home', 'Shop', 'SleepLog', 'Knowledge', 'Community', 'Profile', 'AIChat'];
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
