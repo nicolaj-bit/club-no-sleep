@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Heart, Sparkles, BookOpen } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
+import { localizePregnancyWeek } from '@/components/knowledge/pregnancyWeekDataEn';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import PageHeader from '@/components/ui/PageHeader';
 
@@ -28,10 +29,10 @@ function renderRichText(text, motherName, linkUrl) {
 }
 
 export default function PregnancyWeekDetail() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const week = parseInt(urlParams.get('week') || '12', 10);
-  const data = PREGNANCY_WEEKS[week];
+  const data = localizePregnancyWeek(PREGNANCY_WEEKS[week], week, lang);
 
   const [motherName, setMotherName] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -145,7 +146,7 @@ export default function PregnancyWeekDetail() {
               <ChevronLeft className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
               <div>
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdPrevious}</p>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{PREGNANCY_WEEKS[prevWeek]?.title || `Uge ${prevWeek}`}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{localizePregnancyWeek(PREGNANCY_WEEKS[prevWeek], prevWeek, lang)?.title || `${t.weekWord} ${prevWeek}`}</p>
               </div>
             </Link>
           ) : <div />}
@@ -153,7 +154,7 @@ export default function PregnancyWeekDetail() {
             <Link to={`/PregnancyWeekDetail?week=${nextWeek}`} className="rounded-2xl p-4 flex items-center justify-end gap-2 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div className="text-right">
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.pwdNext}</p>
-                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{PREGNANCY_WEEKS[nextWeek]?.title || `Uge ${nextWeek}`}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{localizePregnancyWeek(PREGNANCY_WEEKS[nextWeek], nextWeek, lang)?.title || `${t.weekWord} ${nextWeek}`}</p>
               </div>
               <ChevronRight className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
             </Link>

@@ -6,6 +6,7 @@ import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from './pregnancyWeekData';
+import { localizePregnancyWeek } from './pregnancyWeekDataEn';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -86,7 +87,7 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyTab() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
@@ -168,7 +169,7 @@ export default function PregnancyTab() {
               <WeekCard
                 key={week}
                 week={week}
-                data={PREGNANCY_WEEKS[week]}
+                data={localizePregnancyWeek(PREGNANCY_WEEKS[week], week, lang)}
                 isCurrent={isPregnant && week === currentWeek}
               />
             ))}

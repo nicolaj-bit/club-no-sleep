@@ -3,6 +3,7 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, BookOpen } from 'lucide-react';
 import { PREGNANCY_WEEKS } from '@/components/knowledge/pregnancyWeekData';
+import { localizePregnancyWeek } from '@/components/knowledge/pregnancyWeekDataEn';
 import { getGestationalAge } from '../../base44/shared/getGestationalAge';
 import PageHeader from '@/components/ui/PageHeader';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -100,7 +101,7 @@ export default function PregnancyWeeks() {
                 <WeekCard
                   key={week}
                   week={week}
-                  data={PREGNANCY_WEEKS[week]}
+                  data={localizePregnancyWeek(PREGNANCY_WEEKS[week], week, lang)}
                   isCurrent={isPregnant && (week === currentWeek || (week === 41 && currentWeek === 42))}
                 />
               ))}
