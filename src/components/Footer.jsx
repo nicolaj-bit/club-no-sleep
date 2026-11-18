@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 const DEFAULTS = {
   name: 'LALATOTO',
@@ -16,6 +17,7 @@ const DEFAULTS = {
 };
 
 export default function Footer({ previewData }) {
+  const { t } = useLanguage();
   const [info, setInfo] = useState(DEFAULTS);
 
   useEffect(() => {
@@ -98,7 +100,7 @@ export default function Footer({ previewData }) {
           © {new Date().getFullYear()} {d.name} ApS. Alle rettigheder forbeholdes.
         </p>
         <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-          {d.cvr && `CVR: ${d.cvr} • `}Skabt med ❤️ i Danmark
+          {d.cvr && `CVR: ${d.cvr} • `}{t.footerMadeIn}
         </p>
       </div>
     </footer>
