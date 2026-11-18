@@ -5,6 +5,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import MilestoneCamera from '@/components/milestones/MilestoneCamera';
 import TypeSticker from '@/components/milestones/TypeSticker';
 import { MILESTONE_FRAMES } from '@/components/milestones/milestonesData';
+import { localizeFrame } from '@/components/milestones/milestoneTextEn';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import { Camera, Lock } from 'lucide-react';
@@ -34,6 +35,11 @@ function normalizeDbFrame(f) {
     emoji: f.emoji || '🤍',
     headline: f.headline,
     subline: f.subline || '',
+    // Engelsk skrevet direkte paa rammen. Er den tom, slaar localizeFrame den
+    // danske tekst op i stedet.
+    label_en: f.label_en || '',
+    headline_en: f.headline_en || '',
+    subline_en: f.subline_en || '',
     bgColor: f.bg_color || '#F5EFE6',
     accentColor: f.accent_color || 'var(--color-accent)',
     textColor: f.text_color || 'var(--color-text-primary)',
@@ -63,7 +69,8 @@ export default function Milestones() {
     const openId = params.get('open');
     if (!openId) return;
 
-    const frames = dbFrames.length > 0 ? dbFrames.map(normalizeDbFrame) : MILESTONE_FRAMES;
+    const frames = (dbFrames.length > 0 ? dbFrames.map(normalizeDbFrame) : MILESTONE_FRAMES)
+      .map(f => localizeFrame(f, lang));
     const match = frames.find(f => f.milestone_id === openId);
     if (match) setCameraFrame(match);
   }, [isSuccess, dbFrames]);
@@ -91,9 +98,9 @@ export default function Milestones() {
   }
 
   // Use DB frames if available, otherwise fall back to hardcoded
-  const frames = dbFrames.length > 0
+  const frames = (dbFrames.length > 0
     ? dbFrames.map(normalizeDbFrame)
-    : MILESTONE_FRAMES;
+    : MILESTONE_FRAMES).map(f => localizeFrame(f, lang));
 
   const grouped = CATEGORY_ORDER.reduce((acc, cat) => {
     acc[cat] = frames.filter(f => f.category === cat);
