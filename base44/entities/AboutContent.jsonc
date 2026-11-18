@@ -10,10 +10,19 @@
       "type": "string",
       "description": "Overskrift (valgfrit)"
     },
+    "title_en": {
+      "type": "string",
+      "description": "Overskrift p\u00e5 engelsk (valgfri). Tom = den danske overskrift bruges."
+    },
     "body": {
       "type": "string",
       "format": "html",
       "description": "Br\u00f8dtekst / indhold (underst\u00f8tter fed, kursiv, understreg)"
+    },
+    "body_en": {
+      "type": "string",
+      "format": "html",
+      "description": "Samme tekst p\u00e5 engelsk. Er feltet tomt, viser appen den danske tekst, s\u00e5 der aldrig st\u00e5r ingenting."
     },
     "image": {
       "type": "string",
