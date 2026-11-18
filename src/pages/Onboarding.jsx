@@ -185,7 +185,7 @@ export default function Onboarding() {
             <div className="flex flex-col items-center gap-6 flex-1 justify-center">
               {/* Logo / app navn */}
               <div className="text-center">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-accent)' }}>Velkommen til</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--color-accent)' }}>{t.onbWelcomeTo}</p>
                 <h1 className="text-4xl font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', letterSpacing: '-0.01em' }}>
                   Club No Sleep
                 </h1>
@@ -213,7 +213,7 @@ export default function Onboarding() {
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
                   {t.onbLetterComfort}
                 </p>
-                <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>Kærligst,<br />Sara & Nicolaj</p>
+                <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>{t.onbSignature}<br />Sara & Nicolaj</p>
               </div>
             </div>
 
@@ -254,7 +254,7 @@ export default function Onboarding() {
           {step === 0 ? (
             <div>
               <h1 className="text-2xl font-serif leading-snug" style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}>
-                Velkommen til<br />
+                {t.onbWelcomeTo}<br />
                 <span>CLUB NO SLEEP</span>
               </h1>
               <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app</p>
@@ -323,7 +323,7 @@ export default function Onboarding() {
 
                 {/* Køn */}
                 <div className="space-y-2">
-                  <Label>Er du kvinde eller mand?</Label>
+                  <Label>{t.onbWomanOrMan}</Label>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -352,7 +352,7 @@ export default function Onboarding() {
                   </div>
                   {form.profile_label === 'far' && (
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                      Som mand har du ikke adgang til community-funktionen, men du får fuld adgang til søvnlog, viden og kalender.
+                      {t.onbManNote}
                     </p>
                   )}
                   {errors.profile_label && <p className="text-xs text-red-500">{errors.profile_label}</p>}
@@ -404,10 +404,10 @@ export default function Onboarding() {
                     />
                     <div>
                       <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                        Ja tak, send mig gode råd, nyt om appen og tilbud på mail.
+                        {t.onbMarketingConsent}
                       </span>
                       <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                        Du kan altid framelde dig igen. Vi deler aldrig din mail med andre.
+                        {t.onbMarketingNote}
                       </p>
                     </div>
                   </label>
@@ -428,7 +428,7 @@ export default function Onboarding() {
                   <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt=t.onbMapTitle className="w-48 h-auto" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Din by (valgfrit)</Label>
+                  <Label>{t.onbCityOptional}</Label>
                   <Input
                     value={form.city}
                     onChange={e => setField('city', e.target.value)}
@@ -481,13 +481,13 @@ export default function Onboarding() {
                 {childMode === 'fodt' && (
                   <div className="space-y-4">
                     <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Hvis du både er gravid og har et barn, som du ønsker at registrere i appen, vælg da "Jeg er gravid" og tilføj senere barnet under din profil i appen.
+                      {t.onbBothNote}
                     </p>
                     <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Terminsdatoen bruges til at beregne tigerspring mens fødselsdatoen blandt andet bruges til at beregne milepæle og give korrekt søvnvejledning.
+                      {t.onbDatesNote}
                     </p>
                     <div className="space-y-2">
-                      <Label>Barnets navn</Label>
+                      <Label>{t.onbChildName}</Label>
                       <Input
                         value={form.child_name || ''}
                         onChange={e => setForm(f => ({ ...f, child_name: e.target.value }))}
@@ -496,7 +496,7 @@ export default function Onboarding() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Barnets fødselsdato</Label>
+                      <Label>{t.onbChildBirthdate}</Label>
                       <Input
                         type="date"
                         value={form.child_birthdate}
@@ -520,7 +520,7 @@ export default function Onboarding() {
                 {childMode === 'gravid' && (
                   <div className="space-y-4">
                     <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      Terminsdatoen er vigtig for at kunne sende dig opdateringer om graviditeten uge for uge. Terminsdatoen anvendes også senere til at beregne tigerspring.
+                      {t.onbDueDateNote}
                     </p>
                     <div className="space-y-2">
                       <Label>Terminsdato</Label>
