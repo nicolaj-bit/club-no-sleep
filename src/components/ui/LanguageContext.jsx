@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { additionalDa, additionalEn } from './additionalTranslations';
+import { base44 } from '@/api/base44Client';
 
 const translations = {
   da: {
@@ -2466,9 +2467,39 @@ export function LanguageProvider({ children }) {
     return localStorage.getItem('app-language') || 'da';
   });
 
+  // Sprogvalget hører til brugeren og ikke til browseren.
+  //
+  // localStorage bliver stående som den hurtige kilde ved opstart — den virker
+  // også, før man er logget ind, og brugerfladen skal ikke nå at blinke på
+  // dansk. Men profilens sprog vinder, når det findes, så valget følger med
+  // til en ny telefon i stedet for at starte forfra.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        if (!(await base44.auth.isAuthenticated())) return;
+        const res = await base44.functions.invoke('userLanguage', {});
+        const saved = res?.data?.stored ? res.data.language : null;
+        if (!cancelled && saved && saved !== localStorage.getItem('app-language')) {
+          localStorage.setItem('app-language', saved);
+          setLangState(saved);
+        }
+      } catch (_) {
+        // Ikke logget ind, offline eller profil endnu ikke oprettet.
+        // localStorage-valget gælder, og appen fungerer som før.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const setLang = (newLang) => {
     localStorage.setItem('app-language', newLang);
     setLangState(newLang);
+    // Skriv valget til profilen, så push-beskeder, mails og AI-rådgiveren
+    // kommer på samme sprog. Fejler det, beholder brugeren sit valg lokalt.
+    base44.functions.invoke('userLanguage', { language: newLang }).catch(() => {});
   };
 
   const t = translations[lang] || translations.da;
