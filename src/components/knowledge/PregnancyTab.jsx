@@ -7,8 +7,10 @@ import { useSubscription } from '@/components/subscription/useSubscription';
 import { differenceInDays } from 'date-fns';
 import { PREGNANCY_WEEKS } from './pregnancyWeekData';
 import { getGestationalAge } from '../../../base44/shared/getGestationalAge';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function WeekCard({ week, data, isCurrent }) {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(isCurrent);
 
   return (

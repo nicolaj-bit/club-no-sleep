@@ -17,7 +17,7 @@ const DEFAULTS = {
 };
 
 export default function Footer({ previewData }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [info, setInfo] = useState(DEFAULTS);
 
   useEffect(() => {

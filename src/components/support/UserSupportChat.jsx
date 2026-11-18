@@ -4,8 +4,10 @@ import { Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function UserSupportChat({ user }) {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
