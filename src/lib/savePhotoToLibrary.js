@@ -1,4 +1,5 @@
 import { toast } from 'sonner';
+import { pickText } from '@/lib/currentLanguage';
 
 const ALBUM_NAME = 'Club No Sleep';
 const ACCESS_MESSAGE = () =>
@@ -61,11 +62,11 @@ async function saveViaShareOrDownload(dataUrl, fileName) {
     a.href = dataUrl;
     a.download = fileName;
     a.click();
-    toast.success(SAVED_MESSAGE, { duration: 2000 });
+    toast.success(SAVED_MESSAGE(), { duration: 2000 });
     return true;
   } catch (e) {
     console.error('[FOTO] download fejlede:', e?.message || e);
-    toast.error(ACCESS_MESSAGE);
+    toast.error(ACCESS_MESSAGE());
     return false;
   }
 }
@@ -92,11 +93,11 @@ export async function saveMilestonePhotoToLibrary(dataUrl, options = {}) {
       if (albumIdentifier) saveOptions.albumIdentifier = albumIdentifier;
     }
     await Media.savePhoto(saveOptions);
-    toast.success(SAVED_MESSAGE, { duration: 2000 });
+    toast.success(SAVED_MESSAGE(), { duration: 2000 });
     return true;
   } catch (e) {
     console.error('[FOTO] kunne ikke gemme billedet:', e?.message || e);
-    toast.error(ACCESS_MESSAGE);
+    toast.error(ACCESS_MESSAGE());
     return false;
   }
 }
