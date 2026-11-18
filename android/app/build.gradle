@@ -7,8 +7,8 @@ android {
         applicationId "com.base699f47a86e7e0a874d1159ed.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
-        versionName "2.5"
+        versionCode 12
+        versionName "2.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // Metas app-id og client token.
