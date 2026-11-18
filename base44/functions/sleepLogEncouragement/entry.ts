@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { normalizeLanguage } from '../../shared/i18n.js';
 
 function getLastNDays(n) {
   const days = [];
@@ -17,7 +18,7 @@ function getChildAgeMonths(birthdateStr) {
   return Math.floor((now - birth) / (30.44 * 24 * 60 * 60 * 1000));
 }
 
-async function analyzeLogsWithAI(base44, logs, ageMonths, previousAdvice) {
+async function analyzeLogsWithAI(base44, logs, ageMonths, previousAdvice, lang) {
   const logSummary = logs.map(l => ({
     date: l.date,
     bedtime: l.bedtime,
@@ -31,11 +32,13 @@ async function analyzeLogsWithAI(base44, logs, ageMonths, previousAdvice) {
     parent_note: l.parent_note || '',
   }));
 
-  const previousContext = previousAdvice.length > 0
-    ? `\n\nTidligere råd givet (undgå at gentage dem):\n${previousAdvice.map(a => `- "${a.ai_title}": ${a.ai_message} (feedback: ${a.feedback || 'ingen'})`).join('\n')}`
-    : '';
+  const previousContext = previousAdvice.length === 0
+    ? ''
+    : lang === 'en'
+      ? `\n\nAdvice already given (avoid repeating it):\n${previousAdvice.map(a => `- "${a.ai_title}": ${a.ai_message} (feedback: ${a.feedback || 'none'})`).join('\n')}`
+      : `\n\nTidligere råd givet (undgå at gentage dem):\n${previousAdvice.map(a => `- "${a.ai_title}": ${a.ai_message} (feedback: ${a.feedback || 'ingen'})`).join('\n')}`;
 
-  const prompt = `Du er en varm og empatisk baby-søvnekspert. Analyser disse søvnlogs for en baby på ${ageMonths} måneder over de seneste dage:
+  const promptDa = `Du er en varm og empatisk baby-søvnekspert. Analyser disse søvnlogs for en baby på ${ageMonths} måneder over de seneste dage:
 
 ${JSON.stringify(logSummary, null, 2)}
 ${previousContext}
@@ -50,6 +53,24 @@ Returner en push-notifikation med:
 Skriv på dansk. Vær varm, ikke klinisk. Varier dine råd og undgå at gentage tidligere råd der ikke hjalp.
 
 Svar KUN som JSON: { "title": "...", "message": "...", "pattern": "..." }`;
+
+  const promptEn = `You are a warm and empathetic baby sleep expert. Analyse these sleep logs for a baby of ${ageMonths} months over the last few days:
+
+${JSON.stringify(logSummary, null, 2)}
+${previousContext}
+
+Identify the MOST important pattern or problem right now (for example many night wakings, waking very early, a long time to fall asleep, low mood, crying or unrest mentioned in the notes, irregular bedtime).
+
+Return a push notification with:
+1. A short, warm title (8 words maximum) with a relevant emoji
+2. A loving message of 1 to 2 sentences: acknowledge the situation, plus one concrete, actionable piece of advice.
+3. A short internal description of the pattern you identified (for feedback learning, not shown to the user, 20 words maximum).
+
+Write in English. Be warm, not clinical. Vary your advice and avoid repeating earlier advice that did not help.
+
+Answer ONLY as JSON: { "title": "...", "message": "...", "pattern": "..." }`;
+
+  const prompt = lang === 'en' ? promptEn : promptDa;
 
   const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt,
@@ -66,7 +87,7 @@ Svar KUN som JSON: { "title": "...", "message": "...", "pattern": "..." }`;
   return result;
 }
 
-async function sendPushNotification(apiKey, appId, userEmail, title, message, feedbackId) {
+async function sendPushNotification(apiKey, appId, userEmail, title, message, feedbackId, lang) {
   const feedbackUrl = `https://app.lalatoto.dk/SleepAdviceFeedback?id=${feedbackId}`;
 
   const body = {
@@ -78,10 +99,15 @@ async function sendPushNotification(apiKey, appId, userEmail, title, message, fe
     url: feedbackUrl,
     ios_badgeType: 'Increase',
     ios_badgeCount: 1,
-    buttons: [
-      { id: 'helpful', text: '👍 Hjalp mig' },
-      { id: 'not_helpful', text: '👎 Hjalp ikke' },
-    ],
+    buttons: lang === 'en'
+      ? [
+          { id: 'helpful', text: '👍 This helped' },
+          { id: 'not_helpful', text: '👎 Did not help' },
+        ]
+      : [
+          { id: 'helpful', text: '👍 Hjalp mig' },
+          { id: 'not_helpful', text: '👎 Hjalp ikke' },
+        ],
   };
 
   const res = await fetch('https://onesignal.com/api/v1/notifications', {
@@ -136,9 +162,11 @@ Deno.serve(async (req) => {
       const recentLogs = allLogs.filter(l => last7Days.includes(l.date));
 
       const ageMonths = getChildAgeMonths(profile.child_birthdate);
+      // Sproget staar paa profilen, som allerede er hentet — intet ekstra opslag.
+      const lang = normalizeLanguage(profile.language);
 
       // Ask AI to analyze and generate a personalized notification
-      const aiResult = await analyzeLogsWithAI(base44, recentLogs, ageMonths, previousAdvice);
+      const aiResult = await analyzeLogsWithAI(base44, recentLogs, ageMonths, previousAdvice, lang);
       if (!aiResult?.title || !aiResult?.message) { skipped++; continue; }
 
       // Save the advice record first so we have an ID for the feedback link
@@ -151,7 +179,7 @@ Deno.serve(async (req) => {
         log_summary: aiResult.pattern || '',
       });
 
-      const sent = await sendPushNotification(apiKey, appId, profile.user_email, aiResult.title, aiResult.message, adviceRecord.id);
+      const sent = await sendPushNotification(apiKey, appId, profile.user_email, aiResult.title, aiResult.message, adviceRecord.id, lang);
       if (sent) notificationsSent++;
     }
 
