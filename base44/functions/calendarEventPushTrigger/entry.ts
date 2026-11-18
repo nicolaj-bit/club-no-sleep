@@ -1,4 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // Called by entity automation when a CalendarEvent is created
 Deno.serve(async (req) => {
@@ -18,6 +21,8 @@ Deno.serve(async (req) => {
     }
 
     // Find active rules for calendar_event
+    const lang = await getUserLanguage(base44, targetEmail);
+
     const rules = await base44.asServiceRole.entities.PushNotificationRule.filter({
       trigger_type: 'calendar_event',
       is_active: true,
@@ -33,11 +38,14 @@ Deno.serve(async (req) => {
     const results = [];
     for (const rule of rules) {
       // Replace placeholders in title/message with event data
-      let title = rule.title || 'Ny kalenderaftale';
-      let message = rule.message || 'Der er tilføjet en ny aftale';
+      // Reglens egen tekst vinder, hvis den findes paa modtagerens sprog.
+      let title = (lang === 'en' ? rule.title_en : rule.title) || rule.title
+        || T(lang, 'Ny kalenderaftale', 'New calendar appointment');
+      let message = (lang === 'en' ? rule.message_en : rule.message) || rule.message
+        || T(lang, 'Der er tilføjet en ny aftale', 'A new appointment has been added');
 
       const eventDate = data?.start_datetime
-        ? new Date(data.start_datetime).toLocaleDateString('da-DK')
+        ? new Date(data.start_datetime).toLocaleDateString(lang === 'en' ? 'en-GB' : 'da-DK')
         : '';
 
       if (data) {
