@@ -99,7 +99,9 @@ Deno.serve(async (req) => {
       // navne, og forfatteren hedder Sara Baudtler. Derfor tjekkes ogsaa for
       // danske smaaord, som ikke optraeder i en engelsk tekst.
       const danskeTegn = (content_en.match(/[æøåÆØÅ]/g) || []).length;
-      const danskeOrd = (content_en.match(/\b(og|ikke|det|med|til|for|som|kan|skal|har|dit|din|barnet)\b/gi) || []).length;
+      // Kun ord der IKKE ogsaa findes paa engelsk — 'for' og 'men' er udeladt
+      // af netop den grund.
+      const danskeOrd = (content_en.match(/\b(og|ikke|det|med|til|som|kan|skal|har|dit|din|barnet|hvis|eller|også|være|bliver)\b/gi) || []).length;
       const forDansk = danskeTegn > content_en.length / 100 || danskeOrd > 15;
 
       report.push({
