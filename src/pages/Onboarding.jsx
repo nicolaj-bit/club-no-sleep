@@ -18,7 +18,7 @@ import { invalidateProfileCache } from '@/components/auth/ProfileGate';
 import { logMetaOnboardingComplete } from '@/lib/metaEvents';
 
 export default function Onboarding() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [step, setStep] = useState(-1);
@@ -71,7 +71,9 @@ export default function Onboarding() {
         privacy: legalBody(privacy, lang) || t.onbPrivacyMissing,
       });
     });
-  }, []);
+    // Sproget er med i afhaengighederne: skifter brugeren sprog, skal de
+    // juridiske tekster hentes igen i den rigtige udgave.
+  }, [lang]);
 
   // Opdages et aktivt abonnement, mens brugeren er ved plan-steppet, springes det over
   useEffect(() => {

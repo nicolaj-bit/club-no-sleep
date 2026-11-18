@@ -6,7 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function Terms() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
