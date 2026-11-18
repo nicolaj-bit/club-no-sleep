@@ -204,7 +204,7 @@ export default function Calendar() {
     const items = [];
     for (const child of children) {
       const color = getChildColor(children, child.id);
-      for (const d of getDynamicItemsForDay(child.due_date, child.birthdate, day)) {
+      for (const d of getDynamicItemsForDay(child.due_date, child.birthdate, day, lang)) {
         items.push({ ...d, childId: child.id, childName: child.name, childColor: color });
       }
       if (child.due_date && !child.birthdate) {
