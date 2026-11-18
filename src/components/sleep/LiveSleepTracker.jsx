@@ -96,7 +96,7 @@ function LiveTimer({ ms }) {
 
 export default function LiveSleepTracker({ user, activeChild }) {
   const { activeSession, startSession, markAwake, markSleeping, endSession, undoEnd, isPending, loading } = useSleepSession(user);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [justEndedSession, setJustEndedSession] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
@@ -387,7 +387,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
             </div>
             <div className="flex justify-between">
               <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.totalSleepLabel}</span>
-              <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalSleepMs)}</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalSleepMs, lang)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.wakeupCountLabel}</span>
@@ -395,7 +395,7 @@ export default function LiveSleepTracker({ user, activeChild }) {
             </div>
             <div className="flex justify-between">
               <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{t.totalAwakeLabel}</span>
-              <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalAwakeMs)}</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{formatHoursMinutes(justEndedTotals.totalAwakeMs, lang)}</span>
             </div>
           </div>
         </div>
