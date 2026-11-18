@@ -11,6 +11,7 @@
 export const uiDa = {
   // Sider og formularer der stod fast paa dansk
   cafesPageTitle: 'Babyvenlige caféer',
+  cafesFind: 'Find caféer',
   practPageTitle: 'Behandlere',
   practFind: 'Find behandlere',
   formName: 'Navn *',
@@ -329,6 +330,7 @@ export const uiDa = {
 export const uiEn = {
   // Sider og formularer der stod fast paa dansk
   cafesPageTitle: 'Baby-friendly cafés',
+  cafesFind: 'Find cafés',
   practPageTitle: 'Practitioners',
   practFind: 'Find practitioners',
   formName: 'Name *',

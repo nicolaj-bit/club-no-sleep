@@ -292,7 +292,7 @@ export default function BabyFriendlyCafes() {
           {/* Search area button */}
           <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
             <div>
-              <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find caféer</p>
+              <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.cafesFind}</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 {cafeSearchMode === 'area' && userLocation ? t.showingInArea : t.cafesAll}
               </p>
