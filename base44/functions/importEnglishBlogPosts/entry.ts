@@ -92,9 +92,15 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Sikkerhedstjek: er siden stadig dansk, er det ikke en oversaettelse.
+      // Sikkerhedstjek: er siden stadig dansk, er det ikke en oversaettelse,
+      // og saa skal den ikke gemmes som engelsk.
+      //
+      // Enkelte danske bogstaver er helt normale — navneartiklen lister danske
+      // navne, og forfatteren hedder Sara Baudtler. Derfor tjekkes ogsaa for
+      // danske smaaord, som ikke optraeder i en engelsk tekst.
       const danskeTegn = (content_en.match(/[æøåÆØÅ]/g) || []).length;
-      const forDansk = danskeTegn > content_en.length / 400;
+      const danskeOrd = (content_en.match(/\b(og|ikke|det|med|til|for|som|kan|skal|har|dit|din|barnet)\b/gi) || []).length;
+      const forDansk = danskeTegn > content_en.length / 100 || danskeOrd > 15;
 
       report.push({
         slug: post.slug,
@@ -102,6 +108,7 @@ Deno.serve(async (req) => {
         title_en,
         tegn: content_en.length,
         danskeTegn,
+        danskeOrd,
       });
 
       if (forDansk || dry) continue;
