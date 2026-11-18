@@ -257,7 +257,7 @@ export default function Onboarding() {
                 {t.onbWelcomeTo}<br />
                 <span>CLUB NO SLEEP</span>
               </h1>
-              <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app</p>
+              <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{t.onbCreateProfileSteps}</p>
             </div>
           ) : step === 1 ? (
             <div>
