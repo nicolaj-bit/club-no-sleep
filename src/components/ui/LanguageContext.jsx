@@ -1233,6 +1233,7 @@ const translations = {
 
   en: {
     ...additionalEn,
+    ...uiEn,
     // Nav
     home: 'Home',
     menu: 'Menu',
