@@ -21,7 +21,9 @@ export function computeSessionTotals(session, nowMs) {
   return { totalSleepMs, totalAwakeMs, wakeCount };
 }
 
-export function formatHoursMinutes(ms) {
+export function formatHoursMinutes(ms, lang = 'da') {
   const totalMin = Math.floor(Math.max(0, ms) / 60000);
-  return `${Math.floor(totalMin / 60)} t. ${totalMin % 60} min.`;
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return lang === 'en' ? `${h} h ${m} min` : `${h} t. ${m} min.`;
 }
