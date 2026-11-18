@@ -136,7 +136,7 @@ function buildChildEvents(child, now, lang) {
     }
     for (let y = 1; y <= 3; y++) {
       if (isSameDayAsYearOffset(birth, y, now)) {
-        events.push({ type: 'birthday', key: `age-${y}y`, title: T(lang, `${name} fylder ${y} år`, `${name} turns ${y}`), message: T(lang, `I dag fylder ${name} ${y} år i dag`.replace(' i dag i dag', ' i dag'), `${name} turns ${y} today`), link: '/Milestones' });
+        events.push({ type: 'birthday', key: `age-${y}y`, title: T(lang, `${name} fylder ${y} år`, `${name} turns ${y}`), message: T(lang, `I dag fylder ${name} ${y} år`, `${name} turns ${y} today`), link: '/Milestones' });
       }
     }
   }
@@ -188,19 +188,34 @@ async function buildAppointmentsPlan(profile, profileEvents, familyMap, todayStr
   const items = [];
   if (profile.notif_calendar_reminder === false) return items;
   const email = profile.user_email;
+  const lang = langOf(profile);
+  // Klokkeslaettet skrives i modtagerens format: 14.30 paa dansk, 2:30 pm paa
+  // engelsk. Tidszonen bliver dansk uanset sprog — aftalen ligger i Danmark.
+  const timeIn = (l) => new Date(event.start_datetime).toLocaleTimeString(
+    l === 'en' ? 'en-GB' : 'da-DK',
+    { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' }
+  );
   for (const event of profileEvents) {
     const eventDateStr = new Date(event.start_datetime).toLocaleDateString('sv-SE', { timeZone: 'Europe/Copenhagen' });
-    const timeStr = new Date(event.start_datetime).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
-    const partners = event.family_id ? (familyMap[event.family_id] || []).filter((p) => p.user_email !== email).map((p) => p.user_email) : [];
-    const ownerName = profile.display_name || profile.username || 'En';
+    const timeStr = new Date(event.start_datetime).toLocaleTimeString(lang === 'en' ? 'en-GB' : 'da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
+    const at = (l, t) => T(l, `kl. ${t}`, `at ${t}`);
+    // Partneren faar hele profilen med, saa beskeden kan skrives paa HENDES sprog.
+    const partners = event.family_id ? (familyMap[event.family_id] || []).filter((p) => p.user_email !== email) : [];
+    const ownerName = profile.display_name || profile.username || T(lang, 'En', 'Someone');
 
     if (eventDateStr === tomorrowStr && !event.notify_day_before_sent) {
-      items.push({ email, profilId: profile.id, childId: null, childName: null, type: 'appointment-day-before', key: `appt-${event.id}-day-before`, title: 'Du har en aftale i morgen', message: `${event.title} kl. ${timeStr}`, link: '/Calendar', kind: 'appointment', eventId: event.id, flagField: 'notify_day_before_sent' });
-      for (const pe of partners) items.push({ email: pe, profilId: null, childId: null, childName: null, type: 'appointment-day-before', key: `appt-${event.id}-day-before-${pe}`, title: `${ownerName} har delt en aftale med dig`, message: `${event.title} kl. ${timeStr}`, link: '/Calendar', kind: 'appointment', eventId: null, flagField: null });
+      items.push({ email, profilId: profile.id, childId: null, childName: null, type: 'appointment-day-before', key: `appt-${event.id}-day-before`, title: T(lang, 'Du har en aftale i morgen', 'You have an appointment tomorrow'), message: `${event.title} ${at(lang, timeStr)}`, link: '/Calendar', kind: 'appointment', eventId: event.id, flagField: 'notify_day_before_sent' });
+      for (const p of partners) {
+        const pl = langOf(p);
+        items.push({ email: p.user_email, profilId: null, childId: null, childName: null, type: 'appointment-day-before', key: `appt-${event.id}-day-before-${p.user_email}`, title: T(pl, `${ownerName} har delt en aftale med dig`, `${ownerName} shared an appointment with you`), message: `${event.title} ${at(pl, timeIn(pl))}`, link: '/Calendar', kind: 'appointment', eventId: null, flagField: null });
+      }
     }
     if (eventDateStr === todayStr && !event.notify_same_day_sent) {
-      items.push({ email, profilId: profile.id, childId: null, childName: null, type: 'appointment-same-day', key: `appt-${event.id}-same-day`, title: 'Du har en aftale i dag', message: `${event.title} kl. ${timeStr}`, link: '/Calendar', kind: 'appointment', eventId: event.id, flagField: 'notify_same_day_sent' });
-      for (const pe of partners) items.push({ email: pe, profilId: null, childId: null, childName: null, type: 'appointment-same-day', key: `appt-${event.id}-same-day-${pe}`, title: `${ownerName} har delt en aftale med dig`, message: `${event.title} kl. ${timeStr}`, link: '/Calendar', kind: 'appointment', eventId: null, flagField: null });
+      items.push({ email, profilId: profile.id, childId: null, childName: null, type: 'appointment-same-day', key: `appt-${event.id}-same-day`, title: T(lang, 'Du har en aftale i dag', 'You have an appointment today'), message: `${event.title} ${at(lang, timeStr)}`, link: '/Calendar', kind: 'appointment', eventId: event.id, flagField: 'notify_same_day_sent' });
+      for (const p of partners) {
+        const pl = langOf(p);
+        items.push({ email: p.user_email, profilId: null, childId: null, childName: null, type: 'appointment-same-day', key: `appt-${event.id}-same-day-${p.user_email}`, title: T(pl, `${ownerName} har delt en aftale med dig`, `${ownerName} shared an appointment with you`), message: `${event.title} ${at(pl, timeIn(pl))}`, link: '/Calendar', kind: 'appointment', eventId: null, flagField: null });
+      }
     }
   }
   return items;
@@ -209,11 +224,11 @@ async function buildAppointmentsPlan(profile, profileEvents, familyMap, todayStr
 async function buildChildPlan(base44, profile, userChildren, now) {
   const items = [];
   for (const child of userChildren) {
-    const evts = buildChildEvents(child, now);
+    const evts = buildChildEvents(child, now, langOf(profile));
     for (const e of evts) {
       if (!optIn(profile, e.type)) continue;
       if (await isLogged(base44, child.id, e.type, e.key)) continue;
-      items.push({ email: profile.user_email, profilId: profile.id, childId: child.id, childName: childName(child), type: e.type, key: e.key, title: e.title, message: e.message, link: e.link, kind: 'child' });
+      items.push({ email: profile.user_email, profilId: profile.id, childId: child.id, childName: childName(child, langOf(profile)), type: e.type, key: e.key, title: e.title, message: e.message, link: e.link, kind: 'child' });
     }
   }
   return items;
