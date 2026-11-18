@@ -44,12 +44,12 @@ function pickBody(entry, lang) {
   return entry?.body;
 }
 
-function get(content, section, fallback, lang) {
+function get(content, section, fallback, lang, lang) {
   const entry = content.find(c => c.section === section);
   const body = pickBody(entry, lang);
   return body !== undefined && body !== null && body !== '' ? body : fallback;
 }
-function getTitle(content, section, fallback, lang) {
+function getTitle(content, section, fallback, lang, lang) {
   const entry = content.find(c => c.section === section);
   if (lang === 'en' && entry?.title_en) return entry.title_en;
   return entry?.title || fallback;
@@ -158,7 +158,7 @@ function PersonCard({ person, openId, setOpenId, t }) {
 
 export default function AboutUs() {
   const { isDark } = useTheme();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -180,31 +180,31 @@ export default function AboutUs() {
   const refetch = () => queryClient.invalidateQueries({ queryKey: ['aboutContent'] });
 
   const sara = {
-    name: getTitle(content, 'team_sara', DEFAULTS.team_sara_name),
-    role: get(content, 'team_sara_role', DEFAULTS.team_sara_role),
+    name: getTitle(content, 'team_sara', DEFAULTS.team_sara_name, lang),
+    role: get(content, 'team_sara_role', DEFAULTS.team_sara_role, lang),
     image: getImage(content, 'team_sara', DEFAULTS.team_sara_image),
-    facts: get(content, 'team_sara_facts', '').split('\n').filter(Boolean).length > 0 && get(content, 'team_sara_facts', '') ? get(content, 'team_sara_facts', '').split('\n').filter(Boolean) : DEFAULTS.team_sara_facts,
+    facts: get(content, 'team_sara_facts', '', lang).split('\n').filter(Boolean).length > 0 && get(content, 'team_sara_facts', '', lang) ? get(content, 'team_sara_facts', '', lang).split('\n').filter(Boolean) : DEFAULTS.team_sara_facts,
   };
   const nicolaj = {
-    name: getTitle(content, 'team_nicolaj', DEFAULTS.team_nicolaj_name),
-    role: get(content, 'team_nicolaj_role', DEFAULTS.team_nicolaj_role),
+    name: getTitle(content, 'team_nicolaj', DEFAULTS.team_nicolaj_name, lang),
+    role: get(content, 'team_nicolaj_role', DEFAULTS.team_nicolaj_role, lang),
     image: getImage(content, 'team_nicolaj', DEFAULTS.team_nicolaj_image),
-    facts: get(content, 'team_nicolaj_facts', '').split('\n').filter(Boolean).length > 0 && get(content, 'team_nicolaj_facts', '') ? get(content, 'team_nicolaj_facts', '').split('\n').filter(Boolean) : DEFAULTS.team_nicolaj_facts,
+    facts: get(content, 'team_nicolaj_facts', '', lang).split('\n').filter(Boolean).length > 0 && get(content, 'team_nicolaj_facts', '', lang) ? get(content, 'team_nicolaj_facts', '', lang).split('\n').filter(Boolean) : DEFAULTS.team_nicolaj_facts,
   };
   const julie = {
-    name: getTitle(content, 'partner_julie', DEFAULTS.partner_julie_name),
-    role: get(content, 'partner_julie_role', DEFAULTS.partner_julie_role),
+    name: getTitle(content, 'partner_julie', DEFAULTS.partner_julie_name, lang),
+    role: get(content, 'partner_julie_role', DEFAULTS.partner_julie_role, lang),
     image: getImage(content, 'partner_julie', DEFAULTS.partner_julie_image),
     link: getLink(content, 'partner_julie', DEFAULTS.partner_julie_link),
-    facts: get(content, 'partner_julie_facts', '').split('\n').filter(Boolean).length > 0 && get(content, 'partner_julie_facts', '') ? get(content, 'partner_julie_facts', '').split('\n').filter(Boolean) : DEFAULTS.partner_julie_facts,
+    facts: get(content, 'partner_julie_facts', '', lang).split('\n').filter(Boolean).length > 0 && get(content, 'partner_julie_facts', '', lang) ? get(content, 'partner_julie_facts', '', lang).split('\n').filter(Boolean) : DEFAULTS.partner_julie_facts,
   };
 
-  const storyTitle = getTitle(content, 'story', DEFAULTS.story_title);
-  const storyBody = get(content, 'story', DEFAULTS.story_body);
-  const contactPhone = get(content, 'contact_phone', DEFAULTS.contact_phone);
-  const contactEmail = get(content, 'contact_email', DEFAULTS.contact_email);
-  const contactHours = get(content, 'contact_hours', DEFAULTS.contact_hours);
-  const contactNote = get(content, 'contact_note', DEFAULTS.contact_note);
+  const storyTitle = getTitle(content, 'story', DEFAULTS.story_title, lang);
+  const storyBody = get(content, 'story', DEFAULTS.story_body, lang);
+  const contactPhone = get(content, 'contact_phone', DEFAULTS.contact_phone, lang);
+  const contactEmail = get(content, 'contact_email', DEFAULTS.contact_email, lang);
+  const contactHours = get(content, 'contact_hours', DEFAULTS.contact_hours, lang);
+  const contactNote = get(content, 'contact_note', DEFAULTS.contact_note, lang);
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: 'var(--color-bg)' }}>
