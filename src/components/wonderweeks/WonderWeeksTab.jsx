@@ -188,10 +188,10 @@ export default function WonderWeeksTab() {
                   )}
                 </div>
                 <p className="font-medium text-sm leading-snug truncate" style={{ color: 'var(--color-text-primary)' }}>
-                  {wwArticles[ww.articleSlug]?.title || ww.name}
+                  {(lang === 'en' ? wwArticles[ww.articleSlug]?.title_en : null) || (lang === 'en' ? null : wwArticles[ww.articleSlug]?.title) || ww.name}
                 </p>
                 <p className="text-xs mt-0.5 line-clamp-1" style={{ color: 'var(--color-text-muted)' }}>
-                  {wwArticles[ww.articleSlug]?.excerpt || ww.shortDescription}
+                  {(lang === 'en' ? wwArticles[ww.articleSlug]?.excerpt_en : null) || (lang === 'en' ? null : wwArticles[ww.articleSlug]?.excerpt) || ww.shortDescription}
                 </p>
               </div>
 
