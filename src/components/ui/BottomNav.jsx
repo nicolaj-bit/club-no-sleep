@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTabState } from '@/components/ui/TabStateContext';
 import { base44 } from '@/api/base44Client';
-import { Home, Menu, ShoppingBag, BookOpen, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark, Moon } from 'lucide-react';
+import { Home, Menu, ShoppingBag, Baby, Users, User, BedDouble, X, CalendarDays, Lightbulb, Stethoscope, Star, Heart, Bookmark, Moon } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ui/ThemeProvider';
@@ -30,7 +30,9 @@ export default function BottomNav() {
     ...(!permissions?.can_see_sleep_log ? ['SleepLog'] : []),
     ...(!permissions?.can_see_wonder_weeks ? ['Knowledge'] : []),
     ...(!permissions?.can_see_calendar ? ['Calendar'] : []),
-    ...(!permissions?.can_see_knowledge ? ['Blog'] : []),
+    // Bloggen er fjernet som sektion. Artikelsiden findes stadig, fordi
+    // graviditetsugerne linker ind i syv af indlæggene, men der er ingen
+    // menupunkt og ingen oversigt længere.
     // Always hidden for invited users
     'Practitioners', 'BabyFriendlyCafes', 'Milestones', 'Community', 'FamilyInvite',
     'AdminNotifications', 'AdminSupport', 'AdminUsers', 'AdminLanding', 'AdminTermsPrivacy',
@@ -59,7 +61,6 @@ export default function BottomNav() {
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
     { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
     { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
-    { key: 'blog', icon: BookOpen, page: 'Blog' },
     { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
     { key: 'cafes', icon: ShoppingBag, page: 'BabyFriendlyCafes', name: 'Babyvenlige caféer' },
     { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },
