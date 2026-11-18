@@ -9,6 +9,7 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  aiEncouragementChatTitle: 'Opmuntring',
   byAuthor: 'af',
   weekWord: 'Uge',
   // Tekster der stod hardkodet paa dansk rundt om i appen.
@@ -298,6 +299,7 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  aiEncouragementChatTitle: 'Encouragement',
   byAuthor: 'by',
   weekWord: 'Week',
   // Tekster der stod hardkodet paa dansk rundt om i appen.

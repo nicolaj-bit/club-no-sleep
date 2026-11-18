@@ -264,7 +264,7 @@ export default function AIChat() {
 
     const conv = await base44.agents.createConversation({
       agent_name: agentName,
-      metadata: { name: agentName === 'encouragement' ? 'Opmuntring Chat' : t.aiChatTitle }
+      metadata: { name: agentName === 'encouragement' ? t.aiEncouragementChatTitle : t.aiChatTitle }
     });
     setConversation(conv);
     setMessages(conv.messages || []);
@@ -302,17 +302,29 @@ export default function AIChat() {
           if (diaryEntries?.length > 0 || profile) {
             setIsLoading(true);
             const MOOD_LABELS = { strålende: t.aiMoodGreat, god: t.aiMoodGood, okay: t.aiMoodOkay, træt: t.aiMoodTired, hård: t.aiMoodHardDay };
+            // Konteksten skrives paa brugerens sprog. Gjorde den ikke det,
+            // ville AI'en svare paa dansk, fordi samtalens foerste besked var dansk.
+            const L = (da, en) => (lang === 'en' ? en : da);
             const diaryText = diaryEntries.map(e =>
-              `Uge ${e.week}: Humør: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptomer: ${e.symptoms || '–'} | Spark: ${e.baby_kicks_count ?? '–'}`
+              L(
+                `Uge ${e.week}: Humør: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptomer: ${e.symptoms || '–'} | Spark: ${e.baby_kicks_count ?? '–'}`,
+                `Week ${e.week}: Mood: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptoms: ${e.symptoms || '–'} | Kicks: ${e.baby_kicks_count ?? '–'}`
+              )
             ).join('\n');
             const contextParts = [];
             if (profile?.child_due_date) {
               const daysLeft = Math.round((new Date(profile.child_due_date) - new Date()) / 86400000);
               const weeksLeft = Math.round(daysLeft / 7);
               const currentWeek = Math.max(1, Math.min(42, 40 - weeksLeft));
-              contextParts.push(`Jeg er i graviditetsuge ${currentWeek} (termin om ca. ${weeksLeft} uger).`);
+              contextParts.push(L(
+                `Jeg er i graviditetsuge ${currentWeek} (termin om ca. ${weeksLeft} uger).`,
+                `I am in week ${currentWeek} of my pregnancy (due in about ${weeksLeft} weeks).`
+              ));
             }
-            if (diaryText) contextParts.push(`Her er mine dagbogsnotater fra graviditeten:\n${diaryText}`);
+            if (diaryText) contextParts.push(L(
+              `Her er mine dagbogsnotater fra graviditeten:\n${diaryText}`,
+              `Here are my diary notes from the pregnancy:\n${diaryText}`
+            ));
             const prompt = `${contextParts.join('\n\n')}\n\n${t.aiPromptContext}`;
             await base44.agents.addMessage(conv, { role: 'user', content: prompt });
           }
