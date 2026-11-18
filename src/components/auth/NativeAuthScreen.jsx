@@ -45,7 +45,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       const { access_token, user } = await base44.auth.loginViaEmailPassword(email, password);
 
       if (!access_token) {
-        throw new Error('Login mislykkedes — intet token modtaget');
+        throw new Error(t.authTokenMissing);
       }
 
       // Gem token i localStorage så SDK + NativeAuthGate kan bruge det efter reload
@@ -260,10 +260,10 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-1 text-center"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Log ind
+                {t.authLogIn}
               </h2>
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                Indtast dine oplysninger for at fortsætte
+                {t.authLoginIntro}
               </p>
 
               {info && (
@@ -297,7 +297,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
-                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>eller</span>
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.authOr}</span>
                 <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
               </div>
               */}
@@ -325,7 +325,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
               <div className="mb-2 relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Adgangskode"
+                  placeholder={t.authPasswordPlaceholder}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
@@ -352,7 +352,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-right text-sm mb-3"
                 style={{ color: 'var(--color-accent)', fontWeight: 600 }}
               >
-                Glemt adgangskode?
+                {t.authForgotPasswordQ}
               </button>
 
               {/* Error */}
@@ -394,8 +394,8 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Har du ikke en konto?{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Opret bruger</span>
+                {t.authNoAccount}{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.authCreateAccount}</span>
               </button>
 
               {/* Demo mode */}
@@ -426,7 +426,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 Opret bruger
               </h2>
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-                Indtast email og adgangskode for at oprette din konto
+                {t.authSignupIntro}
               </p>
 
               {/* Email */}
@@ -452,7 +452,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
               <div className="mb-3 relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Adgangskode (mindst 8 tegn)"
+                  placeholder={t.authPasswordMin8Placeholder}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3.5 pr-12 rounded-xl text-base outline-none"
@@ -476,7 +476,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
               <div className="mb-2">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Bekræft adgangskode"
+                  placeholder={t.authConfirmPassword}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleRegister()}
@@ -527,8 +527,8 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Har du allerede en konto?{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+                {t.authHaveAccount}{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.authLogIn}</span>
               </button>
             </motion.div>
           ) : mode === 'reset' ? (
@@ -545,16 +545,16 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-2"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Vælg ny adgangskode
+                {t.authChooseNewPassword}
               </h2>
               <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                Indtast en ny adgangskode for din konto.
+                {t.authNewPasswordIntro}
               </p>
 
               <div className="w-full mb-3 relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Ny adgangskode (mindst 8 tegn)"
+                  placeholder={t.authNewPasswordPlaceholder}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-4 py-3.5 pr-12 rounded-xl text-base outline-none"
@@ -577,7 +577,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
               <div className="w-full mb-2">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Bekræft ny adgangskode"
+                  placeholder={t.authConfirmNewPassword}
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleResetPassword()}
@@ -612,7 +612,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                   opacity: loading ? 0.6 : 1,
                 }}
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Gem ny adgangskode'}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : t.authSaveNewPassword}
               </motion.button>
 
               <button
@@ -637,7 +637,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-2"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Glemt adgangskode
+                {t.authForgotPassword}
               </h2>
               <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
                 {info || t.authResetIntro}
@@ -709,7 +709,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-2"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Bekræft din email
+                {t.authConfirmYourEmail}
               </h2>
               <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
                 {info || t.authCodeSentTo.replace('{email}', email)}
@@ -719,7 +719,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Kode fra email"
+                  placeholder={t.authCodePlaceholder}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleVerifyOtp()}
@@ -754,7 +754,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                   opacity: loading ? 0.6 : 1,
                 }}
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Bekræft'}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : t.authConfirm}
               </motion.button>
 
               <button
@@ -763,8 +763,8 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-4"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Fik du ingen kode?{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Send igen</span>
+                {t.authNoCode}{' '}
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.authResend}</span>
               </button>
 
               <button
