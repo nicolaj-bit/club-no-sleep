@@ -10,7 +10,6 @@ import { da } from 'date-fns/locale';
 import UserAvatar from '@/components/community/UserAvatar';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { useTranslation } from '@/components/hooks/useTranslation';
 import { enUS } from 'date-fns/locale';
 import ArticleFloatingNav from '@/components/articles/ArticleFloatingNav';
 import { markArticleVisit } from '@/hooks/useListScrollRestoration';
@@ -91,13 +90,20 @@ export default function BlogPost() {
       .join('');
   };
 
-  const translations = useTranslation(
-    lang === 'en' && post
-      ? [{ title: post.title, content: post.content }]
-      : []
-  );
-
-  const translated = Array.isArray(translations) && translations.length > 0 ? translations[0] : null;
+  // Den engelske udgave ligger paa indlaegget (hentet fra lalatoto.dk/en, hvor
+  // de allerede er oversat og gennemlaest). Foer blev hvert indlaeg oversat af
+  // AI'en ved hver visning: det tog et par sekunder, kostede penge hver gang,
+  // og ordlyden var forskellig fra gang til gang. Mangler den engelske tekst,
+  // vises den danske.
+  const translated = React.useMemo(() => {
+    if (!post || lang !== 'en') return null;
+    if (!post.title_en && !post.content_en) return null;
+    return {
+      title: post.title_en || post.title,
+      excerpt: post.excerpt_en || post.excerpt,
+      content: post.content_en || post.content,
+    };
+  }, [post, lang]);
 
   const handleShare = async () => {
     try {
