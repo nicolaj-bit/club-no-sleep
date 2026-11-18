@@ -7,6 +7,7 @@ import { CheckCircle, ThumbsUp, ThumbsDown, RefreshCw, AlertCircle, ChevronLeft 
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import PageHeader from '@/components/ui/PageHeader';
+import BrandLoader from '@/components/ui/BrandLoader';
 
 export default function SleepAdviceFeedback() {
   const { isDark } = useTheme();
@@ -78,7 +79,7 @@ export default function SleepAdviceFeedback() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: bg }}>
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin" />
+        <BrandLoader fullScreen={false} />
       </div>
     );
   }
