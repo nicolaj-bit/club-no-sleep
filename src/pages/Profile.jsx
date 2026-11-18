@@ -650,7 +650,7 @@ export default function Profile() {
           {notifPermStatus === 'not_determined' && (
             <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
               <p className="text-sm mb-3" style={{ color: 'var(--color-text-secondary)' }}>
-                Notifikationer er slået fra på din telefon. Dine valg herunder træder først i kraft, når du slår dem til.
+                {t.notifOffOnPhone}
               </p>
               <button
                 onClick={async () => {
@@ -661,14 +661,14 @@ export default function Profile() {
                 className="w-full py-2.5 rounded-xl text-sm font-semibold active:opacity-80 transition-opacity"
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
               >
-                Slå notifikationer til
+                {t.notifTurnOn}
               </button>
             </div>
           )}
           {notifPermStatus === 'denied' && (
             <div className="rounded-2xl p-4" style={{ backgroundColor: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
               <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>
-                Notifikationer er slået fra på din telefon. Dine valg herunder træder først i kraft, når du slår dem til.
+                {t.notifOffOnPhone}
               </p>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
                 {Capacitor.getPlatform() === 'ios'

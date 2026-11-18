@@ -421,7 +421,7 @@ export default function Settings() {
       <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            Du kan til enhver tid opsige dit abonnement. Det er købt i App Store eller Google Play, så det er også dér, du opsiger — vi åbner siden for dig. Opsigelse træder i kraft ved udløbet af den <strong>{t.setCancelCurrentMonth}</strong> — ingen binding.
+            {t.setCancelIntro} <strong>{t.setCancelCurrentMonth}</strong> — ingen binding.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
@@ -431,7 +431,7 @@ export default function Settings() {
             className="text-sm underline underline-offset-2 cursor-pointer"
             style={{ color: 'var(--color-accent)' }}>
             
-            Læs handelsbetingelserne →
+            {t.setReadTerms}
           </button>
           <Button
             variant="destructive"
@@ -439,7 +439,7 @@ export default function Settings() {
             onClick={handleCancelSubscription}>
             
             <CreditCard className="w-4 h-4 mr-2" />
-            Åbn mine abonnementer
+            {t.setOpenSubscriptions}
           </Button>
           <button onClick={() => setCancelOpen(false)} className="w-full py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
             Fortryd
