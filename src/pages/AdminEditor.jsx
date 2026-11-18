@@ -31,6 +31,9 @@ export default function AdminEditor() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('BlogPost');
   const [menuOpen, setMenuOpen] = useState(false);
+  // Hentning af de engelske blogindlaeg fra lalatoto.dk
+  const [importerer, setImporterer] = useState(false);
+  const [importSvar, setImportSvar] = useState(null);
   const [editing, setEditing] = useState(null);
   const [isNew, setIsNew] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -239,6 +242,28 @@ export default function AdminEditor() {
     if (activeTab === 'BlogPost') setEditing({ ...emptyBlog });
     else if (activeTab === 'KnowledgeArticle') setEditing({ ...emptyArticle });
     else setEditing({ ...emptyLegal });
+  };
+
+  // De engelske blogindlaeg ligger allerede oversat paa lalatoto.dk/en.
+  // Knappen henter dem og skriver dem ind paa indlaegget, saa appen kan vise
+  // dem med det samme i stedet for at lade AI'en oversaette ved hver visning.
+  const hentEngelskeBlogindlaeg = async () => {
+    setImporterer(true);
+    setImportSvar(null);
+    try {
+      const res = await base44.functions.invoke('importEnglishBlogPosts', {});
+      const d = res?.data || {};
+      if (d.error) {
+        setImportSvar({ fejl: d.error });
+      } else {
+        const mislykkede = (d.report || []).filter(r => r.status !== 'gemt');
+        setImportSvar({ gemt: d.gemt ?? 0, antal: d.antal ?? 0, mislykkede });
+      }
+    } catch (e) {
+      setImportSvar({ fejl: e?.message || 'Ukendt fejl' });
+    } finally {
+      setImporterer(false);
+    }
   };
 
   const handleEdit = (item) => {
