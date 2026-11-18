@@ -1,57 +1,69 @@
 {
   "name": "BlogPost",
-  "type": "object",
   "properties": {
-    "title": {
-      "type": "string",
-      "description": "Blogtitel"
-    },
-    "slug": {
-      "type": "string",
-      "description": "URL-venlig titel"
-    },
-    "excerpt": {
-      "type": "string",
-      "description": "Kort uddrag"
-    },
-    "content": {
-      "type": "string",
-      "description": "Fuldt indhold (markdown)"
-    },
-    "featured_image": {
-      "type": "string",
-      "description": "Hovedbillede URL"
-    },
-    "category": {
-      "type": "string",
-      "description": "Kategori"
-    },
-    "tags": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Tags"
+    "author_image": {
+      "type": "string"
     },
     "author_name": {
       "type": "string"
     },
-    "author_image": {
+    "category": {
+      "description": "Kategori",
+      "type": "string"
+    },
+    "content": {
+      "description": "Fuldt indhold (markdown)",
+      "type": "string"
+    },
+    "content_en": {
+      "description": "Engelsk indhold, hentet fra lalatoto.dk/en. Er det tomt, vises det danske.",
+      "type": "string"
+    },
+    "excerpt": {
+      "description": "Kort uddrag",
+      "type": "string"
+    },
+    "excerpt_en": {
+      "description": "Engelsk uddrag. Er det tomt, vises det danske.",
+      "type": "string"
+    },
+    "featured_image": {
+      "description": "Hovedbillede URL",
       "type": "string"
     },
     "published": {
-      "type": "boolean",
-      "default": true
+      "default": true,
+      "type": "boolean"
     },
     "published_date": {
-      "type": "string",
-      "format": "date"
+      "format": "date",
+      "type": "string"
+    },
+    "slug": {
+      "description": "URL-venlig titel",
+      "type": "string"
+    },
+    "tags": {
+      "description": "Tags",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "title": {
+      "description": "Blogtitel",
+      "type": "string"
+    },
+    "title_en": {
+      "description": "Engelsk titel, hentet fra lalatoto.dk/en. Er den tom, vises den danske.",
+      "type": "string"
     }
   },
   "required": [
     "title",
     "content"
   ],
+  "type": "object",
   "rls": {
     "create": {
       "user_condition": {
