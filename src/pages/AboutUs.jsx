@@ -44,12 +44,12 @@ function pickBody(entry, lang) {
   return entry?.body;
 }
 
-function get(content, section, fallback, lang, lang) {
+function get(content, section, fallback, lang) {
   const entry = content.find(c => c.section === section);
   const body = pickBody(entry, lang);
   return body !== undefined && body !== null && body !== '' ? body : fallback;
 }
-function getTitle(content, section, fallback, lang, lang) {
+function getTitle(content, section, fallback, lang) {
   const entry = content.find(c => c.section === section);
   if (lang === 'en' && entry?.title_en) return entry.title_en;
   return entry?.title || fallback;
