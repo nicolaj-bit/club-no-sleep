@@ -65,7 +65,7 @@ function AIAvatar({ size = 'sm', iconUrl = null }) {
 
 
 export default function AIChat() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
