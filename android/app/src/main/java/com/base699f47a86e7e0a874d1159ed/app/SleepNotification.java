@@ -41,6 +41,22 @@ final class SleepNotification {
     private static final String KEY_SESSION_ID = "session_id";
     private static final String KEY_PHASE_START = "phase_start";
     private static final String KEY_IS_AWAKE = "is_awake";
+    // Teksterne vaelges af web-laget, saa notifikationen foelger brugerens
+    // sprogvalg i appen. De gemmes her, fordi knappen haandteres af en
+    // BroadcastReceiver, hvor JavaScript ikke koerer og ikke kan spoerges.
+    private static final String KEY_TITLE_AWAKE = "title_awake";
+    private static final String KEY_TITLE_SLEEPING = "title_sleeping";
+    private static final String KEY_BODY_AWAKE = "body_awake";
+    private static final String KEY_BODY_SLEEPING = "body_sleeping";
+    private static final String KEY_BTN_WHEN_AWAKE = "btn_when_awake";
+    private static final String KEY_BTN_WHEN_SLEEPING = "btn_when_sleeping";
+    private static final String KEY_BTN_END = "btn_end";
+
+    /** Gemt tekst, eller den danske hvis appen ikke har sendt nogen. */
+    private static String label(Context context, String key, String fallback) {
+        String v = state(context).getString(key, null);
+        return (v == null || v.isEmpty()) ? fallback : v;
+    }
 
     private SleepNotification() {}
 
@@ -98,6 +114,26 @@ final class SleepNotification {
             .apply();
     }
 
+    /** Gemmer teksterne. Kun dem der faktisk er sendt med. */
+    static void saveLabels(Context context, java.util.Map<String, String> labels) {
+        if (labels == null || labels.isEmpty()) return;
+        android.content.SharedPreferences.Editor e = state(context).edit();
+        for (java.util.Map.Entry<String, String> entry : labels.entrySet()) {
+            if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+                e.putString(entry.getKey(), entry.getValue());
+            }
+        }
+        e.apply();
+    }
+
+    static final String L_TITLE_AWAKE = KEY_TITLE_AWAKE;
+    static final String L_TITLE_SLEEPING = KEY_TITLE_SLEEPING;
+    static final String L_BODY_AWAKE = KEY_BODY_AWAKE;
+    static final String L_BODY_SLEEPING = KEY_BODY_SLEEPING;
+    static final String L_BTN_WHEN_AWAKE = KEY_BTN_WHEN_AWAKE;
+    static final String L_BTN_WHEN_SLEEPING = KEY_BTN_WHEN_SLEEPING;
+    static final String L_BTN_END = KEY_BTN_END;
+
     private static void clearState(Context context) {
         state(context).edit().clear().apply();
     }
@@ -112,8 +148,12 @@ final class SleepNotification {
         NotificationCompat.Builder builder =
             new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_sleep_notification)
-                .setContentTitle(isAwake ? "Barnet er vågent" : "Søvnlog kører")
-                .setContentText(isAwake ? "Vågen siden" : "Sover siden")
+                .setContentTitle(isAwake
+                    ? label(context, KEY_TITLE_AWAKE, "Barnet er vågent")
+                    : label(context, KEY_TITLE_SLEEPING, "Søvnlog kører"))
+                .setContentText(isAwake
+                    ? label(context, KEY_BODY_AWAKE, "Vågen siden")
+                    : label(context, KEY_BODY_SLEEPING, "Sover siden"))
                 // Tælleren: Android tæller selv opad fra setWhen.
                 .setWhen(phaseStart)
                 .setShowWhen(true)
@@ -175,7 +215,9 @@ final class SleepNotification {
     private static NotificationCompat.Action toggleAction(Context context, boolean isAwake) {
         return new NotificationCompat.Action(
             0,
-            isAwake ? "Sover igen" : "Barnet er vågent",
+            isAwake
+                ? label(context, KEY_BTN_WHEN_AWAKE, "Sover igen")
+                : label(context, KEY_BTN_WHEN_SLEEPING, "Barnet er vågent"),
             actionIntent(context, SleepActionReceiver.BUTTON_TOGGLE, 1)
         );
     }
@@ -183,7 +225,7 @@ final class SleepNotification {
     private static NotificationCompat.Action endAction(Context context) {
         return new NotificationCompat.Action(
             0,
-            "Afslut log",
+            label(context, KEY_BTN_END, "Afslut log"),
             actionIntent(context, SleepActionReceiver.BUTTON_END, 2)
         );
     }

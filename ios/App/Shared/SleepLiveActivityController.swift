@@ -28,7 +28,11 @@ enum SleepLiveActivityController {
     static func start(sessionId: String?,
                       sessionStart: Date,
                       phaseStart: Date,
-                      isAwake: Bool) -> Bool {
+                      isAwake: Bool,
+                      titleAwake: String? = nil,
+                      titleSleeping: String? = nil,
+                      buttonWhenAwake: String? = nil,
+                      buttonWhenSleeping: String? = nil) -> Bool {
 
         guard areActivitiesEnabled else {
             NSLog("[CNS-LIVE] Live Activities er slået fra for appen")
@@ -40,7 +44,14 @@ enum SleepLiveActivityController {
             return true
         }
 
-        let attributes = SleepActivityAttributes(sessionId: sessionId, sessionStart: sessionStart)
+        let attributes = SleepActivityAttributes(
+            sessionId: sessionId,
+            sessionStart: sessionStart,
+            titleAwake: titleAwake,
+            titleSleeping: titleSleeping,
+            buttonWhenAwake: buttonWhenAwake,
+            buttonWhenSleeping: buttonWhenSleeping
+        )
         let state = SleepActivityAttributes.ContentState(isAwake: isAwake, phaseStart: phaseStart)
 
         do {

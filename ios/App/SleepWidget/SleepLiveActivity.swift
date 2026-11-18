@@ -21,7 +21,7 @@ struct SleepLiveActivity: Widget {
                 // Samme opbygning som låseskærmen: teksten til venstre,
                 // tælleren til højre, knappen nedenunder.
                 DynamicIslandExpandedRegion(.leading) {
-                    Text(title(for: context.state))
+                    Text(title(for: context.state, context.attributes))
                         .font(.caption)
                         .foregroundStyle(.white)
                 }
@@ -58,7 +58,7 @@ struct SleepLiveActivity: Widget {
             // højre i samme størrelse som før. HStack centrerer dem lodret i
             // forhold til hinanden.
             HStack(spacing: 10) {
-                Text(title(for: context.state))
+                Text(title(for: context.state, context.attributes))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white)
 
@@ -95,7 +95,7 @@ struct SleepLiveActivity: Widget {
     ) -> some View {
         if #available(iOS 17.0, *) {
             Button(intent: SleepPhaseToggleIntent()) {
-                Text(buttonTitle(for: context.state))
+                Text(buttonTitle(for: context.state, context.attributes))
                     .font(.headline)
                     .frame(maxWidth: .infinity, minHeight: 44)
                     .padding(.vertical, 6)
@@ -110,12 +110,18 @@ struct SleepLiveActivity: Widget {
     // MARK: - Tekst
 
     /// Hvad knappen gør, hvis man trykker nu — ikke hvad der gælder lige nu.
-    private func buttonTitle(for state: SleepActivityAttributes.ContentState) -> String {
-        state.isAwake ? "Sover igen" : "Barnet er vågent"
+    private func buttonTitle(for state: SleepActivityAttributes.ContentState,
+                             _ attrs: SleepActivityAttributes) -> String {
+        let valgt = state.isAwake ? attrs.buttonWhenAwake : attrs.buttonWhenSleeping
+        if let t = valgt, !t.isEmpty { return t }
+        return state.isAwake ? "Sover igen" : "Barnet er vågent"
     }
 
-    private func title(for state: SleepActivityAttributes.ContentState) -> String {
-        state.isAwake ? "Barnet er vågent" : "Søvnlog kører"
+    private func title(for state: SleepActivityAttributes.ContentState,
+                       _ attrs: SleepActivityAttributes) -> String {
+        let valgt = state.isAwake ? attrs.titleAwake : attrs.titleSleeping
+        if let t = valgt, !t.isEmpty { return t }
+        return state.isAwake ? "Barnet er vågent" : "Søvnlog kører"
     }
 
     /// Tæller opad fra `start`. Vinduet på et døgn er blot en øvre grænse for,
