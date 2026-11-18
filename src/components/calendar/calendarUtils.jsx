@@ -31,39 +31,33 @@ export function isPregnancyWeekStart(dueDateStr, onDate = new Date()) {
 }
 
 // Age milestones (months 1-23, skip 12 = birthday)
-export const AGE_MILESTONES = [
-  { months: 1, label: '1 måned' },
-  { months: 2, label: '2 måneder' },
-  { months: 3, label: '3 måneder' },
-  { months: 4, label: '4 måneder' },
-  { months: 5, label: '5 måneder' },
-  { months: 6, label: '6 måneder' },
-  { months: 7, label: '7 måneder' },
-  { months: 8, label: '8 måneder' },
-  { months: 9, label: '9 måneder' },
-  { months: 10, label: '10 måneder' },
-  { months: 11, label: '11 måneder' },
-  { months: 13, label: '13 måneder' },
-  { months: 14, label: '14 måneder' },
-  { months: 15, label: '15 måneder' },
-  { months: 16, label: '16 måneder' },
-  { months: 17, label: '17 måneder' },
-  { months: 18, label: '18 måneder' },
-  { months: 19, label: '19 måneder' },
-  { months: 20, label: '20 måneder' },
-  { months: 21, label: '21 måneder' },
-  { months: 22, label: '22 måneder' },
-  { months: 23, label: '23 måneder' },
-];
+// Sproget vælges her i filen frem for med oversættelsesnøgler, fordi teksterne
+// bygges af tal. 25 nøgler fra «1 måned» til «23 måneder» skulle holdes i sync
+// i hånden, og de to sprog bøjer ikke ens: dansk år hedder år i både éntal og
+// flertal, engelsk year bliver til years.
+const L = (lang, da, en) => (lang === 'en' ? en : da);
 
-export const BIRTHDAY_MILESTONES = [
-  { years: 1, label: '1 år' },
-  { years: 2, label: '2 år' },
-  { years: 3, label: '3 år' },
-];
+// 12 måneder mangler med vilje — det er 1 år og håndteres som fødselsdag.
+export const AGE_MILESTONES = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+].map((months) => ({ months }));
+
+export const BIRTHDAY_MILESTONES = [1, 2, 3].map((years) => ({ years }));
+
+/** «1 måned» / «3 måneder» — «1 month» / «3 months». */
+export function formatAgeLabel(months, lang) {
+  if (lang === 'en') return `${months} ${months === 1 ? 'month' : 'months'}`;
+  return `${months} ${months === 1 ? 'måned' : 'måneder'}`;
+}
+
+/** «1 år» / «3 år» — «1 year» / «3 years». */
+export function formatBirthdayLabel(years, lang) {
+  if (lang === 'en') return `${years} ${years === 1 ? 'year' : 'years'}`;
+  return `${years} år`;
+}
 
 // Check if a given day is an age milestone
-export function getAgeMilestoneForDay(birthDateStr, day) {
+export function getAgeMilestoneForDay(birthDateStr, day, lang) {
   if (!birthDateStr) return null;
   const birthDate = new Date(birthDateStr);
   birthDate.setHours(0, 0, 0, 0);
@@ -74,14 +68,23 @@ export function getAgeMilestoneForDay(birthDateStr, day) {
     const milestoneDate = addMonths(birthDate, m.months);
     milestoneDate.setHours(0, 0, 0, 0);
     if (isSameDay(milestoneDate, target)) {
+      const label = formatAgeLabel(m.months, lang);
       return {
         type: 'age_milestone',
         milestone_id: `age-${m.months}m`,
-        title: m.label,
-        headline: `${m.label} i dag`,
+        title: label,
+        headline: L(lang, `${label} i dag`, `${label} today`),
         message: m.months === 6
-          ? 'Baby er et halvt år! Der ligger nye milepæle klar i appen.'
-          : `Baby er ${m.label} i dag. Måske er der en milepæl, du har lyst til at gemme.`,
+          ? L(
+              lang,
+              'Baby er et halvt år! Der ligger nye milepæle klar i appen.',
+              'Baby is six months old! New milestones are ready in the app.'
+            )
+          : L(
+              lang,
+              `Baby er ${label} i dag. Måske er der en milepæl, du har lyst til at gemme.`,
+              `Baby is ${label} today. Perhaps there is a milestone you would like to save.`
+            ),
         link: '/Milestones',
       };
     }
@@ -91,12 +94,17 @@ export function getAgeMilestoneForDay(birthDateStr, day) {
     const milestoneDate = addYears(birthDate, b.years);
     milestoneDate.setHours(0, 0, 0, 0);
     if (isSameDay(milestoneDate, target)) {
+      const label = formatBirthdayLabel(b.years, lang);
       return {
         type: 'birthday',
         milestone_id: `age-${b.years}y`,
-        title: b.label,
-        headline: `${b.label} i dag`,
-        message: `Tillykke med ${b.label}-fødselsdagen! Gem dagen med en milepæl, hvis du har lyst.`,
+        title: label,
+        headline: L(lang, `${label} i dag`, `${label} today`),
+        message: L(
+          lang,
+          `Tillykke med ${label}-fødselsdagen! Gem dagen med en milepæl, hvis du har lyst.`,
+          `Happy ${label} birthday! Save the day with a milestone if you like.`
+        ),
         link: '/Milestones',
       };
     }
