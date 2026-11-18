@@ -86,6 +86,7 @@ function WeekCard({ week, data, isCurrent }) {
 }
 
 export default function PregnancyTab() {
+  const { t } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const { isActive: hasSubscription, loading: subscriptionLoading } = useSubscription();
