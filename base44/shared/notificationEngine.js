@@ -25,6 +25,13 @@
 
 import { getGestationalAge } from './getGestationalAge.js';
 import { WONDER_WEEKS } from './getWonderWeek.js';
+import { normalizeLanguage } from './i18n.js';
+
+// Sproget staar paa profilen, og motoren laeser alligevel alle profiler ind,
+// saa der skal ikke slaas op én gang til. Modtagerens eget sprog bestemmer —
+// ogsaa naar beskeden handler om en andens aftale.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
+const langOf = (profile) => normalizeLanguage(profile && profile.language);
 
 const ONESIGNAL_APP_ID = (typeof Deno !== 'undefined') ? Deno.env.get('ONESIGNAL_APP_ID') : undefined;
 const REST_API_KEY = (typeof Deno !== 'undefined') ? Deno.env.get('ONESIGNAL_REST_API_KEY') : undefined;
@@ -35,9 +42,9 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
-function childName(child) {
+function childName(child, lang) {
   const n = (child && child.name || '').trim();
-  return n || 'dit barn';
+  return n || T(lang, 'dit barn', 'your baby');
 }
 
 function daysSince(dateStr, now) {
@@ -79,9 +86,9 @@ function optIn(profile, type) {
   return true;
 }
 
-function buildChildEvents(child, now) {
+function buildChildEvents(child, now, lang) {
   const events = [];
-  const name = childName(child);
+  const name = childName(child, lang);
   const due = child.due_date;
   const birth = child.birthdate;
 
@@ -91,10 +98,10 @@ function buildChildEvents(child, now) {
       for (const ww of WONDER_WEEKS) {
         const startDay = ww.weekStart * 7;
         if (ageDays === startDay - 1) {
-          events.push({ type: 'wonderweek', key: `wonderweek-${ww.number}-approaching`, title: 'Tigerspring', message: `${name} går ind i tigerspring ${ww.number} i morgen`, link: '/Knowledge' });
+          events.push({ type: 'wonderweek', key: `wonderweek-${ww.number}-approaching`, title: T(lang, 'Tigerspring', 'Leap'), message: T(lang, `${name} går ind i tigerspring ${ww.number} i morgen`, `${name} enters leap ${ww.number} tomorrow`), link: '/Knowledge' });
         }
         if (ageDays === startDay) {
-          events.push({ type: 'wonderweek', key: `wonderweek-${ww.number}`, title: 'Tigerspring', message: `${name} er nu i tigerspring ${ww.number}`, link: '/Knowledge' });
+          events.push({ type: 'wonderweek', key: `wonderweek-${ww.number}`, title: T(lang, 'Tigerspring', 'Leap'), message: T(lang, `${name} er nu i tigerspring ${ww.number}`, `${name} is now in leap ${ww.number}`), link: '/Knowledge' });
         }
       }
     }
@@ -105,31 +112,31 @@ function buildChildEvents(child, now) {
     if (ga && ga.days === 0) {
       const week = ga.ordinal;
       if (week >= 4 && week <= 42) {
-        events.push({ type: 'pregnancy-week', key: `pregnancy-week-${week}`, title: `Uge ${week}`, message: `Uge ${week} — ${name}`, link: '/PregnancyWeeks' });
+        events.push({ type: 'pregnancy-week', key: `pregnancy-week-${week}`, title: T(lang, `Uge ${week}`, `Week ${week}`), message: T(lang, `Uge ${week} — ${name}`, `Week ${week} — ${name}`), link: '/PregnancyWeeks' });
         if (PREGNANCY_MILESTONE_WEEKS.includes(week)) {
-          events.push({ type: 'pregnancy-milestone', key: `preg-${week}`, title: `Uge ${week}`, message: `Ny milepæl klar for ${name} — uge ${week}`, link: '/Milestones' });
+          events.push({ type: 'pregnancy-milestone', key: `preg-${week}`, title: T(lang, `Uge ${week}`, `Week ${week}`), message: T(lang, `Ny milepæl klar for ${name} — uge ${week}`, `A new milestone is ready for ${name} — week ${week}`), link: '/Milestones' });
         }
       }
     }
     if (isSameDateStr(due, now)) {
-      events.push({ type: 'termin', key: 'termin', title: 'Termin', message: `I dag er det termin for ${name}`, link: '/PregnancyWeeks' });
+      events.push({ type: 'termin', key: 'termin', title: T(lang, 'Termin', 'Due date'), message: T(lang, `I dag er det termin for ${name}`, `Today is the due date for ${name}`), link: '/PregnancyWeeks' });
     }
   }
 
   if (birth) {
     for (let m = 1; m <= 11; m++) {
       if (isSameDayAsMonthOffset(birth, m, now)) {
-        events.push({ type: 'age-milestone', key: `age-${m}m`, title: `${name} er ${m} måneder`, message: `${name} er ${m} måneder i dag`, link: '/Milestones' });
+        events.push({ type: 'age-milestone', key: `age-${m}m`, title: T(lang, `${name} er ${m} måneder`, `${name} is ${m} months`), message: T(lang, `${name} er ${m} måneder i dag`, `${name} is ${m} months old today`), link: '/Milestones' });
       }
     }
     for (let m = 13; m <= 23; m++) {
       if (isSameDayAsMonthOffset(birth, m, now)) {
-        events.push({ type: 'age-milestone', key: `age-${m}m`, title: `${name} er ${m} måneder`, message: `${name} er ${m} måneder i dag`, link: '/Milestones' });
+        events.push({ type: 'age-milestone', key: `age-${m}m`, title: T(lang, `${name} er ${m} måneder`, `${name} is ${m} months`), message: T(lang, `${name} er ${m} måneder i dag`, `${name} is ${m} months old today`), link: '/Milestones' });
       }
     }
     for (let y = 1; y <= 3; y++) {
       if (isSameDayAsYearOffset(birth, y, now)) {
-        events.push({ type: 'birthday', key: `age-${y}y`, title: `${name} fylder ${y} år`, message: `I dag fylder ${name} ${y} år`, link: '/Milestones' });
+        events.push({ type: 'birthday', key: `age-${y}y`, title: T(lang, `${name} fylder ${y} år`, `${name} turns ${y}`), message: T(lang, `I dag fylder ${name} ${y} år i dag`.replace(' i dag i dag', ' i dag'), `${name} turns ${y} today`), link: '/Milestones' });
       }
     }
   }
