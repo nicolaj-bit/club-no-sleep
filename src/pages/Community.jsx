@@ -89,7 +89,7 @@ export default function Community() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       <PageHeader
-        title="Et lys i mørket"
+        title={t.natteensomhed}
         rightAction={
           <Link to={createPageUrl('ChatList')} className="relative p-2 rounded-full active:opacity-60" style={{ color: 'var(--color-text-secondary)' }}>
             <MessageCircle className="w-5 h-5" />

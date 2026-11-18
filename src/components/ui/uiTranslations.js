@@ -9,6 +9,14 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  // Menupunkter. Stod foer hardkodet paa dansk i BottomNav.
+  menuTigerspring: 'Tigerspring',
+  menuPregnancy: 'Graviditet',
+  menuCafes: 'Babyvenlige caféer',
+  menuMilestones: 'Milepæle',
+  sleepPageTitle: 'Søvn',
+  sleepLogBtn: 'Log',
+  questionPageTitle: 'Spørgsmål',
   // Login og oprettelse (NativeAuthScreen)
   authFillEmailPassword: 'Udfyld email og adgangskode',
   authLoginFailed: 'Login mislykkedes. Tjek email og adgangskode.',
@@ -268,6 +276,14 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  // Menupunkter. Stod foer hardkodet paa dansk i BottomNav.
+  menuTigerspring: 'Leaps',
+  menuPregnancy: 'Pregnancy',
+  menuCafes: 'Baby-friendly cafés',
+  menuMilestones: 'Milestones',
+  sleepPageTitle: 'Sleep',
+  sleepLogBtn: 'Log',
+  questionPageTitle: 'Question',
   // Sign-in and sign-up (NativeAuthScreen)
   authFillEmailPassword: 'Enter your email and password',
   authLoginFailed: 'Sign-in failed. Check your email and password.',

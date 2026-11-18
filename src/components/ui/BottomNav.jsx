@@ -57,17 +57,17 @@ export default function BottomNav() {
     && new Date(activeProfile.child_due_date) > new Date();
 
   const menuItemsConfig = [
-    { key: 'community', icon: Users, page: 'Community', name: 'Et lys i mørket' },
+    { key: 'natteensomhed', icon: Users, page: 'Community' },
     { key: 'sleepLog', icon: BedDouble, page: 'SleepLog' },
-    { key: 'tigerspring', icon: Baby, page: 'Knowledge', name: 'Tigerspring' },
-    { key: 'pregnancy', icon: Lightbulb, page: 'PregnancyWeeks', name: 'Graviditet' },
-    { key: 'practitioners', icon: Stethoscope, page: 'Practitioners', name: 'Behandlere' },
-    { key: 'cafes', icon: ShoppingBag, page: 'BabyFriendlyCafes', name: 'Babyvenlige caféer' },
-    { key: 'milestones', icon: Star, page: 'Milestones', name: 'Milepæle' },
+    { key: 'menuTigerspring', icon: Baby, page: 'Knowledge' },
+    { key: 'menuPregnancy', icon: Lightbulb, page: 'PregnancyWeeks' },
+    { key: 'practitioners', icon: Stethoscope, page: 'Practitioners' },
+    { key: 'menuCafes', icon: ShoppingBag, page: 'BabyFriendlyCafes' },
+    { key: 'menuMilestones', icon: Star, page: 'Milestones' },
     { key: 'calendar', icon: CalendarDays, page: 'Calendar' },
-    { key: 'favorites', icon: Bookmark, page: 'Favorites', name: 'Favoritter' },
+    { key: 'favorites', icon: Bookmark, page: 'Favorites' },
     { key: 'profile', icon: User, page: 'Profile' },
-    { key: 'aboutUs', icon: Heart, page: 'AboutUs', name: 'Om os' },
+    { key: 'aboutUs', icon: Heart, page: 'AboutUs' },
   ];
 
   const menuItems = menuItemsConfig

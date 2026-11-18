@@ -42,7 +42,7 @@ export default function SleepLog() {
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="min-h-screen pb-28" style={{ backgroundColor: 'var(--color-bg)' }}>
         <PageHeader
-          title="Søvn"
+          title={t.sleepPageTitle}
           rightAction={
             <button
               onClick={() => setView(v => v === 'tracker' ? 'history' : 'tracker')}
@@ -50,7 +50,7 @@ export default function SleepLog() {
               style={{ background: 'linear-gradient(135deg, #F7F2EC, #EDE4D8)', border: '1px solid #E8DDD2', color: 'var(--color-text-secondary)' }}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              {view === 'tracker' ? 'Historik' : 'Log'}
+              {view === 'tracker' ? t.historyBtn : t.sleepLogBtn}
             </button>
           }
         />

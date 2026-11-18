@@ -145,7 +145,7 @@ export default function QuestionDetail() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <PageHeader title="Spørgsmål" backUrl={createPageUrl('Knowledge')} />
+      <PageHeader title={t.questionPageTitle} backUrl={createPageUrl('Knowledge')} />
 
       {/* Question */}
       <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
