@@ -40,7 +40,7 @@ export default function BrandLoader({ size = 64, fullScreen = true, background }
     <>
       <style>{`
         @keyframes cns-breathe {
-          0%, 100% { opacity: 0.35; transform: scale(0.94); }
+          0%, 100% { opacity: 0.55; transform: scale(0.96); }
           50%      { opacity: 1;    transform: scale(1); }
         }
         .cns-breathe { animation: cns-breathe 1.6s ease-in-out infinite; transform-origin: center; }
