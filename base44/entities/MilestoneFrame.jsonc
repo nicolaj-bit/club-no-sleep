@@ -1,66 +1,77 @@
 {
   "name": "MilestoneFrame",
-  "type": "object",
   "properties": {
-    "milestone_id": {
-      "type": "string",
-      "description": "Unik ID (fx 'preg-12', 'baby-1y')"
+    "accent_color": {
+      "description": "Accentfarve til sticker-ring (hex)",
+      "type": "string"
+    },
+    "bg_color": {
+      "description": "Baggrundfarve (hex, fx '#F5EFE6')",
+      "type": "string"
     },
     "category": {
-      "type": "string",
+      "description": "Kategori",
       "enum": [
         "Graviditet",
         "Baby",
         "\u00d8jeblikke"
       ],
-      "description": "Kategori"
-    },
-    "label": {
-      "type": "string",
-      "description": "Kort label (fx 'Uge 12', '1 \u00e5r')"
-    },
-    "emoji": {
-      "type": "string",
-      "description": "Emoji til stickeren"
-    },
-    "headline": {
-      "type": "string",
-      "description": "Stor tekst p\u00e5 stickeren"
-    },
-    "subline": {
-      "type": "string",
-      "description": "Lille tekst under headline"
-    },
-    "bg_color": {
-      "type": "string",
-      "description": "Baggrundfarve (hex, fx '#F5EFE6')"
-    },
-    "accent_color": {
-      "type": "string",
-      "description": "Accentfarve til sticker-ring (hex)"
-    },
-    "text_color": {
-      "type": "string",
-      "description": "Tekstfarve (hex)"
-    },
-    "sticker_image": {
-      "type": "string",
-      "description": "Valgfrit brugerdefineret sticker-billede (URL)"
-    },
-    "order": {
-      "type": "number",
-      "default": 0,
-      "description": "Sorteringsr\u00e6kkef\u00f8lge"
-    },
-    "is_active": {
-      "type": "boolean",
-      "default": true,
-      "description": "Om milep\u00e6len vises"
+      "type": "string"
     },
     "description": {
-      "type": "string",
+      "description": "Valgfri beskrivelse",
       "maxLength": 1000,
-      "description": "Valgfri beskrivelse"
+      "type": "string"
+    },
+    "emoji": {
+      "description": "Emoji til stickeren",
+      "type": "string"
+    },
+    "headline": {
+      "description": "Stor tekst p\u00e5 stickeren",
+      "type": "string"
+    },
+    "headline_en": {
+      "description": "Engelsk hovedtekst p\u00e5 stickeren. Er den tom, vises den danske.",
+      "type": "string"
+    },
+    "is_active": {
+      "default": true,
+      "description": "Om milep\u00e6len vises",
+      "type": "boolean"
+    },
+    "label": {
+      "description": "Kort label (fx 'Uge 12', '1 \u00e5r')",
+      "type": "string"
+    },
+    "label_en": {
+      "description": "Engelsk label. Er den tom, vises den danske.",
+      "type": "string"
+    },
+    "milestone_id": {
+      "description": "Unik ID (fx 'preg-12', 'baby-1y')",
+      "type": "string"
+    },
+    "order": {
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge",
+      "type": "number"
+    },
+    "sticker_image": {
+      "description": "Valgfrit brugerdefineret sticker-billede (URL)",
+      "type": "string"
+    },
+    "subline": {
+      "description": "Lille tekst under headline",
+      "type": "string"
+    },
+    "subline_en": {
+      "description": "Engelsk undertekst p\u00e5 stickeren. Er den tom, vises den danske.",
+      "type": "string"
+    },
+    "text_color": {
+      "description": "Tekstfarve (hex)",
+      "type": "string"
     }
   },
   "required": [
@@ -69,6 +80,7 @@
     "label",
     "headline"
   ],
+  "type": "object",
   "rls": {
     "create": {
       "user_condition": {
