@@ -18,6 +18,16 @@ const DEFAULTS = {
   logo_url: 'https://www.lalatoto.dk/cdn/shop/files/LALATOTO_logotype_Brun_600x.png?v=1730971736',
 };
 
+// Tomme felter skal falde tilbage til standardvaerdien i stedet for at slette
+// den. Bruges baade for databasen og for forhaandsvisningen i administrationen,
+// saa de to viser det samme.
+function medStandard(values) {
+  const udfyldte = Object.fromEntries(
+    Object.entries(values || {}).filter(([, v]) => v !== null && v !== undefined && v !== '')
+  );
+  return { ...DEFAULTS, ...udfyldte };
+}
+
 export default function Footer({ previewData }) {
   const { t, lang } = useLanguage();
   const [info, setInfo] = useState(DEFAULTS);
@@ -31,15 +41,12 @@ export default function Footer({ previewData }) {
         // overskrive standardvaerdierne — og saa forsvandt butikslinkene
         // helt, fordi de kun vises naar der er en adresse. Her tages kun de
         // felter med, der faktisk har en vaerdi.
-        const udfyldte = Object.fromEntries(
-          Object.entries(records[0]).filter(([, v]) => v !== null && v !== undefined && v !== '')
-        );
-        setInfo({ ...DEFAULTS, ...udfyldte });
+        setInfo(medStandard(records[0]));
       }
     }).catch(() => {});
   }, [previewData]);
 
-  const d = previewData ? { ...DEFAULTS, ...previewData } : info;
+  const d = previewData ? medStandard(previewData) : info;
 
   return (
     <footer style={{ backgroundColor: 'var(--color-bg-card)', color: 'var(--color-text-secondary)' }}>
