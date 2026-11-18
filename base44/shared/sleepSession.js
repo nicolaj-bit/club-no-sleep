@@ -62,10 +62,14 @@ export function formatClockHm(isoStr) {
   return `${String(d.getHours()).padStart(2, '0')}.${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-// Formaterer millisekunder som "X t. Y min.".
-export function formatHoursMinutes(ms) {
+// Formaterer millisekunder som "X t. Y min." paa dansk og "X h Y min" paa
+// engelsk. Sproget er et valgfrit argument og ikke en global vaerdi, fordi
+// funktionen ogsaa kaldes fra backend, hvor to brugere kan betjenes samtidig
+// og hver skal have sit eget sprog. Standarden er dansk, saa kaldesteder, der
+// endnu ikke sender sproget med, opfoerer sig praecis som foer.
+export function formatHoursMinutes(ms, lang = 'da') {
   const totalMin = Math.floor(Math.max(0, ms) / 60000);
   const h = Math.floor(totalMin / 60);
   const m = totalMin % 60;
-  return `${h} t. ${m} min.`;
+  return lang === 'en' ? `${h} h ${m} min` : `${h} t. ${m} min.`;
 }
