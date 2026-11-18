@@ -294,8 +294,6 @@ export const uiDa = {
   adminAddFeature: 'Tilføj feature',
   adminSaveChanges: 'Gem ændringer',
   privacyPolicyShort: 'Privatlivspolitik',
-  footerTagline: 'En app skabt til danske forældre — søvn, trivsel og fællesskab samlet ét sted.',
-  footerMadeIn: 'Skabt med ❤️ i Danmark',
 };
 
 export const uiEn = {
@@ -584,6 +582,4 @@ export const uiEn = {
   adminAddFeature: 'Add feature',
   adminSaveChanges: 'Save changes',
   privacyPolicyShort: 'Privacy Policy',
-  footerTagline: 'An app made for Danish parents — sleep, wellbeing and community in one place.',
-  footerMadeIn: 'Made with ❤️ in Denmark',
 };
