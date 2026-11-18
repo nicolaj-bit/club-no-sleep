@@ -66,8 +66,8 @@ export default function Onboarding() {
       const terms = items.find(i => i.type === 'terms');
       const privacy = items.find(i => i.type === 'privacy');
       setLegalContent({
-        terms: terms?.content || 'Handelsbetingelserne er ikke opsat endnu.',
-        privacy: privacy?.content || 'Privatlivspolitikken er ikke opsat endnu.',
+        terms: terms?.content || t.onbTermsMissing,
+        privacy: privacy?.content || t.onbPrivacyMissing,
       });
     });
   }, []);
@@ -88,7 +88,7 @@ export default function Onboarding() {
     const newErrors = {};
     if (!form.username.trim()) newErrors.username = t.errorChooseUsername;
     else if (form.username.length < 3) newErrors.username = t.errorUsernameMin;
-    if (!form.profile_label) newErrors.profile_label = 'Du skal vælge om du er kvinde eller mand';
+    if (!form.profile_label) newErrors.profile_label = t.onbChooseGender;
     if (!form.accept_terms) newErrors.accept_terms = t.errorAcceptTerms;
     if (!form.accept_privacy) newErrors.accept_privacy = t.errorAcceptPrivacy;
     setErrors(newErrors);
@@ -106,7 +106,7 @@ export default function Onboarding() {
 
   const handleFinish = async (plan = 'demo') => {
     if (!user?.email) {
-      toast.error(t.errorTryAgain || 'Kunne ikke finde din bruger. Prøv igen.');
+      toast.error(t.errorTryAgain || t.onbUserNotFound);
       return;
     }
     if (saving) return; // forhindrer dobbelt-kald
@@ -128,7 +128,7 @@ export default function Onboarding() {
       });
 
       if (!response.data?.ok) {
-        throw new Error(response.data?.error || 'Kunne ikke gemme profil');
+        throw new Error(response.data?.error || t.onbCouldNotSaveProfile);
       }
 
       invalidateProfileCache(user.email);
@@ -140,16 +140,16 @@ export default function Onboarding() {
 
       navigate('/app');
     } catch (e) {
-      toast.error(e?.message || 'Noget gik galt. Prøv igen.');
+      toast.error(e?.message || t.onbSomethingWrong);
       setSaving(false);
     }
   };
 
   const STEPS = [
-    { icon: Shield, title: 'Velkommen til CLUB NO SLEEP', subtitle: 'Opret din profil i 4 korte steps, så vi kan gøre appen til DIN app' },
+    { icon: Shield, title: t.onbWelcomeTitle, subtitle: t.onbCreateProfileSteps },
     { icon: MapPin, title: 'Mindre Natteensomhed', subtitle: '' },
     { icon: Baby, title: t.aboutYourChild, subtitle: '' },
-    { icon: Sparkles, title: 'Vælg din plan', subtitle: '' },
+    { icon: Sparkles, title: t.onbChoosePlan, subtitle: '' },
   ];
 
   // step -1 = velkomstskærm, step 0-3 = de rigtige steps
@@ -205,13 +205,13 @@ export default function Onboarding() {
               {/* Velkomstbesked */}
               <div className="rounded-3xl p-5 text-center max-w-xs" style={{ background: 'var(--color-bg-subtle)', border: '1px solid var(--color-border)' }}>
                 <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  "Velkommen til. Vi er så glade for, at du er her.
+                  {t.onbLetterOpen}
                 </p>
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  Natteensomhed findes. Og den kan føles tung, når resten af verden sover, og man selv sidder vågen i mørket. Det ved vi, fordi vi selv var igennem en lang og ensom periode, da vi blev forældre til en baby med uro i søvnen.
+                  {t.onbLetterLoneliness}
                 </p>
                 <p className="text-base leading-relaxed mt-3" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif', fontSize: '1.1rem' }}>
-                  Club No Sleep er den trøst, vi selv manglede. Sammen med appens andre funktioner håber vi, at den kan være med til at gøre din tid med graviditet, baby eller små børn lidt lettere og lidt mindre alene."
+                  {t.onbLetterComfort}
                 </p>
                 <p className="text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>Kærligst,<br />Sara & Nicolaj</p>
               </div>
@@ -232,7 +232,7 @@ export default function Onboarding() {
                 onClick={() => inAppLogout('/')}
               >
                 Har du allerede en konto?{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Log ind</span>
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.logIn}</span>
               </button>
             </div>
           </div>
@@ -421,11 +421,11 @@ export default function Onboarding() {
               <motion.div key="s2" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.2 }} className="space-y-5">
                 <div className="rounded-2xl p-5 text-center" style={{ background: 'var(--color-bg-subtle)' }}>
                   <p className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
-                    Forestil dig, at når du sidder med en vågen baby om natten, så tændes der et lille lys over dit hus. Og forestil dig så, hvor mange små lys der er tændt over huse nær dig
+                    {t.onbLightQuote}
                   </p>
                 </div>
                 <div className="flex justify-center">
-                  <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt="Vågne mødre kort over Danmark" className="w-48 h-auto" />
+                  <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt=t.onbMapTitle className="w-48 h-auto" />
                 </div>
                 <div className="space-y-2">
                   <Label>Din by (valgfrit)</Label>
@@ -436,7 +436,7 @@ export default function Onboarding() {
                     style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                   />
                   <p className="text-xs" style={{ color: 'var(--color-text-secondary)', lineHeight: '1.5' }}>
-                    Vi bruger din by til at vise dig som et lys på kortet, når du logger at du er vågen — så andre vågne mødre kan se, at de ikke er alene. Vi viser aldrig dit navn eller din præcise adresse, og du kan altid slå det fra.
+                    {t.onbCityNote}
                   </p>
                 </div>
               </motion.div>
@@ -473,7 +473,7 @@ export default function Onboarding() {
                       color: childMode === 'fodt' ? 'var(--color-bg)' : 'var(--color-text-secondary)',
                     }}
                   >
-                    Jeg har født
+                    {t.onbIHaveGivenBirth}
                   </button>
                 </div>
 
@@ -491,7 +491,7 @@ export default function Onboarding() {
                       <Input
                         value={form.child_name || ''}
                         onChange={e => setForm(f => ({ ...f, child_name: e.target.value }))}
-                        placeholder="Skriv barnets navn"
+                        placeholder=t.onbWriteChildName
                         style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                       />
                     </div>
@@ -562,7 +562,7 @@ export default function Onboarding() {
                   ? !!form.child_due_date
                   : !!(form.child_birthdate || form.child_due_date);
                 if (!hasDate) {
-                  setDateError('Angiv mindst én dato');
+                  setDateError(t.onbAtLeastOneDate);
                   return;
                 }
                 setDateError('');
