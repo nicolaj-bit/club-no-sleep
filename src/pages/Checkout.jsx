@@ -25,8 +25,8 @@ function GooglePlayIcon({ className, style }) {
 }
 
 const STORE_LABELS = {
-  ios: { name: 'App Store', title: 'In-App Purchase (App Store)', sub: 'Betal via din Apple-konto · Sikker og nem', footer: 'Apple' },
-  android: { name: 'Google Play', title: 'In-App Purchase (Google Play)', sub: 'Betal via din Google-konto · Sikker og nem', footer: 'Google Play' },
+  ios: { name: 'App Store', title: 'In-App Purchase (App Store)', subKey: 'checkoutPayApple', footer: 'Apple' },
+  android: { name: 'Google Play', title: 'In-App Purchase (Google Play)', subKey: 'checkoutPayGoogle', footer: 'Google Play' },
 };
 
 // Faste salgspunkter på Checkout — aldrig tomme. Tomme streng springes over.

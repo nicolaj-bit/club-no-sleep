@@ -150,7 +150,7 @@ export default function Onboarding() {
 
   const STEPS = [
     { icon: Shield, title: t.onbWelcomeTitle, subtitle: t.onbCreateProfileSteps },
-    { icon: MapPin, title: 'Mindre Natteensomhed', subtitle: '' },
+    { icon: MapPin, title: t.onbLessLoneliness, subtitle: '' },
     { icon: Baby, title: t.aboutYourChild, subtitle: '' },
     { icon: Sparkles, title: t.onbChoosePlan, subtitle: '' },
   ];

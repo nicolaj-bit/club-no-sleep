@@ -193,7 +193,7 @@ export default function Practitioners() {
                   className="min-h-20"
                 />
                 <Textarea
-                  placeholder="Hvorfor er denne behandler god?"
+                  placeholder={t.practWhyGood}
                   value={tipData.whyGood}
                   onChange={(e) => setTipData({ ...tipData, whyGood: e.target.value })}
                   className="min-h-20"
@@ -280,7 +280,7 @@ export default function Practitioners() {
               <div>
                 <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find behandlere</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                  {searchMode === 'area' && userLocation ? t.showingInArea : 'Alle behandlere'}
+                  {searchMode === 'area' && userLocation ? t.showingInArea : t.practAll}
                 </p>
               </div>
               <Button

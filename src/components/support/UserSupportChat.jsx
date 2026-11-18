@@ -71,7 +71,7 @@ export default function UserSupportChat({ user }) {
       setNewMessage('');
       toast.success('Besked sendt!');
     } catch (e) {
-      toast.error('Kunne ikke sende besked');
+      toast.error(t.supportSendFailed);
     } finally {
       setSending(false);
     }

@@ -294,7 +294,7 @@ export default function BabyFriendlyCafes() {
             <div>
               <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find caféer</p>
               <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                {cafeSearchMode === 'area' && userLocation ? t.showingInArea : 'Alle caféer'}
+                {cafeSearchMode === 'area' && userLocation ? t.showingInArea : t.cafesAll}
               </p>
             </div>
             <Button

@@ -315,7 +315,7 @@ export default function Landing() {
           {/* LEFT — photo */}
           <div className="lnd-klub-img" style={{ flexShrink: 0, width: 260, height: 360, borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}>
             <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/eca32e989_Skrmbillede2026-06-08161849.png"
-            alt="Kvinde med Club No Sleep taske og barnevogn"
+            alt={t.landingKlubAlt}
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
           </div>
 

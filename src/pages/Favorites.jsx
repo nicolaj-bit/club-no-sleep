@@ -77,7 +77,7 @@ export default function Favorites() {
     const linkPage = typeLink[item.item_type] || 'ArticleDetail';
     const linkUrl = createPageUrl(`${linkPage}?id=${item.item_id}`);
     const subtitle = isMilestone
-      ? (item.item_date || 'Milepæl')
+      ? (item.item_date || t.favMilestone)
       : stripCount(item.item_type === 'product' ? t.favoritesProduct : item.item_type === 'blog' ? t.favoritesBlog : t.favoritesArticle);
 
     const Thumb = (
@@ -160,7 +160,7 @@ export default function Favorites() {
             </TabsContent>
             <TabsContent value="milestone" className="space-y-2">
               {milestoneFavorites.length === 0
-                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>Ingen gemte milepæle endnu</p>
+                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.favNoMilestones}</p>
                 : milestoneFavorites.map(item => <FavoriteItem key={item.id} item={item} />)
               }
             </TabsContent>

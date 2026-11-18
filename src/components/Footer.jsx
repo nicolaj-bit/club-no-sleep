@@ -54,7 +54,7 @@ export default function Footer({ previewData }) {
               style={{ height: 28, marginBottom: 16, filter: 'brightness(0) invert(1) opacity(0.8)' }}
             />
             <p style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'var(--color-text-muted)', maxWidth: 220 }}>
-              {d.tagline}
+              {lang === 'en' ? t.footerTagline : d.tagline}
             </p>
           </div>
 

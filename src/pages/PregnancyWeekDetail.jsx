@@ -112,7 +112,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)' }}>
             <Heart className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Til dig, der står ved siden af</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.pregForPartner}</span>
           </div>
           <div className="px-4 py-4 space-y-3">
             {data.partnerText.map((para, i) => (
@@ -127,7 +127,7 @@ export default function PregnancyWeekDetail() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-card)' }}>
           <div className="px-4 py-3 flex items-center gap-2 border-b" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)' }}>
             <Sparkles className="w-4 h-4" style={{ color: 'var(--color-cappuccino)' }} />
-            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>Et lille næste skridt</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>{t.pregNextStep}</span>
           </div>
           <div className="px-4 py-4 space-y-3">
             {data.nextStepText.map((para, i) => (

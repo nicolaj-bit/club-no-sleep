@@ -9,6 +9,26 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  // Tekster der stod hardkodet paa dansk rundt om i appen.
+  checkoutPayApple: 'Betal via din Apple-konto · Sikker og nem',
+  checkoutPayGoogle: 'Betal via din Google-konto · Sikker og nem',
+  onbLessLoneliness: 'Mindre Natteensomhed',
+  pregYourBody: 'Din krop',
+  pregInspiredBy: 'Inspireret af',
+  pregForPartner: 'Til dig, der står ved siden af',
+  pregNextStep: 'Et lille næste skridt',
+  qNotFound: 'Spørgsmål ikke fundet',
+  qNoAnswers: 'Ingen svar endnu',
+  qWriteAnswer: 'Skriv dit svar...',
+  cafesAll: 'Alle caféer',
+  practAll: 'Alle behandlere',
+  practWhyGood: 'Hvorfor er denne behandler god?',
+  favMilestone: 'Milepæl',
+  favNoMilestones: 'Ingen gemte milepæle endnu',
+  wwFootnote: 'Ugerne er vejledende og regnes fra terminsdato. Børn udvikler sig forskelligt, så brug springet som en kærlig guide, ikke som en facitliste.',
+  supportSendFailed: 'Kunne ikke sende besked',
+  familyInviteIntro: 'Du er ikke alene, heller ikke i appen.\nDel rejsen med en, der betyder noget for dig. Du vælger selv, hvad personen skal kunne se og modtage notifikationer om.',
+  landingKlubAlt: 'Kvinde med Club No Sleep taske og barnevogn',
   // Menupunkter. Stod foer hardkodet paa dansk i BottomNav.
   menuTigerspring: 'Tigerspring',
   menuPregnancy: 'Graviditet',
@@ -276,6 +296,26 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  // Tekster der stod hardkodet paa dansk rundt om i appen.
+  checkoutPayApple: 'Pay with your Apple account · Safe and simple',
+  checkoutPayGoogle: 'Pay with your Google account · Safe and simple',
+  onbLessLoneliness: 'Less night-time loneliness',
+  pregYourBody: 'Your body',
+  pregInspiredBy: 'Inspired by',
+  pregForPartner: 'For you, standing alongside',
+  pregNextStep: 'One small next step',
+  qNotFound: 'Question not found',
+  qNoAnswers: 'No answers yet',
+  qWriteAnswer: 'Write your answer...',
+  cafesAll: 'All cafés',
+  practAll: 'All practitioners',
+  practWhyGood: 'Why is this practitioner good?',
+  favMilestone: 'Milestone',
+  favNoMilestones: 'No saved milestones yet',
+  wwFootnote: 'The weeks are a guide and are counted from the due date. Children develop differently, so use the leap as a kind companion, not as a set of answers.',
+  supportSendFailed: 'Could not send message',
+  familyInviteIntro: 'You are not alone, in the app either.\nShare the journey with someone who matters to you. You decide what they can see and what they are notified about.',
+  landingKlubAlt: 'Woman with a Club No Sleep bag and a pram',
   // Menupunkter. Stod foer hardkodet paa dansk i BottomNav.
   menuTigerspring: 'Leaps',
   menuPregnancy: 'Pregnancy',

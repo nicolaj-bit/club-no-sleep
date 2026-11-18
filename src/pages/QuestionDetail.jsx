@@ -135,7 +135,7 @@ export default function QuestionDetail() {
   if (!question) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <p style={{ color: 'var(--color-text-muted)' }}>Spørgsmål ikke fundet</p>
+        <p style={{ color: 'var(--color-text-muted)' }}>{t.qNotFound}</p>
       </div>
     );
   }
@@ -194,7 +194,7 @@ export default function QuestionDetail() {
           ) : answers.length === 0 ? (
             <div className="text-center py-8">
               <MessageCircle className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
-              <p style={{ color: 'var(--color-text-muted)' }}>Ingen svar endnu</p>
+              <p style={{ color: 'var(--color-text-muted)' }}>{t.qNoAnswers}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -262,7 +262,7 @@ export default function QuestionDetail() {
             <Textarea
               value={answerText}
               onChange={(e) => setAnswerText(e.target.value)}
-              placeholder="Skriv dit svar..."
+              placeholder={t.qWriteAnswer}
               className="flex-1 min-h-[60px] resize-none"
               rows={2}
             />

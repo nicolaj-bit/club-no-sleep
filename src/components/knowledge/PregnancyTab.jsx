@@ -54,7 +54,7 @@ function WeekCard({ week, data, isCurrent }) {
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 mb-1">
               <Heart className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Din krop</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregYourBody}</span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.mom}</p>
           </div>
@@ -125,7 +125,7 @@ export default function PregnancyTab() {
 
       {/* Info card */}
       <div className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <p className="text-xs uppercase tracking-widest font-medium mb-0.5" style={{ color: 'var(--color-text-muted)' }}>Inspireret af</p>
+        <p className="text-xs uppercase tracking-widest font-medium mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.pregInspiredBy}</p>
         <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Politikens Graviditetsbog</p>
         <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>af Lene Skou Jensen</p>
 
