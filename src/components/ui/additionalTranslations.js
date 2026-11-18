@@ -103,7 +103,7 @@ export const additionalEn = {
   cancel: 'Cancel',
   deleting: 'Deleting…',
   yesDelete: 'Yes, delete',
-  logIn: 'Log in',
+  logIn: 'Sign in',
   selectChild: 'Select child',
 
   // Home

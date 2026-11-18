@@ -260,7 +260,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-1 text-center"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                {t.authLogIn}
+                {t.logIn}
               </h2>
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
                 {t.authLoginIntro}
@@ -383,7 +383,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    <LogIn className="w-5 h-5" /> Log ind
+                    <LogIn className="w-5 h-5" /> {t.logIn}
                   </>
                 )}
               </motion.button>
@@ -408,7 +408,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                   backgroundColor: 'transparent',
                 }}
               >
-                Jeg vil kigge
+                {t.authBrowse}
               </button>
             </motion.div>
           ) : mode === 'signup' ? (
@@ -423,7 +423,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="text-xl font-semibold mb-1 text-center"
                 style={{ fontFamily: 'Cormorant Garamond, Georgia, serif', color: 'var(--color-text-primary)' }}
               >
-                Opret bruger
+                {t.authCreateAccount}
               </h2>
               <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
                 {t.authSignupIntro}
@@ -528,7 +528,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 style={{ color: 'var(--color-text-secondary)' }}
               >
                 {t.authHaveAccount}{' '}
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.authLogIn}</span>
+                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>{t.logIn}</span>
               </button>
             </motion.div>
           ) : mode === 'reset' ? (
@@ -620,7 +620,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-4"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Tilbage til login
+                {t.authBackToLogin}
               </button>
             </motion.div>
           ) : mode === 'forgot' ? (
@@ -692,7 +692,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-4"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Tilbage til login
+                {t.authBackToLogin}
               </button>
             </motion.div>
           ) : (
@@ -772,7 +772,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 className="w-full text-center text-sm pt-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Tilbage til login
+                {t.authBackToLogin}
               </button>
             </motion.div>
           )}
