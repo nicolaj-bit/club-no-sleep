@@ -98,11 +98,15 @@ Deno.serve(async (req) => {
       // Enkelte danske bogstaver er helt normale — navneartiklen lister danske
       // navne, og forfatteren hedder Sara Baudtler. Derfor tjekkes ogsaa for
       // danske smaaord, som ikke optraeder i en engelsk tekst.
-      const danskeTegn = (content_en.match(/[æøåÆØÅ]/g) || []).length;
+      // Kun den synlige tekst taelles. Foer blev markup talt med, og saa
+      // udloeste danske ord inde i links (lalatoto.dk/collections/...) og i
+      // style-attributter falsk alarm paa en artikel, der var helt engelsk.
+      const synligTekst = content_en.replace(/<[^>]*>/g, ' ');
+      const danskeTegn = (synligTekst.match(/[æøåÆØÅ]/g) || []).length;
       // Kun ord der IKKE ogsaa findes paa engelsk — 'for' og 'men' er udeladt
       // af netop den grund.
-      const danskeOrd = (content_en.match(/\b(og|ikke|det|med|til|som|kan|skal|har|dit|din|barnet|hvis|eller|også|være|bliver)\b/gi) || []).length;
-      const forDansk = danskeTegn > content_en.length / 100 || danskeOrd > 15;
+      const danskeOrd = (synligTekst.match(/\b(og|ikke|det|med|til|som|kan|skal|har|dit|din|barnet|hvis|eller|også|være|bliver)\b/gi) || []).length;
+      const forDansk = danskeTegn > synligTekst.length / 100 || danskeOrd > 15;
 
       report.push({
         slug: post.slug,
