@@ -30,7 +30,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Udfyld email og adgangskode');
+      setError(t.authFillEmailPassword);
       return;
     }
 
@@ -53,22 +53,22 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       navigateAfterLogin();
     } catch (e) {
       console.error('[NativeAuthScreen] Login error:', e);
-      setError(e?.message || 'Login mislykkedes. Tjek email og adgangskode.');
+      setError(e?.message || t.authLoginFailed);
       setLoading(false);
     }
   };
 
   const handleRegister = async () => {
     if (!email || !password) {
-      setError('Udfyld email og adgangskode');
+      setError(t.authFillEmailPassword);
       return;
     }
     if (password.length < 8) {
-      setError('Adgangskoden skal være mindst 8 tegn');
+      setError(t.authPasswordMin8);
       return;
     }
     if (password !== confirmPassword) {
-      setError('Adgangskoderne er ikke ens');
+      setError(t.authPasswordsDiffer);
       return;
     }
 
@@ -77,11 +77,11 @@ export default function NativeAuthScreen({ resetToken } = {}) {
     localStorage.removeItem('demo_mode'); // Ryd demo mode ved oprettelse
     try {
       await base44.auth.register({ email, password });
-      setInfo('Vi har sendt en kode til din email. Indtast den herunder for at bekræfte din konto.');
+      setInfo(t.authCodeSent);
       setMode('verify');
     } catch (e) {
       console.error('[NativeAuthScreen] Register error:', e);
-      setError(e?.message || 'Oprettelse mislykkedes. Prøv igen.');
+      setError(e?.message || t.authSignupFailed);
     } finally {
       setLoading(false);
     }
@@ -89,7 +89,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
   const handleVerifyOtp = async () => {
     if (!otpCode) {
-      setError('Indtast koden fra din email');
+      setError(t.authEnterCodeFromEmail);
       return;
     }
 
@@ -100,14 +100,14 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       await base44.auth.verifyOtp({ email, otpCode });
       const { access_token } = await base44.auth.loginViaEmailPassword(email, password);
       if (!access_token) {
-        throw new Error('Login mislykkedes efter bekræftelse');
+        throw new Error(t.authLoginAfterConfirmFailed);
       }
       localStorage.setItem('base44_access_token', access_token);
       // Efter oprettelse sendes brugeren direkte til abonnementssiden.
       window.location.href = '/Subscription';
     } catch (e) {
       console.error('[NativeAuthScreen] Verify OTP error:', e);
-      setError(e?.message || 'Koden er forkert eller udløbet. Prøv igen.');
+      setError(e?.message || t.authCodeWrongOrExpired);
       setLoading(false);
     }
   };
@@ -118,9 +118,9 @@ export default function NativeAuthScreen({ resetToken } = {}) {
     setInfo(null);
     try {
       await base44.auth.resendOtp(email);
-      setInfo('Vi har sendt en ny kode til din email.');
+      setInfo(t.authNewCodeSent);
     } catch (e) {
-      setError(e?.message || 'Kunne ikke sende koden igen. Prøv senere.');
+      setError(e?.message || t.authResendFailed);
     } finally {
       setLoading(false);
     }
@@ -128,7 +128,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      setError('Indtast din email');
+      setError(t.authEnterYourEmail);
       return;
     }
 
@@ -137,10 +137,10 @@ export default function NativeAuthScreen({ resetToken } = {}) {
     setInfo(null);
     try {
       await base44.auth.resetPasswordRequest(email);
-      setInfo(`Vi har sendt et link til at nulstille din adgangskode til ${email}.`);
+      setInfo(t.authResetLinkSent.replace('{email}', email));
     } catch (e) {
       console.error('[NativeAuthScreen] Reset password request error:', e);
-      setError(e?.message || 'Kunne ikke sende nulstillingslink. Prøv igen.');
+      setError(e?.message || t.authResetLinkFailed);
     } finally {
       setLoading(false);
     }
@@ -152,11 +152,11 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       return;
     }
     if (newPassword.length < 8) {
-      setError('Adgangskoden skal være mindst 8 tegn');
+      setError(t.authPasswordMin8);
       return;
     }
     if (newPassword !== confirmNewPassword) {
-      setError('Adgangskoderne er ikke ens');
+      setError(t.authPasswordsDiffer);
       return;
     }
 
@@ -164,13 +164,13 @@ export default function NativeAuthScreen({ resetToken } = {}) {
     setError(null);
     try {
       await base44.auth.resetPassword({ resetToken, newPassword });
-      setInfo('Din adgangskode er nulstillet. Log ind med den nye adgangskode.');
+      setInfo(t.authPasswordReset);
       setNewPassword('');
       setConfirmNewPassword('');
       setMode('login');
     } catch (e) {
       console.error('[NativeAuthScreen] Reset password error:', e);
-      setError(e?.message || 'Linket er udløbet eller ugyldigt. Anmod om et nyt.');
+      setError(e?.message || t.authLinkExpired);
     } finally {
       setLoading(false);
     }
@@ -188,7 +188,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
       await base44.auth.loginWithProvider('apple', '/app');
     } catch (e) {
       console.error('[NativeAuthScreen] Apple login error:', e);
-      setError(e?.response?.data?.error || e?.message || 'Apple login mislykkedes. Prøv igen.');
+      setError(e?.response?.data?.error || e?.message || t.authAppleFailed);
       setLoading(false);
     }
   };
@@ -638,7 +638,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 Glemt adgangskode
               </h2>
               <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                {info || 'Indtast din email, og vi sender dig et link til at nulstille din adgangskode.'}
+                {info || t.authResetIntro}
               </p>
 
               <div className="w-full mb-2">
@@ -710,7 +710,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
                 Bekræft din email
               </h2>
               <p className="text-sm mb-6 max-w-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                {info || `Vi har sendt en kode til ${email}. Indtast den herunder.`}
+                {info || t.authCodeSentTo.replace('{email}', email)}
               </p>
 
               <div className="w-full mb-2">
