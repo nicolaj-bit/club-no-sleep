@@ -1,14 +1,20 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { normalizeLanguage } from '../../shared/i18n.js';
+
+// Disse beskeder sendes til et helt segment paa én gang, ikke til én bruger.
+// Derfor kan vi ikke slaa den enkeltes sprogvalg op foer afsendelse. I stedet
+// sender vi begge sprog med til OneSignal, som selv vaelger ud fra telefonens
+// sprog. Mailen sendes derimod per bruger, og der bruger vi hendes eget valg.
 
 // Send OneSignal push (Android/web only — iOS understøtter ikke web push)
-async function sendOneSignalPush(title, message, url, segment = 'all') {
+async function sendOneSignalPush(title, message, url, segment = 'all', titleEn, messageEn) {
   const appId = Deno.env.get('ONESIGNAL_APP_ID');
   const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
 
   const body = {
     app_id: appId,
-    headings: { en: title, da: title },
-    contents: { en: message, da: message },
+    headings: { da: title, en: titleEn || title },
+    contents: { da: message, en: messageEn || message },
     isIos: true,
     isAndroid: true,
     isAnyWeb: true,
@@ -41,7 +47,7 @@ async function sendOneSignalPush(title, message, url, segment = 'all') {
 }
 
 // Send email til alle brugere som iOS fallback
-async function sendEmailToAllUsers(base44, title, message, url, segment) {
+async function sendEmailToAllUsers(base44, title, message, url, segment, titleEn, messageEn) {
   const profiles = await base44.asServiceRole.entities.UserProfile.list();
 
   let sent = 0;
@@ -50,10 +56,14 @@ async function sendEmailToAllUsers(base44, title, message, url, segment) {
     if (segment === 'moms' && profile.profile_label !== 'mor') continue;
     if (segment === 'dads' && profile.profile_label !== 'far') continue;
 
+    const lang = normalizeLanguage(profile.language);
+    const subj = lang === 'en' ? (titleEn || title) : title;
+    const msg = lang === 'en' ? (messageEn || message) : message;
+    const readMore = lang === 'en' ? 'Read more' : 'Læs mere';
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: profile.user_email,
-      subject: title,
-      body: `<p>${message}</p>${url ? `<p><a href="${url}">Læs mere</a></p>` : ''}`,
+      subject: subj,
+      body: `<p>${msg}</p>${url ? `<p><a href="${url}">${readMore}</a></p>` : ''}`,
     });
     sent++;
   }
@@ -75,8 +85,8 @@ Deno.serve(async (req) => {
       const rule = await base44.asServiceRole.entities.PushNotificationRule.get(rule_id);
       if (!rule) return Response.json({ error: 'Regel ikke fundet' }, { status: 404 });
 
-      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment);
-      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment);
+      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment, rule.title_en, rule.message_en);
+      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment, rule.title_en, rule.message_en);
 
       await base44.asServiceRole.entities.PushNotificationRule.update(rule_id, {
         last_triggered_at: new Date().toISOString(),
@@ -111,9 +121,9 @@ Deno.serve(async (req) => {
       }
 
       console.log(`[processPushRules] Sender regel: ${rule.name} (id: ${rule.id})`);
-      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment);
+      const pushResult = await sendOneSignalPush(rule.title, rule.message, rule.url, rule.target_segment, rule.title_en, rule.message_en);
       console.log(`[processPushRules] OneSignal resultat:`, JSON.stringify(pushResult));
-      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment);
+      const emailsSent = await sendEmailToAllUsers(base44, rule.title, rule.message, rule.url, rule.target_segment, rule.title_en, rule.message_en);
       console.log(`[processPushRules] Emails sendt: ${emailsSent}`);
 
       await base44.asServiceRole.entities.PushNotificationRule.update(rule.id, {
