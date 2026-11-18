@@ -20,20 +20,23 @@ function setCache(key, value) {
   } catch {}
 }
 
-function getTimeOfDay() {
+function getTimeOfDay(lang) {
   const h = new Date().getHours();
-  if (h < 6) return 'nat';
-  if (h < 10) return 'morgen';
-  if (h < 14) return 'formiddag';
-  if (h < 18) return 'eftermiddag';
-  return 'aften';
+  const da = ['nat', 'morgen', 'formiddag', 'eftermiddag', 'aften'];
+  const en = ['night', 'morning', 'late morning', 'afternoon', 'evening'];
+  const words = lang === 'en' ? en : da;
+  if (h < 6) return words[0];
+  if (h < 10) return words[1];
+  if (h < 14) return words[2];
+  if (h < 18) return words[3];
+  return words[4];
 }
 
 function formatDateDa() {
   return new Date().toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-function buildPrompt(profile) {
+function buildPrompt(profile, lang) {
   const motherName = profile?.display_name || profile?.username || '';
   const babyAge = (() => {
     const bd = profile?.child_birthdate || profile?.child_due_date;
@@ -61,7 +64,7 @@ Affirmationen må gerne være mildt poetisk, men den skal stadig være enkel og 
 Inputdata (bruges kun meget diskret til stemning):
 Mors navn: ${motherName || 'ukendt'}
 Barnets alder: ${babyAge || 'ukendt'}
-Tidspunkt på dagen: ${getTimeOfDay()}
+Tidspunkt på dagen: ${getTimeOfDay(lang)}
 
 Gode eksempler på ønsket tone:
 "Jeg er nok, også når dagen ikke bliver, som jeg havde håbet."
@@ -77,16 +80,18 @@ Gode eksempler på ønsket tone:
 }
 
 export default function DailyPersonalMessage({ userEmail, profile }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const fetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!userEmail || !profile || fetchedRef.current) return;
-    fetchedRef.current = true;
+    if (!userEmail || !profile || fetchedRef.current === lang) return;
+    fetchedRef.current = lang;
 
-    const cacheKey = `daily-msg-${userEmail}-${new Date().toDateString()}`;
+    // Sproget er med i noeglen: ellers ville en gemt dansk affirmation blive
+    // vist, efter at brugeren har skiftet til engelsk.
+    const cacheKey = `daily-msg-${lang}-${userEmail}-${new Date().toDateString()}`;
     const cached = getCached(cacheKey);
     if (cached) {
       setMessage(cached);
@@ -94,7 +99,7 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
       return;
     }
 
-    const prompt = buildPrompt(profile);
+    const prompt = buildPrompt(profile, lang);
     base44.integrations.Core.InvokeLLM({ prompt }).then(text => {
         const msg = typeof text === 'string' ? text.trim() : '';
         if (msg) {
@@ -103,7 +108,7 @@ export default function DailyPersonalMessage({ userEmail, profile }) {
         }
         setLoading(false);
       }).catch(() => setLoading(false));
-  }, [userEmail, profile]);
+  }, [userEmail, profile, lang]);
 
   if (loading || !message) return null;
 
