@@ -9,6 +9,16 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  // Indstillinger — tekster der stod fast paa dansk
+  setTermsShort: 'Betingelser',
+  setPrivacyShort: 'Privatliv',
+  setTermsTitle: 'Handelsbetingelser',
+  setNotificationsTitle: 'Notifikationer',
+  setCancelSubscription: 'Opsig abonnement',
+  setCancelledUntil: 'Opsagt — adgang til {date}',
+  setNoCommitment: 'ingen binding',
+  setKeepAccess: 'Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.',
+  setUndo: 'Fortryd',
   aiEncouragementChatTitle: 'Opmuntring',
   byAuthor: 'af',
   weekWord: 'Uge',
@@ -297,6 +307,16 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  // Indstillinger — tekster der stod fast paa dansk
+  setTermsShort: 'Terms',
+  setPrivacyShort: 'Privacy',
+  setTermsTitle: 'Terms and conditions',
+  setNotificationsTitle: 'Notifications',
+  setCancelSubscription: 'Cancel subscription',
+  setCancelledUntil: 'Cancelled — access until {date}',
+  setNoCommitment: 'no commitment',
+  setKeepAccess: 'You keep access to LALATOTO for the rest of the period you have paid for. Remaining days are not refunded.',
+  setUndo: 'Close',
   aiEncouragementChatTitle: 'Encouragement',
   byAuthor: 'by',
   weekWord: 'Week',

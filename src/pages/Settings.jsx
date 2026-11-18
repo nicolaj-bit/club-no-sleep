@@ -274,7 +274,7 @@ export default function Settings() {
             style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
             
             <FileText className="w-4 h-4" style={{ color: ICON_COLOR }} />
-            Betingelser
+            {t.setTermsShort}
           </button>
           <button
             onClick={openPrivacy}
@@ -282,7 +282,7 @@ export default function Settings() {
             style={{ background: cardBg, borderColor: cardBorder, color: 'var(--color-text-secondary)' }}>
             
             <Shield className="w-4 h-4" style={{ color: ICON_COLOR }} />
-            Privatliv
+            {t.setPrivacyShort}
           </button>
         </div>
 
@@ -295,8 +295,8 @@ export default function Settings() {
           <span className="flex items-center justify-center gap-2">
             <CreditCard className="w-4 h-4" style={{ color: ICON_COLOR }} />
             {profile?.subscription_cancel_at ?
-            `Opsagt — adgang til ${new Date(profile.subscription_cancel_at).toLocaleDateString('da-DK', { day: 'numeric', month: 'long' })}` :
-            'Opsig abonnement'}
+            t.setCancelledUntil.replace('{date}', new Date(profile.subscription_cancel_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'da-DK', { day: 'numeric', month: 'long' })) :
+            t.setCancelSubscription}
           </span>
         </button>
 
@@ -343,7 +343,7 @@ export default function Settings() {
       </BottomSheet>
 
       {/* Notification preferences */}
-      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
+      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title={t.setNotificationsTitle}>
         <div className="px-5 py-4 space-y-5">
           <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.notifChooseWhich}</p>
 
@@ -413,19 +413,19 @@ export default function Settings() {
       </BottomSheet>
 
       {/* Terms */}
-      {termsOpen && <LegalModal type="terms" title="Handelsbetingelser" onClose={() => setTermsOpen(false)} />}
+      {termsOpen && <LegalModal type="terms" title={t.setTermsTitle} onClose={() => setTermsOpen(false)} />}
 
       {/* Privacy */}
       {privacyOpen && <LegalModal type="privacy" title={t.privacy} onClose={() => setPrivacyOpen(false)} />}
 
       {/* Cancel subscription */}
-      <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title="Opsig abonnement">
+      <BottomSheet open={cancelOpen} onOpenChange={setCancelOpen} title={t.setCancelSubscription}>
         <div className="px-5 py-4 space-y-4">
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            {t.setCancelIntro} <strong>{t.setCancelCurrentMonth}</strong> — ingen binding.
+            {t.setCancelIntro} <strong>{t.setCancelCurrentMonth}</strong> — {t.setNoCommitment}.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Du bevarer adgang til LALATOTO resten af den betalte periode. Der refunderes ikke for resterende dage.
+            {t.setKeepAccess}
           </p>
           <button
             onClick={openTerms}
@@ -443,7 +443,7 @@ export default function Settings() {
             {t.setOpenSubscriptions}
           </Button>
           <button onClick={() => setCancelOpen(false)} className="w-full py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-            Fortryd
+            {t.setUndo}
           </button>
           <div className="h-2" />
         </div>
