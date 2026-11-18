@@ -13,7 +13,6 @@ import { useInviteAccess } from '@/components/auth/InviteAccessContext';
 import ChildDevelopmentCard from '@/components/home/ChildDevelopmentCard';
 import SleepSummaryCard from '@/components/home/SleepSummaryCard';
 import UpcomingEventCard from '@/components/home/UpcomingEventCard';
-import AIRelevantPosts from '@/components/home/AIRelevantPosts';
 import SleepAdviceCard from '@/components/home/SleepAdviceCard';
 import DailyPersonalMessage from '@/components/home/DailyPersonalMessage';
 import NotificationBell from '@/components/ui/NotificationBell';
@@ -67,12 +66,6 @@ export default function Home() {
   }, []);
 
   // No onboarding redirect — users complete profile after payment
-
-  const { data: posts = [] } = useQuery({
-    queryKey: ['blogPosts'],
-    queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-published_date', 20),
-    staleTime: 5 * 60 * 1000, // 5 min cache
-  });
 
   const profile = activeProfile;
 
@@ -181,8 +174,8 @@ export default function Home() {
         </>
       )}
 
-      {/* AI-curated blog posts — vises i begge faser */}
-      {(!isInvited || canSeeKnowledge) && Array.isArray(posts) && <AIRelevantPosts profile={profile} allPosts={posts} />}
+      {/* Her lå før en sektion med blogindlæg, som AI'en valgte efter barnets
+          alder. Bloggen er fjernet fra appen, og sektionen med den. */}
     </div>
     </PullToRefresh>
   );
