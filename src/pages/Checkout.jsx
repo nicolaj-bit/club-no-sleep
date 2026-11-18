@@ -282,7 +282,7 @@ export default function Checkout() {
 
         <div className="flex items-center justify-center gap-4 mt-3 text-xs">
           <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.termsShort}</Link>
-          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
+          <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.privacyPolicyShort}</Link>
         </div>
       </div>
     </div>

@@ -72,7 +72,7 @@ export default function Footer({ previewData }) {
             <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Juridisk</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: '0.85rem' }}>
               <Link to="/terms" style={{ color: 'var(--color-accent)', textDecoration: 'none' }}>Handelsbetingelser</Link>
-              <Link to="/privacy" style={{ color: 'var(--color-accent)', textDecoration: 'none' }}>Privatlivspolitik</Link>
+              <Link to="/privacy" style={{ color: 'var(--color-accent)', textDecoration: 'none' }}>{t.privacyPolicyShort}</Link>
               <a href="#" style={{ color: 'var(--color-text-muted)', textDecoration: 'none', cursor: 'not-allowed' }} title="Kommer snart">Cookiepolitik</a>
             </div>
           </div>

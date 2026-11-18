@@ -262,6 +262,7 @@ export const uiDa = {
   checkoutLoadError: 'Abonnementet kunne ikke indlæses fra {store}. Tjek din internetforbindelse og prøv igen.',
   adminAddFeature: 'Tilføj feature',
   adminSaveChanges: 'Gem ændringer',
+  privacyPolicyShort: 'Privatlivspolitik',
 };
 
 export const uiEn = {
@@ -518,4 +519,5 @@ export const uiEn = {
   checkoutLoadError: 'The subscription could not be loaded from {store}. Check your internet connection and try again.',
   adminAddFeature: 'Add feature',
   adminSaveChanges: 'Save changes',
+  privacyPolicyShort: 'Privacy Policy',
 };
