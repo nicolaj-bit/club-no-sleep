@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { legalBody, legalTitle } from '@/lib/legalContent';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function CompleteProfileOnboarding({ user, open, onClose, onComplete }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -46,8 +47,8 @@ export default function CompleteProfileOnboarding({ user, open, onClose, onCompl
       const terms = items.find(i => i.type === 'terms');
       const privacy = items.find(i => i.type === 'privacy');
       setLegalContent({
-        terms: terms?.content || t.termsNotSetUp,
-        privacy: privacy?.content || t.privacyNotSetUp,
+        terms: legalBody(terms, lang) || t.termsNotSetUp,
+        privacy: legalBody(privacy, lang) || t.privacyNotSetUp,
       });
     });
   }, []);
