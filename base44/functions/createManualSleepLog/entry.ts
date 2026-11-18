@@ -10,12 +10,11 @@ import { getUserLanguage } from '../../shared/i18n.js';
 //          local_date, existing_id? }
 // ============================================================================
 
-// Sproget saettes, saa snart brugeren er kendt. Fejlbeskeder vises direkte i
-// appen, saa de skal foelge brugerens sprogvalg ligesom alt andet.
-let LANG = 'da';
-const T = (da, en) => (LANG === 'en' ? en : da);
+// Fejlbeskeder vises direkte i appen og skal derfor foelge brugerens sprog.
+// Sproget sendes med som argument — ikke gemt paa modulniveau, da den samme
+// isolat kan behandle flere brugeres kald samtidig.
+const pick = (lang, da, en) => (lang === 'en' ? en : da);
 const fail = (error, status) => Response.json({ error }, { status });
-const failT = (da, en, status) => fail(T(da, en), status);
 const HAS_TZ = /(Z|[+-]\d{2}:?\d{2})$/i;
 const MONTHS_DA = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
 const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -26,12 +25,12 @@ function parseDate(v) {
   return isNaN(d.getTime()) ? null : d;
 }
 
-function formatDanishDate(ymd) {
+function formatDate(ymd, lang) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || '');
-  if (!m) return 'en anden dato';
+  if (!m) return pick(lang, 'en anden dato', 'another date');
   const day = parseInt(m[3], 10);
   const monthIdx = parseInt(m[2], 10) - 1;
-  return T(`${day}. ${MONTHS_DA[monthIdx]} ${m[1]}`, `${day} ${MONTHS_EN[monthIdx]} ${m[1]}`);
+  return pick(lang, `${day}. ${MONTHS_DA[monthIdx]} ${m[1]}`, `${day} ${MONTHS_EN[monthIdx]} ${m[1]}`);
 }
 
 function ageMonthsAt(birthdate, at) {
@@ -46,7 +45,9 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return fail('Unauthorized', 401);
-    LANG = await getUserLanguage(base44, user.email);
+    const lang = await getUserLanguage(base44, user.email);
+    const T = (da, en) => pick(lang, da, en);
+    const failT = (da, en, status) => fail(T(da, en), status);
 
     const body = await req.json().catch(() => ({}));
     const { child_id, sleep_type, wakings, parent_note, local_date, existing_id } = body;
@@ -147,8 +148,8 @@ Deno.serve(async (req) => {
       const oe = o.session_end ? new Date(o.session_end).getTime() : Date.now();
       if (isNaN(os) || isNaN(oe)) continue;
       if (start.getTime() < oe && end.getTime() > os) {
-        const when = formatDanishDate(o.date || String(o.session_start).slice(0, 10));
-        return failT(`Søvnen overlapper en søvn, der allerede er registreret den ${when}.  Ret tidspunkterne eller åbn den eksisterende post.`.replace('.  ', '. '), `This sleep overlaps a sleep already recorded on ${when}. Change the times or open the existing entry.`, 409);
+        const when = formatDate(o.date || String(o.session_start).slice(0, 10), lang);
+        return failT(`Søvnen overlapper en søvn, der allerede er registreret den ${when}. Ret tidspunkterne eller åbn den eksisterende post.`, `This sleep overlaps a sleep already recorded on ${when}. Change the times or open the existing entry.`, 409);
       }
     }
 
