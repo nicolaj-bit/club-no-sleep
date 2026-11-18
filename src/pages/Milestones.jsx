@@ -13,13 +13,18 @@ import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
 import KraeverBarn from '@/components/children/KraeverBarn';
 
-const TODAY = new Date().toLocaleDateString('da-DK', { day: 'numeric', month: 'long', year: 'numeric' });
+// Dagens dato skrives paa brugerens sprog. Den regnes ud inde i komponenten og
+// ikke som en konstant her: en konstant laases fast, naar modulet indlaeses, og
+// ville baade blive staaende paa dansk og vise gaarsdagens dato for en app, der
+// har vaeret aaben over midnat.
+const todayLabel = (lang) =>
+  new Date().toLocaleDateString(lang === 'da' ? 'da-DK' : 'en-GB',
+    { day: 'numeric', month: 'long', year: 'numeric' });
 
 const CATEGORY_ORDER = ['Graviditet', 'Baby', 'Alder'];
 const CATEGORY_LABELS = {
-  Graviditet: '🌱 Graviditet',
-  Baby: '🍼 Baby',
-  Alder: '📅 Alder',
+  da: { Graviditet: '🌱 Graviditet', Baby: '🍼 Baby', Alder: '📅 Alder' },
+  en: { Graviditet: '🌱 Pregnancy',  Baby: '🍼 Baby', Alder: '📅 Age'   },
 };
 
 const cleanHeadline = (headline) =>
@@ -120,7 +125,7 @@ export default function Milestones() {
                 className="text-base font-semibold mb-4 tracking-wide uppercase"
                 style={{ color: 'var(--color-text-muted)', fontSize: 11, letterSpacing: '0.1em' }}
               >
-                {CATEGORY_LABELS[cat]}
+                {(CATEGORY_LABELS[lang] || CATEGORY_LABELS.da)[cat]}
               </h2>
 
               <div className="space-y-3">
@@ -154,7 +159,7 @@ function MilestoneRow({ frame, onCapture }) {
       >
         {frame.sticker_image
           ? <img src={frame.sticker_image} alt={frame.label} className="w-12 h-12 object-contain" />
-          : <TypeSticker headline={cleanHeadline(frame.headline)} date={TODAY} size={48} />
+          : <TypeSticker headline={cleanHeadline(frame.headline)} date={todayLabel(lang)} size={48} />
         }
       </div>
 
