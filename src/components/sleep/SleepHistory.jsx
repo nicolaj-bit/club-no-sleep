@@ -27,7 +27,7 @@ function Chip({ label, color }) {
 
 export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
   const { history, loading } = useSleepSession(user);
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const [filter, setFilter] = useState('all'); // 'all' | 'night' | 'nap'
   const [editLog, setEditLog] = useState(null); // manuel post der rettes
 
