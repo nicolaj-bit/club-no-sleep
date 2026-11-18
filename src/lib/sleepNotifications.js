@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { pickText } from '@/lib/currentLanguage';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { base44 } from '@/api/base44Client';
 import { getCurrentPhaseStart, formatClockHm } from '../../base44/shared/sleepSession';
@@ -42,7 +43,7 @@ export async function ensureActionTypesRegistered() {
           id: ACTION_TYPE,
           actions: [
             { id: 'awake', title: pickText('Barnet er vågent', 'Baby is awake') },
-            { id: 'end', title: 'Afslut log' },
+            { id: 'end', title: pickText('Afslut log', 'End log') },
           ],
         },
       ],
@@ -117,7 +118,7 @@ export async function showSleepNotification(session) {
         {
           id: NOTIF_ID,
           title: pickText('Søvnlog kører', 'Sleep log running'),
-          body: `Startet kl. ${timeStr}`,
+          body: pickText(`Startet kl. ${timeStr}`, `Started at ${timeStr}`),
           actionTypeId: ACTION_TYPE,
           extra: { session_id: session?.id },
           schedule: { at: triggerAt },
