@@ -1,8 +1,12 @@
 import { toast } from 'sonner';
 
 const ALBUM_NAME = 'Club No Sleep';
-const ACCESS_MESSAGE = 'Vi har ikke adgang til dine billeder. Du kan give adgang under Indstillinger.';
-const SAVED_MESSAGE = 'Gemt i dine billeder';
+const ACCESS_MESSAGE = () =>
+  pickText(
+    'Vi har ikke adgang til dine billeder. Du kan give adgang under Indstillinger.',
+    'We do not have access to your photos. You can grant access in Settings.'
+  );
+const SAVED_MESSAGE = () => pickText('Gemt i dine billeder', 'Saved to your photos');
 
 function getMediaPlugin() {
   return window.Capacitor?.Plugins?.Media || null;
