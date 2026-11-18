@@ -1,13 +1,62 @@
 {
   "name": "PushNotificationRule",
-  "type": "object",
   "properties": {
+    "description": {
+      "description": "Intern note",
+      "type": "string"
+    },
+    "is_active": {
+      "default": true,
+      "description": "Er reglen aktiv",
+      "type": "boolean"
+    },
+    "last_triggered_at": {
+      "description": "Sidst udsendt (ISO timestamp)",
+      "type": "string"
+    },
+    "message": {
+      "description": "Notifikationens besked",
+      "type": "string"
+    },
+    "message_en": {
+      "description": "Engelsk besked. Er den tom, bruges den danske.",
+      "type": "string"
+    },
     "name": {
-      "type": "string",
-      "description": "Navn på reglen (intern brug)"
+      "description": "Navn p\u00e5 reglen (intern brug)",
+      "type": "string"
+    },
+    "schedule_days": {
+      "description": "Ugedage (0=s\u00f8ndag, 1=mandag ... 6=l\u00f8rdag). Tom = alle dage",
+      "items": {
+        "type": "number"
+      },
+      "type": "array"
+    },
+    "schedule_time": {
+      "description": "Tidspunkt for daglig udsendelse (HH:mm), fx '09:00'",
+      "type": "string"
+    },
+    "target_segment": {
+      "default": "all",
+      "description": "Hvem skal modtage",
+      "enum": [
+        "all",
+        "moms",
+        "dads"
+      ],
+      "type": "string"
+    },
+    "title": {
+      "description": "Notifikationens titel",
+      "type": "string"
+    },
+    "title_en": {
+      "description": "Engelsk titel. Er den tom, bruges den danske.",
+      "type": "string"
     },
     "trigger_type": {
-      "type": "string",
+      "description": "Hvorn\u00e5r/hvad trigger notifikationen",
       "enum": [
         "manual",
         "scheduled",
@@ -16,63 +65,11 @@
         "new_question",
         "sleep_log"
       ],
-      "description": "Hvornår/hvad trigger notifikationen"
-    },
-    "schedule_time": {
-      "type": "string",
-      "description": "Tidspunkt for daglig udsendelse (HH:mm), fx '09:00'"
-    },
-    "schedule_days": {
-      "type": "array",
-      "items": {
-        "type": "number"
-      },
-      "description": "Ugedage (0=søndag, 1=mandag ... 6=lørdag). Tom = alle dage"
-    },
-    "title": {
-      "type": "string",
-      "description": "Push-notifikationens titel"
-    },
-    "message": {
-      "type": "string",
-      "description": "Push-notifikationens besked"
-    },
-    "title_en": {
-      "type": "string",
-      "description": "Engelsk titel. Er den tom, bruges den danske."
-    },
-    "message_en": {
-      "type": "string",
-      "description": "Engelsk besked. Er den tom, bruges den danske."
+      "type": "string"
     },
     "url": {
-      "type": "string",
-      "description": "Valgfrit link der åbnes ved klik"
-    },
-    "target_segment": {
-      "type": "string",
-      "enum": [
-        "all",
-        "moms",
-        "dads"
-      ],
-      "default": "all",
-      "description": "Hvem skal modtage notifikationen"
-    },
-    "is_active": {
-      "type": "boolean",
-      "default": true,
-      "description": "Om reglen er aktiv"
-    },
-    "last_triggered_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "Senest trigget tidspunkt"
-    },
-    "description": {
-      "type": "string",
-      "maxLength": 1000,
-      "description": "Valgfri beskrivelse"
+      "description": "Hvor skal brugeren hen ved klik (fx /Knowledge)",
+      "type": "string"
     }
   },
   "required": [
@@ -81,6 +78,7 @@
     "title",
     "message"
   ],
+  "type": "object",
   "rls": {
     "create": {
       "user_condition": {
