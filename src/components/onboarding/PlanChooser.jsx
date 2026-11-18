@@ -22,7 +22,7 @@ export default function PlanChooser({ onChoose, finishing }) {
 
   const handleAppStore = async () => {
     if (window.self !== window.top) {
-      alert(t.landingPreviewAlert);
+      alert(t.landingPreviewPaymentAlert);
       return;
     }
     // Must run in native Capacitor environment (iOS app)

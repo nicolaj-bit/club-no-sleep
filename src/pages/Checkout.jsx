@@ -162,7 +162,7 @@ export default function Checkout() {
             <span className="text-2xl font-bold" style={{ color: 'var(--color-primary-foreground)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>C</span>
           </div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-            {t.checkoutBeccomeMember}
+            {t.checkoutBecomeMember}
           </h1>
           <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             {isTrialEligible
