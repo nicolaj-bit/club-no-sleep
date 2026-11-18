@@ -1,4 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { milestoneHeadline } from '../../shared/milestoneCalendarTextEn.js';
+import { normalizeLanguage } from '../../shared/i18n.js';
+
+// Teksten skrives ind i kalenderaftalen og gemmes. Den faar derfor ejerens
+// sprog paa det tidspunkt, aftalen oprettes. Skifter hun sprog bagefter, staar
+// de allerede oprettede aftaler stadig paa det gamle sprog.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // Alle aldersbaserede milepæle med offset i dage fra fødselsdato
 const AGE_MILESTONES = [
@@ -133,6 +140,7 @@ Deno.serve(async (req) => {
 
       const email = child.user_email;
       const cid = child.id;
+      const lang = normalizeLanguage(profileByEmail[email]?.language);
 
       // Hent eksisterende milepæls-kalenderevents for dette barn
       const existing = await base44.asServiceRole.entities.CalendarEvent.filter({
@@ -153,8 +161,10 @@ Deno.serve(async (req) => {
           if (existingIds.has(m.milestone_id)) { skipped++; continue; }
           const eventDate = addDays(ageBaseDate, m.days);
           toCreate.push({
-            title: `${m.emoji} ${m.headline}`,
-            description: `${child.name} — ${m.headline}. Fang øjeblikket med en milepæls-sticker i appen! 📸`,
+            title: `${m.emoji} ${milestoneHeadline(m.headline, lang)}`,
+            description: T(lang,
+              `${child.name} — ${m.headline}. Fang øjeblikket med en milepæls-sticker i appen! 📸`,
+              `${child.name} — ${milestoneHeadline(m.headline, lang)}. Capture the moment with a milestone sticker in the app! 📸`),
             start_datetime: `${eventDate}T09:00:00`,
             end_datetime: `${eventDate}T09:30:00`,
             user_email: email,
@@ -175,8 +185,10 @@ Deno.serve(async (req) => {
           if (existingIds.has(m.milestone_id)) { skipped++; continue; }
           const eventDate = pregnancyWeekDate(child.due_date, m.weeks);
           toCreate.push({
-            title: `${m.emoji} ${m.headline}`,
-            description: `Du er nu i uge ${m.weeks} af din graviditet! Åbn appen for at læse om din babys udvikling og få tips til ugen. 🌿`,
+            title: `${m.emoji} ${milestoneHeadline(m.headline, lang)}`,
+            description: T(lang,
+              `Du er nu i uge ${m.weeks} af din graviditet! Åbn appen for at læse om din babys udvikling og få tips til ugen. 🌿`,
+              `You are now in week ${m.weeks} of your pregnancy. Open the app to read about your baby's development and get tips for the week. 🌿`),
             start_datetime: `${eventDate}T09:00:00`,
             end_datetime: `${eventDate}T09:30:00`,
             user_email: email,
