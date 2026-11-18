@@ -161,7 +161,10 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen pb-12" style={{ backgroundColor: 'var(--color-bg)' }}>
       <ArticleFloatingNav
-        backUrl={createPageUrl('Blog')}
+        /* Tilbage går normalt et skridt tilbage i historikken — altså til den
+           graviditetsuge, linket kom fra. Home er kun nødudgangen, hvis siden
+           åbnes direkte uden historik; blogoversigten findes ikke længere. */
+        backUrl={createPageUrl('Home')}
         hasHero
         heroRef={heroRef}
       >
