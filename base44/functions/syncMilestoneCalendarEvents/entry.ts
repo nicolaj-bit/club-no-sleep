@@ -132,6 +132,17 @@ Deno.serve(async (req) => {
     }
     console.log(`Fandt ${children.length} børn`);
 
+    // Sproget pr. ejer slaas op én gang, ikke én gang per barn.
+    const langByEmail = {};
+    try {
+      const profiles = await base44.asServiceRole.entities.UserProfile.list();
+      for (const p of profiles || []) {
+        if (p.user_email) langByEmail[p.user_email] = normalizeLanguage(p.language);
+      }
+    } catch (e) {
+      console.log('[syncMilestoneCalendarEvents] kunne ikke hente sprog:', e?.message);
+    }
+
     let created = 0;
     let skipped = 0;
 
@@ -140,7 +151,7 @@ Deno.serve(async (req) => {
 
       const email = child.user_email;
       const cid = child.id;
-      const lang = normalizeLanguage(profileByEmail[email]?.language);
+      const lang = langByEmail[email] || 'da';
 
       // Hent eksisterende milepæls-kalenderevents for dette barn
       const existing = await base44.asServiceRole.entities.CalendarEvent.filter({
