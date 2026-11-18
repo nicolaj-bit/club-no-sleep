@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+// Fejlbeskeder vises direkte i appen og foelger derfor brugerens sprogvalg.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // ============================================================================
 // 'Et lys i mørket' — tænder/slukker brugerens lys (is_online) baseret på
@@ -25,6 +29,7 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    const lang = await getUserLanguage(base44, user?.email);
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json().catch(() => ({}));
@@ -33,7 +38,7 @@ export default async function(req) {
     // Find brugerens profil via asServiceRole (virker for email/password-brugere)
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: user.email });
     const profile = profiles?.[0];
-    if (!profile) return Response.json({ error: 'Profil ikke fundet' }, { status: 404 });
+    if (!profile) return Response.json({ error: T(lang, 'Profil ikke fundet', 'Profile not found') }, { status: 404 });
 
     const now = new Date();
 

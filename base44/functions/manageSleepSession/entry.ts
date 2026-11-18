@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+// Fejlbeskeder vises direkte i appen og foelger derfor brugerens sprogvalg.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // ============================================================================
 // Live søvnsession — håndterer alle tilstande:
@@ -39,6 +43,7 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    const lang = await getUserLanguage(base44, user?.email);
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
@@ -59,7 +64,7 @@ export default async function(req) {
       const invite = invites?.find(i => i.status === 'accepted' && i.inviter_email && i.inviter_email !== user.email);
       if (invite) {
         if (invite.can_see_sleep_log === false) {
-          return Response.json({ error: 'Ingen adgang til søvnlog' }, { status: 403 });
+          return Response.json({ error: T(lang, 'Ingen adgang til søvnlog', 'No access to the sleep log') }, { status: 403 });
         }
         ownerEmail = invite.inviter_email;
       }
@@ -69,7 +74,7 @@ export default async function(req) {
     if (child_id) {
       const children = await base44.asServiceRole.entities.Child.filter({ id: child_id, user_email: ownerEmail });
       if (!children || children.length === 0) {
-        return Response.json({ error: 'Barnet tilhører ikke brugeren' }, { status: 403 });
+        return Response.json({ error: T(lang, 'Barnet tilhører ikke brugeren', 'The child does not belong to this user') }, { status: 403 });
       }
     }
 
@@ -163,7 +168,7 @@ export default async function(req) {
     // === UNDO_END ===
     if (action === 'undo_end') {
       const session = session_id ? await findSessionById(session_id) : null;
-      if (!session) return Response.json({ error: 'Session ikke fundet' }, { status: 404 });
+      if (!session) return Response.json({ error: T(lang, 'Session ikke fundet', 'Session not found') }, { status: 404 });
 
       const periods = (session.periods || []).slice();
       periods.push({ type: 'sleep', start: now, end: null });

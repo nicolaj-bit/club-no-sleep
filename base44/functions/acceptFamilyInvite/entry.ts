@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+// Fejlbeskeder vises direkte i appen og foelger derfor brugerens sprogvalg.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // Called when an invited partner accepts an invitation.
 // 1. Loads the FamilyInvite record
@@ -10,6 +14,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    const lang = await getUserLanguage(base44, user?.email);
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -23,10 +28,10 @@ Deno.serve(async (req) => {
     const invites = await base44.entities.FamilyInvite.filter({ id: invite_id });
     const invite = invites[0];
     if (!invite) {
-      return Response.json({ error: 'Invitation ikke fundet' }, { status: 404 });
+      return Response.json({ error: T(lang, 'Invitation ikke fundet', 'Invitation not found') }, { status: 404 });
     }
     if (invite.invitee_email.toLowerCase() !== user.email.toLowerCase()) {
-      return Response.json({ error: 'Denne invitation tilhører ikke dig' }, { status: 403 });
+      return Response.json({ error: T(lang, 'Denne invitation tilhører ikke dig', 'This invitation is not for you') }, { status: 403 });
     }
     if (invite.status === 'accepted') {
       return Response.json({ ok: true, already_accepted: true });
@@ -36,7 +41,7 @@ Deno.serve(async (req) => {
     const inviterProfiles = await base44.asServiceRole.entities.UserProfile.filter({ user_email: invite.inviter_email });
     const inviterProfile = inviterProfiles[0];
     if (!inviterProfile) {
-      return Response.json({ error: 'Inviterens profil ikke fundet' }, { status: 404 });
+      return Response.json({ error: T(lang, 'Inviterens profil ikke fundet', "The inviter's profile was not found") }, { status: 404 });
     }
 
     // family_id = inviter's own profile id (if they haven't set one yet, use their profile id)

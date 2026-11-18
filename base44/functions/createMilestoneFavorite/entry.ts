@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+// Fejlbeskeder vises direkte i appen og foelger derfor brugerens sprogvalg.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 // Opretter en Favorite med item_type 'milestone' for den autentificerede bruger
 // via asServiceRole, da RLS create blokerer direkte oprettelse for email/password-brugere.
@@ -7,10 +11,11 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
+    const lang = await getUserLanguage(base44, user?.email);
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const title = (body.title || 'Milepæl').toString().slice(0, 200);
+    const title = (body.title || T(lang, 'Milepæl', 'Milestone')).toString().slice(0, 200);
     const date = (body.date || '').toString().slice(0, 100);
     const image_url = (body.image_url || '').toString();
     const frame_id = (body.frame_id || '').toString();
