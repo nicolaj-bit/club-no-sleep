@@ -1,5 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { buildManualPeriods } from '../../shared/manualSleepPeriods.js';
+import { getUserLanguage } from '../../shared/i18n.js';
 
 // ============================================================================
 // Manuel søvnlog — registrerer en søvn bagud med samme periods-struktur som
@@ -9,9 +10,15 @@ import { buildManualPeriods } from '../../shared/manualSleepPeriods.js';
 //          local_date, existing_id? }
 // ============================================================================
 
+// Sproget saettes, saa snart brugeren er kendt. Fejlbeskeder vises direkte i
+// appen, saa de skal foelge brugerens sprogvalg ligesom alt andet.
+let LANG = 'da';
+const T = (da, en) => (LANG === 'en' ? en : da);
 const fail = (error, status) => Response.json({ error }, { status });
+const failT = (da, en, status) => fail(T(da, en), status);
 const HAS_TZ = /(Z|[+-]\d{2}:?\d{2})$/i;
-const MONTHS = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+const MONTHS_DA = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 function parseDate(v) {
   if (typeof v !== 'string' || !HAS_TZ.test(v.trim())) return null;
@@ -22,7 +29,9 @@ function parseDate(v) {
 function formatDanishDate(ymd) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || '');
   if (!m) return 'en anden dato';
-  return `${parseInt(m[3], 10)}. ${MONTHS[parseInt(m[2], 10) - 1]} ${m[1]}`;
+  const day = parseInt(m[3], 10);
+  const monthIdx = parseInt(m[2], 10) - 1;
+  return T(`${day}. ${MONTHS_DA[monthIdx]} ${m[1]}`, `${day} ${MONTHS_EN[monthIdx]} ${m[1]}`);
 }
 
 function ageMonthsAt(birthdate, at) {
@@ -37,6 +46,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     if (!user) return fail('Unauthorized', 401);
+    LANG = await getUserLanguage(base44, user.email);
 
     const body = await req.json().catch(() => ({}));
     const { child_id, sleep_type, wakings, parent_note, local_date, existing_id } = body;
@@ -55,7 +65,7 @@ Deno.serve(async (req) => {
       const invite = invites?.find(i => i.status === 'accepted' && i.inviter_email && i.inviter_email !== user.email);
       if (invite) {
         if (invite.can_see_sleep_log === false) {
-          return fail('Ingen adgang til søvnlog', 403);
+          return failT('Ingen adgang til søvnlog', 'No access to the sleep log', 403);
         }
         ownerEmail = invite.inviter_email;
       }
@@ -65,7 +75,7 @@ Deno.serve(async (req) => {
     let child = null;
     if (child_id) {
       const children = await base44.asServiceRole.entities.Child.filter({ id: child_id, user_email: ownerEmail });
-      if (!children || children.length === 0) return fail('Barnet tilhører ikke brugeren', 403);
+      if (!children || children.length === 0) return failT('Barnet tilhører ikke brugeren', 'The child does not belong to this user', 403);
       child = children[0];
     }
 
@@ -73,42 +83,42 @@ Deno.serve(async (req) => {
     const start = parseDate(body.session_start);
     const end = parseDate(body.session_end);
     if (!start || !end) {
-      return fail('Start- og sluttidspunkt mangler eller er ugyldige. Tjek tidspunkterne og prøv igen.', 400);
+      return failT('Start- og sluttidspunkt mangler eller er ugyldige. Tjek tidspunkterne og prøv igen.', 'The start and end times are missing or invalid. Check the times and try again.', 400);
     }
     if (end.getTime() <= start.getTime()) {
-      return fail('Sluttidspunktet skal ligge efter starttidspunktet.', 400);
+      return failT('Sluttidspunktet skal ligge efter starttidspunktet.', 'The end time must be after the start time.', 400);
     }
     if (end.getTime() > Date.now() + 5 * 60 * 1000) {
-      return fail('Sluttidspunktet ligger i fremtiden. Registrér søvnen, når den er slut.', 400);
+      return failT('Sluttidspunktet ligger i fremtiden. Registrér søvnen, når den er slut.', 'The end time is in the future. Record the sleep once it is over.', 400);
     }
     if (start.getTime() > Date.now() + 5 * 60 * 1000) {
-      return fail('Starttidspunktet ligger i fremtiden. Du kan kun registrere søvn, der allerede er begyndt.', 400);
+      return failT('Starttidspunktet ligger i fremtiden. Du kan kun registrere søvn, der allerede er begyndt.', 'The start time is in the future. You can only record sleep that has already begun.', 400);
     }
     if (end.getTime() - start.getTime() > 24 * 60 * 60 * 1000) {
-      return fail('En søvn kan højst vare 24 timer.', 400);
+      return failT('En søvn kan højst vare 24 timer.', 'A sleep can last at most 24 hours.', 400);
     }
     if (typeof local_date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(local_date)) {
-      return fail('Datoen mangler eller er ugyldig.', 400);
+      return failT('Datoen mangler eller er ugyldig.', 'The date is missing or invalid.', 400);
     }
     if (sleep_type !== 'night' && sleep_type !== 'nap') {
-      return fail('Vælg om det er nattesøvn eller en lur.', 400);
+      return failT('Vælg om det er nattesøvn eller en lur.', 'Choose whether this is night sleep or a nap.', 400);
     }
 
     const parsedWakings = [];
     for (const w of Array.isArray(wakings) ? wakings : []) {
       const ws = parseDate(w?.start);
       const we = parseDate(w?.end);
-      if (!ws || !we) return fail('En opvågning har et ugyldigt tidspunkt.', 400);
-      if (we.getTime() <= ws.getTime()) return fail('En opvågning skal slutte efter den begynder.', 400);
+      if (!ws || !we) return failT('En opvågning har et ugyldigt tidspunkt.', 'One of the wake-ups has an invalid time.', 400);
+      if (we.getTime() <= ws.getTime()) return failT('En opvågning skal slutte efter den begynder.', 'A wake-up must end after it begins.', 400);
       if (ws.getTime() < start.getTime() || we.getTime() > end.getTime()) {
-        return fail('En opvågning ligger uden for søvnens tidsrum.', 400);
+        return failT('En opvågning ligger uden for søvnens tidsrum.', 'A wake-up falls outside the sleep period.', 400);
       }
       parsedWakings.push({ s: ws.getTime(), e: we.getTime(), start: ws.toISOString(), end: we.toISOString() });
     }
     parsedWakings.sort((a, b) => a.s - b.s);
     for (let i = 1; i < parsedWakings.length; i++) {
       if (parsedWakings[i].s < parsedWakings[i - 1].e) {
-        return fail('To opvågninger overlapper hinanden.', 400);
+        return failT('To opvågninger overlapper hinanden.', 'Two wake-ups overlap.', 400);
       }
     }
 
@@ -117,9 +127,9 @@ Deno.serve(async (req) => {
     if (existing_id) {
       const found = await base44.asServiceRole.entities.SleepLog.filter({ id: existing_id, user_email: ownerEmail });
       existing = found?.[0] || null;
-      if (!existing) return fail('Posten blev ikke fundet.', 404);
+      if (!existing) return failT('Posten blev ikke fundet.', 'The entry was not found.', 404);
       if (existing.entry_mode !== 'manual') {
-        return fail('Kun manuelt tilføjede poster kan rettes.', 403);
+        return failT('Kun manuelt tilføjede poster kan rettes.', 'Only manually added entries can be edited.', 403);
       }
     }
 
@@ -138,7 +148,7 @@ Deno.serve(async (req) => {
       if (isNaN(os) || isNaN(oe)) continue;
       if (start.getTime() < oe && end.getTime() > os) {
         const when = formatDanishDate(o.date || String(o.session_start).slice(0, 10));
-        return fail(`Søvnen overlapper en søvn, der allerede er registreret den ${when}. Ret tidspunkterne eller åbn den eksisterende post.`, 409);
+        return failT(`Søvnen overlapper en søvn, der allerede er registreret den ${when}.  Ret tidspunkterne eller åbn den eksisterende post.`.replace('.  ', '. '), `This sleep overlaps a sleep already recorded on ${when}. Change the times or open the existing entry.`, 409);
       }
     }
 
