@@ -1,4 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
+import { normalizeLanguage } from '../../shared/i18n.js';
+
+// Modtagerens eget sprog bestemmer. T vaelger tekst, L vaelger dato-format.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
+const L = (lang) => (lang === 'en' ? 'en-GB' : 'da-DK');
 
 const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
@@ -38,26 +43,26 @@ async function createInAppNotifications(base44, emails, title, message, link) {
   }
 }
 
-async function sendEmailFallback(base44, email, eventTitle, eventTime, isReminder30min) {
+async function sendEmailFallback(base44, email, eventTitle, eventTime, isReminder30min, lang = 'da') {
   try {
     const subject = isReminder30min
-      ? `Om 30 min: ${eventTitle}`
-      : `Husk i morgen: ${eventTitle}`;
+      ? T(lang, `Om 30 min: ${eventTitle}`, `In 30 min: ${eventTitle}`)
+      : T(lang, `Husk i morgen: ${eventTitle}`, `Tomorrow: ${eventTitle}`);
 
     const preheader = isReminder30min
-      ? `Din aftale starter kl. ${eventTime}`
-      : `Du har en aftale i morgen kl. ${eventTime}`;
+      ? T(lang, `Din aftale starter kl. ${eventTime}`, `Your appointment starts at ${eventTime}`)
+      : T(lang, `Du har en aftale i morgen kl. ${eventTime}`, `You have an appointment tomorrow at ${eventTime}`);
 
     const headingText = isReminder30min
-      ? `Om 30 minutter`
-      : `I morgen`;
+      ? T(lang, `Om 30 minutter`, `In 30 minutes`)
+      : T(lang, `I morgen`, `Tomorrow`);
 
     const bodyText = isReminder30min
-      ? `Din aftale <strong>${eventTitle}</strong> starter kl. <strong>${eventTime}</strong>.`
-      : `Du har en aftale i morgen kl. <strong>${eventTime}</strong>:<br><strong>${eventTitle}</strong>`;
+      ? T(lang, `Din aftale <strong>${eventTitle}</strong> starter kl. <strong>${eventTime}</strong>.`, `Your appointment <strong>${eventTitle}</strong> starts at <strong>${eventTime}</strong>.`)
+      : T(lang, `Du har en aftale i morgen kl. <strong>${eventTime}</strong>:<br><strong>${eventTitle}</strong>`, `You have an appointment tomorrow at <strong>${eventTime}</strong>:<br><strong>${eventTitle}</strong>`);
 
     const html = `<!DOCTYPE html>
-<html lang="da">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,14 +85,13 @@ async function sendEmailFallback(base44, email, eventTitle, eventTime, isReminde
               <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#2B1F16;">${bodyText}</p>
               <hr style="border:none;border-top:1px solid #EDE4DB;margin:24px 0;">
               <p style="margin:0;font-size:13px;color:#7A665A;line-height:1.6;">
-                Denne paamindelse er sendt fra din Club No Sleep kalender.<br>
-                Du kan administrere dine aftaler direkte i appen.
+                ${T(lang, 'Denne paamindelse er sendt fra din Club No Sleep kalender.<br>Du kan administrere dine aftaler direkte i appen.', 'This reminder was sent from your Club No Sleep calendar.<br>You can manage your appointments in the app.')}
               </p>
             </td>
           </tr>
           <tr>
             <td style="background-color:#F3E9E1;padding:16px 32px;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#B08D72;">Club No Sleep - Sendt fordi du har aktiveret kalender-paamindelser</p>
+              <p style="margin:0;font-size:12px;color:#B08D72;">${T(lang, 'Club No Sleep - Sendt fordi du har aktiveret kalender-paamindelser', 'Club No Sleep - Sent because you have turned on calendar reminders')}</p>
             </td>
           </tr>
         </table>
@@ -147,8 +151,12 @@ Deno.serve(async (req) => {
     console.log(`[calendarNotifications] Fandt ${allEvents.length} events`);
 
     const notifPrefByEmail = {};
+    const langByEmail = {};
     for (const p of profiles) {
-      if (p.user_email) notifPrefByEmail[p.user_email] = p.notif_calendar_reminder !== false;
+      if (p.user_email) {
+        notifPrefByEmail[p.user_email] = p.notif_calendar_reminder !== false;
+        langByEmail[p.user_email] = normalizeLanguage(p.language);
+      }
     }
 
     let sentCount = 0;
@@ -161,13 +169,15 @@ Deno.serve(async (req) => {
       console.log(`[calendarNotifications] Event: "${event.title}" starter ${start.toISOString()}, om ${diffMins.toFixed(1)} minutter. notify_30min_before_sent=${event.notify_30min_before_sent}`);
 
       const emailsToNotify = [event.user_email];
+      // Aftalen ejes af én bruger, saa sproget er hendes.
+      const lang = langByEmail[event.user_email] || 'da';
 
       // Dagen før: mellem 23.5 og 25 timer til aftalen
       if (event.notify_day_before !== false && !event.notify_day_before_sent && diffMins > 23.5 * 60 && diffMins <= 25 * 60) {
-        const dateStr = start.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
-        const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
-        const title = `Du har en aftale i morgen`;
-        const msg = `${event.title} kl. ${timeStr}`;
+        const dateStr = start.toLocaleDateString(L(lang), { weekday: 'long', day: 'numeric', month: 'long' });
+        const timeStr = start.toLocaleTimeString(L(lang), { hour: '2-digit', minute: '2-digit' });
+        const title = T(lang, `Du har en aftale i morgen`, `You have an appointment tomorrow`);
+        const msg = T(lang, `${event.title} kl. ${timeStr}`, `${event.title} at ${timeStr}`);
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
           if (notifPrefByEmail[email] !== false) {
@@ -180,9 +190,9 @@ Deno.serve(async (req) => {
 
       // 30 min før: mellem 28 og 32 minutter til aftalen
       if (event.notify_30min_before !== false && !event.notify_30min_before_sent && diffMins > 28 && diffMins <= 32) {
-        const timeStr = start.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
-        const title = `Du har en aftale snart`;
-        const msg = `${event.title} kl. ${timeStr}`;
+        const timeStr = start.toLocaleTimeString(L(lang), { hour: '2-digit', minute: '2-digit' });
+        const title = T(lang, `Du har en aftale snart`, `You have an appointment soon`);
+        const msg = T(lang, `${event.title} kl. ${timeStr}`, `${event.title} at ${timeStr}`);
         await createInAppNotifications(base44, emailsToNotify, title, msg, '/Calendar');
         for (const email of emailsToNotify) {
           if (notifPrefByEmail[email] !== false) {
