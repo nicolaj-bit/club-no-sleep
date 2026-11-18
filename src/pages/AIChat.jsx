@@ -264,7 +264,7 @@ export default function AIChat() {
 
     const conv = await base44.agents.createConversation({
       agent_name: agentName,
-      metadata: { name: agentName === 'encouragement' ? 'Opmuntring Chat' : 'Baby & Søvn Chat' }
+      metadata: { name: agentName === 'encouragement' ? 'Opmuntring Chat' : t.aiChatTitle }
     });
     setConversation(conv);
     setMessages(conv.messages || []);
@@ -301,7 +301,7 @@ export default function AIChat() {
           const profile = profiles[0];
           if (diaryEntries?.length > 0 || profile) {
             setIsLoading(true);
-            const MOOD_LABELS = { strålende: 'Strålende 🌟', god: 'God 😊', okay: 'Okay 😐', træt: 'Træt 😴', hård: 'Hård dag 😢' };
+            const MOOD_LABELS = { strålende: t.aiMoodGreat, god: 'God 😊', okay: 'Okay 😐', træt: t.aiMoodTired, hård: t.aiMoodHardDay };
             const diaryText = diaryEntries.map(e =>
               `Uge ${e.week}: Humør: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptomer: ${e.symptoms || '–'} | Spark: ${e.baby_kicks_count ?? '–'}`
             ).join('\n');
@@ -451,7 +451,7 @@ export default function AIChat() {
                 onClick={() => setPickingAvatar(true)}
                 className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
                 style={{ background: 'linear-gradient(135deg, var(--color-accent), #8B5E3C)' }}
-                aria-label="Vælg avatar"
+                aria-label={t.aiChooseAvatar}
               >
                 {savingAvatar ? (
                   <div className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -469,7 +469,7 @@ export default function AIChat() {
             {/* Entry-point buttons */}
             <div className="w-full max-w-sm space-y-3 mt-4">
               <button
-                onClick={() => { setMode('encouragement'); startChat('encouragement', 'Jeg har brug for opmuntring'); }}
+                onClick={() => { setMode('encouragement'); startChat('encouragement', t.aiNeedEncouragement); }}
                 className="w-full text-sm font-medium px-5 py-4 rounded-2xl border-2 transition-all cursor-pointer"
                 style={{
                   backgroundColor: 'var(--color-bg-card)',
@@ -613,7 +613,7 @@ export default function AIChat() {
       <Dialog open={editingName} onOpenChange={setEditingName}>
         <DialogContent className="max-w-xs">
           <DialogHeader>
-            <DialogTitle>Navngiv din hjælper</DialogTitle>
+            <DialogTitle>{t.aiNameHelper}</DialogTitle>
           </DialogHeader>
           <input
             type="text"
@@ -639,7 +639,7 @@ export default function AIChat() {
       <Dialog open={pickingAvatar} onOpenChange={setPickingAvatar}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Vælg din hjælper</DialogTitle>
+            <DialogTitle>{t.aiChooseHelper}</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-3 gap-3 py-2">
             {AI_AVATARS.map((av) => {
@@ -704,7 +704,7 @@ export default function AIChat() {
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium" style={{ color: 'var(--color-accent)' }}>
-                    {conv.agent_name === 'encouragement' ? 'Opmuntring' : 'Baby & Søvn'}
+                    {conv.agent_name === 'encouragement' ? 'Opmuntring' : t.aiChatShort}
                   </span>
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                     {conv.updated_date ? new Date(conv.updated_date).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}

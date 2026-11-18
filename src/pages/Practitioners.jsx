@@ -52,9 +52,9 @@ export default function Practitioners() {
       queryClient.invalidateQueries({ queryKey: ['experts'] });
       setShowAddForm(false);
       setFormData({ name: '', title: '', city: '', address: '', instagram: '', website: '' });
-      toast.success('Behandler tilføjet! ✓');
+      toast.success(t.practAdded);
     },
-    onError: () => toast.error('Kunne ikke tilføje behandler'),
+    onError: () => toast.error(t.practAddError),
   });
 
   const filteredExperts = experts
@@ -98,9 +98,9 @@ export default function Practitioners() {
     }
     setTipSending(true);
     await base44.functions.invoke('sendContactEmail', {
-      name: 'App bruger',
+      name: t.tipAppUser,
       email: 'tip@lalatoto.dk',
-      message: `Behandler info:\n${tipData.practitionerInfo}\n\nHvorfor god:\n${tipData.whyGood || '(ikke udfyldt)'}`,
+      message: `Behandler info:\n${tipData.practitionerInfo}\n\nHvorfor god:\n${tipData.whyGood || t.tipNotFilled}`,
     });
     await base44.entities.AppNotification.create({
       title: '👨‍⚕️ Ny behandler-anbefaling',
@@ -110,12 +110,12 @@ export default function Practitioners() {
     setTipSending(false);
     setTipData({ practitionerInfo: '', whyGood: '' });
     setShowTipForm(false);
-    toast.success('Tak for dit tip! Vi kigger på det 🙏');
+    toast.success(t.tipThanks);
   };
 
   const handleAddExpert = () => {
     if (!formData.name.trim()) {
-      toast.error('Navn er påkrævet');
+      toast.error(t.tipNameRequired);
       return;
     }
     addExpertMutation.mutate(formData);
@@ -172,7 +172,7 @@ export default function Practitioners() {
             >
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-primary-foreground)' }}>Kan du anbefale en behandler?</span>
+                <span className="font-medium text-sm" style={{ color: 'var(--color-primary-foreground)' }}>{t.practRecommend}</span>
               </div>
               {showTipForm ? (
                 <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
@@ -187,7 +187,7 @@ export default function Practitioners() {
                   Tips os om en god behandler, så kigger vi på det og tilføjer den til listen 💛
                 </p>
                 <Textarea
-                  placeholder="Behandlers info — navn, speciale, telefon og adresse"
+                  placeholder={t.practInfo}
                   value={tipData.practitionerInfo}
                   onChange={(e) => setTipData({ ...tipData, practitionerInfo: e.target.value })}
                   className="min-h-20"
@@ -217,7 +217,7 @@ export default function Practitioners() {
               className="w-full gap-2 text-sm font-medium underline py-1"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              {showAddForm ? 'Skjul formular' : '+ Tilføj behandler (admin)'}
+              {showAddForm ? 'Skjul formular' : t.practAddAdmin}
             </button>
           )}
 
@@ -245,7 +245,7 @@ export default function Practitioners() {
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               />
               <Input
-                placeholder="Instagram (fx https://instagram.com/navn)"
+                placeholder={t.practInstagram}
                 value={formData.instagram}
                 onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
               />
@@ -268,7 +268,7 @@ export default function Practitioners() {
                   onClick={handleAddExpert}
                   disabled={addExpertMutation.isPending}
                 >
-                  {addExpertMutation.isPending ? 'Tilføjer...' : 'Tilføj'}
+                  {addExpertMutation.isPending ? t.addingBtn : t.addBtn}
                 </Button>
               </div>
             </div>
@@ -302,7 +302,7 @@ export default function Practitioners() {
               <div className="text-center py-12">
                 <MapPin className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
                 <p style={{ color: 'var(--color-text-muted)' }}>
-                  {searchMode === 'area' ? 'Ingen behandlere i dit område' : 'Ingen behandlere tilgængelige'}
+                  {searchMode === 'area' ? t.practNoneInArea : t.practNoneAvailable}
                 </p>
                 {searchMode === 'area' && (
                   <button className="text-sm text-blue-500 mt-2" onClick={() => setSearchMode('all')}>

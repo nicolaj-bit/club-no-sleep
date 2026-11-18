@@ -52,9 +52,9 @@ export default function BabyFriendlyCafes() {
       queryClient.invalidateQueries({ queryKey: ['cafes'] });
       setShowAddForm(false);
       setFormData({ name: '', description: '', city: '', address: '', phone: '', website: '', instagram: '', facebook: '' });
-      toast.success('Café tilføjet! ✓');
+      toast.success(t.cafeAdded);
     },
-    onError: () => toast.error('Kunne ikke tilføje café'),
+    onError: () => toast.error(t.cafeAddError),
   });
 
   const filteredCafes = cafes
@@ -99,9 +99,9 @@ export default function BabyFriendlyCafes() {
     setTipSending(true);
     // Send email til admin
     await base44.functions.invoke('sendContactEmail', {
-      name: 'App bruger',
+      name: t.tipAppUser,
       email: 'tip@lalatoto.dk',
-      message: `Café info:\n${tipData.cafeInfo}\n\nHvorfor god:\n${tipData.whyGood || '(ikke udfyldt)'}`,
+      message: `Café info:\n${tipData.cafeInfo}\n\nHvorfor god:\n${tipData.whyGood || t.tipNotFilled}`,
     });
     // Opret in-app notifikation til admins
     await base44.entities.AppNotification.create({
@@ -112,12 +112,12 @@ export default function BabyFriendlyCafes() {
     setTipSending(false);
     setTipData({ cafeInfo: '', whyGood: '' });
     setShowTipForm(false);
-    toast.success('Tak for dit tip! Vi kigger på det 🙏');
+    toast.success(t.tipThanks);
   };
 
   const handleAddCafe = () => {
     if (!formData.name.trim()) {
-      toast.error('Navn er påkrævet');
+      toast.error(t.tipNameRequired);
       return;
     }
     addCafeMutation.mutate(formData);
@@ -175,7 +175,7 @@ export default function BabyFriendlyCafes() {
             >
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
-                <span className="font-medium text-sm" style={{ color: 'var(--color-primary-foreground)' }}>Kender du en god café?</span>
+                <span className="font-medium text-sm" style={{ color: 'var(--color-primary-foreground)' }}>{t.cafeKnowOne}</span>
               </div>
               {showTipForm ? (
                 <ChevronUp className="w-4 h-4" style={{ color: 'var(--color-primary-foreground)' }} />
@@ -190,13 +190,13 @@ export default function BabyFriendlyCafes() {
                   Fortæl os, hvis du kender en babyvenlig café, så vi kan tilføje den til listen. Jo flere jo bedre!
                 </p>
                 <Textarea
-                  placeholder="Caféens navn og hjemmeside eller Instagram profil"
+                  placeholder={t.cafeNameWebsite}
                   value={tipData.cafeInfo}
                   onChange={(e) => setTipData({ ...tipData, cafeInfo: e.target.value })}
                   className="min-h-20"
                 />
                 <Textarea
-                  placeholder="Hvad kan du særligt godt lide ved netop dette sted?"
+                  placeholder={t.tipWhatYouLike}
                   value={tipData.whyGood}
                   onChange={(e) => setTipData({ ...tipData, whyGood: e.target.value })}
                   className="min-h-20"
@@ -220,7 +220,7 @@ export default function BabyFriendlyCafes() {
               className="w-full gap-2 text-sm font-medium underline py-1"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              {showAddForm ? 'Skjul formular' : '+ Tilføj café (admin)'}
+              {showAddForm ? 'Skjul formular' : t.cafeAddAdmin}
             </button>
           )}
 
@@ -228,7 +228,7 @@ export default function BabyFriendlyCafes() {
           {showAddForm && isAdmin && (
             <div className="rounded-2xl p-4 border space-y-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <Input
-                placeholder="Caféens navn *"
+                placeholder={t.cafeNameRequired}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -282,7 +282,7 @@ export default function BabyFriendlyCafes() {
                   onClick={handleAddCafe}
                   disabled={addCafeMutation.isPending}
                 >
-                  {addCafeMutation.isPending ? 'Tilføjer...' : 'Tilføj'}
+                  {addCafeMutation.isPending ? t.addingBtn : t.addBtn}
                 </Button>
               </div>
             </div>
@@ -316,7 +316,7 @@ export default function BabyFriendlyCafes() {
             <div className="text-center py-12">
               <MapPin className="w-12 h-12 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
               <p style={{ color: 'var(--color-text-muted)' }}>
-                {cafeSearchMode === 'area' ? 'Ingen caféer i dit område' : 'Ingen caféer tilgængelige'}
+                {cafeSearchMode === 'area' ? t.cafeNoneInArea : t.cafeNoneAvailable}
               </p>
               {cafeSearchMode === 'area' && (
                 <button className="text-sm text-blue-500 mt-2" onClick={() => setCafeSearchMode('all')}>
