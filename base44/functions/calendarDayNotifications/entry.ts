@@ -1,4 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { normalizeLanguage } from '../../shared/i18n.js';
+
+// Modtagerens eget sprog bestemmer teksten og tidsformatet.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 const ONESIGNAL_APP_ID = Deno.env.get('ONESIGNAL_APP_ID');
 const REST_API_KEY = Deno.env.get('ONESIGNAL_REST_API_KEY');
@@ -49,28 +53,34 @@ Deno.serve(async (req) => {
     console.log(`[calendarDayNotifications] Fandt ${allEvents.length} events`);
 
     const notifPrefByEmail = {};
+    const langByEmail = {};
     for (const p of profiles) {
-      if (p.user_email) notifPrefByEmail[p.user_email] = p.notif_calendar_reminder !== false;
+      if (p.user_email) {
+        notifPrefByEmail[p.user_email] = p.notif_calendar_reminder !== false;
+        langByEmail[p.user_email] = normalizeLanguage(p.language);
+      }
     }
 
     let sent = 0;
 
     for (const event of allEvents) {
       const eventDateStr = new Date(event.start_datetime).toLocaleDateString('sv-SE', { timeZone: 'Europe/Copenhagen' });
-      const timeStr = new Date(event.start_datetime).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
       const email = event.user_email;
+      const lang = langByEmail[email] || 'da';
+      const timeStr = new Date(event.start_datetime).toLocaleTimeString(lang === 'en' ? 'en-GB' : 'da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
+      const when = T(lang, `${event.title} kl. ${timeStr}`, `${event.title} at ${timeStr}`);
 
       // Dagen før
       if (eventDateStr === tomorrowStr && !event.notify_day_before_sent) {
         await base44.asServiceRole.entities.AppNotification.create({
-          title: 'Du har en aftale i morgen',
-          message: `${event.title} kl. ${timeStr}`,
+          title: T(lang, 'Du har en aftale i morgen', 'You have an appointment tomorrow'),
+          message: when,
           link: '/Calendar',
           target_emails: [email],
           published_at: new Date().toISOString(),
         });
         if (notifPrefByEmail[email] !== false) {
-          await sendPush(email, 'Du har en aftale i morgen', `${event.title} kl. ${timeStr}`);
+          await sendPush(email, T(lang, 'Du har en aftale i morgen', 'You have an appointment tomorrow'), when);
         }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_day_before_sent: true });
         console.log(`[calendarDayNotifications] Dagen-før notifikation sendt til ${email} for "${event.title}"`);
@@ -80,14 +90,14 @@ Deno.serve(async (req) => {
       // På selve dagen
       if (eventDateStr === todayStr && !event.notify_same_day_sent) {
         await base44.asServiceRole.entities.AppNotification.create({
-          title: 'Du har en aftale i dag',
-          message: `${event.title} kl. ${timeStr}`,
+          title: T(lang, 'Du har en aftale i dag', 'You have an appointment today'),
+          message: when,
           link: '/Calendar',
           target_emails: [email],
           published_at: new Date().toISOString(),
         });
         if (notifPrefByEmail[email] !== false) {
-          await sendPush(email, 'Du har en aftale i dag', `${event.title} kl. ${timeStr}`);
+          await sendPush(email, T(lang, 'Du har en aftale i dag', 'You have an appointment today'), when);
         }
         await base44.asServiceRole.entities.CalendarEvent.update(event.id, { notify_same_day_sent: true });
         console.log(`[calendarDayNotifications] Samme-dag notifikation sendt til ${email} for "${event.title}"`);
