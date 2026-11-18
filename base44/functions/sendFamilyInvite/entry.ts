@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const lang = await getUserLanguage(base44, user.email);
 
     const {
       invitee_email,
@@ -48,7 +49,7 @@ Deno.serve(async (req) => {
     );
     const activeInvite = existingInvites?.find(i => i.status === 'pending' || i.status === 'accepted');
     if (activeInvite) {
-      return Response.json({ error: 'Du kan kun invitere én person. Slet den eksisterende invitation først.', error_en: 'You can only invite one person. Delete the existing invitation first.' }, { status: 409 });
+      return Response.json({ error: T(lang, 'Du kan kun invitere én person. Slet den eksisterende invitation først.', 'You can only invite one person. Delete the existing invitation first.') }, { status: 409 });
     }
 
     // Opret FamilyInvite-record med service role (RLS blokerer frontend create)
@@ -69,7 +70,6 @@ Deno.serve(async (req) => {
     });
 
     const appStoreUrl = 'https://apps.apple.com/app/id6764388095';
-    const lang = await getUserLanguage(base44, user?.email);
 
     // Branded HTML invitation email
     const html = `<!DOCTYPE html>
