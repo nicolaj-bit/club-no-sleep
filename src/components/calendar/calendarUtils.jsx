@@ -1,5 +1,5 @@
 import { addMonths, addYears, isSameDay } from 'date-fns';
-import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
+import { WONDER_WEEKS, localizeWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 
 // Determine calendar mode based on dates
 export function getCalendarMode(dueDate, birthDate) {
@@ -126,15 +126,14 @@ export function getWonderWeekForDay(dueDateStr, day, lang) {
 
   const weeksSinceDue = Math.floor(daysSinceDue / 7);
 
-  for (const ww of WONDER_WEEKS) {
+  for (const rawWw of WONDER_WEEKS) {
+    const ww = localizeWonderWeek(rawWw, lang);
     if (weeksSinceDue === ww.weekStart) {
       return {
         type: 'wonder_week',
         milestone_id: `ww-${ww.number}`,
         number: ww.number,
         name: ww.name,
-        // ww.name kommer fra tigerspringsindholdet og er stadig dansk — det
-        // oversættes sammen med resten af de store indholdssæt.
         title: L(lang, `Tigerspring ${ww.number}`, `Leap ${ww.number}`),
         headline: L(
           lang,

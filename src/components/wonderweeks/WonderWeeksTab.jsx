@@ -3,8 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { getAgeInWeeks, getCurrentWonderWeek, wonderWeeks } from '@/components/wonderweeks/wonderweeksData';
+import { getAgeInWeeks, getCurrentWonderWeek, getWonderWeeks } from '@/components/wonderweeks/wonderweeksData';
 import { ChevronRight, Sparkles, Clock } from 'lucide-react';
+import { useLanguage } from '@/components/ui/LanguageContext';
 import { useWonderWeekEmojis } from './useWonderWeekEmojis';
 import ContentLock from '@/components/subscription/ContentLock';
 import { useSubscription } from '@/components/subscription/useSubscription';
@@ -51,6 +52,8 @@ function useWonderWeekArticles() {
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
 export default function WonderWeeksTab() {
+  const { t, lang } = useLanguage();
+  const wonderWeeks = getWonderWeeks(lang);
   const emojiMap = useWonderWeekEmojis();
   const { isActive: hasSubscription } = useSubscription();
   const { activeChild } = useActiveChild();
@@ -87,7 +90,7 @@ export default function WonderWeeksTab() {
   const hasDueDate = !!(activeChild ? activeChild.due_date : profile?.child_due_date);
 
   const ageInWeeks = getAgeInWeeks(dueDate, birthDate);
-  const currentWW = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
+  const currentWW = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks, lang) : null;
 
   const getStatus = (ww) => {
     if (ageInWeeks === null) return 'unknown';
@@ -180,7 +183,7 @@ export default function WonderWeeksTab() {
                   {isUpcoming && ageInWeeks !== null && (
                     <span className="text-xs flex items-center gap-1" style={{ color: 'var(--color-text-muted)' }}>
                       <Clock className="w-3 h-3" />
-                      om {ww.weekStart - ageInWeeks} uger
+                      {t.inWeeksPrefix} {ww.weekStart - ageInWeeks} {ww.weekStart - ageInWeeks === 1 ? t.weekSingular : t.weekPlural}
                     </span>
                   )}
                 </div>

@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { ChevronDown, ChevronUp, Sparkles, Clock, ArrowRight } from 'lucide-react';
 import { useWonderWeekEmojis } from './useWonderWeekEmojis';
+import { localizeWonderWeek } from './wonderweeksData';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 const EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 
-export default function WonderWeekCard({ wonderWeek, ageInWeeks }) {
-  const { t } = useLanguage();
+export default function WonderWeekCard({ wonderWeek: wonderWeekProp, ageInWeeks }) {
+  const { t, lang } = useLanguage();
+  // Kaldere sender normalt et spring, der allerede er oversat. Vi gentager det
+  // her, saa kortet ogsaa er rigtigt, hvis en ny kalder glemmer sproget.
+  const wonderWeek = localizeWonderWeek(wonderWeekProp, lang);
   const [expanded, setExpanded] = useState(false);
   const emojiMap = useWonderWeekEmojis();
   const emoji = emojiMap[wonderWeek?.number] || wonderWeek?.emoji;

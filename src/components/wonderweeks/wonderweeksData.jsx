@@ -11,6 +11,7 @@ import {
   getAgeInWeeksFromDue,
   getLeapNumberByAge,
 } from '../../../base44/shared/getWonderWeek';
+import { WONDER_WEEKS_EN } from './wonderweeksEn';
 
 export const WONDER_WEEKS = [
   {
@@ -238,6 +239,23 @@ export const WONDER_WEEKS = [
 export const wonderWeeks = WONDER_WEEKS;
 
 /**
+ * Laeg de engelske tekster oven paa et spring. Tal, emoji, farve og
+ * articleSlug roeres ikke — kun det brugeren laeser. Paa dansk returneres
+ * springet uaendret, saa den danske app opfoerer sig praecis som foer.
+ */
+export function localizeWonderWeek(ww, lang) {
+  if (!ww || lang !== 'en') return ww;
+  const en = WONDER_WEEKS_EN[ww.number];
+  if (!en) return ww;
+  return { ...ww, ...en };
+}
+
+/** Hele listen paa det valgte sprog. */
+export function getWonderWeeks(lang) {
+  return WONDER_WEEKS.map((ww) => localizeWonderWeek(ww, lang));
+}
+
+/**
  * Beregn barnets alder i uger fra terminsdato.
  * Wonder Weeks bruger terminsdato som udgangspunkt. Delegerer til den delte
  * kilde (base44/shared/getWonderWeek.js).
@@ -252,7 +270,7 @@ export function getAgeInWeeks(dueDate, birthDate) {
  * Afgørelsen om hvilket spring der er "aktivt" kommer fra den delte kilde
  * (getLeapNumberByAge), så app-visning og notifikation er enige.
  */
-export function getCurrentWonderWeek(ageInWeeks) {
+export function getCurrentWonderWeek(ageInWeeks, lang) {
   if (ageInWeeks === null || ageInWeeks < 0) return null;
 
   // Er barnet i et spring? (samme vindue som backend-notifikationen)
@@ -260,14 +278,14 @@ export function getCurrentWonderWeek(ageInWeeks) {
   if (leapNumber !== null) {
     const current = WONDER_WEEKS.find(ww => ww.number === leapNumber);
     const weeksLeft = current.weekEnd - ageInWeeks;
-    return { ...current, status: 'active', weeksLeft: Math.max(0, weeksLeft) };
+    return { ...localizeWonderWeek(current, lang), status: 'active', weeksLeft: Math.max(0, weeksLeft) };
   }
 
   // Næste spring
   const next = WONDER_WEEKS.find(ww => ww.weekStart > ageInWeeks);
   if (next) {
     const weeksUntil = next.weekStart - ageInWeeks;
-    return { ...next, status: 'upcoming', weeksUntil };
+    return { ...localizeWonderWeek(next, lang), status: 'upcoming', weeksUntil };
   }
 
   // Alle spring er passeret

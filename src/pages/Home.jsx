@@ -81,7 +81,7 @@ export default function Home() {
   const isExpecting = childDueDate && !childBirthdate && new Date(childDueDate) > new Date();
 
   const ageInWeeks = getAgeInWeeks(childDueDate, childBirthdate);
-  const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks) : null;
+  const wonderWeek = ageInWeeks !== null ? getCurrentWonderWeek(ageInWeeks, lang) : null;
 
   const affirmationIndex = useDailyAffirmationIndex(t.affirmations.length);
   const affirmation = t.affirmations[affirmationIndex] || t.affirmations[0];
