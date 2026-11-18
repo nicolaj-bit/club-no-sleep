@@ -31,5 +31,24 @@ struct SleepActivityAttributes: ActivityAttributes {
     var sessionId: String?
     /// Hele sessionens starttidspunkt.
     var sessionStart: Date
+
+    // MARK: - Tekster
+    //
+    // Teksterne tegnes af Swift, men vælges af web-laget og sættes én gang, når
+    // aktiviteten starter. Det er med vilje, at de ligger her og ikke i
+    // ContentState: knappen på låseskærmen kører i widget-extensionen uden at
+    // JavaScript er i gang, så den skal kunne slå teksten op selv.
+    //
+    // Er de tomme — fordi aktiviteten er startet af en ældre udgave af appen —
+    // falder widgeten tilbage til de danske tekster.
+
+    /// Overskrift når barnet er vågent.
+    var titleAwake: String?
+    /// Overskrift når barnet sover.
+    var titleSleeping: String?
+    /// Knaptekst mens barnet er vågent (et tryk betyder "sover igen").
+    var buttonWhenAwake: String?
+    /// Knaptekst mens barnet sover (et tryk betyder "barnet er vågent").
+    var buttonWhenSleeping: String?
 }
 #endif

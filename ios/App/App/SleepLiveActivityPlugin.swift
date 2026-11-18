@@ -44,11 +44,18 @@ public class SleepLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         let phaseStart = Self.parseDate(call.getString("phaseStart")) ?? Date()
         let sessionStart = Self.parseDate(call.getString("sessionStart")) ?? phaseStart
 
+        // Teksterne vaelges af web-laget, saa laaseskaermen foelger brugerens
+        // sprogvalg. Sender en aeldre udgave af appen dem ikke med, tegner
+        // widgeten de danske tekster.
         let started = SleepLiveActivityController.start(
             sessionId: sessionId,
             sessionStart: sessionStart,
             phaseStart: phaseStart,
-            isAwake: isAwake
+            isAwake: isAwake,
+            titleAwake: call.getString("titleAwake"),
+            titleSleeping: call.getString("titleSleeping"),
+            buttonWhenAwake: call.getString("buttonWhenAwake"),
+            buttonWhenSleeping: call.getString("buttonWhenSleeping")
         )
         call.resolve(["started": started])
     }

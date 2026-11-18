@@ -61,6 +61,18 @@ public class SleepLiveActivityPlugin extends Plugin {
         boolean isAwake = Boolean.TRUE.equals(call.getBoolean("isAwake", false));
         long phaseStart = parseDate(call.getString("phaseStart"), System.currentTimeMillis());
 
+        // Teksterne vaelges af web-laget og gemmes, saa knappens
+        // BroadcastReceiver kan tegne notifikationen igen paa samme sprog.
+        java.util.Map<String, String> labels = new java.util.HashMap<>();
+        labels.put(SleepNotification.L_TITLE_AWAKE, call.getString("titleAwake"));
+        labels.put(SleepNotification.L_TITLE_SLEEPING, call.getString("titleSleeping"));
+        labels.put(SleepNotification.L_BODY_AWAKE, call.getString("bodyAwake"));
+        labels.put(SleepNotification.L_BODY_SLEEPING, call.getString("bodySleeping"));
+        labels.put(SleepNotification.L_BTN_WHEN_AWAKE, call.getString("buttonWhenAwake"));
+        labels.put(SleepNotification.L_BTN_WHEN_SLEEPING, call.getString("buttonWhenSleeping"));
+        labels.put(SleepNotification.L_BTN_END, call.getString("buttonEnd"));
+        SleepNotification.saveLabels(getContext(), labels);
+
         boolean started = SleepNotification.show(getContext(), sessionId, phaseStart, isAwake);
         Log.d(TAG, "start: " + started);
 
