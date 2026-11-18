@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { legalBody, legalTitle } from '@/lib/legalContent';
 import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -89,7 +90,7 @@ export default function LegalModal({ type, title, onClose }) {
               <div
                 className="legal-content"
                 style={{ color: '#2B1F16' }}
-                dangerouslySetInnerHTML={{ __html: formatLegalContent(content.content) }}
+                dangerouslySetInnerHTML={{ __html: formatLegalContent(legalBody(content, lang)) }}
               />
             ) : (
               <p className="text-center py-12 text-sm" style={{ color: '#9A7A6A' }}>

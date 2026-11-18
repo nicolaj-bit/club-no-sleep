@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { legalBody, legalTitle } from '@/lib/legalContent';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
 import { inAppLogout } from '@/lib/inAppLogout';
@@ -245,7 +246,7 @@ export default function Settings() {
               
               <AccordionContent className="px-5 pb-4 text-sm leading-relaxed prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {faqContent ?
-                <div dangerouslySetInnerHTML={{ __html: faqContent.content }} /> :
+                <div dangerouslySetInnerHTML={{ __html: legalBody(faqContent, lang) }} /> :
                 !helpLoaded ? t.loading : t.noFaqAvailable}
               </AccordionContent>
             </AccordionItem>
@@ -258,7 +259,7 @@ export default function Settings() {
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4 text-sm prose prose-sm max-w-none" style={{ color: 'var(--color-text-muted)' }}>
                 {supportContent ?
-                <div dangerouslySetInnerHTML={{ __html: supportContent.content }} /> :
+                <div dangerouslySetInnerHTML={{ __html: legalBody(supportContent, lang) }} /> :
                 !helpLoaded ? t.loading : t.noSupportInfo}
               </AccordionContent>
             </AccordionItem>

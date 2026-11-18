@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { legalBody, legalTitle } from '@/lib/legalContent';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { showInAppLogin } from '@/lib/showInAppLogin';
@@ -66,8 +67,8 @@ export default function Onboarding() {
       const terms = items.find(i => i.type === 'terms');
       const privacy = items.find(i => i.type === 'privacy');
       setLegalContent({
-        terms: terms?.content || t.onbTermsMissing,
-        privacy: privacy?.content || t.onbPrivacyMissing,
+        terms: legalBody(terms, lang) || t.onbTermsMissing,
+        privacy: legalBody(privacy, lang) || t.onbPrivacyMissing,
       });
     });
   }, []);

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { legalBody, legalTitle } from '@/lib/legalContent';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -53,7 +54,7 @@ export default function Terms() {
 
         {content?.content ? (
           <div
-            dangerouslySetInnerHTML={{ __html: content.content }}
+            dangerouslySetInnerHTML={{ __html: legalBody(content, lang) }}
             style={{
               '& p': { marginBottom: '1rem' },
               '& h2': { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.4rem', fontWeight: 400, marginTop: '2rem', marginBottom: '1rem', color: 'var(--color-text-primary)' },
