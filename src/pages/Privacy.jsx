@@ -49,7 +49,7 @@ export default function Privacy() {
       {/* Content */}
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '2rem 1.5rem', fontSize: '0.95rem', lineHeight: 1.8, color: 'var(--color-text-primary)', paddingBottom: 'max(3rem, env(safe-area-inset-bottom))' }}>
         <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2rem', fontWeight: 400, marginBottom: '1.5rem', color: 'var(--color-text-primary)' }}>
-          {content?.title || t.privacyTitle}
+          {legalTitle(content, lang) || t.privacyTitle}
         </h1>
 
         {content?.content ? (
