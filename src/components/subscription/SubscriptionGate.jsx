@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearSubscriptionCache } from './useSubscription';
+import BrandLoader from '@/components/ui/BrandLoader';
 
 /**
  * SubscriptionGate — wraps the entire app.
@@ -78,9 +79,7 @@ export default function SubscriptionGate({ children }) {
 
   if (status === 'loading') {
     return (
-      <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-amber-700 rounded-full animate-spin" />
-      </div>
+      <BrandLoader />
     );
   }
 

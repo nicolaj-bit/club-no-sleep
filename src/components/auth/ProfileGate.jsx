@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
+import BrandLoader from '@/components/ui/BrandLoader';
 
 /**
  * ProfileGate — sender indloggede brugere uden en UserProfile til /Onboarding.
@@ -109,9 +110,7 @@ export default function ProfileGate({ children }) {
 
   if (!ready) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--color-bg-subtle)', borderTopColor: 'var(--color-primary)' }} />
-      </div>
+      <BrandLoader />
     );
   }
 

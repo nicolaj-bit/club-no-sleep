@@ -4,6 +4,7 @@ import { App } from '@capacitor/app';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import NativeAuthScreen from './NativeAuthScreen';
+import BrandLoader from '@/components/ui/BrandLoader';
 
 /**
  * NativeAuthGate — vises kun på native (iOS/Android).
@@ -123,7 +124,7 @@ export default function NativeAuthGate({ children }) {
         className="fixed inset-0 flex items-center justify-center"
         style={{ backgroundColor: 'var(--color-bg)' }}
       >
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-amber-700 rounded-full animate-spin" />
+        <BrandLoader fullScreen={false} />
       </div>
     );
   }

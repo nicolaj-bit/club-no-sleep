@@ -24,6 +24,7 @@ import { useAuth } from '@/lib/AuthContext';
 import ReactivateSubscriptionBanner from '@/components/subscription/ReactivateSubscriptionBanner';
 import CompleteMembershipBanner from '@/components/subscription/CompleteMembershipBanner';
 import { useDailyAffirmationIndex } from '@/hooks/useDailyAffirmationIndex';
+import BrandLoader from '@/components/ui/BrandLoader';
 
 function getGreeting(lang, name) {
   const hour = new Date().getHours();
@@ -93,9 +94,7 @@ export default function Home() {
   // Vent til BÅDE profil OG user er loaded før vi beslutter view
   if (profileLoading || childLoading || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
+      <BrandLoader />
     );
   }
 
