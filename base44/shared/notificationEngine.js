@@ -189,13 +189,13 @@ async function buildAppointmentsPlan(profile, profileEvents, familyMap, todayStr
   if (profile.notif_calendar_reminder === false) return items;
   const email = profile.user_email;
   const lang = langOf(profile);
-  // Klokkeslaettet skrives i modtagerens format: 14.30 paa dansk, 2:30 pm paa
-  // engelsk. Tidszonen bliver dansk uanset sprog — aftalen ligger i Danmark.
-  const timeIn = (l) => new Date(event.start_datetime).toLocaleTimeString(
-    l === 'en' ? 'en-GB' : 'da-DK',
-    { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' }
-  );
   for (const event of profileEvents) {
+    // Klokkeslaettet skrives i modtagerens format: 14.30 paa dansk, 02:30 paa
+    // engelsk. Tidszonen er dansk uanset sprog — aftalen ligger i Danmark.
+    const timeIn = (l) => new Date(event.start_datetime).toLocaleTimeString(
+      l === 'en' ? 'en-GB' : 'da-DK',
+      { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' }
+    );
     const eventDateStr = new Date(event.start_datetime).toLocaleDateString('sv-SE', { timeZone: 'Europe/Copenhagen' });
     const timeStr = new Date(event.start_datetime).toLocaleTimeString(lang === 'en' ? 'en-GB' : 'da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
     const at = (l, t) => T(l, `kl. ${t}`, `at ${t}`);
