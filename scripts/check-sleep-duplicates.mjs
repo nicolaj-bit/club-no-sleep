@@ -95,8 +95,16 @@ for (const [label, session] of totalsCases) {
 }
 
 // --- formatHoursMinutes ---------------------------------------------------
+// Begge sprog prøves. Ellers kunne kopierne skride fra hinanden netop på
+// engelsk, uden at noget her fangede det.
 for (const ms of [0, 59_000, 60_000, 3_600_000, 26_400_000, -5_000]) {
-  compare(`formatHoursMinutes — ${ms} ms`, sharedFormat(ms), clientFormat(ms));
+  for (const lang of [undefined, 'da', 'en']) {
+    compare(
+      `formatHoursMinutes — ${ms} ms (${lang || 'standard'})`,
+      sharedFormat(ms, lang),
+      clientFormat(ms, lang)
+    );
+  }
 }
 
 // --- Resultat -------------------------------------------------------------
@@ -111,5 +119,5 @@ if (problems.length > 0) {
 }
 
 console.log(
-  `Søvnlogikken er ens begge steder (${periodCases.length + totalsCases.length + 6} tilfælde sammenlignet).`
+  `Søvnlogikken er ens begge steder (${periodCases.length + totalsCases.length + 18} tilfælde sammenlignet).`
 );
