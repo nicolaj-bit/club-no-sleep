@@ -52,7 +52,8 @@ import AdminEditor from './pages/AdminEditor';
 import AdminWonderWeeks from './pages/AdminWonderWeeks';
 import ArticleDetail from './pages/ArticleDetail';
 import AskQuestion from './pages/AskQuestion';
-import Blog from './pages/Blog';
+// Blog-oversigten er fjernet. BlogPost bliver stående, fordi
+// graviditetsugerne linker ind i syv af indlæggene.
 import BlogPost from './pages/BlogPost';
 import Booking from './pages/Booking';
 import Chat from './pages/Chat';
@@ -78,7 +79,6 @@ export const PAGES = {
     "AdminWonderWeeks": AdminWonderWeeks,
     "ArticleDetail": ArticleDetail,
     "AskQuestion": AskQuestion,
-    "Blog": Blog,
     "BlogPost": BlogPost,
     "Booking": Booking,
     "Chat": Chat,
