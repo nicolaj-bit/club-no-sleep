@@ -358,7 +358,7 @@ export default function Practitioners() {
                               style={{ color: 'var(--color-accent)' }}
                             >
                               <Globe className="w-4 h-4" />
-                              Webside
+                              {t.formWebsite}
                             </a>
                           )}
                         </div>
