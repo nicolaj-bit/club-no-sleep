@@ -160,7 +160,7 @@ export default function Practitioners() {
         <div className="p-4 space-y-4">
           {/* Intro tekst */}
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Vi har samlet en række mor og barn behandlere. Fælles for dem alle er, at de er anbefalet af JER. Vi tilføjer kun behandlere til listen, som er direkte anbefalet af vores brugere og følgere. For det er SÅ vigtigt at blive mødt af omsorg, forståelse og høj faglighed, når man er allermest sårbar.
+            {t.practIntro}
           </p>
 
           {/* Tip os om en behandler */}
@@ -184,7 +184,7 @@ export default function Practitioners() {
             {showTipForm && (
               <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
-                  Tips os om en god behandler, så kigger vi på det og tilføjer den til listen 💛
+                  {t.practTipUs}
                 </p>
                 <Textarea
                   placeholder={t.practInfo}

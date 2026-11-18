@@ -162,8 +162,8 @@ export default function BabyFriendlyCafes() {
         <div className="p-4 space-y-4">
           {/* Intro tekst */}
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Nogle dage har man bare brug for at komme væk hjemmefra og drikke en kop kaffe, man ikke selv har lavet.
-            Vi har samlet en række babyvenlige caféer, som alle er anbefalet af mødre selv. Steder hvor der er plads til babylyde, amning, krummer på gulvet og alt hvad der ellers følger med livet med en baby.
+            {t.cafeIntro}
+            {t.cafeIntro2}
           </p>
 
           {/* Tip os om en café */}
@@ -187,7 +187,7 @@ export default function BabyFriendlyCafes() {
             {showTipForm && (
               <div className="px-4 pb-4 space-y-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-xs pt-3" style={{ color: 'var(--color-text-muted)' }}>
-                  Fortæl os, hvis du kender en babyvenlig café, så vi kan tilføje den til listen. Jo flere jo bedre!
+                  {t.cafeTellUs}
                 </p>
                 <Textarea
                   placeholder={t.cafeNameWebsite}
@@ -406,7 +406,7 @@ export default function BabyFriendlyCafes() {
                 return (
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-wider px-1 mb-2 mt-4" style={{ color: 'var(--color-text-muted)' }}>
-                      Øvrige
+                      {t.regionOther}
                     </p>
                     <div className="space-y-3">
                       {unassigned.map(cafe => (

@@ -301,7 +301,7 @@ export default function AIChat() {
           const profile = profiles[0];
           if (diaryEntries?.length > 0 || profile) {
             setIsLoading(true);
-            const MOOD_LABELS = { strålende: t.aiMoodGreat, god: 'God 😊', okay: 'Okay 😐', træt: t.aiMoodTired, hård: t.aiMoodHardDay };
+            const MOOD_LABELS = { strålende: t.aiMoodGreat, god: t.aiMoodGood, okay: t.aiMoodOkay, træt: t.aiMoodTired, hård: t.aiMoodHardDay };
             const diaryText = diaryEntries.map(e =>
               `Uge ${e.week}: Humør: ${MOOD_LABELS[e.mood] || '–'} | Note: ${e.note || '–'} | Symptomer: ${e.symptoms || '–'} | Spark: ${e.baby_kicks_count ?? '–'}`
             ).join('\n');
@@ -462,7 +462,7 @@ export default function AIChat() {
             </div>
             <div>
               <p className="text-lg font-light" style={{ color: 'var(--color-text-primary)', fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
-                Hvordan kan jeg hjælpe lige nu?
+                {t.aiHowCanIHelp}
               </p>
             </div>
 
@@ -488,7 +488,7 @@ export default function AIChat() {
                   color: 'var(--color-text-primary)',
                 }}
               >
-                Jeg har spørgsmål
+                {t.aiHaveQuestions}
               </button>
             </div>
           </div>
@@ -605,7 +605,7 @@ export default function AIChat() {
           </button>
         </div>
         <p className="text-center text-xs mt-2 px-4" style={{ color: 'var(--color-text-muted)' }}>
-          AI-assistenten kan støtte og vejlede, men ved bekymring bør du altid kontakte læge eller sundhedsplejerske
+          {t.aiDisclaimer}
         </p>
       </div>
       )}
