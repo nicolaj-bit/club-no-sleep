@@ -27,7 +27,7 @@ function Chip({ label, color }) {
 
 export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
   const { history, loading } = useSleepSession(user);
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [filter, setFilter] = useState('all'); // 'all' | 'night' | 'nap'
   const [editLog, setEditLog] = useState(null); // manuel post der rettes
 
@@ -119,12 +119,12 @@ export default function SleepHistory({ user, activeChild, lang, dateLocale }) {
                 )}
               </div>
               <div className="flex flex-wrap gap-1.5">
-                <Chip label={`${formatHoursMinutes(totals.totalSleepMs)} ${t.sleepSuffix}`} color="blue" />
+                <Chip label={`${formatHoursMinutes(totals.totalSleepMs, lang)} ${t.sleepSuffix}`} color="blue" />
                 {totals.wakeCount > 0 && (
                   <Chip label={`${totals.wakeCount} ${totals.wakeCount === 1 ? t.wakings : t.wakingsPlural}`} color="yellow" />
                 )}
                 {totals.totalAwakeMs > 0 && (
-                  <Chip label={`${formatHoursMinutes(totals.totalAwakeMs)} ${t.awakeSuffix}`} color="orange" />
+                  <Chip label={`${formatHoursMinutes(totals.totalAwakeMs, lang)} ${t.awakeSuffix}`} color="orange" />
                 )}
               </div>
               {log.parent_note && (
