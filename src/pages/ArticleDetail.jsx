@@ -10,7 +10,7 @@ import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import ArticleFloatingNav from '@/components/articles/ArticleFloatingNav';
 import { markArticleVisit } from '@/hooks/useListScrollRestoration';
-import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
+import { WONDER_WEEKS, localizeWonderWeek } from '@/components/wonderweeks/wonderweeksData';
 
 // Kategorinavnene staar som fri tekst paa artiklen. Kun 'tigerspring' bruges
 // i praksis, og den har et rigtigt engelsk navn ('Leap'). Alt andet vises som
@@ -51,7 +51,7 @@ export default function ArticleDetail() {
   useEffect(() => { markArticleVisit(); }, []);
 
   const { data: article, isLoading } = useQuery({
-    queryKey: ['article', articleId, articleSlug],
+    queryKey: ['article', articleId, articleSlug, lang],
     queryFn: async () => {
       // Hent alle artikler og find den rette
       const articles = await base44.entities.KnowledgeArticle.list();
@@ -66,21 +66,26 @@ export default function ArticleDetail() {
         if (dbArticle) return dbArticle;
 
         // Fallback: brug hardcoded wonderweeks-data
-        const wwMatch = WONDER_WEEKS.find(ww => ww.articleSlug === articleSlug);
-        if (wwMatch) {
+        const wwRaw = WONDER_WEEKS.find(ww => ww.articleSlug === articleSlug);
+        if (wwRaw) {
+          const wwMatch = localizeWonderWeek(wwRaw, lang);
+          const h = (da, en) => (lang === 'en' ? en : da);
           return {
-            title: `Tigerspring ${wwMatch.number}: ${wwMatch.name}`,
-            category: 'Tigerspring',
+            title: h(
+              `Tigerspring ${wwMatch.number}: ${wwMatch.name}`,
+              `Leap ${wwMatch.number}: ${wwMatch.name}`
+            ),
+            category: h('Tigerspring', 'Leaps'),
             is_faq: false,
             content: `
               <p>${wwMatch.longDescription}</p>
-              <h2>Nye færdigheder</h2>
+              <h2>${h('Nye færdigheder', 'New skills')}</h2>
               <ul>${wwMatch.skills.map(s => `<li>${s}</li>`).join('')}</ul>
-              <h2>Tegn på tigerspringet</h2>
+              <h2>${h('Tegn på tigerspringet', 'Signs of the leap')}</h2>
               <ul>${wwMatch.signs.map(s => `<li>${s}</li>`).join('')}</ul>
-              <h2>Til dig som forælder</h2>
+              <h2>${h('Til dig som forælder', 'For you as a parent')}</h2>
               <p><em>${wwMatch.parentMessage}</em></p>
-              <h2>Tips til perioden</h2>
+              <h2>${h('Tips til perioden', 'Tips for this time')}</h2>
               <ul>${wwMatch.tips.map(t => `<li>${t}</li>`).join('')}</ul>
             `,
             tags: [],
@@ -116,7 +121,7 @@ export default function ArticleDetail() {
       await navigator.share({ title: article.title, url: window.location.href });
     } catch {
       navigator.clipboard.writeText(window.location.href);
-      toast.success('Link kopieret');
+      toast.success(lang === 'en' ? 'Link copied' : 'Link kopieret');
     }
   };
 
