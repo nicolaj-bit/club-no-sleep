@@ -102,7 +102,7 @@ export default function MyQuestions() {
                       className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full font-medium"
                       style={statusStyle[q.status] || statusStyle.open}
                     >
-                      {statusLabel[q.status] || 'Åben'}
+                      {statusLabel[q.status] || t.myQuestionsOpen}
                     </span>
                   </div>
                   <p className="text-xs line-clamp-1 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>{q.content}</p>

@@ -9,6 +9,7 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  byAuthor: 'af',
   weekWord: 'Uge',
   // Tekster der stod hardkodet paa dansk rundt om i appen.
   checkoutPayApple: 'Betal via din Apple-konto · Sikker og nem',
@@ -297,6 +298,7 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  byAuthor: 'by',
   weekWord: 'Week',
   // Tekster der stod hardkodet paa dansk rundt om i appen.
   checkoutPayApple: 'Pay with your Apple account · Safe and simple',

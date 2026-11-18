@@ -131,7 +131,7 @@ export default function PregnancyTab() {
       <div className="rounded-2xl p-4 border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
         <p className="text-xs uppercase tracking-widest font-medium mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{t.pregInspiredBy}</p>
         <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Politikens Graviditetsbog</p>
-        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>af Lene Skou Jensen</p>
+        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.byAuthor} Lene Skou Jensen</p>
 
         {!dueDateStr && (
           <p className="text-xs mt-3 p-2 rounded-xl" style={{ backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }}>

@@ -627,9 +627,9 @@ export default function AIChat() {
             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-bg-subtle)', color: 'var(--color-text-primary)' }}
           />
           <DialogFooter className="flex-row gap-2">
-            <Button variant="outline" onClick={() => setEditingName(false)} className="flex-1">Annuller</Button>
+            <Button variant="outline" onClick={() => setEditingName(false)} className="flex-1">{t.cancel}</Button>
             <Button onClick={handleSaveName} disabled={!nameInput.trim() || savingName} className="flex-1">
-              {savingName ? '...' : 'Gem'}
+              {savingName ? '...' : t.save}
             </Button>
           </DialogFooter>
         </DialogContent>
