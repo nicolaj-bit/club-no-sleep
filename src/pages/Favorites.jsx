@@ -56,7 +56,9 @@ export default function Favorites() {
     onSettled: () => queryClient.invalidateQueries(['myFavorites', user?.email]),
   });
 
-  const blogFavorites = favorites.filter(f => f.item_type === 'blog');
+  // Bloggen er fjernet som sektion, så der er ikke længere en fane for den.
+  // Gamle blog-favoritter bliver stående under «Alle» og virker stadig, fordi
+  // selve artikelsiden findes.
   const milestoneFavorites = favorites.filter(f => f.item_type === 'milestone');
   const nonProductFavorites = favorites.filter(f => f.item_type !== 'product');
 
@@ -150,18 +152,11 @@ export default function Favorites() {
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="w-full p-1 rounded-2xl mb-4" style={{ background: 'var(--color-bg-card)' }}>
               <TabsTrigger value="all" className="flex-1 rounded-xl text-xs">{t.favoritesAll?.replace('{count}', nonProductFavorites.length)}</TabsTrigger>
-              <TabsTrigger value="blog" className="flex-1 rounded-xl text-xs">{t.favoritesBlog?.replace('{count}', blogFavorites.length)}</TabsTrigger>
               <TabsTrigger value="milestone" className="flex-1 rounded-xl text-xs">Milepæle ({milestoneFavorites.length})</TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-2">
               {nonProductFavorites.map(item => <FavoriteItem key={item.id} item={item} />)}
-            </TabsContent>
-            <TabsContent value="blog" className="space-y-2">
-              {blogFavorites.length === 0
-                ? <p className="text-center py-10 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.favoritesNoBlog}</p>
-                : blogFavorites.map(item => <FavoriteItem key={item.id} item={item} />)
-              }
             </TabsContent>
             <TabsContent value="milestone" className="space-y-2">
               {milestoneFavorites.length === 0
