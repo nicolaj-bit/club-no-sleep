@@ -240,7 +240,7 @@ export default function NativeAuthScreen({ resetToken } = {}) {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="text-sm text-white/75 max-w-xs"
           >
-            Alene, sammen.
+            {t.authTagline}
           </motion.p>
         </div>
       </div>
