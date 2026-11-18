@@ -719,6 +719,39 @@ export default function AdminEditor() {
         </div>
       )}
 
+      {/* De engelske blogindlæg ligger allerede på lalatoto.dk/en. Knappen
+          henter dem ind i appen, så de vises med det samme på engelsk. */}
+      {activeTab === 'BlogPost' && (
+        <div className="mx-4 mt-3 p-4 rounded-2xl border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
+          <p className="font-medium text-sm" style={{ color: 'var(--color-text-primary)' }}>Engelske udgaver</p>
+          <p className="text-xs mt-1 mb-3 leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Henter de engelske blogindlæg fra lalatoto.dk/en og gemmer dem på indlæggene her.
+            Uden dem oversætter AI’en hvert indlæg, hver gang nogen åbner det. Kør den igen, når I har lagt nye indlæg op.
+          </p>
+          <Button onClick={hentEngelskeBlogindlaeg} disabled={importerer} className="w-full">
+            {importerer ? 'Henter…' : 'Hent engelske udgaver'}
+          </Button>
+          {importSvar && (
+            <div className="mt-3 text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {importSvar.fejl ? (
+                <p style={{ color: '#b91c1c' }}>Fejl: {importSvar.fejl}</p>
+              ) : (
+                <>
+                  <p>Gemt {importSvar.gemt} af {importSvar.antal} indlæg.</p>
+                  {importSvar.mislykkede?.length > 0 && (
+                    <ul className="mt-1 list-disc pl-4">
+                      {importSvar.mislykkede.map((r, i) => (
+                        <li key={i}>{r.slug || r.id}: {r.status}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="p-4 space-y-2 mt-2">
         {activeTab === 'HelpModal' || activeTab === 'SharingPage' || activeTab === 'ColorTheme' || activeTab === 'Milestones' || activeTab === 'DemoMode' || activeTab === 'WonderWeeksIntro' || activeTab === 'DebugMode' ? null : isLoading ? (
           <p className="text-center py-8 text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.adminEditorLoading}</p>
