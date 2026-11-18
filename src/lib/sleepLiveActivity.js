@@ -1,5 +1,27 @@
 import { registerPlugin, Capacitor } from '@capacitor/core';
 import { getCurrentPhase, getCurrentPhaseStart } from '../../base44/shared/sleepSession';
+import { pickText } from '@/lib/currentLanguage';
+
+// Teksterne paa laaseskaermen tegnes af Swift og Java, men vaelges her, saa de
+// foelger brugerens sprogvalg i appen. Alle sendes med én gang ved start, fordi
+// knappen paa laaseskaermen haandteres uden at JavaScript koerer: iOS gemmer dem
+// i aktivitetens faste data, Android i sine indstillinger.
+//
+// Sender en aeldre udgave af appen dem ikke med, tegner begge platforme de
+// danske tekster som foer. Derfor kan denne aendring godt publiceres, foer de
+// nye native builds er i butikkerne.
+function liveActivityLabels() {
+  return {
+    titleAwake: pickText('Barnet er vågent', 'Baby is awake'),
+    titleSleeping: pickText('Søvnlog kører', 'Sleep log running'),
+    buttonWhenAwake: pickText('Sover igen', 'Asleep again'),
+    buttonWhenSleeping: pickText('Barnet er vågent', 'Baby is awake'),
+    // Kun Android: undertekst og en knap mere. iOS ser bort fra dem.
+    bodyAwake: pickText('Vågen siden', 'Awake since'),
+    bodySleeping: pickText('Sover siden', 'Asleep since'),
+    buttonEnd: pickText('Afslut log', 'End log'),
+  };
+}
  
 // Native plugin. Samme jsName, metoder og parametre på begge platforme:
 //   iOS      — ios/App/App/SleepLiveActivityPlugin.swift (Live Activity)
@@ -54,6 +76,7 @@ export async function startSleepLiveActivity(session) {
       sessionStart: session?.session_start || phaseStart,
       phaseStart,
       isAwake,
+      ...liveActivityLabels(),
     });
     console.log('[SLEEPLOG-LIVE] start:', res?.started);
     return !!(res?.started);
