@@ -3,6 +3,7 @@ import { legalBody, legalTitle } from '@/lib/legalContent';
 import { base44 } from '@/api/base44Client';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 function formatLegalContent(html) {
   if (!html) return '';
@@ -27,6 +28,7 @@ function formatLegalContent(html) {
 }
 
 export default function LegalModal({ type, title, onClose }) {
+  const { lang } = useLanguage();
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
 
