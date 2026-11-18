@@ -235,7 +235,7 @@ export default function PlanChooser({ onChoose, finishing }) {
           gap: 6,
         }}
       >
-        {finishing ? <><Loader2 size={14} className="animate-spin" /> Gemmer...</> : t.skipLimitedAccess}
+        {finishing ? <><Loader2 size={14} className="animate-spin" /> {t.saving}</> : t.skipLimitedAccess}
       </button>
     </motion.div>
   );

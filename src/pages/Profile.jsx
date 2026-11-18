@@ -520,7 +520,7 @@ export default function Profile() {
             <HelpCircle className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-accent)' }} />
             <div className="flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.help}</p>
-              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Kontakt os</p>
+              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{t.profContactUs}</p>
             </div>
             <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
           </button>
@@ -644,7 +644,7 @@ export default function Profile() {
       </AnimatePresence>
 
       {/* Notification preferences */}
-      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title="Notifikationer">
+      <BottomSheet open={notifOpen} onOpenChange={setNotifOpen} title={t.setNotificationsTitle}>
         <div className="px-5 py-4 space-y-5">
           {/* Permission status banner — only when OS permission is missing */}
           {notifPermStatus === 'not_determined' && (

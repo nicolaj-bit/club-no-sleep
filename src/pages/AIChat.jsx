@@ -437,7 +437,7 @@ export default function AIChat() {
           onClick={() => { setShowHistory(true); loadHistory(); }}
           className="p-2 rounded-full cursor-pointer active:opacity-70"
           style={{ color: 'rgba(255,255,255,0.9)' }}
-          aria-label="Historik"
+          aria-label={t.historyBtn}
         >
           <History className="w-5 h-5" />
         </button>
@@ -691,7 +691,7 @@ export default function AIChat() {
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
         <DialogContent className="max-w-sm max-h-[70vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>Historik</DialogTitle>
+            <DialogTitle>{t.historyBtn}</DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto flex-1 -mx-2 px-2">
             {loadingHistory && (

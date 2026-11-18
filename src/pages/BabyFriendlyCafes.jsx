@@ -157,7 +157,7 @@ export default function BabyFriendlyCafes() {
       </Dialog>
 
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <PageHeader title="Babyvenlige caféer" />
+        <PageHeader title={t.cafesPageTitle} />
 
         <div className="p-4 space-y-4">
           {/* Intro tekst */}
@@ -233,38 +233,38 @@ export default function BabyFriendlyCafes() {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
               <Textarea
-                placeholder="Beskrivelse"
+                placeholder={t.formDescription}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="min-h-20"
               />
               <Input
-                placeholder="By"
+                placeholder={t.formCity}
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               />
               <Input
-                placeholder="Adresse"
+                placeholder={t.formAddress}
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               />
               <Input
-                placeholder="Telefonnummer"
+                placeholder={t.formPhone}
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               />
               <Input
-                placeholder="Webside"
+                placeholder={t.formWebsite}
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
               />
               <Input
-                placeholder="Instagram (fx https://instagram.com/cafenavn)"
+                placeholder={t.formInstagram}
                 value={formData.instagram}
                 onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
               />
               <Input
-                placeholder="Facebook (fx https://facebook.com/cafenavn)"
+                placeholder={t.formFacebook}
                 value={formData.facebook}
                 onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
               />

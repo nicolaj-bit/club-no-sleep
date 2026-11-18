@@ -48,7 +48,7 @@ function WeekCard({ week, data, isCurrent }) {
           <div className="pt-3 space-y-1">
             <div className="flex items-center gap-1.5 mb-1">
               <Baby className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>Babyen</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-accent)' }}>{t.pregBaby}</span>
             </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{data.baby}</p>
           </div>

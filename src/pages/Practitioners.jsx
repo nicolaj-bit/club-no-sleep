@@ -155,7 +155,7 @@ export default function Practitioners() {
       </Dialog>
 
       <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
-        <PageHeader title="Behandlere" />
+        <PageHeader title={t.practPageTitle} />
 
         <div className="p-4 space-y-4">
           {/* Intro tekst */}
@@ -225,22 +225,22 @@ export default function Practitioners() {
           {showAddForm && isAdmin && (
             <div className="rounded-2xl p-4 border space-y-3" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <Input
-                placeholder="Navn *"
+                placeholder={t.formName}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
               <Input
-                placeholder="Speciale"
+                placeholder={t.formSpeciality}
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
               <Input
-                placeholder="Adresse"
+                placeholder={t.formAddress}
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               />
               <Input
-                placeholder="By"
+                placeholder={t.formCity}
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               />
@@ -250,7 +250,7 @@ export default function Practitioners() {
                 onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
               />
               <Input
-                placeholder="Hjemmeside"
+                placeholder={t.formHomepage}
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
               />
@@ -278,7 +278,7 @@ export default function Practitioners() {
             {/* Search area button */}
             <div className="rounded-2xl p-4 border flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
               <div>
-                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Find behandlere</p>
+                <p className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.practFind}</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                   {searchMode === 'area' && userLocation ? t.showingInArea : t.practAll}
                 </p>

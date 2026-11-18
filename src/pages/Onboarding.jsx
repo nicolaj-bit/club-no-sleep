@@ -227,7 +227,7 @@ export default function Onboarding() {
                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
                 onClick={() => setStep(0)}
               >
-                <span className="flex items-center gap-2">Kom i gang <ArrowRight className="w-5 h-5" /></span>
+                <span className="flex items-center gap-2">{t.onbGetStarted} <ArrowRight className="w-5 h-5" /></span>
               </Button>
               <button
                 className="w-full text-center text-sm py-2"
@@ -338,7 +338,7 @@ export default function Onboarding() {
                       }}
                     >
                       <span className="text-2xl block mb-1">👩</span>
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Kvinde</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.genderWoman}</span>
                     </button>
                     <button
                       type="button"
@@ -350,7 +350,7 @@ export default function Onboarding() {
                       }}
                     >
                       <span className="text-2xl block mb-1">👨</span>
-                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Mand</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>{t.genderMan}</span>
                     </button>
                   </div>
                   {form.profile_label === 'far' && (
@@ -508,7 +508,7 @@ export default function Onboarding() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Terminsdato</Label>
+                      <Label>{t.dueDateLabel}</Label>
                       <Input
                         type="date"
                         value={form.child_due_date}
@@ -526,7 +526,7 @@ export default function Onboarding() {
                       {t.onbDueDateNote}
                     </p>
                     <div className="space-y-2">
-                      <Label>Terminsdato</Label>
+                      <Label>{t.dueDateLabel}</Label>
                       <Input
                         type="date"
                         value={form.child_due_date}

@@ -9,6 +9,26 @@
 //   t.authResetLinkSent.replace('{email}', email)
 
 export const uiDa = {
+  // Sider og formularer der stod fast paa dansk
+  cafesPageTitle: 'Babyvenlige caféer',
+  practPageTitle: 'Behandlere',
+  practFind: 'Find behandlere',
+  formName: 'Navn *',
+  formSpeciality: 'Speciale',
+  formDescription: 'Beskrivelse',
+  formCity: 'By',
+  formAddress: 'Adresse',
+  formPhone: 'Telefonnummer',
+  formWebsite: 'Webside',
+  formHomepage: 'Hjemmeside',
+  formInstagram: 'Instagram (fx https://instagram.com/cafenavn)',
+  formFacebook: 'Facebook (fx https://facebook.com/cafenavn)',
+  onbGetStarted: 'Kom i gang',
+  genderWoman: 'Kvinde',
+  genderMan: 'Mand',
+  dueDateLabel: 'Terminsdato',
+  pregBaby: 'Babyen',
+  profContactUs: 'Kontakt os',
   // Indstillinger — tekster der stod fast paa dansk
   setTermsShort: 'Betingelser',
   setPrivacyShort: 'Privatliv',
@@ -307,6 +327,26 @@ export const uiDa = {
 };
 
 export const uiEn = {
+  // Sider og formularer der stod fast paa dansk
+  cafesPageTitle: 'Baby-friendly cafés',
+  practPageTitle: 'Practitioners',
+  practFind: 'Find practitioners',
+  formName: 'Name *',
+  formSpeciality: 'Speciality',
+  formDescription: 'Description',
+  formCity: 'City',
+  formAddress: 'Address',
+  formPhone: 'Phone number',
+  formWebsite: 'Website',
+  formHomepage: 'Website',
+  formInstagram: 'Instagram (e.g. https://instagram.com/cafename)',
+  formFacebook: 'Facebook (e.g. https://facebook.com/cafename)',
+  onbGetStarted: 'Get started',
+  genderWoman: 'Woman',
+  genderMan: 'Man',
+  dueDateLabel: 'Due date',
+  pregBaby: 'Baby',
+  profContactUs: 'Contact us',
   // Indstillinger — tekster der stod fast paa dansk
   setTermsShort: 'Terms',
   setPrivacyShort: 'Privacy',
