@@ -41,7 +41,7 @@ export async function ensureActionTypesRegistered() {
         {
           id: ACTION_TYPE,
           actions: [
-            { id: 'awake', title: 'Barnet er vågent' },
+            { id: 'awake', title: pickText('Barnet er vågent', 'Baby is awake') },
             { id: 'end', title: 'Afslut log' },
           ],
         },
@@ -116,7 +116,7 @@ export async function showSleepNotification(session) {
       notifications: [
         {
           id: NOTIF_ID,
-          title: 'Søvnlog kører',
+          title: pickText('Søvnlog kører', 'Sleep log running'),
           body: `Startet kl. ${timeStr}`,
           actionTypeId: ACTION_TYPE,
           extra: { session_id: session?.id },
