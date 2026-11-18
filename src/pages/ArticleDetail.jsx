@@ -54,7 +54,11 @@ export default function ArticleDetail() {
     queryKey: ['article', articleId, articleSlug, lang],
     queryFn: async () => {
       // Hent alle artikler og find den rette
-      const articles = await base44.entities.KnowledgeArticle.list();
+      // Der ligger to saet tigerspringsartikler i databasen med de samme tags.
+      // Uden en sortering var det tilfaeldigt, hvilken af dem der blev vist.
+      // Nyeste foerst, saa det er det redigerede saet — det er ogsaa dem, der
+      // har en engelsk udgave.
+      const articles = await base44.entities.KnowledgeArticle.list('-created_date');
 
       if (articleId) {
         return articles.find(a => a.id === articleId) || null;

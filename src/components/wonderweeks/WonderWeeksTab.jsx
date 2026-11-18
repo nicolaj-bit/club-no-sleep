@@ -18,7 +18,11 @@ function useWonderWeekArticles() {
   return useQuery({
     queryKey: ['wwArticles'],
     queryFn: async () => {
-      const articles = await base44.entities.KnowledgeArticle.list();
+      // Der ligger to saet tigerspringsartikler i databasen med de samme tags.
+      // Uden en sortering var det tilfaeldigt, hvilken af dem der blev vist.
+      // Nyeste foerst, saa det er det redigerede saet — det er ogsaa dem, der
+      // har en engelsk udgave.
+      const articles = await base44.entities.KnowledgeArticle.list('-created_date');
       const map = {};
       articles.forEach(a => {
         const tags = a.tags || [];
