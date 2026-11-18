@@ -1,39 +1,50 @@
 {
   "name": "KnowledgeArticle",
-  "type": "object",
   "properties": {
-    "title": {
-      "type": "string",
-      "description": "Artikeltitel"
-    },
-    "excerpt": {
-      "type": "string",
-      "description": "Kort beskrivelse (vises i lister)"
+    "category": {
+      "description": "Kategori",
+      "type": "string"
     },
     "content": {
-      "type": "string",
-      "description": "Indhold (HTML)"
+      "description": "Indhold (HTML)",
+      "type": "string"
     },
-    "category": {
-      "type": "string",
-      "description": "Kategori"
+    "content_en": {
+      "description": "Engelsk indhold (HTML). Er det tomt, vises det danske.",
+      "type": "string"
+    },
+    "excerpt": {
+      "description": "Kort beskrivelse (vises i lister)",
+      "type": "string"
+    },
+    "excerpt_en": {
+      "description": "Engelsk kort beskrivelse. Er den tom, vises den danske.",
+      "type": "string"
+    },
+    "is_faq": {
+      "default": false,
+      "description": "Er dette en FAQ?",
+      "type": "boolean"
+    },
+    "order": {
+      "default": 0,
+      "description": "Sorteringsr\u00e6kkef\u00f8lge",
+      "type": "number"
     },
     "tags": {
-      "type": "array",
+      "description": "Tags \u2014 fx tigerspring-1 for at knytte til tigerspring nr. 1",
       "items": {
         "type": "string"
       },
-      "description": "Tags \u2014 fx tigerspring-1 for at knytte til tigerspring nr. 1"
+      "type": "array"
     },
-    "is_faq": {
-      "type": "boolean",
-      "default": false,
-      "description": "Er dette en FAQ?"
+    "title": {
+      "description": "Artikeltitel",
+      "type": "string"
     },
-    "order": {
-      "type": "number",
-      "default": 0,
-      "description": "Sorteringsr\u00e6kkef\u00f8lge"
+    "title_en": {
+      "description": "Engelsk titel. Er den tom, vises den danske.",
+      "type": "string"
     }
   },
   "required": [
@@ -41,6 +52,7 @@
     "content",
     "category"
   ],
+  "type": "object",
   "rls": {
     "create": {
       "user_condition": {
