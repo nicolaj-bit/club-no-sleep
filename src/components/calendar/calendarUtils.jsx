@@ -114,7 +114,7 @@ export function getAgeMilestoneForDay(birthDateStr, day, lang) {
 }
 
 // Check if a given day is the start of a wonder week
-export function getWonderWeekForDay(dueDateStr, day) {
+export function getWonderWeekForDay(dueDateStr, day, lang) {
   if (!dueDateStr) return null;
   const due = new Date(dueDateStr);
   due.setHours(0, 0, 0, 0);
@@ -133,9 +133,19 @@ export function getWonderWeekForDay(dueDateStr, day) {
         milestone_id: `ww-${ww.number}`,
         number: ww.number,
         name: ww.name,
-        title: `Tigerspring ${ww.number}`,
-        headline: `Tigerspring ${ww.number} – ${ww.name}`,
-        message: 'Et nyt tigerspring nærmer sig. Læs mere, hvis du har brug for lidt overblik.',
+        // ww.name kommer fra tigerspringsindholdet og er stadig dansk — det
+        // oversættes sammen med resten af de store indholdssæt.
+        title: L(lang, `Tigerspring ${ww.number}`, `Leap ${ww.number}`),
+        headline: L(
+          lang,
+          `Tigerspring ${ww.number} – ${ww.name}`,
+          `Leap ${ww.number} – ${ww.name}`
+        ),
+        message: L(
+          lang,
+          'Et nyt tigerspring nærmer sig. Læs mere, hvis du har brug for lidt overblik.',
+          'A new leap is coming up. Read more if you would like an overview.'
+        ),
         link: '/Knowledge',
       };
     }
@@ -145,7 +155,7 @@ export function getWonderWeekForDay(dueDateStr, day) {
 }
 
 // Get all dynamic (calculated) items for a given day
-export function getDynamicItemsForDay(dueDate, birthDate, day) {
+export function getDynamicItemsForDay(dueDate, birthDate, day, lang) {
   const items = [];
   const mode = getCalendarMode(dueDate, birthDate);
 
@@ -156,9 +166,13 @@ export function getDynamicItemsForDay(dueDate, birthDate, day) {
       items.push({
         type: 'pregnancy_week',
         week,
-        title: `Graviditetsuge ${week}`,
-        headline: `Uge ${week}`,
-        message: 'Der ligger en lille opdatering klar til dig.',
+        title: L(lang, `Graviditetsuge ${week}`, `Pregnancy week ${week}`),
+        headline: L(lang, `Uge ${week}`, `Week ${week}`),
+        message: L(
+          lang,
+          'Der ligger en lille opdatering klar til dig.',
+          'A small update is ready for you.'
+        ),
         link: `/PregnancyWeekDetail?week=${week}`,
       });
     }
@@ -166,12 +180,12 @@ export function getDynamicItemsForDay(dueDate, birthDate, day) {
 
   // Age milestones (only in baby mode)
   if (mode === 'baby') {
-    const milestone = getAgeMilestoneForDay(birthDate, day);
+    const milestone = getAgeMilestoneForDay(birthDate, day, lang);
     if (milestone) items.push(milestone);
   }
 
   // Wonder weeks (always, based on due date — never birth date)
-  const wonderWeek = getWonderWeekForDay(dueDate, day);
+  const wonderWeek = getWonderWeekForDay(dueDate, day, lang);
   if (wonderWeek) items.push(wonderWeek);
 
   return items;
