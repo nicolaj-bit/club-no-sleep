@@ -3,8 +3,10 @@ import { LogIn, UserPlus, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from 'lu
 import { motion, AnimatePresence } from 'framer-motion';
 import { Capacitor } from '@capacitor/core';
 import { base44 } from '@/api/base44Client';
+import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function NativeAuthScreen({ resetToken } = {}) {
+  const { t } = useLanguage();
   // Efter login: navigér til post_login_redirect hvis sat, ellers /app
   const navigateAfterLogin = () => {
     const redirect = localStorage.getItem('post_login_redirect');
