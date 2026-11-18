@@ -419,14 +419,17 @@ async function isLoggedRecent(base44, key, withinMs) {
   return rows.some((r) => { try { return new Date(r.sentAt).getTime() > cutoff; } catch { return false; } });
 }
 
-function formatDayDa(dtStr) {
+// Ugedagen skrives med smaa bogstaver paa dansk ('mandag'), men med stort paa
+// engelsk ('Monday'), som sproget kraever.
+function formatDay(dtStr, lang) {
   try {
-    return new Date(dtStr).toLocaleDateString('da-DK', { weekday: 'long', timeZone: 'Europe/Copenhagen' }).toLowerCase();
+    const d = new Date(dtStr).toLocaleDateString(lang === 'en' ? 'en-GB' : 'da-DK', { weekday: 'long', timeZone: 'Europe/Copenhagen' });
+    return lang === 'en' ? d : d.toLowerCase();
   } catch { return ''; }
 }
-function formatTimeDa(dtStr) {
+function formatTime(dtStr, lang) {
   try {
-    return new Date(dtStr).toLocaleTimeString('da-DK', { hour: 'numeric', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
+    return new Date(dtStr).toLocaleTimeString(lang === 'en' ? 'en-GB' : 'da-DK', { hour: 'numeric', minute: '2-digit', timeZone: 'Europe/Copenhagen' });
   } catch { return ''; }
 }
 function formatDateParam(dtStr) {
@@ -453,7 +456,9 @@ export async function notifyCalendarPartnerChange(base44, { action, event, oldSt
 
     const actorRows = await base44.asServiceRole.entities.UserProfile.filter({ user_email: actorEmail });
     const actorProfile = actorRows?.[0];
-    const actorName = (actorProfile && (actorProfile.display_name || actorProfile.username)) || 'Din partner';
+    // Beskeden er partnerens, saa den skrives paa PARTNERENS sprog.
+    const plang = langOf(partner);
+    const actorName = (actorProfile && (actorProfile.display_name || actorProfile.username)) || T(plang, 'Din partner', 'Your partner');
 
     let childName = null;
     if (event.child_id) {
@@ -462,11 +467,11 @@ export async function notifyCalendarPartnerChange(base44, { action, event, oldSt
         if (child && child.name) childName = child.name;
       } catch {}
     }
-    const childSuffix = childName ? ` for ${childName}` : '';
+    const childSuffix = childName ? ` for ${childName}` : '';  // 'for' er ens paa begge sprog
 
-    const title = event.title || 'Aftale';
-    const day = formatDayDa(event.start_datetime);
-    const time = formatTimeDa(event.start_datetime);
+    const title = event.title || T(plang, 'Aftale', 'Appointment');
+    const day = formatDay(event.start_datetime, plang);
+    const time = formatTime(event.start_datetime, plang);
     const dateParam = formatDateParam(event.start_datetime);
     const link = `/Calendar?date=${dateParam}`;
     const partnerId = partner.id;
@@ -478,23 +483,33 @@ export async function notifyCalendarPartnerChange(base44, { action, event, oldSt
       if (await isLoggedRecent(base44, key, 5 * 60 * 1000)) return Response.json({ skipped: true, reason: 'deduped 5min', key });
     }
 
+    const when = T(plang, `${day} kl. ${time}`, `${day} at ${time}`);
     let message;
     if (action === 'created') {
-      message = `${actorName} har tilføjet: ${title}${childSuffix}, ${day} kl. ${time}`;
+      message = T(plang,
+        `${actorName} har tilføjet: ${title}${childSuffix}, ${when}`,
+        `${actorName} added: ${title}${childSuffix}, ${when}`);
     } else if (action === 'updated') {
       const moved = oldStartDatetime && event.start_datetime &&
         new Date(oldStartDatetime).getTime() !== new Date(event.start_datetime).getTime();
       message = moved
-        ? `${actorName} har flyttet: ${title}${childSuffix} til ${day} kl. ${time}`
-        : `${actorName} har ændret: ${title}${childSuffix}, ${day} kl. ${time}`;
+        ? T(plang,
+            `${actorName} har flyttet: ${title}${childSuffix} til ${when}`,
+            `${actorName} moved: ${title}${childSuffix} to ${when}`)
+        : T(plang,
+            `${actorName} har ændret: ${title}${childSuffix}, ${when}`,
+            `${actorName} changed: ${title}${childSuffix}, ${when}`);
     } else {
-      message = `${actorName} har slettet: ${title}${childSuffix}, ${day}`;
+      message = T(plang,
+        `${actorName} har slettet: ${title}${childSuffix}, ${day}`,
+        `${actorName} deleted: ${title}${childSuffix}, ${day}`);
     }
+    const calTitle = T(plang, 'Kalender', 'Calendar');
 
     // Log FØR afsendelse (race-beskyttelse).
     await base44.asServiceRole.entities.NotificationLog.create({ profilId: partnerId, childId: event.child_id || null, type: 'appointment', key, sentAt: new Date().toISOString() });
-    await base44.asServiceRole.entities.AppNotification.create({ title: 'Kalender', message, link, target_emails: [partner.user_email], published_at: new Date().toISOString() });
-    await sendPush(partner.user_email, 'Kalender', message, link);
+    await base44.asServiceRole.entities.AppNotification.create({ title: calTitle, message, link, target_emails: [partner.user_email], published_at: new Date().toISOString() });
+    await sendPush(partner.user_email, calTitle, message, link);
 
     console.log(`[notifyCalendarPartnerChange] ${action}/${key} → ${partner.user_email}: ${message}`);
     return Response.json({ success: true, action, partner: partner.user_email, key, message });
