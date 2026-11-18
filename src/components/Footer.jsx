@@ -11,8 +11,10 @@ const DEFAULTS = {
   email: 'kundeservice@lalatoto.dk',
   website: 'lalatoto.dk',
   cvr: '43 86 12 59',
-  app_store_url: 'https://apps.apple.com/app/lalatoto/id6478508842',
-  google_play_url: 'https://play.google.com/store/apps/details?id=com.lalatoto.app',
+  // Club No Sleep i de to butikker. Stod foer paa LALATOTO-appen, som er et
+  // andet produkt — klik paa linkene her foerte altsaa til den forkerte app.
+  app_store_url: 'https://apps.apple.com/dk/app/id6764388095',
+  google_play_url: 'https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app',
   logo_url: 'https://www.lalatoto.dk/cdn/shop/files/LALATOTO_logotype_Brun_600x.png?v=1730971736',
 };
 
@@ -24,7 +26,15 @@ export default function Footer({ previewData }) {
     if (previewData) return; // skip fetch if preview mode
     base44.entities.FooterContent.list().then((records) => {
       if (records && records.length > 0) {
-        setInfo({ ...DEFAULTS, ...records[0] });
+        // Raekken i databasen har felter, der aldrig er udfyldt, og de staar
+        // som null. Et almindeligt spread ville lade de tomme felter
+        // overskrive standardvaerdierne — og saa forsvandt butikslinkene
+        // helt, fordi de kun vises naar der er en adresse. Her tages kun de
+        // felter med, der faktisk har en vaerdi.
+        const udfyldte = Object.fromEntries(
+          Object.entries(records[0]).filter(([, v]) => v !== null && v !== undefined && v !== '')
+        );
+        setInfo({ ...DEFAULTS, ...udfyldte });
       }
     }).catch(() => {});
   }, [previewData]);
