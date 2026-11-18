@@ -35,12 +35,23 @@ const DEFAULTS = {
   contact_note: 'Alle henvendelser besvares inden for 24 timer på hverdage.',
 };
 
-function get(content, section, fallback) {
-  const entry = content.find(c => c.section === section);
-  return entry?.body !== undefined && entry?.body !== null && entry?.body !== '' ? entry.body : fallback;
+// Om os-teksten ligger i databasen, ikke i koden. Hver sektion har en dansk
+// tekst og en engelsk ved siden af. Er den engelske tom, viser vi den danske
+// — så der aldrig står ingenting, selv om en oversættelse mangler.
+function pickBody(entry, lang) {
+  const en = entry?.body_en;
+  if (lang === 'en' && en !== undefined && en !== null && en !== '') return en;
+  return entry?.body;
 }
-function getTitle(content, section, fallback) {
+
+function get(content, section, fallback, lang) {
   const entry = content.find(c => c.section === section);
+  const body = pickBody(entry, lang);
+  return body !== undefined && body !== null && body !== '' ? body : fallback;
+}
+function getTitle(content, section, fallback, lang) {
+  const entry = content.find(c => c.section === section);
+  if (lang === 'en' && entry?.title_en) return entry.title_en;
   return entry?.title || fallback;
 }
 function getImage(content, section, fallback) {
