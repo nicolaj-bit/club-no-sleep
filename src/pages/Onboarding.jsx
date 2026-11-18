@@ -425,7 +425,7 @@ export default function Onboarding() {
                   </p>
                 </div>
                 <div className="flex justify-center">
-                  <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt=t.onbMapTitle className="w-48 h-auto" />
+                  <img src="https://media.base44.com/images/public/699f47a86e7e0a874d1159ed/bc529a9aa_Vgnemdre.png" alt={t.onbMapTitle} className="w-48 h-auto" />
                 </div>
                 <div className="space-y-2">
                   <Label>{t.onbCityOptional}</Label>
@@ -491,7 +491,7 @@ export default function Onboarding() {
                       <Input
                         value={form.child_name || ''}
                         onChange={e => setForm(f => ({ ...f, child_name: e.target.value }))}
-                        placeholder=t.onbWriteChildName
+                        placeholder={t.onbWriteChildName}
                         style={{ backgroundColor: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}
                       />
                     </div>
