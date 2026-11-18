@@ -1,4 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { getUserLanguage } from '../../shared/i18n.js';
+
+// Invitationen gaar til en, der endnu ikke er bruger, saa der er ikke noget
+// sprog paa hende. Afsenderens sprog er det bedste gaet: hun inviterer typisk
+// sin partner, og de taler samme sprog.
+const T = (lang, da, en) => (lang === 'en' ? en : da);
 
 Deno.serve(async (req) => {
   try {
@@ -42,7 +48,7 @@ Deno.serve(async (req) => {
     );
     const activeInvite = existingInvites?.find(i => i.status === 'pending' || i.status === 'accepted');
     if (activeInvite) {
-      return Response.json({ error: 'Du kan kun invitere én person. Slet den eksisterende invitation først.' }, { status: 409 });
+      return Response.json({ error: 'Du kan kun invitere én person. Slet den eksisterende invitation først.', error_en: 'You can only invite one person. Delete the existing invitation first.' }, { status: 409 });
     }
 
     // Opret FamilyInvite-record med service role (RLS blokerer frontend create)
@@ -63,10 +69,11 @@ Deno.serve(async (req) => {
     });
 
     const appStoreUrl = 'https://apps.apple.com/app/id6764388095';
+    const lang = await getUserLanguage(base44, user?.email);
 
     // Branded HTML invitation email
     const html = `<!DOCTYPE html>
-    <html lang="da">
+    <html lang="${lang}">
     <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
     <body style="margin:0;padding:0;background-color:#FAF6F1;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;">
       <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF6F1;padding:40px 20px;">
@@ -76,34 +83,34 @@ Deno.serve(async (req) => {
               <h1 style="margin:0;color:#FAF6F1;font-size:28px;font-weight:600;letter-spacing:0.05em;">Club No Sleep</h1>
             </td></tr>
             <tr><td style="padding:40px;">
-              <p style="margin:0 0 20px;color:#2B1F16;font-size:16px;line-height:1.6;">Hej,</p>
+              <p style="margin:0 0 20px;color:#2B1F16;font-size:16px;line-height:1.6;">${T(lang, 'Hej,', 'Hi,')}</p>
               <p style="margin:0 0 28px;color:#2B1F16;font-size:16px;line-height:1.6;">
-                <strong style="color:#5B3F2B;">${inviter_name}</strong> har inviteret dig til Club No Sleep — en digital babybog og fællesskab for forældre.
+                ${T(lang, `<strong style="color:#5B3F2B;">${inviter_name}</strong> har inviteret dig til Club No Sleep — en digital babybog og fællesskab for forældre.`, `<strong style="color:#5B3F2B;">${inviter_name}</strong> has invited you to Club No Sleep — a digital baby book and a community for parents.`)}
               </p>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
                 <tr><td align="center">
-                  <a href="${appStoreUrl}" style="display:inline-block;background-color:#5B3F2B;color:#FAF6F1;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:500;">Download på App Store</a>
+                  <a href="${appStoreUrl}" style="display:inline-block;background-color:#5B3F2B;color:#FAF6F1;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:500;">${T(lang, 'Download på App Store', 'Download on the App Store')}</a>
                 </td></tr>
               </table>
-              <p style="margin:0 0 12px;color:#2B1F16;font-size:15px;font-weight:600;line-height:1.6;">Sådan kommer du i gang:</p>
+              <p style="margin:0 0 12px;color:#2B1F16;font-size:15px;font-weight:600;line-height:1.6;">${T(lang, 'Sådan kommer du i gang:', 'How to get started:')}</p>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
                 <tr><td style="padding:6px 0;color:#2B1F16;font-size:15px;line-height:1.6;">
-                  <strong style="color:#5B3F2B;">1)</strong>&nbsp; Hent appen.
+                  <strong style="color:#5B3F2B;">1)</strong>&nbsp; ${T(lang, 'Hent appen.', 'Download the app.')}
                 </td></tr>
                 <tr><td style="padding:6px 0;color:#2B1F16;font-size:15px;line-height:1.6;">
-                  <strong style="color:#5B3F2B;">2)</strong>&nbsp; Opret dig med DENNE email: <strong style="color:#5B3F2B;">${invitee_email}</strong>
+                  <strong style="color:#5B3F2B;">2)</strong>&nbsp; ${T(lang, `Opret dig med DENNE email: <strong style="color:#5B3F2B;">${invitee_email}</strong>`, `Sign up with THIS email address: <strong style="color:#5B3F2B;">${invitee_email}</strong>`)}
                 </td></tr>
                 <tr><td style="padding:6px 0;color:#2B1F16;font-size:15px;line-height:1.6;">
-                  <strong style="color:#5B3F2B;">3)</strong>&nbsp; Så får du automatisk adgang gennem ${inviter_name}.
+                  <strong style="color:#5B3F2B;">3)</strong>&nbsp; ${T(lang, `Så får du automatisk adgang gennem ${inviter_name}.`, `You then get access automatically through ${inviter_name}.`)}
                 </td></tr>
               </table>
               <p style="margin:0;color:#7A665A;font-size:13px;line-height:1.6;font-style:italic;">
-                Android-versionen kommer snart.
+                ${T(lang, 'Android-versionen kommer snart.', 'The Android version is coming soon.')}
               </p>
             </td></tr>
             <tr><td style="padding:24px 40px 32px;border-top:1px solid #EDE4DB;">
               <p style="margin:0;color:#7A665A;font-size:12px;line-height:1.5;text-align:center;">
-                Club No Sleep · Den digitale babybog<br/>Spørgsmål? Skriv til hello@clubnosleep.com
+                ${T(lang, 'Club No Sleep · Den digitale babybog<br/>Spørgsmål? Skriv til hello@clubnosleep.com', 'Club No Sleep · The digital baby book<br/>Questions? Write to hello@clubnosleep.com')}
               </p>
             </td></tr>
           </table>
@@ -122,7 +129,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: 'Club No Sleep <hello@clubnosleep.com>',
         to: invitee_email,
-        subject: `${inviter_name} inviterer dig til Club No Sleep 🤍`,
+        subject: T(lang, `${inviter_name} inviterer dig til Club No Sleep 🤍`, `${inviter_name} is inviting you to Club No Sleep 🤍`),
         html,
       }),
     });
