@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { additionalDa, additionalEn } from './additionalTranslations';
+import { uiDa, uiEn } from './uiTranslations';
 import { base44 } from '@/api/base44Client';
 
 const translations = {
   da: {
     ...additionalDa,
+    ...uiDa,
     // Nav
     home: 'Hjem',
     menu: 'Menu',
