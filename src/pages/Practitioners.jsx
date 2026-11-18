@@ -217,7 +217,7 @@ export default function Practitioners() {
               className="w-full gap-2 text-sm font-medium underline py-1"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              {showAddForm ? 'Skjul formular' : t.practAddAdmin}
+              {showAddForm ? t.practHideForm : t.practAddAdmin}
             </button>
           )}
 
@@ -306,14 +306,14 @@ export default function Practitioners() {
                 </p>
                 {searchMode === 'area' && (
                   <button className="text-sm text-blue-500 mt-2" onClick={() => setSearchMode('all')}>
-                    Vis alle behandlere
+                    {t.practShowAll}
                   </button>
                 )}
               </div>
             ) : (
               <>
                 <p className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: 'var(--color-text-muted)' }}>
-                  Anbefalede af brugerne
+                  {t.practRecommendedBy}
                 </p>
                 <div className="space-y-3">
                   {filteredExperts.map(expert => (
