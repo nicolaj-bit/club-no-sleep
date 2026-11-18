@@ -233,6 +233,15 @@
       "type": "string",
       "maxLength": 1000,
       "description": "Valgfri beskrivelse"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "da",
+        "en"
+      ],
+      "default": "da",
+      "description": "Brugerens valgte sprog. Skrives af setUserLanguage. Backend laeser det her, naar den sender push og mails \u2014 sprogvalget i browseren kan den ikke se."
     }
   },
   "required": [
