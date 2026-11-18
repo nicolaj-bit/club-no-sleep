@@ -108,7 +108,7 @@ export default function Checkout() {
       // Efter start af prøveperiode/køb lander brugeren på forsiden.
       setTimeout(() => navigate('/app'), 1400);
     } catch (e) {
-      const errMsg = e?.message || (typeof e === 'string' ? e : 'Køb fejlede');
+      const errMsg = e?.message || (typeof e === 'string' ? e : (da ? 'Køb fejlede' : 'Purchase failed'));
       if (!errMsg.toLowerCase().includes('cancel') && e.code !== 'PURCHASE_CANCELLED') {
         setError(errMsg);
       }

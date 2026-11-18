@@ -215,7 +215,7 @@ export default function Subscription() {
     ? (da ? '7 dage gratis · Derefter 29 kr./md. · Opsig når som helst' : '7 days free · Then 29 DKK/mo. · Cancel anytime')
     : iosPrice
       ? `${iosPrice} / ${da ? 'måned' : 'month'}`
-      : display.price_label || '29 kr. / måned';
+      : (da ? (display.price_label || '29 kr. / måned') : '29 DKK / month');
   const ctaLabel = isTrialEligible
     ? (da ? 'Start 7 dage gratis' : 'Start 7 days free')
     : isTrialIneligible
