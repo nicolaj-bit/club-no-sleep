@@ -36,6 +36,7 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import ChatList from './pages/ChatList';
 
 import NativeAuthGate from './components/auth/NativeAuthGate';
+import { LanguageProvider } from '@/components/ui/LanguageContext';
 import ProfileGate from './components/auth/ProfileGate';
 import AccessGate from './components/auth/AccessGate';
 import InAppBrowserLinkHandler from './components/InAppBrowserLinkHandler';
@@ -156,12 +157,23 @@ function AppRoutes() {
 function App() {
   return (
     <QueryClientProvider client={queryClientInstance}>
-      <Router>
-        <PublicOrAuth />
-        <InAppBrowserLinkHandler />
-        <SwipeBackGesture />
-      </Router>
-      <Toaster />
+      {/* Sproget skal ligge yderst.
+
+          LanguageProvider lå før inde i Layout, men Layout bruges kun til de
+          sider, der har bundmenu. Login-skærmen, onboarding, betaling og
+          landingssiden renderes uden for Layout, og de fik derfor aldrig
+          brugerens sprogvalg — de faldt tilbage til standardværdien, som er
+          dansk. Man kunne vælge engelsk og stadig møde en dansk login-skærm.
+
+          Flyt den ikke ned igen. */}
+      <LanguageProvider>
+        <Router>
+          <PublicOrAuth />
+          <InAppBrowserLinkHandler />
+          <SwipeBackGesture />
+        </Router>
+        <Toaster />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
