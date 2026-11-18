@@ -69,7 +69,11 @@ Deno.serve(async (req) => {
       description: description || undefined,
     });
 
-    const appStoreUrl = 'https://apps.apple.com/app/id6764388095';
+    // Begge butikker. Appen har vaeret i Google Play laenge, men mailen
+    // linkede kun til App Store og sagde at Android var paa vej — saa en
+    // inviteret partner med Android fik at vide, at appen ikke fandtes til ham.
+    const appStoreUrl = 'https://apps.apple.com/dk/app/id6764388095';
+    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.base699f47a86e7e0a874d1159ed.app';
 
     // Branded HTML invitation email
     const html = `<!DOCTYPE html>
@@ -88,8 +92,11 @@ Deno.serve(async (req) => {
                 ${T(lang, `<strong style="color:#5B3F2B;">${inviter_name}</strong> har inviteret dig til Club No Sleep — en digital babybog og fællesskab for forældre.`, `<strong style="color:#5B3F2B;">${inviter_name}</strong> has invited you to Club No Sleep — a digital baby book and a community for parents.`)}
               </p>
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+                <tr><td align="center" style="padding:0 0 10px;">
+                  <a href="${appStoreUrl}" style="display:inline-block;background-color:#5B3F2B;color:#FAF6F1;text-decoration:none;padding:14px 36px;border-radius:8px;font-size:16px;font-weight:500;">${T(lang, 'Hent til iPhone', 'Get it for iPhone')}</a>
+                </td></tr>
                 <tr><td align="center">
-                  <a href="${appStoreUrl}" style="display:inline-block;background-color:#5B3F2B;color:#FAF6F1;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:500;">${T(lang, 'Download på App Store', 'Download on the App Store')}</a>
+                  <a href="${playStoreUrl}" style="display:inline-block;background-color:#FFFDF9;color:#5B3F2B;text-decoration:none;padding:13px 36px;border-radius:8px;font-size:16px;font-weight:500;border:1px solid #5B3F2B;">${T(lang, 'Hent til Android', 'Get it for Android')}</a>
                 </td></tr>
               </table>
               <p style="margin:0 0 12px;color:#2B1F16;font-size:15px;font-weight:600;line-height:1.6;">${T(lang, 'Sådan kommer du i gang:', 'How to get started:')}</p>
@@ -104,9 +111,6 @@ Deno.serve(async (req) => {
                   <strong style="color:#5B3F2B;">3)</strong>&nbsp; ${T(lang, `Så får du automatisk adgang gennem ${inviter_name}.`, `You then get access automatically through ${inviter_name}.`)}
                 </td></tr>
               </table>
-              <p style="margin:0;color:#7A665A;font-size:13px;line-height:1.6;font-style:italic;">
-                ${T(lang, 'Android-versionen kommer snart.', 'The Android version is coming soon.')}
-              </p>
             </td></tr>
             <tr><td style="padding:24px 40px 32px;border-top:1px solid #EDE4DB;">
               <p style="margin:0;color:#7A665A;font-size:12px;line-height:1.5;text-align:center;">
