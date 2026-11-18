@@ -5,7 +5,8 @@ import { Toaster } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { TabStateProvider } from '@/components/ui/TabStateContext';
-import { LanguageProvider } from '@/components/ui/LanguageContext';
+// LanguageProvider er flyttet op i App.jsx, så den også dækker login, onboarding
+// og betaling, som ligger uden for Layout. Læg den ikke tilbage her.
 import DarkModeNudge from '@/components/ui/DarkModeNudge';
 import NotificationPrompt from '@/components/ui/NotificationPrompt';
 import MarketingConsentPrompt from '@/components/ui/MarketingConsentPrompt';
@@ -51,7 +52,6 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ThemeProvider>
-    <LanguageProvider>
     <InviteAccessProvider>
     <ActiveProfileProvider>
     <ActiveChildProvider>
@@ -119,7 +119,6 @@ export default function Layout({ children, currentPageName }) {
     </ActiveChildProvider>
     </ActiveProfileProvider>
     </InviteAccessProvider>
-    </LanguageProvider>
     </ThemeProvider>
   );
 }
