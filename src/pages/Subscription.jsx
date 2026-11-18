@@ -426,7 +426,7 @@ export default function Subscription() {
         <p className="text-xs text-center mt-4" style={{ color: 'var(--color-text-muted)' }}>{footerNote}</p>
 
         <div className="flex items-center justify-center gap-4 mt-3 text-xs">
-          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Vilkår</Link>
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.termsShort}</Link>
           <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
         </div>
       </div>
@@ -593,7 +593,7 @@ export default function Subscription() {
                   className="flex items-center gap-2 text-sm py-2"
                   style={{ color: 'var(--color-accent)' }}
                   >
-                   <Plus className="w-4 h-4" /> Tilføj feature
+                   <Plus className="w-4 h-4" /> {t.adminAddFeature}
                 </button>
               </div>
             </div>
@@ -607,7 +607,7 @@ export default function Subscription() {
               className="w-full py-4 rounded-2xl text-base font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
               style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-bg)' }}
             >
-              {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Gemmer…</> : 'Gem ændringer'}
+              {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Gemmer…</> : t.adminSaveChanges}
             </button>
           </div>
         </div>

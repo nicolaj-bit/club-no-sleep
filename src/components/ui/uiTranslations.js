@@ -259,6 +259,9 @@ export const uiDa = {
   practInstagram: 'Instagram (fx https://instagram.com/navn)',
   practNoneInArea: 'Ingen behandlere i dit område',
   practNoneAvailable: 'Ingen behandlere tilgængelige',
+  checkoutLoadError: 'Abonnementet kunne ikke indlæses fra {store}. Tjek din internetforbindelse og prøv igen.',
+  adminAddFeature: 'Tilføj feature',
+  adminSaveChanges: 'Gem ændringer',
 };
 
 export const uiEn = {
@@ -512,4 +515,7 @@ export const uiEn = {
   practInstagram: 'Instagram (e.g. https://instagram.com/name)',
   practNoneInArea: 'No practitioners in your area',
   practNoneAvailable: 'No practitioners available',
+  checkoutLoadError: 'The subscription could not be loaded from {store}. Check your internet connection and try again.',
+  adminAddFeature: 'Add feature',
+  adminSaveChanges: 'Save changes',
 };

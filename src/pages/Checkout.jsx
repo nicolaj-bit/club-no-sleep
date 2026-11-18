@@ -93,7 +93,7 @@ export default function Checkout() {
   const handlePurchase = async () => {
     const pkg = rc.offerings?.current?.availablePackages?.[0];
     if (!pkg) {
-      setError(`Abonnementet kunne ikke indlæses fra ${store.name}. Tjek din internetforbindelse og prøv igen.`);
+      setError(t.checkoutLoadError.replace('{store}', store.name));
       return;
     }
 
@@ -281,7 +281,7 @@ export default function Checkout() {
         </p>
 
         <div className="flex items-center justify-center gap-4 mt-3 text-xs">
-          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Vilkår</Link>
+          <Link to="/Terms" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">{t.termsShort}</Link>
           <Link to="/Privacy" style={{ color: 'var(--color-text-secondary)' }} className="underline underline-offset-2">Privatlivspolitik</Link>
         </div>
       </div>
