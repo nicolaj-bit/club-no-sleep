@@ -13,7 +13,7 @@ const inputStyle = { backgroundColor: 'var(--color-bg-card)', borderColor: 'var(
 const labelStyle = { color: 'var(--color-text-muted)' };
 
 export default function ManualSleepDialog({ open, onOpenChange, user, activeChild, editLog }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { addManualSession } = useSleepSession(user);
   const [form, setForm] = useState(emptyForm());
   const [error, setError] = useState('');
@@ -103,7 +103,7 @@ export default function ManualSleepDialog({ open, onOpenChange, user, activeChil
 
           {totals && (
             <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-              {t.manualTotal} {formatHoursMinutes(totals.totalSleepMs)} {t.sleepSuffix}, {totals.wakeCount} {totals.wakeCount === 1 ? t.wakings : t.wakingsPlural}
+              {t.manualTotal} {formatHoursMinutes(totals.totalSleepMs, lang)} {t.sleepSuffix}, {totals.wakeCount} {totals.wakeCount === 1 ? t.wakings : t.wakingsPlural}
             </p>
           )}
           {error && <p className="text-sm text-red-600">{error}</p>}
