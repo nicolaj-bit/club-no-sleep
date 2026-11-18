@@ -8,10 +8,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/ui/ThemeProvider';
 import { useLanguage } from '@/components/ui/LanguageContext';
-import { useTranslation } from '@/components/hooks/useTranslation';
 import ArticleFloatingNav from '@/components/articles/ArticleFloatingNav';
 import { markArticleVisit } from '@/hooks/useListScrollRestoration';
 import { WONDER_WEEKS } from '@/components/wonderweeks/wonderweeksData';
+
+// Kategorinavnene staar som fri tekst paa artiklen. Kun 'tigerspring' bruges
+// i praksis, og den har et rigtigt engelsk navn ('Leap'). Alt andet vises som
+// det staar, saa en ny kategori ikke forsvinder.
+function categoryLabel(category, lang) {
+  if (!category) return category;
+  if (lang === 'en' && category.toLowerCase() === 'tigerspring') return 'Leaps';
+  return category;
+}
 
 // Konverterer plain text (linjeskift) til HTML <p>-tags hvis der ikke er HTML i forvejen
 function formatContent(content) {
@@ -39,7 +47,6 @@ export default function ArticleDetail() {
   // Debug: log hvad vi ser
   console.log('[ArticleDetail] location.search:', location.search, '| window.search:', window.location.search, '| slug:', articleSlug, '| id:', articleId);
 
-  const [translatedArticle, setTranslatedArticle] = useState(null);
 
   useEffect(() => { markArticleVisit(); }, []);
 
@@ -89,26 +96,19 @@ export default function ArticleDetail() {
   // Debug
   console.log('[ArticleDetail] isLoading:', isLoading, '| article:', article?.title, '| enabled:', !!(articleId || articleSlug));
 
-  // Translate article when language = English
-  useEffect(() => {
-    if (!article || lang !== 'en') {
-      setTranslatedArticle(null);
-      return;
-    }
-
-    base44.integrations.Core.InvokeLLM({
-      prompt: `Translate this Danish article to English. Return ONLY valid JSON.
-Article: ${JSON.stringify({ title: article.title, content: article.content, category: article.category || '' })}
-
-Return format:
-{"title": "...", "content": "...", "category": "..."}`,
-      response_json_schema: {
-        type: 'object',
-        properties: { title: { type: 'string' }, content: { type: 'string' }, category: { type: 'string' } }
-      }
-    }).then(result => {
-      setTranslatedArticle(result);
-    });
+  // Den engelske udgave ligger paa artiklen i databasen (content_en). Foer
+  // blev artiklen oversat af AI'en hver gang siden blev aabnet, og brugeren saa
+  // den danske tekst i de to-tre sekunder det tog. Nu er der ingen ventetid, og
+  // teksten er den samme hver gang. Mangler den engelske, vises den danske.
+  const displayArticle = React.useMemo(() => {
+    if (!article) return null;
+    if (lang !== 'en') return article;
+    return {
+      ...article,
+      title: article.title_en || article.title,
+      excerpt: article.excerpt_en || article.excerpt,
+      content: article.content_en || article.content,
+    };
   }, [article, lang]);
 
   const handleShare = async () => {
@@ -178,7 +178,7 @@ Return format:
             className="text-xs font-medium uppercase tracking-widest"
             style={{ color: 'var(--color-text-muted)' }}
           >
-            {translatedArticle?.category || article.category}
+            {categoryLabel(displayArticle?.category || article.category, lang)}
           </span>
           </div>
 
@@ -187,7 +187,7 @@ Return format:
           className="text-2xl font-bold leading-snug mb-8"
           style={{ color: 'var(--color-text-primary)', fontFamily: 'Georgia, serif' }}
           >
-          {translatedArticle?.title || article.title}
+          {displayArticle?.title || article.title}
           </h1>
 
         {/* Divider */}
@@ -197,7 +197,7 @@ Return format:
         <div
           className="article-content"
           style={{ color: 'var(--color-text-secondary)' }}
-          dangerouslySetInnerHTML={{ __html: formatContent(translatedArticle?.content || article.content) }}
+          dangerouslySetInnerHTML={{ __html: formatContent(displayArticle?.content || article.content) }}
         />
 
         {/* Tags */}
