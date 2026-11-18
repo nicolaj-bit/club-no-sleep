@@ -113,11 +113,14 @@ export default function WonderWeeksTab() {
         style={{ background: 'linear-gradient(135deg, #2C1A0E 0%, #4A2E1A 100%)' }}
       >
         <div className="relative z-10">
+          {/* Overskrift og broedtekst skrives af en admin i Base44 og findes kun
+              paa dansk. Derfor bruges appens egen engelske tekst, naar sproget er
+              engelsk — samme maade som fodnoten lige nedenfor. */}
           <h2 className="text-lg font-semibold text-white mb-1">
-            {introConfig?.title || 'Tigerspring'}
+            {(lang === 'en' ? t.wonderWeekDefaultTitle : (introConfig?.title || t.wonderWeekDefaultTitle))}
           </h2>
           <p className="text-sm leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.82)' }}>
-            {introConfig?.body || 'Tigerspring er perioder, hvor dit barn udvikler sig særligt meget mentalt. Det kan gøre barnet mere uroligt, mere kontaktsøgende eller påvirke søvnen i en periode.'}
+            {(lang === 'en' ? t.wonderWeekDefaultBody : (introConfig?.body || t.wonderWeekDefaultBody))}
           </p>
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {(lang === 'en' ? t.wwFootnote : (introConfig?.footnote || t.wwFootnote))}
